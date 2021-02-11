@@ -1,0 +1,89 @@
+main:
+  prefix: "&3&leGlow &9>&r "
+
+  no-permission: "&cNo tienes permiso suficiente para hacer esto."
+  no-permission-join: "&c¡No tienes permiso para este efecto de aura!"
+  no-permission-glowonjoin: "&c¡No tienes permiso para portar un aura al ingresar!"
+
+  glow-new: "&7¡Muy bien! Elegiste el aura: %glowname%"
+  glow-same: "&e¡Ya tienes esa aura elegida!"
+  glow-enable: "&a¡Sí! Activaste tu aura."
+  glow-disable: "&cOh... Desactivaste tu aura."
+  glow-visibility-change: "&fPuedes elegir solo los siguientes efectos de aura: &e%value%"
+  glow-unsupported: "&c¡No puedes mirar los efectos de aura debido a que tu versión de juego no lo soporta!"
+
+  other-glow-player-confirm: "&e%target% &f¡ahora tiene un aura! &f[%glowname%&f]"
+  other-glow-on-join-confirm: "&fAura al entrar de &e%target% &ffué establecida en &e%value%"
+  other-glow-player-confirm-off: "&e%target% &f¡ya no tiene el efecto de aura!"
+  other-glow-player-disabled-world: "&e%target% &c¡está en un mundo donde el aura está desactivada!"
+  other-glow-target-notification-prefix: "&f[&2Otros&f] "
+
+  reload-success: "&a¡Se recargaron exitosamente los archivos de eGlow!"
+  reload-fail: "&cEl comando reload ha fallado, por favor lee la consola."
+
+  argument-no-last-glow: "&c¡Hey! Aún no eliges un aura..."
+  argument-incorrect-usage: "&cUso incorrecto, prueba: %command%"
+  argument-player-not-found: "&c¡No se pudo encontrar este jugador!"
+
+  command-list: "&fUtiliza &e/eGlow help &fpara recibir una lista de comandos."
+  command-player-only: "&6¡Este comando sólo puede ser usado por jugadores!"
+
+  disguise-glow-blocked: "&c¡El aura está desactivada cuando estás disfrazado/a!"
+  disguise-glow-allowed: "&aYa no estás disfrazado... &a¡Reactivando aura!"
+
+  world-glow-blocked: "&c¡El aura está desactivada en este mundo!"
+  world-glow-blocked-reload: "&c¡El aura ya no está &aactiva &cen este mundo, &cDesactivando tu aura!"
+  world-glow-allowed: "&aGlowing is back allowed in this world&f! &aReactivating glow&f!"
+
+  color-red: "&cRoja"
+  color-dark-red: "&4Carmesi"
+  color-gold: "&6Dorada"
+  color-yellow: "&eAmarilla"
+  color-green: "&aVerde Claro"
+  color-dark-green: "&2Verde Fuerte"
+  color-aqua: "&bCeleste"
+  color-dark-aqua: "&3Cian"
+  color-blue: "&9Azul"
+  color-dark-blue: "&1Azul Fuerte"
+  color-purple: "&5Purpura"
+  color-pink: "&dRosa"
+  color-white: "&fBlanca"
+  color-gray: "&7Gris"
+  color-dark-gray: "&8Gris obscura"
+  color-black: "&8Negra"
+  color-none: "&fNinguna"
+  color-slow: "&6Lenta"
+  color-fast: "&aRápida"
+  color-effect-blink: "&eBlink"
+  color-effect-rainbow: "&cA&6r&ec&ao&bi&9r&di&5s"
+
+  citizens-not-installed: "&c¡No tienes el plugin Citizens instalado!"
+  citizens-npc: "&f[&cNPC&f] "
+  citizens-npc-not-spawned: "&c¡El NPC seleccionado no está invocado!"
+  citizens-npc-not-found: "&c¡No fue posible encontrar el NPC!"
+  citizens-argument-npc-missing: "&c¡Argumento de NPC incompleto!"
+  citizens-argument-npcid-invalid: "&c¡No fue posible encontrar un NPC con esta ID!"
+
+gui:
+  title: "&9Seleccionar Aura"
+  
+  misc-yes: "&aSi"
+  misc-no: "&cNo"
+  misc-not-available: "&eN/A"
+  misc-left-click: "&fClic Izquierdo: "
+  misc-right-click: "&fClic Derecho: "
+  misc-click-to-toggle: "&9Clic para alternar."
+  
+  color-colorpermission: "&fPermiso para color: "
+  color-blinkpermission: "&fPermiso para blink: "
+  color-effectpermission: "&fPermiso de efecto: "
+  
+  setting-item-name: "&eTus ajustes de Aura"
+  setting-glow-on-join: "&fAura al entrar: "
+  setting-last-glow: "&fTu última aura: "
+  
+  glow-item-name: "&eEstado del aura"
+  glow-glowing: "&fAura: "
+  
+  speed-item-name: "&eVelocidad de efecto"
+  speed-speed: "&fVelocidad: "
