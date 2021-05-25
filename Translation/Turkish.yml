@@ -1,0 +1,89 @@
+main:
+  prefix: "&e&leGlow&r "
+
+  no-permission: "&cBunu kullanmaya iznin yok&f!"
+  no-permission-join: "&cBu parlama efektine artık iznin yok&f!"
+  no-permission-glowonjoin: "&cGirdiğinde parlama iznin yok&f!"
+
+  glow-new: "&fŞuan parlıyorsun&f! &f[&e%glowname%&f]"
+  glow-same: "&eZaten bu parlama efektini seçtin!"
+  glow-enable: "&fParlaman aktif edildi!"
+  glow-disable: "&fParlaman devre dışı bırakıldı!"
+  glow-visibility-change: "&fSadece bu parlamaları göreceksin: &e%value%"
+  glow-unsupported: "&cOynunun versiyonu parlamaları desteklemediği için parlamaları göremeyeceksin&f!"
+
+  other-glow-player-confirm: "&e%target% &fadlı oyuncu artık parlıyor! &f[%glowname%&f]"
+  other-glow-on-join-confirm: "&e%target% adlı oyuncu için &fgirişte parlama: &e%value%"
+  other-glow-player-confirm-off: "&e%target% &fadlı oyuncu artık parlamıyor!"
+  other-glow-player-disabled-world: "&e%target% &cadlı oyuncu parlamanın devre dışı bırakıldığı bir dünyada!"
+  other-glow-target-notification-prefix: "&f[&cRemote&f]"
+
+  reload-success: "&aYeniden başlatma başarılı!"
+  reload-fail: "&cYeniden başlatma başarısız&f."
+
+  argument-no-last-glow: " &cEn son bilinen parlaman yok."
+  argument-incorrect-usage: "&cYanlış kullanım&f! %command%"
+  argument-player-not-found: "&cOyuncu bulunamadı&f!"
+
+  command-list: "&fKomut listesi &eiçin /eGlow kullan."
+  command-player-only: "&6Bu komudu sadece oyuncu kullanabilir&f!"
+
+  disguise-glow-blocked: "&cSahte kılık kullanırken parlayamazsın&f!"
+  disguise-glow-allowed: "&aSahte kılığını kapattığın için artık parlayabilirsin&f! &aParlama yeniden aktif ediliyor&f!"
+
+  world-glow-blocked: "&cBu dünyada parlayamazsın&f!"
+  world-glow-blocked-reload: "&cBu dünyada artık parlayamazsın&f! &cParlama devre dışı bırakılıyor&f!"
+  world-glow-allowed: "&aBu dünyada artık parlayabilirsin&f! &aParlama yeniden aktif ediliyor&f!"
+
+  color-red: "&cKırmızı"
+  color-dark-red: "&4Koyu Kırmızı"
+  color-gold: "&6Altın"
+  color-yellow: "&eSarı"
+  color-green: "&aYeşil"
+  color-dark-green: "&2Koyu Yeşil"
+  color-aqua: "&bTurkuaz"
+  color-dark-aqua: "&3Koyu Turkuaz"
+  color-blue: "&9Mavi"
+  color-dark-blue: "&1Koyu Mavi"
+  color-purple: "&5Mor"
+  color-pink: "&dPembe"
+  color-white: "&fBeyaz"
+  color-gray: "&7Gri"
+  color-dark-gray: "&8Koyu Gri"
+  color-black: "&8Siyah"
+  color-none: "&fHiçbiri"
+  color-slow: "&6Yavaş"
+  color-fast: "&aHızlı"
+  color-effect-blink: "&eIşıldamak"
+  color-effect-rainbow: "&eGökkuşağı"
+
+  citizens-not-installed: "&cCitizens yüklü değil&f!"
+  citizens-npc: "&f[&cNPC&f] "
+  citizens-npc-not-spawned: "&cSeçilen NPC doğmadı&f!"
+  citizens-npc-not-found: "&cNPC bulunamadı&f!"
+  citizens-argument-npc-missing: "&cKonu bulunamadı&f!"
+  citizens-argument-npcid-invalid: "&cO ID ile NPC bulunamadı&f!"
+
+gui:
+  title: "&9Seçme Menüsü"
+  
+  misc-yes: "&aEvet"
+  misc-no: "&cHayır"
+  misc-not-available: "&eN/A"
+  misc-left-click: "&fSol tık: "
+  misc-right-click: "&fSağ tık: "
+  misc-click-to-toggle: "&9Geçiş yapmak için tıklayın&f."
+  
+  color-colorpermission: "&fRenk yetkisi: "
+  color-blinkpermission: "&fIşıldama yetkisi: "
+  color-effectpermission: "&fEfekt yetkisi: "
+  
+  setting-item-name: "&eSenin ayarların"
+  setting-glow-on-join: "&fGirdiğinde parlama: "
+  setting-last-glow: "&fSon parlama: "
+  
+  glow-item-name: "&eParlama duumu"
+  glow-glowing: "&fParlama: "
+  
+  speed-item-name: "&eEfekt hızı"
+  speed-speed: "&fHız: "
