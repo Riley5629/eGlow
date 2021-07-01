@@ -5,9 +5,9 @@
   <version>3.0.9</version>
   
   <properties>
-  <sonar.projectKey>MrGraycat_eGlow-private</sonar.projectKey>
-  <sonar.organization>mrgraycat</sonar.organization>
-  <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+   <sonar.projectKey>MrGraycat_eGlow</sonar.projectKey>
+   <sonar.organization>mrgraycat</sonar.organization>
+   <sonar.host.url>https://sonarcloud.io</sonar.host.url>
   </properties>
   
   <build>
