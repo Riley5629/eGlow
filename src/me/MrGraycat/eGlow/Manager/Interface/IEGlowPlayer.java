@@ -1,0 +1,391 @@
+package me.MrGraycat.eGlow.Manager.Interface;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+
+import me.MrGraycat.eGlow.EGlow;
+import me.MrGraycat.eGlow.Addon.NPCs.Citizens.EGlowCitizensTrait;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
+import me.MrGraycat.eGlow.Util.EnumUtil.*;
+import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
+import me.MrGraycat.eGlow.Util.Packets.MultiVersion.EnumChatFormat;
+import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.trait.ScoreboardTrait;
+
+public class IEGlowPlayer {
+	private String entityType;
+	
+	private NPC citizensNPC;
+	//private ZNPC znpcNPC;
+	private Player player;
+	private String name;
+	private UUID uuid;
+	private ProtocolVersion version = ProtocolVersion.SERVER_VERSION;
+
+	private ChatColor activeColor = ChatColor.RESET;
+	private boolean glowStatus = false;
+	private boolean fakeGlowStatus = false;
+
+	private IEGlowEffect glowEffect;
+
+	private boolean glowOnJoin;
+	private boolean activeOnQuit;
+	private boolean saveData = false;
+	private GlowDisableReason glowDisableReason = GlowDisableReason.NONE;
+	private GlowVisibility glowVisibility;
+	
+	private GlowTargetMode glowTarget = GlowTargetMode.ALL;
+	private List<Player> customTargetList;
+
+	public IEGlowPlayer(Player player) {
+		this.entityType = "PLAYER";
+		this.player = player;
+		this.name = player.getName();
+		this.uuid = player.getUniqueId();
+		this.customTargetList = new ArrayList<Player>(Arrays.asList(player));
+		this.version = ProtocolVersion.getPlayerVersion(this);
+		
+		if (this.version.getNetworkId() <= 110 && !this.version.getFriendlyName().equals("1.9.4")) {
+			this.glowVisibility = GlowVisibility.UNSUPPORTEDCLIENT;
+		} else {
+			this.glowVisibility = GlowVisibility.ALL;
+		}
+			
+	}
+	
+	public IEGlowPlayer(NPC npc) {
+		this.entityType = "NPC";
+		this.citizensNPC = npc;
+		this.name = npc.getFullName();
+	}
+	
+	// Glowing stuff
+	public void setGlowing(boolean status, boolean fake) {
+		if (!fake && status == getGlowStatus())
+			return;
+		
+		setGlowStatus(status);
+		
+		switch (entityType) {
+		case ("PLAYER"):
+			PacketUtil.updateGlowing(this, status);
+			break;
+		case ("NPC"):
+			citizensNPC.data().setPersistent(NPC.GLOWING_METADATA, status);
+			try {
+				if (!fake) 
+					citizensNPC.getOrAddTrait(EGlowCitizensTrait.class).setActiveOnDespawn(status);
+			} catch(NoSuchMethodError e) {
+				ChatUtil.sendToConsoleWithPrefix("&cYour Citizens version is outdated please use 2.0.27 or later");
+			}
+			break;
+		}
+	}
+	
+	public void setColor(ChatColor color, boolean status, boolean fake) {
+		if (!getSaveData())
+			setSaveData(true);
+		
+		setFakeGlowStatus(fake);
+		
+		if (color.equals(ChatColor.RESET)) {
+			setGlowing(false, fake);
+			
+		} else {
+			setGlowing(status, fake);
+			
+			if (getActiveColor() != null && getActiveColor().equals(color))
+				return;
+			
+			setGlowStatus(status);
+			setActiveColor(color);
+			
+			switch(getEntityType()) {
+			case("PLAYER"):
+				PacketUtil.updateScoreboardTeam(EGlow.getDataManager().getEGlowPlayer(getPlayer()), getTeamName(), ((EGlow.getVaultAddon() != null) ? EGlow.getVaultAddon().getPlayerTagPrefix(this) : "") + color, (EGlow.getVaultAddon() != null) ? EGlow.getVaultAddon().getPlayerTagSuffix(this) : "", true, true, EnumChatFormat.valueOf(color.name()));
+				//prefix = "" + color
+			break;
+			case("NPC"):
+				if (!fake && citizensNPC.isSpawned())
+					citizensNPC.getOrAddTrait(ScoreboardTrait.class).setColor(color);
+				break;
+			}
+		}
+		
+		if (getEntityType().equals("NPC"))
+			return;
+		
+		if (EGlow.getVaultAddon() != null)
+			EGlow.getVaultAddon().updatePlayerTabname(this);
+		EGlow.getDataManager().sendAPIEvent(this, fake);
+	}
+	
+	public boolean isSameGlow(IEGlowEffect newGlowEffect) {
+		if (getGlowStatus() && getEffect() != null && newGlowEffect.equals(getEffect()))
+			return true;
+		return false;	
+	}
+	
+	public void activateGlow() {
+		setGlowStatus(true);
+		
+		if (getEffect() != null) {
+			activateGlow(getEffect());
+		} else {
+			setGlowStatus(false);
+		}
+	}
+	
+	public void activateGlow(IEGlowEffect newGlow) {
+		disableGlow(true);	
+		setEffect(newGlow);
+		
+		newGlow.activateForEntity(getEntity());
+		setGlowing(true, false);
+	}
+	
+	public void toggleGlow() {
+		if (getFakeGlowStatus() || getGlowStatus()) {
+			disableGlow(false);
+			setFakeGlowStatus(false);
+			EGlow.getDataManager().sendAPIEvent(this, false);
+			if (EGlow.getVaultAddon() != null)
+				EGlow.getVaultAddon().updatePlayerTabname(this);
+		} else {
+			activateGlow();
+		}
+	}
+	
+	public void disableGlow(boolean hardReset) {
+		if (getFakeGlowStatus() || getGlowStatus()) {
+			if (glowEffect != null) {
+				glowEffect.deactivateForEntity(getEntity());
+			}
+			
+			if (hardReset)
+				setEffect(EGlow.getDataManager().getEGlowEffect("none"));
+			
+			if (getPlayer() != null)
+				PacketUtil.updateScoreboardTeam(EGlow.getDataManager().getEGlowPlayer(getPlayer()), getTeamName(), (EGlow.getVaultAddon() != null) ? EGlow.getVaultAddon().getPlayerTagPrefix(this) : "", (EGlow.getVaultAddon() != null) ? EGlow.getVaultAddon().getPlayerTagSuffix(this) : "", true, true, EnumChatFormat.RESET);
+			
+			if (this.citizensNPC != null)
+				citizensNPC.getOrAddTrait(ScoreboardTrait.class).setColor(ChatColor.RESET);
+			
+			setActiveColor(ChatColor.RESET);
+			setGlowing(false, false);
+		}
+	}
+	
+	public String getTeamName() {
+		String playerName = name;
+		return (playerName.length() > 15) ? "E" + playerName.substring(0,14) : "E" + playerName;
+	}
+	
+	public String getEntityType() {
+		return entityType;
+	}
+	
+	public Object getEntity() {
+		if (player != null) 
+			return player;
+		return citizensNPC;
+	}
+	
+	public String getDisplayName() {
+		return this.name;
+	}
+	
+	public Player getPlayer() {
+		return this.player;
+	}
+	
+	public UUID getUUID() {
+		return this.uuid;
+	}
+	
+	public ProtocolVersion getVersion() {
+		return this.version;
+	}
+	
+	public IEGlowEffect getForceGlow() {
+		if (!EGlowMainConfig.getForceGlowEnabled() || getPlayer() == null || isInBlockedWorld() && !EGlowMainConfig.getForceGlowBypassBlockedWorlds())
+			return null;
+		
+		for (String permission : EGlowMainConfig.getForceGlowList()) {
+			if (getPlayer().hasPermission("eglow.force." + permission.toLowerCase()))
+				return EGlow.getDataManager().getEGlowEffect(EGlowMainConfig.getForceGlowEffect(permission));
+		}
+		return null;
+	}
+	
+	public boolean isInBlockedWorld() {
+		if (!EGlowMainConfig.getWorldCheckEnabled())
+			return false;
+			
+		switch (EGlowMainConfig.getWorldAction()) {
+		case BLOCKED:
+			if (EGlowMainConfig.getWorlds().contains(getPlayer().getWorld().getName().toLowerCase()))
+				return true;
+			break;
+		case ALLOWED:
+			if (!EGlowMainConfig.getWorlds().contains(getPlayer().getWorld().getName().toLowerCase()))
+				return true;
+			break;
+		case UNKNOWN:
+			return false;
+		}
+		return false;
+	}
+	
+	public ChatColor getActiveColor() {
+		return this.activeColor;
+	}
+	
+	public void setActiveColor(ChatColor color) {
+		this.activeColor = color;
+	}
+	
+	public boolean getGlowStatus() {
+		return this.glowStatus;
+	}
+	
+	public void setGlowStatus(boolean status) {
+		this.glowStatus = status;
+	}
+	
+	public boolean getFakeGlowStatus() {
+		return this.fakeGlowStatus;
+	}
+	
+	public void setFakeGlowStatus(boolean status) {
+		this.fakeGlowStatus = status;
+	}
+	
+	public GlowDisableReason getGlowDisableReason() {
+		return this.glowDisableReason;
+	}
+	
+	public void setGlowDisableReason(GlowDisableReason reason) {
+		this.glowDisableReason = reason;
+	}
+	
+	public GlowVisibility getGlowVisibility() {
+		return this.glowVisibility;
+	}
+	
+	public void setGlowVisibility(GlowVisibility visibility) {
+		if (!this.glowVisibility.equals(GlowVisibility.UNSUPPORTEDCLIENT))
+			this.glowVisibility = visibility;
+	}
+	
+	public GlowTargetMode getGlowTargetMode() {
+		return glowTarget;
+	}
+
+	public void setGlowTargetMode(GlowTargetMode glowTarget) {
+		this.glowTarget = glowTarget;
+	}
+	
+	public List<Player> getGlowTargets() {
+		return customTargetList;
+	}
+	
+	public void addGlowTarget(Player p) {
+		if (!customTargetList.contains(p))
+			customTargetList.add(p);
+		if (!customTargetList.contains(player)) 
+			customTargetList.add(player);
+		if (glowTarget.equals(GlowTargetMode.ALL))
+			setGlowTargetMode(GlowTargetMode.CUSTOM);
+	}
+	
+	public void removeGlowTarget(Player p) {
+		if (customTargetList.contains(p));
+			customTargetList.remove(p);
+		if (glowTarget.equals(GlowTargetMode.CUSTOM) && customTargetList.isEmpty())
+			setGlowTargetMode(GlowTargetMode.ALL);
+	}
+	
+	public void setGlowTargets(List<Player> targets) {
+		if (targets == null) {
+			customTargetList.clear();
+			customTargetList.add(player);
+			if (glowTarget.equals(GlowTargetMode.ALL))
+				setGlowTargetMode(GlowTargetMode.CUSTOM);
+		} else {
+			if (targets.contains(player))
+				targets.add(player);
+			
+			customTargetList = targets;
+			
+			if (glowTarget.equals(GlowTargetMode.ALL))
+				setGlowTargetMode(GlowTargetMode.CUSTOM);
+		}
+	}
+	
+	public void resetGlowTargets() {
+		customTargetList.clear();
+		setGlowTargetMode(GlowTargetMode.ALL);
+	}
+	
+	public IEGlowEffect getEffect() {
+		return this.glowEffect;
+	}
+	
+	public void setEffect(IEGlowEffect effect) {
+		this.glowEffect = effect;
+	}
+	
+	public boolean getGlowOnJoin() {
+		return this.glowOnJoin;
+	}
+
+	public void setGlowOnJoin(boolean status) {
+		if (this.glowOnJoin != status) {
+			if (!getSaveData())
+				setSaveData(true);
+		}
+		
+		this.glowOnJoin = status;
+	}
+
+	public boolean getActiveOnQuit() {
+		return this.activeOnQuit;
+	}
+
+	public void setActiveOnQuit(boolean status) {
+		this.activeOnQuit = status;
+	}
+	
+	public boolean getSaveData() {
+		return saveData;
+	}
+
+	public void setSaveData(boolean saveData) {
+		this.saveData = saveData;
+	}
+	
+	public void setDataFromLastGlow(String lastGlow) {
+		if (lastGlow.contains("SOLID:") || lastGlow.contains("EFFECT:"))
+			lastGlow = lastGlow.replace("SOLID:", "").replace("EFFECT:", "");
+		
+		IEGlowEffect effect = EGlow.getDataManager().getEGlowEffect(lastGlow);
+		setEffect(effect);
+	}
+	
+	public String getLastGlowName() {
+		return (getEffect() != null) ? getEffect().getDisplayName() : Message.COLOR.get("none");
+	}
+	
+	public String getLastGlow() {
+		return (getEffect() != null) ? getEffect().getName() : "none";
+	}
+}

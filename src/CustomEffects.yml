@@ -1,0 +1,31 @@
+Effects:
+  Christmas:
+    Displayname: "&cC&2h&cr&2i&cs&2t&cm&2a&cs"
+    Delay: 1.0
+    Colors:
+     - "red"
+     - "darkgreen"
+    GUI:
+     Page: 1
+     Slot: 1
+     Material: "SAPLING"
+     Meta: 1
+     Name: "&cC&2h&cr&2i&cs&2t&cm&2a&cs"
+     Lores:
+      - "&fLeft click: %effect_name%"
+      - "&fEffect permission: %effect_has_permission%"
+  Halloween:
+    Displayname: "&6Halloween"
+    Delay: 1.0
+    Colors:
+     - "gold"
+     - "yellow"
+    GUI:
+     Page: 1
+     Slot: 2
+     Material: "PUMPKIN"
+     Meta: 0
+     Name: "&6H&ea&6l&el&6o&ew&6e&ee&6n"
+     Lores:
+      - "&fLeft click: %effect_name%"
+      - "&fEffect permission: %effect_has_permission%"

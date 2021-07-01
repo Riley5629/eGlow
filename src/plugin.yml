@@ -1,0 +1,218 @@
+name: eGlow
+main: me.MrGraycat.eGlow.EGlow
+version: 3.1.0-PRE1-2
+api-version: 1.13
+softdepend: [TAB,Citizens,PlaceholderAPI,MVdWPlaceholderAPI,Vault,iDisguise,LibsDisguises,ViaVersion,ProtocolSupport]
+author: MrGraycat
+description: Adds a static/animated glow outline to players.
+commands:
+  eglow:
+   description: opens eGlow GUI.
+permissions:
+  eglow.*:
+   description: Gives access to all eGlow commands.
+   children:
+    eglow.color.*: true
+    eglow.blink.*: true
+    eglow.effect.*: true
+    eglow.user.*: true
+    eglow.admin.*: true  
+  eglow.color.*:
+   description: Gives access to all colors.
+   children:
+    eglow.color.red: true
+    eglow.color.darkred: true
+    eglow.color.gold: true
+    eglow.color.yellow: true
+    eglow.color.green: true
+    eglow.color.darkgreen: true
+    eglow.color.aqua: true
+    eglow.color.darkaqua: true
+    eglow.color.blue: true
+    eglow.color.darkblue: true
+    eglow.color.purple: true
+    eglow.color.pink: true
+    eglow.color.white: true
+    eglow.color.gray: true
+    eglow.color.darkgray: true
+    eglow.color.black: true
+    eglow.color.none: true
+  eglow.blink.*:
+   description: Gives access to all blink effects.
+   children:
+    eglow.blink.red: true
+    eglow.blink.darkred: true
+    eglow.blink.gold: true
+    eglow.blink.yellow: true
+    eglow.blink.green: true
+    eglow.blink.darkgreen: true
+    eglow.blink.aqua: true
+    eglow.blink.darkaqua: true
+    eglow.blink.blue: true
+    eglow.blink.darkblue: true
+    eglow.blink.purple: true
+    eglow.blink.pink: true
+    eglow.blink.white: true
+    eglow.blink.gray: true
+    eglow.blink.darkgray: true
+    eglow.blink.black: true
+  eglow.effect.*:
+   description: Gives access to all effects.
+   children:
+    eglow.effect.rainbow: true
+  eglow.user.*:
+   description: Gives access to user commands.
+   children:
+    eglow.command.gui: true
+    eglow.command.help: true
+    eglow.command.list: true
+    eglow.command.toggle: true
+    eglow.command.visibility: true
+    eglow.option.glowonjoin: true
+  eglow.admin.*:
+   description: Gives access to admin commands.
+   children:
+    eglow.option.update: true
+    eglow.command.set: true
+    eglow.command.unset: true
+    eglow.command.debug: true
+    eglow.command.convert: true
+    eglow.command.reload: true
+  eglow.color.red:
+   description: Gives access to glow red.
+   default: false
+  eglow.blink.red:
+   description: Gives access to blink red.
+   default: false
+  eglow.color.darkred:
+   description: Gives access to glow dark red.
+   default: false
+  eglow.blink.darkred:
+   description: Gives access to blink dark red. 
+   default: false
+  eglow.color.gold:
+   description: Gives access to glow gold.
+   default: false
+  eglow.blink.gold:
+   description: Gives access to blink gold.
+   default: false
+  eglow.color.yellow:
+   description: Gives access to glow yellow.
+   default: false
+  eglow.blink.yellow:
+   description: Gives access to blink yellow.
+   default: false
+  eglow.color.green:
+   description: Gives access to glow green.
+   default: false
+  eglow.blink.green:
+   description: Gives access to blink green.
+   default: false
+  eglow.color.darkgreen:
+   description: Gives access to glow dark green.
+   default: false
+  eglow.blink.darkgreen:
+   description: Gives access to blink dark green.
+   default: false
+  eglow.color.aqua:
+   description: Gives access to glow aqua.
+   default: false
+  eglow.blink.aqua:
+   description: Gives access to blink aqua.
+   default: false
+  eglow.color.darkaqua:
+   description: Gives access to glow dark aqua.
+   default: false
+  eglow.blink.darkaqua:
+   description: Gives access to blink dark aqua.
+   default: false
+  eglow.color.blue:
+   description: Gives access to glow blue.
+   default: false
+  eglow.blink.blue:
+   description: Gives access to blink blue.
+   default: false
+  eglow.color.darkblue:
+   description: Gives access to glow dark blue.
+   default: false
+  eglow.blink.darkblue:
+   description: Gives acccess to blink dark blue.
+   default: false
+  eglow.color.purple:
+   description: Gives access to glow purple.
+   default: false
+  eglow.blink.purple:
+   description: Gives access to blink purple.
+   default: false
+  eglow.color.pink:
+   description: Gives access to glow pink.
+   default: false
+  eglow.blink.pink:
+   description: Gives access to blink pink.
+   default: false
+  eglow.color.white:
+   description: Gives access to glow white.
+   default: false
+  eglow.blink.white:
+   description: Gives access to blink white.
+   default: false
+  eglow.color.gray:
+   description: Gives access to glow gray.
+   default: false
+  eglow.blink.gray:
+   description: Gives access to blink gray.
+   default: false
+  eglow.color.darkgray:
+   description: Gives access to glow darkgray.
+   default: false
+  eglow.blink.darkgray:
+   description: Gives access to blink darkgray.
+   default: false
+  eglow.color.black:
+   description: Gives access to glow black.
+   default: false
+  eglow.color.none:
+   description: Gives access to disable glow.
+   default: false
+  eglow.blink.black:
+   description: Gives access to blink black.
+   default: false
+  eglow.effect.rainbow:
+   description: Gives access to rainbow effect.
+   default: false
+  eglow.command.gui:
+   description: Gives access to use gui command.
+   default: false
+  eglow.command.help:
+   description: Gives access to use help command.
+   default: true
+  eglow.command.list:
+   description: Gives access to use list command.
+   default: true
+  eglow.command.toggle:
+   description: Gives access to use toggle command.
+   default: false
+  eglow.command.visibility:
+   description: Gives access to use visbilility command.
+   default: false
+  eglow.command.set:
+   description: Gives access to set command.
+   default: false
+  eglow.command.unset:
+   description: Gives access to unset command.
+   default: false
+  eglow.command.debug:
+   description: Gives access to debug command.
+   default: false
+  eglow.command.convert:
+   description: Gives access to convert command.
+   default: false
+  eglow.command.reload:
+   description: Gives access to reload command.
+   default: false
+  eglow.option.glowonjoin:
+   description: Gives access to glow on join.
+   default: true
+  eglow.option.update:
+   description: Gives access to receive update notifications.
+   default: false

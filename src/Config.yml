@@ -1,0 +1,64 @@
+ #Command alias to use instead of /eglow
+Command-alias: 
+  Enable: false
+  Alias: "glow"
+
+#Block/Allow glowing in certain worlds.
+World:
+  Enable: false
+  Action: BLOCK #Values: BLOCK/ALLOW
+  Worlds: #List of worlds the Action will be applied on.
+   - "worldname1"
+   - "worldname2"
+
+#Configure effects to force on players/groups (requires permission)
+Force-glow:
+  Enable: false
+  Bypass-blocked-worlds: false
+  Glows:
+    Owner: "red" #(eglow.force.owner)
+    Example: "rainbowfast" #(eglow.force.example)
+
+#MySQL Database details
+MySQL:
+  Enable: false
+  Host: "localhost"
+  Port: 3306
+  DBName: ""
+  Username: "root"
+  Password: "123"
+
+#Effect delays in seconds.
+#Editing these may require changes in intervals from other plugins!
+Delays:
+  Player:
+    Slow: 2.0
+    Fast: 1.0
+  NPC:
+    Slow: 2.0
+    Fast: 1.0
+
+#Customise the formatting of the tablist/tagname.
+#Just some basic formatting for now may be expanded in the future.
+Tabname:
+  Enable: false
+  tabPrefix: "%prefix%"
+  tabName: "&r%name%"
+  tabSuffix: "%suffix%"
+ 
+#Limited to format: prefix name suffix
+#name will always be in the color of the glow!
+Tagname:
+  Enable: false
+  tagPrefix: "%prefix%"
+  tagSuffix: "%suffix%"
+
+#Some optional options
+Options:
+  Disable-glow-when-invisible: true #Disable the glow effect while being invisible. (1.13 and above)
+  Render-player-skulls: true #Toggle skins rendering on playerskulls.
+  Default-glow-on-join-value: true #Default value to use for the glowonjoin setting.
+  Send-target-notification: true #Toggle notification for targeted player (when using /eglow set <player>).
+  PermissionCheck-on-join: false #Check if player still has the required permissions for that glow (on join).
+  Send-update-notifications: true #Toggle update notifications.
+  Advanced-TAB-integration: false #Bypass glow colored nametag using the TAB plugin
