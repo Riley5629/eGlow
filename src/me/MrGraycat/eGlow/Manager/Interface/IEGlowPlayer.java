@@ -24,7 +24,6 @@ public class IEGlowPlayer {
 	private String entityType;
 	
 	private NPC citizensNPC;
-	//private ZNPC znpcNPC;
 	private Player player;
 	private String name;
 	private UUID uuid;
