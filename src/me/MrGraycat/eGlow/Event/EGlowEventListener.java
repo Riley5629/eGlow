@@ -88,19 +88,18 @@ public class EGlowEventListener implements Listener {
 		if (p.isGlowing())
 			p.setGlowing(false);
 		
-		if (!EGlow.getInstance().isUpToDate() && EGlowMainConfig.OptionSendUpdateNotifications() && p.hasPermission("eglow.option.update"))
-			ChatUtil.sendMsgWithPrefix(p, "&aA new update is available&f!");
-		
 		IEGlowPlayer eglowPlayer = EGlow.getDataManager().addEGlowPlayer(p, uuid.toString());
-
-		EGlow.getPlayerdataManager().loadPlayerdata(eglowPlayer);
 		PipelineInjector.inject(eglowPlayer);
-		
 		PacketUtil.scoreboardPacket(eglowPlayer, true);
 		
 		new BukkitRunnable() {
 			@Override
 			public void run() {
+				EGlow.getPlayerdataManager().loadPlayerdata(eglowPlayer);
+				
+				if (!EGlow.getInstance().isUpToDate() && EGlowMainConfig.OptionSendUpdateNotifications() && p.hasPermission("eglow.option.update"))
+					ChatUtil.sendMsgWithPrefix(p, "&aA new update is available&f!");
+				
 				PacketUtil.updatePlayerNEW(eglowPlayer);
 				
 				if (EGlow.getVaultAddon() != null)

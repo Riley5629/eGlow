@@ -1,6 +1,6 @@
 package me.MrGraycat.eGlow.Event;
 
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,14 +16,13 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class EGlowEventListener113AndAbove implements Listener {
 
-	//TODO new class to prevent error
 	@EventHandler
 	public void PlayerPotionEvent(EntityPotionEffectEvent e) {
-		EntityType et = e.getEntityType();
+		Entity entity = e.getEntity();
 		
-		if (et.equals(EntityType.PLAYER)) {
-			IEGlowPlayer ep = EGlow.getDataManager().getEGlowPlayer((Player)e.getEntity());
-			
+		if (entity instanceof Player) {
+			IEGlowPlayer ep = EGlow.getDataManager().getEGlowPlayer((Player) entity);
+
 			if (EGlowMainConfig.OptionDisableGlowWhenInvisible()) {
 				if (e.getNewEffect() != null && e.getNewEffect().getType().equals(PotionEffectType.INVISIBILITY)) {
 					if (ep.getGlowStatus() || ep.getFakeGlowStatus()) {
@@ -43,7 +42,7 @@ public class EGlowEventListener113AndAbove implements Listener {
 				return;
 			} else {
 				if (ep != null && ep.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE))
-					ep.setGlowDisableReason(GlowDisableReason.INVISIBLE);	
+					ep.setGlowDisableReason(GlowDisableReason.NONE);	
 			}
 		}
 	}
