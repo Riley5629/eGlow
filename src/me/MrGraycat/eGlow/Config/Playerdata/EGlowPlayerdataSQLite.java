@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.sqlite.SQLiteDataSource;
-import org.sqlite.SQLiteException;
 
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
@@ -119,8 +118,6 @@ public class EGlowPlayerdataSQLite {
 			ps.setString(6, glowDisableReason);
 			
 			ps.executeUpdate();
-		} catch (SQLiteException e) {
-			//supress
 		} catch (SQLException e) {
 			ChatUtil.reportError(e);
 		} finally {
@@ -156,12 +153,18 @@ public class EGlowPlayerdataSQLite {
 		}
 	}
 
-	//https://www.programcreek.com/java-api-examples/index.php?api=com.mysql.cj.jdbc.MysqlDataSource
 	private boolean setupMySQLConnection() {
+		File dbFile = new File(EGlow.getInstance().getDataFolder(), "Playerdata.db;PRAGMA journal_mode=WAL;");
+		
+		//Check if the db exists with incorrect WAL journal mode implementation and renaming it to a proper DB file
+		if (dbFile.exists())
+			dbFile.renameTo(new File(EGlow.getInstance().getDataFolder(), "Playerdata.db"));
+		
 		sqlite = new SQLiteDataSource();
 
-		sqlite.setUrl("jdbc:sqlite:" + EGlow.getInstance().getDataFolder() + File.separator + "Playerdata.db" + ";PRAGMA journal_mode=WAL;");
+		sqlite.setUrl("jdbc:sqlite:" + EGlow.getInstance().getDataFolder() + File.separator + "Playerdata.db");
 		sqlite.setDatabaseName("eglow");
+		sqlite.setJournalMode("WAL");
 		
 		return testMySQLConnection();
 	}
@@ -172,18 +175,6 @@ public class EGlowPlayerdataSQLite {
 		ResultSet res = null;
 		
 		String statement = "";
-		
-		/*try {
-			con = sqlite.getConnection();
-			ps = con.prepareStatement(statement);
-			ps.executeUpdate();
-		} catch(SQLException e) {
-			ChatUtil.reportError(e);
-		} finally {
-			closeMySQLConnection(con, ps, res);
-		}*/
-		
-		//sqlite.setDatabaseName("eglow");
 		
 		try {
 			con = sqlite.getConnection();
