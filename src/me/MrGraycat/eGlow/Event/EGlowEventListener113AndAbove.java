@@ -23,6 +23,9 @@ public class EGlowEventListener113AndAbove implements Listener {
 		if (entity instanceof Player) {
 			IEGlowPlayer ep = EGlow.getDataManager().getEGlowPlayer((Player) entity);
 
+			if (ep == null)
+				return;
+			
 			if (EGlowMainConfig.OptionDisableGlowWhenInvisible()) {
 				if (e.getNewEffect() != null && e.getNewEffect().getType().equals(PotionEffectType.INVISIBILITY)) {
 					if (ep.getGlowStatus() || ep.getFakeGlowStatus()) {
