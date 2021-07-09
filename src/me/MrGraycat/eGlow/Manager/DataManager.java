@@ -19,7 +19,6 @@ import com.google.common.io.ByteStreams;
 
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.API.Event.GlowColorChangeEvent;
-import me.MrGraycat.eGlow.API.Event.eGlowPostPlayerJoinEvent;
 import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig.Effect;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
@@ -245,15 +244,6 @@ public class DataManager implements PluginMessageListener {
 		out.writeUTF(player.getUniqueId().toString());
 		out.writeUTF(glowColor);
 		Bukkit.getServer().sendPluginMessage(EGlow.getInstance(), "eglow:bungee", out.toByteArray());
-	}
-	
-	public void sendPostJoinEvent(IEGlowPlayer player) {
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				Bukkit.getPluginManager().callEvent(new eGlowPostPlayerJoinEvent(player));	
-			}
-		}.runTask(EGlow.getInstance());
 	}
 	
 	public void sendAPIEvent(IEGlowPlayer player, boolean fake) {
