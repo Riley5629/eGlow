@@ -52,13 +52,11 @@ public class EGlowAPI {
 	 * @param player player to get the glow color from
 	 * @return Glow color as String (invisible)
 	 */
-	public String getGlowColor(Player player) {
-		IEGlowPlayer EP = EGlow.getDataManager().getEGlowPlayer(player);
-		
-	    if (EP == null)
+	public String getGlowColor(IEGlowPlayer player) {
+	    if (player == null)
 	      return ""; 
 	    
-	    return (EP.getGlowStatus() || EP.getFakeGlowStatus()) ? EP.getActiveColor() + "" : "";
+	    return (player.getGlowStatus() || player.getFakeGlowStatus()) ? player.getActiveColor() + "" : "";
 	}
 	
 	/**
@@ -66,16 +64,14 @@ public class EGlowAPI {
 	 * @param player to active the effect for
 	 * @param effect to enable
 	 */
-	public void enableGlow(Player player, IEGlowEffect effect) {
+	public void enableGlow(IEGlowPlayer player, IEGlowEffect effect) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				IEGlowPlayer EP = EGlow.getDataManager().getEGlowPlayer(player);
-				
-				if (EP == null)
+				if (player == null)
 					return;
 				
-				EP.activateGlow(effect);
+				player.activateGlow(effect);
 			}
 		}.runTaskLaterAsynchronously(EGlow.getInstance(), 1);
 	}
@@ -85,17 +81,15 @@ public class EGlowAPI {
 	 * @param player to active the glow for
 	 * @param color to enable
 	 */
-	public void enableGlow(Player player, EGlowColor color) {
+	public void enableGlow(IEGlowPlayer player, EGlowColor color) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				IEGlowPlayer EP = EGlow.getDataManager().getEGlowPlayer(player);
-				
-				if (EP == null)
+				if (player == null)
 					return;
 				
 				IEGlowEffect effect = EGlow.getDataManager().getEGlowEffect(color.toString());
-				EP.activateGlow(effect);
+				player.activateGlow(effect);
 			}
 		}.runTaskLaterAsynchronously(EGlow.getInstance(), 1);
 	}
@@ -105,17 +99,15 @@ public class EGlowAPI {
 	 * @param player to activate the blink for
 	 * @param blink to enable
 	 */
-	public void enableGlow(Player player, EGlowBlink blink) {
+	public void enableGlow(IEGlowPlayer player, EGlowBlink blink) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				IEGlowPlayer EP = EGlow.getDataManager().getEGlowPlayer(player);
-				
-				if (EP == null)
+				if (player == null)
 					return;
 				
 				IEGlowEffect effect = EGlow.getDataManager().getEGlowEffect(blink.toString());
-				EP.activateGlow(effect);
+				player.activateGlow(effect);
 			}
 		}.runTaskLaterAsynchronously(EGlow.getInstance(), 1);
 	}
@@ -125,17 +117,15 @@ public class EGlowAPI {
 	 * @param player to activate the effect for
 	 * @param effects to enable
 	 */
-	public void enableGlow(Player player, EGlowEffect effects) {
+	public void enableGlow(IEGlowPlayer player, EGlowEffect effects) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				IEGlowPlayer EP = EGlow.getDataManager().getEGlowPlayer(player);
-				
-				if (EP == null)
+				if (player == null)
 					return;
 				
 				IEGlowEffect effect = EGlow.getDataManager().getEGlowEffect(effects.toString());
-				EP.activateGlow(effect);
+				player.activateGlow(effect);
 			}
 		}.runTaskLaterAsynchronously(EGlow.getInstance(), 1);
 	}
@@ -144,16 +134,14 @@ public class EGlowAPI {
 	 * Disable the glow for a player
 	 * @param player to disable the glow for
 	 */
-	public void disableGlow(Player player) {
+	public void disableGlow(IEGlowPlayer player) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				IEGlowPlayer EP = EGlow.getDataManager().getEGlowPlayer(player);
-				
-				if (EP == null)
+				if (player == null)
 					return;
 				
-				EP.disableGlow(true);
+				player.disableGlow(true);
 			}
 		}.runTaskLaterAsynchronously(EGlow.getInstance(), 1);	
 	}
@@ -163,15 +151,13 @@ public class EGlowAPI {
 	 * @param sender player to add the custom receiver for
 	 * @param receiver player that the sender will be able to see glowing
 	 */
-	public void addCustomGlowReceiver(Player sender, Player receiver) {
-		IEGlowPlayer EP = EGlow.getDataManager().getEGlowPlayer(sender);
-		
-		if (EP == null)
+	public void addCustomGlowReceiver(IEGlowPlayer sender, Player receiver) {
+		if (sender == null)
 			return;
 		
-		EP.addGlowTarget(receiver);
+		sender.addGlowTarget(receiver);
 
-		PacketUtil.forceUpdateGlow(EP);	
+		PacketUtil.forceUpdateGlow(sender);	
 	}
 	
 	/**
@@ -179,14 +165,12 @@ public class EGlowAPI {
 	 * @param sender player to remove the custom receiver for
 	 * @param receiver player that the sender will no longer be able to see glowing
 	 */
-	public void removeCustomGlowReceiver(Player sender, Player receiver) {
-		IEGlowPlayer EP = EGlow.getDataManager().getEGlowPlayer(sender);
-		
-		if (EP == null)
+	public void removeCustomGlowReceiver(IEGlowPlayer sender, Player receiver) {
+		if (sender == null)
 			return;
 		
-		EP.removeGlowTarget(receiver);
-		PacketUtil.forceUpdateGlow(EP);	
+		sender.removeGlowTarget(receiver);
+		PacketUtil.forceUpdateGlow(sender);	
 	}
 	
 	/**
@@ -194,28 +178,24 @@ public class EGlowAPI {
 	 * @param sender player to set the custom receivers for
 	 * @param receivers players that the sender will be able to see glowing
 	 */
-	public void setCustomGlowReceivers(Player sender, List<Player> receivers) {
-		IEGlowPlayer EP = EGlow.getDataManager().getEGlowPlayer(sender);
-		
-		if (EP == null)
+	public void setCustomGlowReceivers(IEGlowPlayer sender, List<Player> receivers) {
+		if (sender == null)
 			return;
 		
-		EP.setGlowTargets(receivers);
-		PacketUtil.forceUpdateGlow(EP);	
+		sender.setGlowTargets(receivers);
+		PacketUtil.forceUpdateGlow(sender);	
 	}
 	
 	/**
 	 * reset custom receivers for a player
 	 * @param sender player to reset the csutom receivers for
 	 */
-	public void resetCustomGlowReceivers(Player sender) {
-		IEGlowPlayer EP = EGlow.getDataManager().getEGlowPlayer(sender);
-		
-		if (EP == null)
+	public void resetCustomGlowReceivers(IEGlowPlayer sender) {
+		if (sender == null)
 			return;
 		
-		EP.resetGlowTargets();;
-		PacketUtil.forceUpdateGlow(EP);	
+		sender.resetGlowTargets();;
+		PacketUtil.forceUpdateGlow(sender);	
 	}
 	
 	/**
