@@ -34,12 +34,12 @@ public class EGlowEventListener implements Listener {
 	
 	@EventHandler
 	public void PlayerKickedEvent(PlayerKickEvent e) {
-		PlayerDisconnect(e.getPlayer());
+		PlayerDisconnect(e.getPlayer(), false);
 	}
 
 	@EventHandler
 	public void PlayerDisconnectEvent(PlayerQuitEvent e) {
-		PlayerDisconnect(e.getPlayer());
+		PlayerDisconnect(e.getPlayer(), false);
 	}
 	
 	@EventHandler
@@ -145,22 +145,30 @@ public class EGlowEventListener implements Listener {
 	 * Code to unload the player from eGlow
 	 * @param p player to unload
 	 */
-	public static void PlayerDisconnect(Player p) {
+	public static void PlayerDisconnect(Player p, boolean shutdown) {
 		IEGlowPlayer eglowPlayer = EGlow.getDataManager().getEGlowPlayer(p);
 		PacketUtil.scoreboardPacket(eglowPlayer, false);
 		
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				if (eglowPlayer != null) {
-					eglowPlayer.setActiveOnQuit((eglowPlayer.getFakeGlowStatus() || eglowPlayer.getGlowStatus()) ? true : false);
-					EGlow.getPlayerdataManager().savePlayerdata(eglowPlayer);
-					//eglowPlayer.disableGlow(true);
-					
-					PipelineInjector.uninject(eglowPlayer);
-					EGlow.getDataManager().removeEGlowPlayer(p);
+		if (!shutdown) {
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					PlayerDisconnectNext(eglowPlayer);
 				}
-			}
-		}.runTaskAsynchronously(EGlow.getInstance());
+			}.runTaskAsynchronously(EGlow.getInstance());
+		} else {
+			PlayerDisconnectNext(eglowPlayer);
+		}
+	}
+	
+	private static void PlayerDisconnectNext(IEGlowPlayer eglowPlayer) {
+		if (eglowPlayer != null) {
+			eglowPlayer.setActiveOnQuit((eglowPlayer.getFakeGlowStatus() || eglowPlayer.getGlowStatus()) ? true : false);
+			EGlow.getPlayerdataManager().savePlayerdata(eglowPlayer);
+			//eglowPlayer.disableGlow(true);
+			
+			PipelineInjector.uninject(eglowPlayer);
+			EGlow.getDataManager().removeEGlowPlayer(eglowPlayer.getPlayer());
+		}
 	}
 }

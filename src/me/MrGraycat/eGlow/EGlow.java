@@ -138,7 +138,7 @@ public class EGlow extends JavaPlugin {
 		if (!getServer().getOnlinePlayers().isEmpty()) {
 			for (Player player : getServer().getOnlinePlayers()) {
 				if (EGlow.getDataManager().getEGlowPlayer(player) == null)
-					EGlowEventListener.PlayerDisconnect(player);
+					EGlowEventListener.PlayerDisconnect(player, true);
 			}
 		}
 	}
