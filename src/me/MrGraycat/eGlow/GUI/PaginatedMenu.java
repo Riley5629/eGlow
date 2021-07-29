@@ -5,12 +5,12 @@ import org.bukkit.Material;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
+import me.MrGraycat.eGlow.GUI.MenuManager.MenuMetadata;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 
 public abstract class PaginatedMenu extends Menu {
 	protected int page = 1;
 	protected int maxItemsPerPage = 26;
-	protected int index = 0;
 	
 	public PaginatedMenu(MenuMetadata menuMetadata) {
 		super(menuMetadata);
