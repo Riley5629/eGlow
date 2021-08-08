@@ -10,21 +10,24 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 public class EGlowPlaceholderAPI extends PlaceholderExpansion {
 	
+	private EGlow instance;
+	
 	/**
 	 * Register all eGlow placeholders in PlaceholderAPI
 	 */
-	public EGlowPlaceholderAPI() {
+	public EGlowPlaceholderAPI(EGlow instance) {
+		setInstance(instance);
 		register();
 	}
 	
 	@Override
 	public String getAuthor() {
-		return EGlow.getInstance().getDescription().getAuthors().toString();
+		return getInstance().getDescription().getAuthors().toString();
 	}
 
 	@Override
 	public String getVersion() {
-		return EGlow.getInstance().getDescription().getVersion();
+		return getInstance().getDescription().getVersion();
 	}
 
 	@Override
@@ -39,7 +42,7 @@ public class EGlowPlaceholderAPI extends PlaceholderExpansion {
 	
 	@Override
 	public boolean canRegister() {
-		return EGlow.getInstance() != null;
+		return getInstance() != null;
 	}
 	
 	@Override
@@ -59,7 +62,7 @@ public class EGlowPlaceholderAPI extends PlaceholderExpansion {
     	if (player == null)
     		return "";
     	
-        IEGlowPlayer eglowPlayer = EGlow.getDataManager().getEGlowPlayer(player);
+        IEGlowPlayer eglowPlayer = getInstance().getDataManager().getEGlowPlayer(player);
         
         if (eglowPlayer == null)
         	return "";
@@ -82,4 +85,14 @@ public class EGlowPlaceholderAPI extends PlaceholderExpansion {
         }
         return null;
     }
+    
+	//Setters
+	private void setInstance(EGlow instance) {
+		this.instance = instance;
+	}
+
+	//Getters
+	private EGlow getInstance() {
+		return this.instance;
+	}
 }

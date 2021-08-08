@@ -7,20 +7,24 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.milkbowl.vault.chat.Chat;
 
 public class VaultAddon {
+	private EGlow instance;
+	
 	private boolean PAPI = false;
 	private Chat chat;
 	
 	/**
 	 * Get vault's chat & check if PlaceholderAPI is installed for placeholder support
 	 */
-	public VaultAddon() {
-		RegisteredServiceProvider<Chat> rsp = EGlow.getInstance().getServer().getServicesManager().getRegistration(Chat.class);
-		PAPI = EGlow.getDebugUtil().pluginCheck("PlaceholderAPI");
+	public VaultAddon(EGlow instance) {
+		setInstance(instance);
+		RegisteredServiceProvider<Chat> rsp = getInstance().getServer().getServicesManager().getRegistration(Chat.class);
+		PAPI = getInstance().getDebugUtil().pluginCheck("PlaceholderAPI");
 		
 		if (rsp != null)
 			chat = (Chat) rsp.getProvider();
@@ -67,7 +71,7 @@ public class VaultAddon {
 		if (PAPI)
 			prefix = PlaceholderAPI.setPlaceholders(p, prefix);
 		
-		if (prefix.length() > 14 && EGlow.getDebugUtil().getMinorVersion() <= 12)
+		if (prefix.length() > 14 && ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12)
 			prefix = prefix.substring(0,14);
 		
 		return (!prefix.isEmpty()) ? ChatUtil.translateColors(prefix) : prefix;
@@ -100,14 +104,14 @@ public class VaultAddon {
 	 * @return Vault prefix + glow color (cut to 16 chars if needed)
 	 */
 	private String getPlayerPrefix(IEGlowPlayer player) {
-		if (EGlow.getVaultAddon() == null || chat == null)
+		if (getInstance().getVaultAddon() == null || chat == null)
 			return "";
 		
 		Player p = player.getPlayer();
 		String prefix = chat.getPlayerPrefix(p);
 		
 		if (prefix != null && !prefix.equals(""))
-			return (EGlow.getDebugUtil().getMinorVersion() <= 12 && prefix.length() > 14) ? ((player.getActiveColor().equals(ChatColor.RESET)) ? (prefix.length() > 16) ? prefix.substring(0,16) : prefix : prefix.substring(0,14) + player.getActiveColor()) : prefix;
+			return (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12 && prefix.length() > 14) ? ((player.getActiveColor().equals(ChatColor.RESET)) ? (prefix.length() > 16) ? prefix.substring(0,16) : prefix : prefix.substring(0,14) + player.getActiveColor()) : prefix;
 		return "";
 	}
 	
@@ -117,14 +121,24 @@ public class VaultAddon {
 	 * @return Vault suffix + glow color (cut to 16 chars if needed)
 	 */
 	private String getPlayerSuffix(IEGlowPlayer player) {
-		if (EGlow.getVaultAddon() == null || chat == null)
+		if (getInstance().getVaultAddon() == null || chat == null)
 			return "";
 		
 		Player p = player.getPlayer();
 		String suffix = chat.getPlayerSuffix(p);
 		
 		if (suffix != null && !suffix.equals(""))
-			return (EGlow.getDebugUtil().getMinorVersion() <= 12 && suffix.length() > 16) ? suffix.substring(0,16) : suffix;
+			return (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12 && suffix.length() > 16) ? suffix.substring(0,16) : suffix;
 		return "";
+	}
+	
+	//Setters
+	private void setInstance(EGlow instance) {
+		this.instance = instance;
+	}
+
+	//Getters
+	private EGlow getInstance() {
+		return this.instance;
 	}
 }

@@ -7,7 +7,6 @@ import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import us.myles.ViaVersion.api.Via;
 
 public enum ProtocolVersion {
-
 	UNKNOWN		(999, "Unknown"),
 	v1_17_1		(756, "1.17.1"),
 	v1_17		(755, "1.17"),
@@ -70,7 +69,7 @@ public enum ProtocolVersion {
 		this.friendlyName = friendlyName;
 		if (toString().equals("UNKNOWN")) {
 			try {
-				minorVersion = EGlow.getDebugUtil().getMinorVersion();
+				minorVersion = EGlow.getInstance().getDebugUtil().getMinorVersion();
 			} catch (Throwable t) {
 				minorVersion = 999;
 			}
@@ -78,15 +77,19 @@ public enum ProtocolVersion {
 			minorVersion = Integer.parseInt(toString().split("_")[1]);
 		}
 	}
+	
 	public int getNetworkId() {
 		return networkId;
 	}
+	
 	public String getFriendlyName() {
 		return friendlyName;
 	}
+	
 	public int getMinorVersion() {
 		return minorVersion;
 	}
+	
 	public static ProtocolVersion fromServerString(String s) {
 		if (s.startsWith("1.8")) return v1_8;
 		try {
@@ -103,7 +106,7 @@ public enum ProtocolVersion {
 	}
 	
 	public static ProtocolVersion getPlayerVersion(IEGlowPlayer p) {
-		if (EGlow.getDebugUtil().isProtocolSupportInstalled()) {
+		if (EGlow.getInstance().getDebugUtil().isProtocolSupportInstalled()) {
 			int version = getProtocolVersionPS(p.getPlayer());
 			if (version < ProtocolVersion.SERVER_VERSION.getNetworkId()) {
 				return ProtocolVersion.fromNumber(version);
@@ -111,7 +114,7 @@ public enum ProtocolVersion {
 				
 		}
 		
-		if (EGlow.getDebugUtil().isViaVersionInstalled()) {
+		if (EGlow.getInstance().getDebugUtil().isViaVersionInstalled()) {
 			return ProtocolVersion.fromNumber(getProtocolVersionVia(p.getPlayer()));
 		}
 		return ProtocolVersion.SERVER_VERSION;

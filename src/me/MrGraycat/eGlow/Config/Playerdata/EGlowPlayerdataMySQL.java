@@ -16,12 +16,15 @@ import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class EGlowPlayerdataMySQL {
+	private EGlow instance;
+	
 	MysqlDataSource mysql;
 
 	/**
 	 * Initialise externam playerdata using MySQL
 	 */
-	public EGlowPlayerdataMySQL() {
+	public EGlowPlayerdataMySQL(EGlow instance) {
+		setInstance(instance);
 		setupMySQLConnection();
 		
 		if (testMySQLConnection()) {
@@ -72,7 +75,7 @@ public class EGlowPlayerdataMySQL {
 					ePlayer.setGlowDisableReason(GlowDisableReason.valueOf(res.getString("glowDisableReason")));
 				}
 			} else {
-				EGlow.getPlayerdataManager().setDefaultValues(ePlayer);
+				getInstance().getPlayerdataManager().setDefaultValues(ePlayer);
 			}
 		} catch(SQLException e) {
 			ChatUtil.reportError(e);
@@ -225,5 +228,15 @@ public class EGlowPlayerdataMySQL {
 			if (res != null)
 				res.close();
 		} catch (SQLException e) {}
+	}
+	
+	//Setters
+	private void setInstance(EGlow instance) {
+		this.instance = instance;
+	}
+
+	//Getters
+	private EGlow getInstance() {
+		return this.instance;
 	}
 }

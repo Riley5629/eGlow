@@ -11,62 +11,80 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.MrGraycat.eGlow.API.EGlowAPI;
 import me.MrGraycat.eGlow.Addon.VaultAddon;
-import me.MrGraycat.eGlow.Addon.Disguises.*;
-import me.MrGraycat.eGlow.Addon.NPCs.Citizens.CitizensAddon;
-import me.MrGraycat.eGlow.Addon.Placeholders.*;
+import me.MrGraycat.eGlow.Addon.Citizens.CitizensAddon;
+import me.MrGraycat.eGlow.Addon.Disguises.IDisguiseAddon;
+import me.MrGraycat.eGlow.Addon.Disguises.LibDisguiseAddon;
+import me.MrGraycat.eGlow.Addon.Placeholders.EGlowPlaceholderAPI;
 import me.MrGraycat.eGlow.Addon.TAB.EGlowTAB;
 import me.MrGraycat.eGlow.Addon.TAB.EGlowTABEvents;
 import me.MrGraycat.eGlow.Command.EGlowCommand;
-import me.MrGraycat.eGlow.Config.*;
+import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig;
+import me.MrGraycat.eGlow.Config.EGlowCustomMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMessageConfig;
 import me.MrGraycat.eGlow.Config.Playerdata.EGlowPlayerdataManager;
-import me.MrGraycat.eGlow.Event.*;
-import me.MrGraycat.eGlow.Manager.*;
+import me.MrGraycat.eGlow.Event.EGlowEventListener;
+import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Util.DebugUtil;
 import me.MrGraycat.eGlow.Util.Packets.NMSHook;
+import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
+import me.MrGraycat.eGlow.Util.Packets.PipelineInjector;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class EGlow extends JavaPlugin {
-	private static EGlow INSTANCE;
+	private static EGlow instance;
 	private static EGlowAPI API;
 	private boolean UP_TO_DATE = true;
 	
 	//Configs
-	private static EGlowMainConfig mainConfig; 
-	private static EGlowMessageConfig messageConfig;
-	private static EGlowPlayerdataManager playerdataConfig;
-	private static EGlowCustomEffectsConfig effectsConfig;
+	private EGlowMainConfig mainConfig;
+	private EGlowMessageConfig messageConfig;
+	private EGlowPlayerdataManager playerdataConfig;
+	private EGlowCustomMainConfig customMainConfig;
+	private EGlowCustomEffectsConfig effectsConfig;
+	
+	//Events
+	private EGlowEventListener eventListener;
 	
 	//Managers
-	private static DataManager dataManager;
+	private DataManager dataManager;
 	
-	//Utils
+	//Packets
+	private NMSHook nmsHook;
+	private PacketUtil packetUtil;
+	private PipelineInjector pipelineInjector;
 	
 	//chat/text
-	private static DebugUtil debugUtil;
+	private DebugUtil debugUtil;
 	
 	//Addons
-	private static CitizensAddon citizensAddon;
-	private static IDisguiseAddon iDisguiseAddon;
-	private static LibDisguiseAddon libDisguiseAddon;
-	private static EGlowTAB tabAddon;
-	private static VaultAddon vaultAddon;
+	private CitizensAddon citizensAddon;
+	private IDisguiseAddon iDisguiseAddon;
+	private LibDisguiseAddon libDisguiseAddon;
+	private EGlowTAB tabAddon;
+	private VaultAddon vaultAddon;
 	
 	@Override
 	public void onEnable() {
-		INSTANCE = this;
-		API = new EGlowAPI();
-		debugUtil = new DebugUtil();
+		setInstance(this);
+		setAPI(new EGlowAPI(this));
+		setDebugUtil(new DebugUtil());
 		
 		if (versionIsCompactible()) {
 			ProtocolVersion.SERVER_VERSION = ProtocolVersion.fromServerString(Bukkit.getBukkitVersion().split("-")[0]);
 			
-			mainConfig = new EGlowMainConfig();
-			messageConfig = new EGlowMessageConfig();
-			effectsConfig = new EGlowCustomEffectsConfig();
-			playerdataConfig = new EGlowPlayerdataManager();
-			dataManager = new DataManager();
-			NMSHook.onEnable();
+			setMainConfig(new EGlowMainConfig(getInstance()));
+			setMessageConfig(new EGlowMessageConfig(getInstance()));
+			//TODO customMainConfig = new EGlowCustomMainConfig();
+			setCustomEffectConfig(new EGlowCustomEffectsConfig(getInstance()));
+			
+			setPlayerdataManager(new EGlowPlayerdataManager(getInstance()));
+			setDataManager(new DataManager(getInstance()));
+			
+			setNMSHook(new NMSHook());
+			setPacketUtil(new PacketUtil(getInstance()));
+			setPipelineInjector(new PipelineInjector(getInstance()));
 			
 			registerEventsAndCommands();
 			checkForUpdates();
@@ -84,7 +102,7 @@ public class EGlow extends JavaPlugin {
 		getServer().getServicesManager().unregisterAll(this);
 		Bukkit.getScheduler().cancelTasks(this);
 		API = null;
-		INSTANCE = null;
+		instance = null;
 	}
 	
 	private boolean versionIsCompactible() {
@@ -94,30 +112,28 @@ public class EGlow extends JavaPlugin {
 	}
 	
 	private void registerEventsAndCommands() {
-		getCommand("eglow").setExecutor(new EGlowCommand());
-		getServer().getPluginManager().registerEvents(new EGlowEventListener(), this);
-		if (getDebugUtil().getMinorVersion() >= 13)
-			getServer().getPluginManager().registerEvents(new EGlowEventListener113AndAbove(), this);
+		getCommand("eglow").setExecutor(new EGlowCommand(getInstance()));
+		setEventListener(new EGlowEventListener(getInstance()));
 	}
-	
+
 	private void runAddonHooks() {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				if (getDebugUtil().pluginCheck("Vault"))
-					vaultAddon = new VaultAddon();
+					setVaultAddon(new VaultAddon(getInstance()));
 				if (getDebugUtil().pluginCheck("PlaceholderAPI"))
-					new EGlowPlaceholderAPI();
+					new EGlowPlaceholderAPI(getInstance());
 				if (getDebugUtil().pluginCheck("Citizens") && citizensAddon == null)
-					citizensAddon = new CitizensAddon();
+					setCitizensAddon(citizensAddon = new CitizensAddon());
 				if (getDebugUtil().pluginCheck("iDisguise"))
-					iDisguiseAddon = new IDisguiseAddon();
+					setIDisguiseAddon(new IDisguiseAddon(getInstance()));
 				if (getDebugUtil().pluginCheck("LibsDisguises"))
-					libDisguiseAddon = new LibDisguiseAddon();
+					setLibDisguiseAddon(new LibDisguiseAddon(getInstance()));
 				if (getDebugUtil().pluginCheck("TAB") && tabAddon == null) {
-					tabAddon = new EGlowTAB();
+					setTABAddon(new EGlowTAB(getInstance()));
 				} else {
-					getServer().getPluginManager().registerEvents(new EGlowTABEvents(), getInstance());
+					getServer().getPluginManager().registerEvents(new EGlowTABEvents(getInstance()), getInstance());
 				}
 					
 				getDebugUtil().addonCheck();
@@ -128,8 +144,8 @@ public class EGlow extends JavaPlugin {
 	private void runPlayerCheckOnEnable() {
 		if (!getServer().getOnlinePlayers().isEmpty()) {
 			for (Player player : getServer().getOnlinePlayers()) {
-				if (EGlow.getDataManager().getEGlowPlayer(player) == null)
-					EGlowEventListener.PlayerConnect(player, player.getUniqueId());
+				if (getDataManager().getEGlowPlayer(player) == null)
+					getEventListener().PlayerConnect(player, player.getUniqueId());
 			}
 		}
 	}
@@ -137,14 +153,110 @@ public class EGlow extends JavaPlugin {
 	private void runPlayerCheckOnDisable() {
 		if (!getServer().getOnlinePlayers().isEmpty()) {
 			for (Player player : getServer().getOnlinePlayers()) {
-				if (EGlow.getDataManager().getEGlowPlayer(player) == null)
-					EGlowEventListener.PlayerDisconnect(player, true);
+				if (getDataManager().getEGlowPlayer(player) == null)
+					getEventListener().PlayerDisconnect(player, true);
 			}
 		}
 	}
 	
-	public static EGlow getInstance() {
-		return INSTANCE;
+	private void checkForUpdates() {
+		  try { 			
+			URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=63295");
+			String currentVersion = getInstance().getDescription().getVersion();
+			String latestVersion = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream())).readLine();
+			
+			if (currentVersion.contains("PRE")) {
+				String betaVersion = currentVersion.split("-")[0];
+				setUpToDate((betaVersion.equals(latestVersion)) ? false : true);
+			} else {
+				if (!latestVersion.contains(currentVersion)) {
+					setUpToDate(false);
+				}
+			}		
+	    } catch (Exception e) {}
+	}
+	
+	//Setter
+	private static void setInstance(EGlow instance) {
+		EGlow.instance = instance;
+	}
+	
+	private void setAPI(EGlowAPI api) {
+		EGlow.API = api;
+	}
+	
+	private void setUpToDate(boolean up_to_date) {
+		this.UP_TO_DATE = up_to_date;
+	}
+	
+	private void setMainConfig(EGlowMainConfig mainConfig) {
+		this.mainConfig = mainConfig;
+	}
+	
+	private void setMessageConfig(EGlowMessageConfig messageConfig) {
+		this.messageConfig = messageConfig;
+	}
+	
+	@SuppressWarnings("unused")
+	private void setCustomGUIConfig(EGlowCustomMainConfig customMainConfig) {
+		this.customMainConfig = customMainConfig;
+	}
+	
+	private void setCustomEffectConfig(EGlowCustomEffectsConfig effectsConfig) {
+		this.effectsConfig = effectsConfig;
+	}
+	
+	private void setEventListener(EGlowEventListener eventListener) {
+		this.eventListener = eventListener;
+	}
+	
+	private void setPlayerdataManager(EGlowPlayerdataManager playerdataConfig) {
+		this.playerdataConfig = playerdataConfig;
+	}
+	
+	private void setDataManager(DataManager dataManager) {
+		this.dataManager = dataManager;
+	}
+	
+	private void setNMSHook(NMSHook nmsHook) {
+		this.nmsHook = nmsHook;
+	}
+	
+	private void setPacketUtil(PacketUtil packetUtil) {
+		this.packetUtil = packetUtil;
+	}
+	
+	private void setPipelineInjector(PipelineInjector pipelineInjector) {
+		this.pipelineInjector = pipelineInjector;
+	}
+	
+	private void setDebugUtil(DebugUtil debugUtil) {
+		this.debugUtil = debugUtil;
+	}
+	
+	private void setCitizensAddon(CitizensAddon citizensAddon) {
+		this.citizensAddon = citizensAddon;
+	}
+	
+	private void setIDisguiseAddon(IDisguiseAddon iDisguiseAddon) {
+		this.iDisguiseAddon = iDisguiseAddon;
+	}
+	
+	private void setLibDisguiseAddon(LibDisguiseAddon libDisguiseAddon) {
+		this.libDisguiseAddon = libDisguiseAddon;
+	}
+	
+	private void setTABAddon(EGlowTAB tabAddon) {
+		this.tabAddon = tabAddon;
+	}
+	
+	private void setVaultAddon(VaultAddon vaultAddon) {
+		this.vaultAddon = vaultAddon;
+	}
+	
+	//Getter
+	public static  EGlow getInstance() {
+		return EGlow.instance;
 	}
 	
 	public static EGlowAPI getAPI() {
@@ -155,64 +267,67 @@ public class EGlow extends JavaPlugin {
 		return UP_TO_DATE;
 	}
 	
-	public static EGlowMainConfig getMainConfig() {
-		return mainConfig;
+	public EGlowMainConfig getMainConfig() {
+		return this.mainConfig;
 	}
 	
-	public static EGlowMessageConfig getMessageConfig() {
-		return messageConfig;
+	public EGlowMessageConfig getMessageConfig() {
+		return this.messageConfig;
 	}
 	
-	public static EGlowCustomEffectsConfig getCustomEffectConfig() {
-		return effectsConfig;
+	public EGlowCustomMainConfig getCustomGUIConfig() {
+		return this.customMainConfig;
 	}
 	
-	public static EGlowPlayerdataManager getPlayerdataManager() {
-		return playerdataConfig;
+	public EGlowCustomEffectsConfig getCustomEffectConfig() {
+		return this.effectsConfig;
 	}
 	
-	public static DataManager getDataManager() {
-		return dataManager;
+	public EGlowEventListener getEventListener() {
+		return this.eventListener;
 	}
 	
-	public static DebugUtil getDebugUtil() {
-		return debugUtil;
+	public EGlowPlayerdataManager getPlayerdataManager() {
+		return this.playerdataConfig;
 	}
 	
-	public static CitizensAddon getCitizensAddon() {
-		return citizensAddon;
+	public DataManager getDataManager() {
+		return this.dataManager;
 	}
 	
-	public static IDisguiseAddon getIDisguiseAddon() {
-		return iDisguiseAddon;
+	public NMSHook getNMSHook() {
+		return this.nmsHook;
 	}
 	
-	public static LibDisguiseAddon getLibDisguiseAddon() {
-		return libDisguiseAddon;
+	public PacketUtil getPacketUtil() {
+		return this.packetUtil;
 	}
 	
-	public static EGlowTAB getTABAddon() {
-		return tabAddon;
+	public PipelineInjector getPipelineInjector() {
+		return this.pipelineInjector;
 	}
 	
-	public static VaultAddon getVaultAddon() {
-		return vaultAddon;
+	public DebugUtil getDebugUtil() {
+		return this.debugUtil;
 	}
 	
-	private void checkForUpdates() {
-		  try { 			
-			URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=63295");
-			String currentVersion = INSTANCE.getDescription().getVersion();
-			String latestVersion = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream())).readLine();
-			
-			if (currentVersion.contains("PRE")) {
-				String betaVersion = currentVersion.split("-")[0];
-				UP_TO_DATE =  (betaVersion.equals(latestVersion)) ? false : true;
-			} else {
-				if (!latestVersion.contains(currentVersion)) {
-					UP_TO_DATE = false;
-				}
-			}		
-	    } catch (Exception e) {}
+	public CitizensAddon getCitizensAddon() {
+		return this.citizensAddon;
+	}
+	
+	public IDisguiseAddon getIDisguiseAddon() {
+		return this.iDisguiseAddon;
+	}
+	
+	public LibDisguiseAddon getLibDisguiseAddon() {
+		return this.libDisguiseAddon;
+	}
+	
+	public EGlowTAB getTABAddon() {
+		return this.tabAddon;
+	}
+	
+	public VaultAddon getVaultAddon() {
+		return this.vaultAddon;
 	}
 }

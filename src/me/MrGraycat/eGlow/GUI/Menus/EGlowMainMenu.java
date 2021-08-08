@@ -5,20 +5,17 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.GUI.Menu;
-import me.MrGraycat.eGlow.GUI.MenuManager;
-import me.MrGraycat.eGlow.GUI.MenuMetadata;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class EGlowMainMenu extends Menu {
 
-	public EGlowMainMenu(MenuMetadata menuMetadata) {
-		super(menuMetadata);
+	public EGlowMainMenu(Player player) {
+		super(player);
 	}
 
 	@Override
@@ -34,7 +31,7 @@ public class EGlowMainMenu extends Menu {
 	@Override
 	public void handleMenu(InventoryClickEvent e) {
 		Player player = (Player) e.getWhoClicked();
-		IEGlowPlayer eGlowPlayer = EGlow.getDataManager().getEGlowPlayer(player);
+		IEGlowPlayer eGlowPlayer = getInstance().getDataManager().getEGlowPlayer(player);
 		ClickType clickType = e.getClick();
 		int clickedSlot = e.getSlot();
 		
@@ -129,7 +126,7 @@ public class EGlowMainMenu extends Menu {
 				updateSpeed(eGlowPlayer);
 		break;
 		case(34):
-			 new EGlowEffectMenu(MenuManager.getMenuMetadata(eGlowPlayer.getPlayer())).openInventory();
+			 new EGlowEffectMenu(eGlowPlayer.getPlayer()).openInventory();
 		break;
 		default:
 			return;
@@ -143,7 +140,7 @@ public class EGlowMainMenu extends Menu {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				IEGlowPlayer p = EGlow.getDataManager().getEGlowPlayer(menuMetadata.getOwner());
+				IEGlowPlayer p = getInstance().getDataManager().getEGlowPlayer(menuMetadata.getOwner());
 				
 				UpdateMainNavigationBar(p);
 				
@@ -170,8 +167,8 @@ public class EGlowMainMenu extends Menu {
 					public void run() {
 						menuMetadata.getOwner().openInventory(inventory);
 					}
-				}.runTask(EGlow.getInstance());
+				}.runTask(getInstance());
 			}
-		}.runTaskAsynchronously(EGlow.getInstance());
+		}.runTaskAsynchronously(getInstance());
 	}
 }

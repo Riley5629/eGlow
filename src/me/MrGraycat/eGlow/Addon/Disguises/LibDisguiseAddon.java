@@ -20,32 +20,34 @@ import me.libraryaddict.disguise.events.UndisguiseEvent;
  * Versions: 1.12-1.16
  */
 public class LibDisguiseAddon implements Listener {
+	private EGlow instance;
 	
 	/**
 	 * Register LibDisguise disguise events
 	 */
-	public LibDisguiseAddon() {
-		EGlow.getInstance().getServer().getPluginManager().registerEvents(this, EGlow.getInstance());
+	public LibDisguiseAddon(EGlow instance) {
+		setInstance(instance);
+		getInstance().getServer().getPluginManager().registerEvents(this, getInstance());
 	}
 
 	
 	/**
 	 * Check to see if player is diguised
-	 * @param p Player to check
+	 * @param player Player to check
 	 * @return true is disguised, false if not
 	 */
-	public boolean isDisguised(Player p) {
-		return DisguiseAPI.isDisguised(p);
+	public boolean isDisguised(Player player) {
+		return DisguiseAPI.isDisguised(player);
 	}
 	
 	@EventHandler
-	public void onDisguise(DisguiseEvent e) {
+	public void onDisguise(DisguiseEvent event) {
 		try {
-			Entity entity = e.getEntity();
+			Entity entity = event.getEntity();
 			
 			if (entity instanceof Player) {
 				Player player = (Player) entity;
-				IEGlowPlayer eglowPlayer = EGlow.getDataManager().getEGlowPlayer(player);
+				IEGlowPlayer eglowPlayer = getInstance().getDataManager().getEGlowPlayer(player);
 			
 				if (eglowPlayer != null && eglowPlayer.getGlowStatus() || eglowPlayer != null && eglowPlayer.getFakeGlowStatus()) {
 					eglowPlayer.setGlowDisableReason(GlowDisableReason.DISGUISE);
@@ -57,13 +59,13 @@ public class LibDisguiseAddon implements Listener {
 	}
 	
 	@EventHandler
-	public void onUnDisguise(UndisguiseEvent e) {
+	public void onUnDisguise(UndisguiseEvent event) {
 		try {
-			Entity entity = e.getDisguised();
+			Entity entity = event.getDisguised();
 			
 			if (entity instanceof Player) {
-				Player player = (Player) e.getDisguised();
-				IEGlowPlayer eglowPlayer = EGlow.getDataManager().getEGlowPlayer(player);
+				Player player = (Player) event.getDisguised();
+				IEGlowPlayer eglowPlayer = getInstance().getDataManager().getEGlowPlayer(player);
 				
 				if (eglowPlayer != null && eglowPlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
 					eglowPlayer.toggleGlow();
@@ -74,7 +76,16 @@ public class LibDisguiseAddon implements Listener {
 		} catch (NoSuchMethodError ex) {
 			ChatUtil.sendToConsoleWithPrefix("&cLibsDisguise isn't up to date &f!");
 			ex.printStackTrace();
-			ChatUtil.sendToConsoleWithPrefix("&cLibsDisguise isn't up to date &f!");
 		}
+	}
+	
+	//Setters
+	private void setInstance(EGlow instance) {
+		this.instance = instance;
+	}
+
+	//Getters
+	private EGlow getInstance() {
+		return this.instance;
 	}
 }

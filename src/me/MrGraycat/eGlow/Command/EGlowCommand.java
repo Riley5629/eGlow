@@ -20,19 +20,22 @@ import me.MrGraycat.eGlow.Command.SubCommands.*;
 import me.MrGraycat.eGlow.Command.SubCommands.Admin.*;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
-import me.MrGraycat.eGlow.Event.EGlowEventListener;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class EGlowCommand implements CommandExecutor, TabExecutor {
+	private EGlow instance;
+	
 	private ArrayList<String> colors = new ArrayList<String>(Arrays.asList("red","darkred", "gold", "yellow", "green", "darkgreen", "aqua", "darkaqua", "blue", "darkblue", "purple", "pink", "white", "gray", "darkgray", "black", "none"));
 	private ArrayList<SubCommand> subcmds = new ArrayList<>();
 	
 	/**
 	 * Register the subcommands & command alias if enabled
 	 */
-	public EGlowCommand() {
+	public EGlowCommand(EGlow instance) {
+		setInstance(instance);
+		
 		try{
 		    final Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 		    String alias = EGlowMainConfig.OptionCommandAlias();
@@ -40,7 +43,7 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 		    if (EGlowMainConfig.OptionEnableCommandAlias() && alias != null) {
 		    	 commandMapField.setAccessible(true);
 				 CommandMap commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
-				 commandMap.register(alias, alias, EGlow.getInstance().getCommand("eglow"));
+				 commandMap.register(alias, alias, getInstance().getCommand("eglow"));
 		    }
 		} catch (NoSuchFieldException  | IllegalArgumentException | IllegalAccessException e){
 		    ChatUtil.reportError(e);
@@ -71,7 +74,7 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 			if (args.length == 0)
 				args = new String[]{"gui"};
 			
-			if (EGlow.getDataManager().isValidEffect(args[0], true) || args[0].equalsIgnoreCase("blink") || EGlow.getDataManager().isValidEffect(args[0], false) || args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("disable")) 
+			if (getInstance().getDataManager().isValidEffect(args[0], true) || args[0].equalsIgnoreCase("blink") || getInstance().getDataManager().isValidEffect(args[0], false) || args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("disable")) 
 				args = new String[] {"effect"};
 			
 			for (int i = 0; i < getSubCommands().size(); i++) {
@@ -85,11 +88,11 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 			if (sender instanceof ConsoleCommandSender && cmd.isPlayerCmd()) {ChatUtil.sendMsgWithPrefix(sender, Message.PLAYER_ONLY.get()); return true;}
 			if (!cmd.getPermission().isEmpty() && !sender.hasPermission(cmd.getPermission())) {ChatUtil.sendMsgWithPrefix(sender, Message.NO_PERMISSION.get()); return true;}
 			if (sender instanceof Player) {
-				ePlayer = EGlow.getDataManager().getEGlowPlayer((Player) sender);
+				ePlayer = getInstance().getDataManager().getEGlowPlayer((Player) sender);
 				
 				if (ePlayer == null) {
-					EGlowEventListener.PlayerConnect((Player) sender, ((Player) sender).getUniqueId());
-					ePlayer = EGlow.getDataManager().getEGlowPlayer((Player) sender);
+					getInstance().getEventListener().PlayerConnect((Player) sender, ((Player) sender).getUniqueId());
+					ePlayer = getInstance().getDataManager().getEGlowPlayer((Player) sender);
 				}
 			}
 			cmd.perform(sender, ePlayer, argsCopy);	
@@ -111,14 +114,14 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 			case(1):
 				suggestions = args1;
 				
-				for (IEGlowEffect effect : EGlow.getDataManager().getEGlowEffects()) {
+				for (IEGlowEffect effect : getInstance().getDataManager().getEGlowEffects()) {
 					String name = effect.getName().replace("slow", "").replace("fast", "");
 					
 					if (!name.contains("blink"))
 						suggestions.add(name);
 				}
 				
-				for (IEGlowEffect effect : EGlow.getDataManager().getCustomEffects()) {
+				for (IEGlowEffect effect : getInstance().getDataManager().getCustomEffects()) {
 					suggestions.add(effect.getName());
 				}
 				
@@ -177,7 +180,7 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 					}
 				break;
 				default:
-					if (EGlow.getDataManager().isValidEffect(args[0], false))
+					if (getInstance().getDataManager().isValidEffect(args[0], false))
 						suggestions = new ArrayList<>(Arrays.asList("slow", "fast"));
 					break;
 				}
@@ -189,14 +192,14 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 					suggestions = new ArrayList<>(Arrays.asList("slow", "fast"));
 				
 				if (args[0].equalsIgnoreCase("set") && sender.hasPermission("eglow.command.set") && args[1].toLowerCase().contains("npc:") || Bukkit.getPlayer(args[1]) != null) {
-					for (IEGlowEffect effect : EGlow.getDataManager().getEGlowEffects()) {
+					for (IEGlowEffect effect : getInstance().getDataManager().getEGlowEffects()) {
 						String name = effect.getName().replace("slow", "").replace("fast", "");
 						
 						if (!name.contains("blink"))
 							suggestions.add(name);
 					}
 					
-					for (IEGlowEffect effect : EGlow.getDataManager().getCustomEffects()) {
+					for (IEGlowEffect effect : getInstance().getDataManager().getCustomEffects()) {
 						suggestions.add(effect.getName());
 					}
 					
@@ -225,7 +228,7 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 					}
 				break;
 				default:
-					if (EGlow.getDataManager().isValidEffect(args[2], false))
+					if (getInstance().getDataManager().isValidEffect(args[2], false))
 						suggestions = new ArrayList<>(Arrays.asList("slow", "fast"));
 					break;
 				}
@@ -249,6 +252,16 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 	
 	public ArrayList<SubCommand> getSubCommands() {
 		return subcmds;
+	}
+	
+	//Setters
+	private void setInstance(EGlow instance) {
+		this.instance = instance;
+	}
+
+	//Getters
+	private EGlow getInstance() {
+		return this.instance;
 	}
 
 }

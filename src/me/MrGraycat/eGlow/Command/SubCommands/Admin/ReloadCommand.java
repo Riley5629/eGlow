@@ -7,7 +7,6 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Command.SubCommand;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
@@ -46,12 +45,12 @@ public class ReloadCommand extends SubCommand {
 
 	@Override
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
-		if (EGlow.getMainConfig().reloadConfig() && EGlow.getMessageConfig().reloadConfig() && EGlow.getCustomEffectConfig().reloadConfig()) {
-			EGlow.getDataManager().addCustomEffects();
+		if (getInstance().getMainConfig().reloadConfig() && getInstance().getMessageConfig().reloadConfig() && getInstance().getCustomEffectConfig().reloadConfig()) {
+			getInstance().getDataManager().addCustomEffects();
 			for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
-				if (EGlow.getVaultAddon() != null)
-					EGlow.getVaultAddon().updatePlayerTabname(ePlayer);
-				ePlayer = EGlow.getDataManager().getEGlowPlayer(onlinePlayer);
+				if (getInstance().getVaultAddon() != null)
+					getInstance().getVaultAddon().updatePlayerTabname(ePlayer);
+				ePlayer = getInstance().getDataManager().getEGlowPlayer(onlinePlayer);
 				
 				if (ePlayer == null)
 					break;
@@ -59,7 +58,7 @@ public class ReloadCommand extends SubCommand {
 				IEGlowEffect effect = ePlayer.getForceGlow();
 				
 				if (effect != null) {
-					if (EGlow.getLibDisguiseAddon() != null && EGlow.getLibDisguiseAddon().isDisguised(ePlayer.getPlayer()) || EGlow.getIDisguiseAddon() != null && EGlow.getIDisguiseAddon().isDisguised(ePlayer.getPlayer())) {
+					if (getInstance().getLibDisguiseAddon() != null && getInstance().getLibDisguiseAddon().isDisguised(ePlayer.getPlayer()) || getInstance().getIDisguiseAddon() != null && getInstance().getIDisguiseAddon().isDisguised(ePlayer.getPlayer())) {
 						ePlayer.setGlowDisableReason(GlowDisableReason.DISGUISE);
 						ChatUtil.sendMsgWithPrefix(ePlayer.getPlayer(), Message.DISGUISE_BLOCKED.get());
 					} else {
@@ -96,13 +95,13 @@ public class ReloadCommand extends SubCommand {
 			    	 final Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 			    	 commandMapField.setAccessible(true);
 					 CommandMap commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
-					 commandMap.register(alias, alias, EGlow.getInstance().getCommand("eglow"));
+					 commandMap.register(alias, alias, getInstance().getCommand("eglow"));
 			    }
 			} catch (NoSuchFieldException  | IllegalArgumentException | IllegalAccessException e){
 			    ChatUtil.reportError(e);
 			}
 			
-			if (EGlow.getTABAddon() != null && EGlow.getTABAddon().installedOnBukkit() && EGlowMainConfig.OptionAdvancedTABIntegration() && !TABAPI.isUnlimitedNameTagModeEnabled())
+			if (getInstance().getTABAddon() != null && getInstance().getTABAddon().installedOnBukkit() && EGlowMainConfig.OptionAdvancedTABIntegration() && !TABAPI.isUnlimitedNameTagModeEnabled())
 				TABAPI.enableUnlimitedNameTagModePermanently();
 			
 			ChatUtil.sendMsgWithPrefix(sender, Message.RELOAD_SUCCESS.get());

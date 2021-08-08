@@ -9,7 +9,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Command.SubCommand;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
@@ -60,7 +59,7 @@ public class ConvertCommand extends SubCommand {
 				try {
 					int delay = Integer.valueOf(args[1]);
 					
-					File playerFolder = new File(EGlow.getInstance().getDataFolder() + File.separator + "PlayerData");
+					File playerFolder = new File(getInstance().getDataFolder() + File.separator + "PlayerData");
 					YamlConfiguration playerConfig = new YamlConfiguration();
 					File[] files;
 					counter = 0;
@@ -89,16 +88,16 @@ public class ConvertCommand extends SubCommand {
 										cancel();
 									}
 
-									playerConfig.load(new File(EGlow.getInstance().getDataFolder() + File.separator + "/PlayerData/" + File.separator + files[counter].getName()));
+									playerConfig.load(new File(getInstance().getDataFolder() + File.separator + "/PlayerData/" + File.separator + files[counter].getName()));
 									
-									if (EGlow.getPlayerdataManager().savePlayerdata(files[counter].getName().replace(".yml", ""), playerConfig.getString("lastGlowData"), playerConfig.getBoolean("glowOnJoin"), playerConfig.getBoolean("activeOnQuit"), playerConfig.getString("glowVisibility"), playerConfig.getString("glowDisableReason"))) {
+									if (getInstance().getPlayerdataManager().savePlayerdata(files[counter].getName().replace(".yml", ""), playerConfig.getString("lastGlowData"), playerConfig.getBoolean("glowOnJoin"), playerConfig.getBoolean("activeOnQuit"), playerConfig.getString("glowVisibility"), playerConfig.getString("glowDisableReason"))) {
 										File file = files[counter];
 										file.delete();
 									} else {failed = true;}
 									counter++;
 								} catch (IOException | InvalidConfigurationException e) {}	
 							}
-						}.runTaskTimerAsynchronously(EGlow.getInstance(), 0L, delay * 20);
+						}.runTaskTimerAsynchronously(getInstance(), 0L, delay * 20);
 					} else {
 						ChatUtil.sendMsgWithPrefix(sender, " &fUse a number from &e1 &fto &e10&f.");
 					}

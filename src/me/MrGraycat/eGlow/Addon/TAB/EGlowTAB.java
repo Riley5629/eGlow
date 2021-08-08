@@ -21,7 +21,9 @@ import me.neznamy.tab.api.TABAPI;
 import me.neznamy.tab.api.TabPlayer;
 import me.neznamy.tab.api.event.BukkitTABLoadEvent;
 
-public class EGlowTAB implements Listener {
+public class EGlowTAB implements Listener { 
+	private EGlow instance;
+	
 	private boolean TAB_Bukkit = false;
 	private boolean nametagPrefixSuffixEnabled = true;
 	private boolean isTeamBlockingActive = true;
@@ -31,14 +33,15 @@ public class EGlowTAB implements Listener {
 	/**
 	 * Loads in the TAB addon for eGlow 
 	 */
-	public EGlowTAB() {
-		TAB_Bukkit = EGlow.getDebugUtil().pluginCheck("TAB");
+	public EGlowTAB(EGlow instance) {
+		setInstance(instance);
+		TAB_Bukkit = getInstance().getDebugUtil().pluginCheck("TAB");
 		
-		if (TAB_Bukkit && !EGlow.getDebugUtil().getPlugin("TAB").getClass().getName().startsWith("me.neznamy.tab"))
+		if (TAB_Bukkit && !getInstance().getDebugUtil().getPlugin("TAB").getClass().getName().startsWith("me.neznamy.tab"))
 			TAB_Bukkit = false;
 		
 		if (TAB_Bukkit) {
-			EGlow.getInstance().getServer().getPluginManager().registerEvents(this, EGlow.getInstance());
+			getInstance().getServer().getPluginManager().registerEvents(this, getInstance());
 			
 			if (file.exists()) {
 				YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -54,8 +57,8 @@ public class EGlowTAB implements Listener {
 			startUpdateChecker();
 		}
 		
-		if (TAB_Bukkit || EGlow.getDebugUtil().onBungee()) {
-			EGlow.getInstance().getServer().getPluginManager().registerEvents(new EGlowTABEvents(), EGlow.getInstance());
+		if (TAB_Bukkit || getInstance().getDebugUtil().onBungee()) {
+			new EGlowTABEvents(getInstance());
 		}
 	}
 	
@@ -86,7 +89,7 @@ public class EGlowTAB implements Listener {
 					ChatUtil.reportError(e);
 				}
 			}
-		}.runTaskAsynchronously(EGlow.getInstance());
+		}.runTaskAsynchronously(getInstance());
 	}
 	
 	/**
@@ -116,9 +119,9 @@ public class EGlowTAB implements Listener {
 							updateTABValues(p, true);
 						}
 					}
-				}.runTaskAsynchronously(EGlow.getInstance());
+				}.runTaskAsynchronously(getInstance());
 			}
-		}.runTaskTimer(EGlow.getInstance(), 1L, 50L);
+		}.runTaskTimer(getInstance(), 1L, 50L);
 	}
 	
 	/**
@@ -127,7 +130,7 @@ public class EGlowTAB implements Listener {
 	 * @param teamCheck true if used in the group update checker, false if not
 	 */
 	public void updateTABValues(Player p, boolean teamCheck) {
-		IEGlowPlayer eglowPlayer = EGlow.getDataManager().getEGlowPlayer(p);
+		IEGlowPlayer eglowPlayer = getInstance().getDataManager().getEGlowPlayer(p);
 		TabPlayer tabPlayer = (TabPlayer) TABAPI.getPlayer(p.getUniqueId());
 		
 		if (eglowPlayer == null || tabPlayer == null)
@@ -193,5 +196,15 @@ public class EGlowTAB implements Listener {
 	public void removePlayerGroup(Player p) {
 		if (this.groups.containsKey(p)) 
 			this.groups.remove(p);
+	}
+	
+	//Setters
+	private void setInstance(EGlow instance) {
+		this.instance = instance;
+	}
+
+	//Getters
+	private EGlow getInstance() {
+		return this.instance;
 	}
 }

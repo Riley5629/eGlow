@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
 
 public class ChatUtil {
 	private final static Pattern rgb = Pattern.compile("#[0-9a-fA-F]{6}");
@@ -36,7 +37,7 @@ public class ChatUtil {
 		if (text == null || text.isEmpty())
 			return text;
 		
-		if (EGlow.getDebugUtil().getMinorVersion() <= 15)
+		if (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 15)
 			return ChatColor.translateAlternateColorCodes('&', text);
 		
 		Matcher match = rgb.matcher(text);
@@ -104,6 +105,6 @@ public class ChatUtil {
 	}
 	
 	public static String getEffectName(String effect) {
-		return "&e" + effect + " &f(" + EGlow.getDataManager().getEGlowEffect(effect).getDisplayName() + "&f)";
+		return "&e" + effect + " &f(" + EGlow.getInstance().getDataManager().getEGlowEffect(effect).getDisplayName() + "&f)";
 	}
 }

@@ -10,18 +10,22 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.API.Enum.*;
 import me.MrGraycat.eGlow.Manager.Interface.*;
-import me.MrGraycat.eGlow.Util.Packets.*;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class EGlowAPI {
+	private EGlow instance;
 	
+	public EGlowAPI(EGlow eGlow) {
+		setInstance(instance);
+	}
+
 	/**
 	 * Get the IEGlowEntity from eGlow
 	 * @param player player to get the IEGlowEntity for
 	 * @return IEGlowEntity instance for the player
 	 */
 	public IEGlowPlayer getEGlowPlayer(Player player) {
-		return EGlow.getDataManager().getEGlowPlayer(player);
+		return getInstance().getDataManager().getEGlowPlayer(player);
 	}
 	
 	/**
@@ -31,7 +35,7 @@ public class EGlowAPI {
 	 */
 	public IEGlowPlayer getEGlowPlayer(UUID uuid) {
 		Player p = Bukkit.getPlayer(uuid);
-		return EGlow.getDataManager().getEGlowPlayer(p);
+		return getInstance().getDataManager().getEGlowPlayer(p);
 	}
 	
 	/**
@@ -40,7 +44,7 @@ public class EGlowAPI {
 	 * @return IEGlowEffect is found, null if not
 	 */
 	public IEGlowEffect getEGlowEffect(String name) {
-		IEGlowEffect effect = EGlow.getDataManager().getEGlowEffect(name);
+		IEGlowEffect effect = getInstance().getDataManager().getEGlowEffect(name);
 		
 		if (effect == null)
 			ChatUtil.sendToConsoleWithPrefix("(API) Unable to find effect for name: " + name);
@@ -73,7 +77,7 @@ public class EGlowAPI {
 				
 				player.activateGlow(effect);
 			}
-		}.runTaskLaterAsynchronously(EGlow.getInstance(), 1);
+		}.runTaskLaterAsynchronously(getInstance(), 1);
 	}
 	
 	/**
@@ -88,10 +92,10 @@ public class EGlowAPI {
 				if (player == null)
 					return;
 				
-				IEGlowEffect effect = EGlow.getDataManager().getEGlowEffect(color.toString());
+				IEGlowEffect effect = getInstance().getDataManager().getEGlowEffect(color.toString());
 				player.activateGlow(effect);
 			}
-		}.runTaskLaterAsynchronously(EGlow.getInstance(), 1);
+		}.runTaskLaterAsynchronously(getInstance(), 1);
 	}
 	
 	/**
@@ -106,10 +110,10 @@ public class EGlowAPI {
 				if (player == null)
 					return;
 				
-				IEGlowEffect effect = EGlow.getDataManager().getEGlowEffect(blink.toString());
+				IEGlowEffect effect = getInstance().getDataManager().getEGlowEffect(blink.toString());
 				player.activateGlow(effect);
 			}
-		}.runTaskLaterAsynchronously(EGlow.getInstance(), 1);
+		}.runTaskLaterAsynchronously(getInstance(), 1);
 	}
 	
 	/**
@@ -124,10 +128,10 @@ public class EGlowAPI {
 				if (player == null)
 					return;
 				
-				IEGlowEffect effect = EGlow.getDataManager().getEGlowEffect(effects.toString());
+				IEGlowEffect effect = getInstance().getDataManager().getEGlowEffect(effects.toString());
 				player.activateGlow(effect);
 			}
-		}.runTaskLaterAsynchronously(EGlow.getInstance(), 1);
+		}.runTaskLaterAsynchronously(getInstance(), 1);
 	}
 	
 	/**
@@ -143,7 +147,7 @@ public class EGlowAPI {
 				
 				player.disableGlow(true);
 			}
-		}.runTaskLaterAsynchronously(EGlow.getInstance(), 1);	
+		}.runTaskLaterAsynchronously(getInstance(), 1);	
 	}
 	
 	/**
@@ -157,7 +161,7 @@ public class EGlowAPI {
 		
 		sender.addGlowTarget(receiver);
 
-		PacketUtil.forceUpdateGlow(sender);	
+		getInstance().getPacketUtil().forceUpdateGlow(sender);	
 	}
 	
 	/**
@@ -170,7 +174,7 @@ public class EGlowAPI {
 			return;
 		
 		sender.removeGlowTarget(receiver);
-		PacketUtil.forceUpdateGlow(sender);	
+		getInstance().getPacketUtil().forceUpdateGlow(sender);	
 	}
 	
 	/**
@@ -183,7 +187,7 @@ public class EGlowAPI {
 			return;
 		
 		sender.setGlowTargets(receivers);
-		PacketUtil.forceUpdateGlow(sender);	
+		getInstance().getPacketUtil().forceUpdateGlow(sender);	
 	}
 	
 	/**
@@ -195,7 +199,7 @@ public class EGlowAPI {
 			return;
 		
 		sender.resetGlowTargets();;
-		PacketUtil.forceUpdateGlow(sender);	
+		getInstance().getPacketUtil().forceUpdateGlow(sender);	
 	}
 	
 	/**
@@ -203,7 +207,7 @@ public class EGlowAPI {
 	 * @param status true to send packets, false for nothing
 	 */
 	public void setSendTeamPackets(boolean status) {
-		PacketUtil.setSendTeamPackets(status);
+		getInstance().getPacketUtil().setSendTeamPackets(status);
 	}
 	
 	/**
@@ -211,6 +215,16 @@ public class EGlowAPI {
 	 * @param status true for packet blocking, false for nothing
 	 */
 	public void setPacketBlockerStatus(boolean status) {
-		PipelineInjector.setBlockPackets(status);	
+		getInstance().getPipelineInjector().setBlockPackets(status);	
+	}
+	
+	//Setters
+	private void setInstance(EGlow instance) {
+		this.instance = instance;
+	}
+
+	//Getters
+	private EGlow getInstance() {
+		return this.instance;
 	}
 }

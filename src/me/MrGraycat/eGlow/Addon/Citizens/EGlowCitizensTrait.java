@@ -1,4 +1,4 @@
-package me.MrGraycat.eGlow.Addon.NPCs.Citizens;
+package me.MrGraycat.eGlow.Addon.Citizens;
 
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
@@ -77,7 +77,7 @@ public class EGlowCitizensTrait extends Trait {
 		//EGlow.getDataManager().removeEGlowEntity(npc);
 	}
 	
-	public void setEGlowNPC(IEGlowPlayer entity) {
+	private void setEGlowNPC(IEGlowPlayer entity) {
 		this.eGlowNPC = entity;
 	}
 	
@@ -85,11 +85,11 @@ public class EGlowCitizensTrait extends Trait {
 		return eGlowNPC;
 	}
 	
-	public void setLastEffect(String lastEffect) {
+	private void setLastEffect(String lastEffect) {
 		this.lastEffect = lastEffect;
 	}
 	
-	public String getLastEffect() {
+	private String getLastEffect() {
 		return lastEffect;
 	}
 	
@@ -97,7 +97,7 @@ public class EGlowCitizensTrait extends Trait {
 		this.activeOnDespawn = activeOnDespawn;
 	}
 	
-	public Boolean getActiveOnDespawn() {
+	private Boolean getActiveOnDespawn() {
 		return activeOnDespawn;
 	}
 }

@@ -15,13 +15,19 @@ import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class EGlowEventListener113AndAbove implements Listener {
-
+	private EGlow instance;
+	
+	public EGlowEventListener113AndAbove(EGlow instance) {
+		setInstance(instance);
+		getInstance().getServer().getPluginManager().registerEvents(this, getInstance());
+	}
+	
 	@EventHandler
 	public void PlayerPotionEvent(EntityPotionEffectEvent e) {
 		Entity entity = e.getEntity();
 		
 		if (entity instanceof Player) {
-			IEGlowPlayer ep = EGlow.getDataManager().getEGlowPlayer((Player) entity);
+			IEGlowPlayer ep = getInstance().getDataManager().getEGlowPlayer((Player) entity);
 
 			if (ep == null)
 				return;
@@ -48,5 +54,15 @@ public class EGlowEventListener113AndAbove implements Listener {
 					ep.setGlowDisableReason(GlowDisableReason.NONE);	
 			}
 		}
+	}
+	
+	//Setters
+	private void setInstance(EGlow instance) {
+		this.instance = instance;
+	}
+
+	//Getters
+	private EGlow getInstance() {
+		return this.instance;
 	}
 }

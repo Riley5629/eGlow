@@ -9,11 +9,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Addon.NPCs.Citizens.EGlowCitizensTrait;
+import me.MrGraycat.eGlow.Addon.Citizens.EGlowCitizensTrait;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Util.EnumUtil.*;
-import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.EnumChatFormat;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
@@ -21,6 +20,8 @@ import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.trait.ScoreboardTrait;
 
 public class IEGlowPlayer {
+	private EGlow instance = EGlow.getInstance();
+	
 	private String entityType;
 	
 	private NPC citizensNPC;
@@ -66,6 +67,8 @@ public class IEGlowPlayer {
 		this.name = npc.getFullName();
 	}
 	
+	
+	
 	// Glowing stuff
 	public void setGlowing(boolean status, boolean fake) {
 		if (!fake && status == getGlowStatus())
@@ -75,7 +78,7 @@ public class IEGlowPlayer {
 		
 		switch (entityType) {
 		case ("PLAYER"):
-			PacketUtil.updateGlowing(this, status);
+			instance.getPacketUtil().updateGlowing(this, status);
 			break;
 		case ("NPC"):
 			citizensNPC.data().setPersistent(NPC.GLOWING_METADATA, status);
@@ -109,7 +112,7 @@ public class IEGlowPlayer {
 			
 			switch(getEntityType()) {
 			case("PLAYER"):
-				PacketUtil.updateScoreboardTeam(EGlow.getDataManager().getEGlowPlayer(getPlayer()), getTeamName(), ((EGlow.getVaultAddon() != null) ? EGlow.getVaultAddon().getPlayerTagPrefix(this) : "") + color, (EGlow.getVaultAddon() != null) ? EGlow.getVaultAddon().getPlayerTagSuffix(this) : "", true, true, EnumChatFormat.valueOf(color.name()));
+				instance.getPacketUtil().updateScoreboardTeam(getInstance().getDataManager().getEGlowPlayer(getPlayer()), getTeamName(), ((instance.getVaultAddon() != null) ? instance.getVaultAddon().getPlayerTagPrefix(this) : "") + color, (instance.getVaultAddon() != null) ? instance.getVaultAddon().getPlayerTagSuffix(this) : "", true, true, EnumChatFormat.valueOf(color.name()));
 				//prefix = "" + color
 			break;
 			case("NPC"):
@@ -122,9 +125,9 @@ public class IEGlowPlayer {
 		if (getEntityType().equals("NPC"))
 			return;
 		
-		if (EGlow.getVaultAddon() != null)
-			EGlow.getVaultAddon().updatePlayerTabname(this);
-		EGlow.getDataManager().sendAPIEvent(this, fake);
+		if (instance.getVaultAddon() != null)
+			instance.getVaultAddon().updatePlayerTabname(this);
+		getInstance().getDataManager().sendAPIEvent(this, fake);
 	}
 	
 	public boolean isSameGlow(IEGlowEffect newGlowEffect) {
@@ -155,9 +158,9 @@ public class IEGlowPlayer {
 		if (getFakeGlowStatus() || getGlowStatus()) {
 			disableGlow(false);
 			setFakeGlowStatus(false);
-			EGlow.getDataManager().sendAPIEvent(this, false);
-			if (EGlow.getVaultAddon() != null)
-				EGlow.getVaultAddon().updatePlayerTabname(this);
+			getInstance().getDataManager().sendAPIEvent(this, false);
+			if (instance.getVaultAddon() != null)
+				instance.getVaultAddon().updatePlayerTabname(this);
 		} else {
 			activateGlow();
 		}
@@ -170,10 +173,10 @@ public class IEGlowPlayer {
 			}
 			
 			if (hardReset)
-				setEffect(EGlow.getDataManager().getEGlowEffect("none"));
+				setEffect(getInstance().getDataManager().getEGlowEffect("none"));
 			
 			if (getPlayer() != null)
-				PacketUtil.updateScoreboardTeam(EGlow.getDataManager().getEGlowPlayer(getPlayer()), getTeamName(), (EGlow.getVaultAddon() != null) ? EGlow.getVaultAddon().getPlayerTagPrefix(this) : "", (EGlow.getVaultAddon() != null) ? EGlow.getVaultAddon().getPlayerTagSuffix(this) : "", true, true, EnumChatFormat.RESET);
+				instance.getPacketUtil().updateScoreboardTeam(getInstance().getDataManager().getEGlowPlayer(getPlayer()), getTeamName(), (instance.getVaultAddon() != null) ? instance.getVaultAddon().getPlayerTagPrefix(this) : "", (instance.getVaultAddon() != null) ? instance.getVaultAddon().getPlayerTagSuffix(this) : "", true, true, EnumChatFormat.RESET);
 			
 			if (this.citizensNPC != null)
 				citizensNPC.getOrAddTrait(ScoreboardTrait.class).setColor(ChatColor.RESET);
@@ -220,7 +223,7 @@ public class IEGlowPlayer {
 		
 		for (String permission : EGlowMainConfig.getForceGlowList()) {
 			if (getPlayer().hasPermission("eglow.force." + permission.toLowerCase()))
-				return EGlow.getDataManager().getEGlowEffect(EGlowMainConfig.getForceGlowEffect(permission));
+				return getInstance().getDataManager().getEGlowEffect(EGlowMainConfig.getForceGlowEffect(permission));
 		}
 		return null;
 	}
@@ -376,7 +379,7 @@ public class IEGlowPlayer {
 		if (lastGlow.contains("SOLID:") || lastGlow.contains("EFFECT:"))
 			lastGlow = lastGlow.replace("SOLID:", "").replace("EFFECT:", "");
 		
-		IEGlowEffect effect = EGlow.getDataManager().getEGlowEffect(lastGlow);
+		IEGlowEffect effect = getInstance().getDataManager().getEGlowEffect(lastGlow);
 		setEffect(effect);
 	}
 	
@@ -386,5 +389,9 @@ public class IEGlowPlayer {
 	
 	public String getLastGlow() {
 		return (getEffect() != null) ? getEffect().getName() : "none";
+	}
+
+	private EGlow getInstance() {
+		return this.instance;
 	}
 }

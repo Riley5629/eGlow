@@ -1,27 +1,31 @@
 package me.MrGraycat.eGlow.Config.Playerdata;
 
+import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.ConfigType;
 
 public class EGlowPlayerdataManager {
+	private EGlow instance;
+	
 	private EGlowPlayerdataSQLite sqlite;
 	private Object mysql;
 	
 	/**
 	 * Initialise the playerdata storage config/mysql
 	 */
-	public EGlowPlayerdataManager() {
+	public EGlowPlayerdataManager(EGlow instance) {
+		setInstance(instance);
 		switch((EGlowMainConfig.useMySQL()) ? ConfigType.MYSQL : ConfigType.SQLITE) {
 		case SQLITE:
-			sqlite = new EGlowPlayerdataSQLite();
+			sqlite = new EGlowPlayerdataSQLite(getInstance());
 			break;
 		case MYSQL:
 			try {
 				Class.forName("com.mysql.cj.jdbc.MysqlDataSource");
-				mysql = new EGlowPlayerdataMySQL8();
+				mysql = new EGlowPlayerdataMySQL8(getInstance());
 			} catch(ClassNotFoundException e) {
-				mysql = new EGlowPlayerdataMySQL();
+				mysql = new EGlowPlayerdataMySQL(getInstance());
 			}
 			break;
 		}
@@ -112,5 +116,15 @@ public class EGlowPlayerdataManager {
 		ePlayer.setActiveOnQuit(false);
 		ePlayer.setDataFromLastGlow("none");
 		ePlayer.setGlowOnJoin(EGlowMainConfig.OptionDefaultGlowOnJoinValue());
+	}
+	
+	//Setters
+	private void setInstance(EGlow instance) {
+		this.instance = instance;
+	}
+
+	//Getters
+	public EGlow getInstance() {
+		return this.instance;
 	}
 }

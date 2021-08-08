@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Util.Packets.NMSHook;
 import me.MrGraycat.eGlow.Util.Packets.NMSStorage;
+import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
 
 public class DataWatcher {
 
@@ -45,7 +45,7 @@ public class DataWatcher {
 	 * @throws Exception - if something fails
 	 */
 	public Object toNMS() throws Exception {
-		NMSStorage nms = NMSHook.nms;
+		NMSStorage nms = EGlow.getInstance().getNMSHook().nms;
 		Object nmsWatcher = nms.newDataWatcher.newInstance(new Object[] {null});
 		
 		if (nms.newDataWatcher.getParameterCount() == 1) {
@@ -84,7 +84,7 @@ public class DataWatcher {
 		DataWatcher watcher = new DataWatcher();
 		List<Object> items = null;
 
-		if (EGlow.getDebugUtil().getMinorVersion() >= 17) {
+		if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 17) {
 			items = (List<Object>)nmsWatcher.getClass().getMethod("getAll", new Class[0]).invoke(nmsWatcher, new Object[0]);
 		} else {
 			items = (List<Object>)nmsWatcher.getClass().getMethod("c", new Class[0]).invoke(nmsWatcher, new Object[0]);

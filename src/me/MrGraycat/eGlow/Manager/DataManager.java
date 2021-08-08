@@ -27,16 +27,18 @@ import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class DataManager implements PluginMessageListener {	
+	private EGlow instance;
 	
 	private static Map<String, IEGlowPlayer> dataPlayers = new ConcurrentHashMap<String, IEGlowPlayer>();
 	private static ConcurrentHashMap<String, IEGlowEffect> dataEffects = new ConcurrentHashMap<String, IEGlowEffect>();
 	private static ConcurrentHashMap<String, IEGlowEffect> dataCustomEffects = new ConcurrentHashMap<String, IEGlowEffect>();
 	
 	//Server
-	public DataManager() {
+	public DataManager(EGlow instance) {
+		setInstance(instance);
 		addEGlowEffects();
-		EGlow.getInstance().getServer().getMessenger().registerOutgoingPluginChannel(EGlow.getInstance(), "eglow:bungee");
-		EGlow.getInstance().getServer().getMessenger().registerIncomingPluginChannel(EGlow.getInstance(), "eglow:bungee", this);
+		getInstance().getServer().getMessenger().registerOutgoingPluginChannel(getInstance(), "eglow:bungee");
+		getInstance().getServer().getMessenger().registerIncomingPluginChannel(getInstance(), "eglow:bungee", this);
 	}
 	
 	//Entities
@@ -142,10 +144,10 @@ public class DataManager implements PluginMessageListener {
 					effect.setColors(colors);
 				}
 				oldEffects.remove(effectName.toLowerCase());
-				EGlow.getInstance().getServer().getPluginManager().removePermission(permission);
+				getInstance().getServer().getPluginManager().removePermission(permission);
 			} else {
 				addEGlowEffect(effectName.toLowerCase(), displayName, "eglow.effect." + effectName.toLowerCase(), delay, colors);
-				try {EGlow.getInstance().getServer().getPluginManager().addPermission(new Permission(permission, "Activate " + effectName + " effect.", PermissionDefault.FALSE));} catch (IllegalArgumentException e) {}//Permission already registered ;)}
+				try {getInstance().getServer().getPluginManager().addPermission(new Permission(permission, "Activate " + effectName + " effect.", PermissionDefault.FALSE));} catch (IllegalArgumentException e) {}//Permission already registered ;)}
 			}
 			
 			newEffects.add(effectName.toLowerCase());
@@ -243,7 +245,7 @@ public class DataManager implements PluginMessageListener {
 		out.writeUTF("TABProxyUpdateRequest");
 		out.writeUTF(player.getUniqueId().toString());
 		out.writeUTF(glowColor);
-		Bukkit.getServer().sendPluginMessage(EGlow.getInstance(), "eglow:bungee", out.toByteArray());
+		Bukkit.getServer().sendPluginMessage(getInstance(), "eglow:bungee", out.toByteArray());
 	}
 	
 	public void sendAPIEvent(IEGlowPlayer player, boolean fake) {
@@ -253,6 +255,16 @@ public class DataManager implements PluginMessageListener {
 			public void run() {
 				Bukkit.getPluginManager().callEvent(new GlowColorChangeEvent(player.getPlayer(), player.getUUID(), player.getActiveColor(), player.getGlowStatus()));	
 			}
-		}.runTask(EGlow.getInstance());
+		}.runTask(getInstance());
+	}
+	
+	//Setters
+	private void setInstance(EGlow instance) {
+		this.instance = instance;
+	}
+
+	//Getters
+	private EGlow getInstance() {
+		return this.instance;
 	}
 }

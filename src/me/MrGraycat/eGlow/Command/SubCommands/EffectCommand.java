@@ -2,7 +2,6 @@ package me.MrGraycat.eGlow.Command.SubCommands;
 
 import org.bukkit.command.CommandSender;
 
-import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Command.SubCommand;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
@@ -59,13 +58,13 @@ public class EffectCommand extends SubCommand {
 		
 		switch(args.length) {
 		case(1):
-			effect = EGlow.getDataManager().getEGlowEffect(args[0].replace("off", "none").replace("disable", "none"));
+			effect = getInstance().getDataManager().getEGlowEffect(args[0].replace("off", "none").replace("disable", "none"));
 			break;
 		case(2):
-			effect = EGlow.getDataManager().getEGlowEffect(args[0] + args[1]);
+			effect = getInstance().getDataManager().getEGlowEffect(args[0] + args[1]);
 			break;
 		case(3):
-			effect = EGlow.getDataManager().getEGlowEffect(args[0] + args[1] + args[2]);
+			effect = getInstance().getDataManager().getEGlowEffect(args[0] + args[1] + args[2]);
 			break;
 		}
 		
@@ -77,7 +76,7 @@ public class EffectCommand extends SubCommand {
 			return;
 		}
 		
-		if (ePlayer.getPlayer().hasPermission(effect.getPermission()) || EGlow.getDataManager().isCustomEffect(effect.getName()) && ePlayer.getPlayer().hasPermission("eglow.effect.*")) {
+		if (ePlayer.getPlayer().hasPermission(effect.getPermission()) || getInstance().getDataManager().isCustomEffect(effect.getName()) && ePlayer.getPlayer().hasPermission("eglow.effect.*")) {
 			if (effect.getName().equals("none") && ePlayer.getGlowStatus()) {
 					ePlayer.toggleGlow();
 				ChatUtil.sendMsgWithPrefix(sender, Message.DISABLE_GLOW.get());

@@ -16,13 +16,15 @@ import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class EGlowPlayerdataSQLite {
+	private EGlow instance;
 	
 	SQLiteDataSource sqlite;
 
 	/**
 	 * Initialise externam playerdata using MySQL
 	 */
-	public EGlowPlayerdataSQLite() {
+	public EGlowPlayerdataSQLite(EGlow instance) {
+		setInstance(instance);
 		setupMySQLConnection();
 		
 		if (testMySQLConnection()) {
@@ -74,7 +76,7 @@ public class EGlowPlayerdataSQLite {
 					ePlayer.setGlowDisableReason(GlowDisableReason.valueOf(res.getString("glowDisableReason")));
 				}
 			} else {
-				EGlow.getPlayerdataManager().setDefaultValues(ePlayer);
+				getInstance().getPlayerdataManager().setDefaultValues(ePlayer);
 			}
 		} catch(SQLException e) {
 			ChatUtil.reportError(e);
@@ -154,15 +156,15 @@ public class EGlowPlayerdataSQLite {
 	}
 
 	private boolean setupMySQLConnection() {
-		File dbFile = new File(EGlow.getInstance().getDataFolder(), "Playerdata.db;PRAGMA journal_mode=WAL;");
+		File dbFile = new File(getInstance().getDataFolder(), "Playerdata.db;PRAGMA journal_mode=WAL;");
 		
 		//Check if the db exists with incorrect WAL journal mode implementation and renaming it to a proper DB file
 		if (dbFile.exists())
-			dbFile.renameTo(new File(EGlow.getInstance().getDataFolder(), "Playerdata.db"));
+			dbFile.renameTo(new File(getInstance().getDataFolder(), "Playerdata.db"));
 		
 		sqlite = new SQLiteDataSource();
 
-		sqlite.setUrl("jdbc:sqlite:" + EGlow.getInstance().getDataFolder() + File.separator + "Playerdata.db");
+		sqlite.setUrl("jdbc:sqlite:" + getInstance().getDataFolder() + File.separator + "Playerdata.db");
 		sqlite.setDatabaseName("eglow");
 		sqlite.setJournalMode("WAL");
 		
@@ -208,5 +210,15 @@ public class EGlowPlayerdataSQLite {
 			if (res != null)
 				res.close();
 		} catch (SQLException e) {}
+	}
+	
+	//Setters
+	private void setInstance(EGlow instance) {
+		this.instance = instance;
+	}
+
+	//Getters
+	private EGlow getInstance() {
+		return this.instance;
 	}
 }

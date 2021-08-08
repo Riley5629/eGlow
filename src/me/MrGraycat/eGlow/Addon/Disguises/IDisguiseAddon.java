@@ -19,44 +19,64 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
  * Versions: 1.9-1.13 (Currently discontinued)
  */
 public class IDisguiseAddon implements Listener {
+	private EGlow instance;
 	private DisguiseAPI api;
 
 	/**
 	 * Register IDisguise disguise events & api
 	 */
-	public IDisguiseAddon() {
-		EGlow.getInstance().getServer().getPluginManager().registerEvents(this, EGlow.getInstance());
-		api = EGlow.getInstance().getServer().getServicesManager().getRegistration(DisguiseAPI.class).getProvider();
+	public IDisguiseAddon(EGlow instance) {
+		setInstance(instance);
+		getInstance().getServer().getPluginManager().registerEvents(this, getInstance());
+		setAPI(getInstance().getServer().getServicesManager().getRegistration(DisguiseAPI.class).getProvider());
 	}
 	
 	/**
 	 * Check to see if player is diguised
-	 * @param p Player to check
+	 * @param player Player to check
 	 * @return true is disguised, false if not
 	 */
-	public boolean isDisguised(Player p) {
-		return api.isDisguised(p);
+	public boolean isDisguised(Player player) {
+		return getAPI().isDisguised(player);
 	}
 	
 	@EventHandler
-	public void onDisguise(DisguiseEvent e) {
-		IEGlowPlayer player = EGlow.getDataManager().getEGlowPlayer(e.getPlayer());
+	public void onDisguise(DisguiseEvent event) {
+		IEGlowPlayer player = getInstance().getDataManager().getEGlowPlayer(event.getPlayer());
 		
 		if (player != null && player.getGlowStatus() || player != null && player.getFakeGlowStatus()) {
 			player.setGlowDisableReason(GlowDisableReason.DISGUISE);
 			player.toggleGlow();
-			ChatUtil.sendMsgWithPrefix(e.getPlayer(), Message.DISGUISE_BLOCKED.get());
+			ChatUtil.sendMsgWithPrefix(player.getPlayer(), Message.DISGUISE_BLOCKED.get());
 		}
 	}
 	
 	@EventHandler
-	public void onUnDisguise(UndisguiseEvent e) {
-		IEGlowPlayer player = EGlow.getDataManager().getEGlowPlayer(e.getPlayer());
+	public void onUnDisguise(UndisguiseEvent event) {
+		IEGlowPlayer player = getInstance().getDataManager().getEGlowPlayer(event.getPlayer());
 		
 		if (player != null && player.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
 			player.toggleGlow();
 			player.setGlowDisableReason(GlowDisableReason.NONE);
-			ChatUtil.sendMsgWithPrefix(e.getPlayer(), Message.DISGUISE_ALLOWED.get());
+			ChatUtil.sendMsgWithPrefix(player.getPlayer(), Message.DISGUISE_ALLOWED.get());
 		}
+	}
+	
+	//Setters
+	private void setInstance(EGlow instance) {
+		this.instance = instance;
+	}
+	
+	private void setAPI(DisguiseAPI api) {
+		this.api = api;
+	}
+	
+	//Getters
+	private DisguiseAPI getAPI() {
+		return this.api;
+	}
+	
+	private EGlow getInstance() {
+		return this.instance;
 	}
 }

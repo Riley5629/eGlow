@@ -14,12 +14,18 @@ import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.PacketPlayOut;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.PacketPlayOutEntityMetadata;
 
-public class PipelineInjector {
-	private static final String DECODER_NAME = "eGlowReader";
-	public static HashMap<Integer, IEGlowPlayer> glowingEntities = new HashMap<Integer, IEGlowPlayer>();
+public class PipelineInjector{
+	private EGlow instance;
 	
-	public static void inject(IEGlowPlayer eglowPlayer) {
-		Channel channel = (Channel) NMSHook.getChannel(eglowPlayer.getPlayer());
+	public PipelineInjector(EGlow instance) {
+		setInstance(instance);
+	}
+	
+	private final String DECODER_NAME = "eGlowReader";
+	public HashMap<Integer, IEGlowPlayer> glowingEntities = new HashMap<Integer, IEGlowPlayer>();
+	
+	public void inject(IEGlowPlayer eglowPlayer) {
+		Channel channel = (Channel) getInstance().getNMSHook().getChannel(eglowPlayer.getPlayer());
 		
 		if (!channel.pipeline().names().contains("packet_handler"))
 			return;
@@ -35,11 +41,11 @@ public class PipelineInjector {
 				}
 				
 				public void write(ChannelHandlerContext context, Object packet, ChannelPromise channelPromise) throws Exception {		
-					if (NMSHook.nms.PacketPlayOutScoreboardTeam.isInstance(packet)) {
+					if (getInstance().getNMSHook().nms.PacketPlayOutScoreboardTeam.isInstance(packet)) {
 						modifyPlayers(packet);
 					}
 
-					if (NMSHook.nms.PacketPlayOutEntityMetadata.isInstance(packet)) {
+					if (getInstance().getNMSHook().nms.PacketPlayOutEntityMetadata.isInstance(packet)) {
 						Integer entityID = (Integer) PacketPlayOut.getField(packet, "a");
 					
 						if (glowingEntities.containsKey(entityID)) {
@@ -55,7 +61,7 @@ public class PipelineInjector {
 								return;
 							}
 
-							packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(entityID, NMSHook.setGlowFlag(glowingTarget.getEntity(), true)/*eglowEntity*/);
+							packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(getInstance(), entityID, getInstance().getNMSHook().setGlowFlag(glowingTarget.getEntity(), true)/*eglowEntity*/);
 							super.write(context, packetPlayOutEntityMetadata.toNMS(eglowPlayer.getVersion()), channelPromise);
 							return;
 						}
@@ -70,51 +76,61 @@ public class PipelineInjector {
 		}
 	}
 
-	public static void uninject(IEGlowPlayer eglowPlayer) {
-		Channel channel = (Channel) NMSHook.getChannel(eglowPlayer.getPlayer());
+	public void uninject(IEGlowPlayer eglowPlayer) {
+		Channel channel = (Channel) getInstance().getNMSHook().getChannel(eglowPlayer.getPlayer());
 		if (channel.pipeline().names().contains(DECODER_NAME)) channel.pipeline().remove(DECODER_NAME);
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static void modifyPlayers(Object packetPlayOutScoreboardTeam) throws Exception {
+	private void modifyPlayers(Object packetPlayOutScoreboardTeam) throws Exception {
 		if (!blockPackets || !EGlowMainConfig.OptionFeaturePacketBlocker())
 			return;
 		
-		String teamName = NMSHook.nms.PacketPlayOutScoreboardTeam_NAME.get(packetPlayOutScoreboardTeam).toString();
-		Collection<String> players = (Collection<String>) NMSHook.nms.PacketPlayOutScoreboardTeam_PLAYERS.get(packetPlayOutScoreboardTeam);
+		String teamName = getInstance().getNMSHook().nms.PacketPlayOutScoreboardTeam_NAME.get(packetPlayOutScoreboardTeam).toString();
+		Collection<String> players = (Collection<String>) getInstance().getNMSHook().nms.PacketPlayOutScoreboardTeam_PLAYERS.get(packetPlayOutScoreboardTeam);
 		if (players == null) return;
 		Collection<String> newList = new ArrayList<>();
 		
 		for (String entry : players) {
 			Player p = Bukkit.getPlayer(entry);
-			IEGlowPlayer ePlayer = (p != null) ? EGlow.getDataManager().getEGlowPlayer(p) : null;
+			IEGlowPlayer ePlayer = (p != null) ? getInstance().getDataManager().getEGlowPlayer(p) : null;
 			
 			if (p == null) {
 				newList.add(entry);
 				continue;
 			}
 			
-			if (EGlow.getTABAddon() == null) {
+			if (getInstance().getTABAddon() == null) {
 				if (!ePlayer.getTeamName().equals(teamName))
 					continue;
 			} else {
-				if (EGlow.getTABAddon().isUnlimitedNametagModeEnabled())
+				if (getInstance().getTABAddon().isUnlimitedNametagModeEnabled())
 					continue;
 			}
 			
 			newList.add(entry);
-			NMSHook.nms.PacketPlayOutScoreboardTeam_PLAYERS.set(packetPlayOutScoreboardTeam, newList);
+			getInstance().getNMSHook().nms.PacketPlayOutScoreboardTeam_PLAYERS.set(packetPlayOutScoreboardTeam, newList);
 		}		
 		return;
 	}
 
-	private static boolean blockPackets = true;
+	private boolean blockPackets = true;
 	
-	public static boolean blockPackets() {
-		return blockPackets;
+	public boolean blockPackets() {
+		return this.blockPackets;
 	}
 
-	public static void setBlockPackets(boolean blockPackets) {
-		PipelineInjector.blockPackets = blockPackets;
+	public void setBlockPackets(boolean blockPackets) {
+		this.blockPackets = blockPackets;
+	}
+	
+	//Setters
+	private void setInstance(EGlow instance) {
+		this.instance = instance;
+	}
+
+	//Getters
+	private EGlow getInstance() {
+		return this.instance;
 	}
 }

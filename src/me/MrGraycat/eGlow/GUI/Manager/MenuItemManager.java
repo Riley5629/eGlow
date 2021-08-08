@@ -1,4 +1,4 @@
-package me.MrGraycat.eGlow.GUI;
+package me.MrGraycat.eGlow.GUI.Manager;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
@@ -18,15 +18,15 @@ import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 @SuppressWarnings("deprecation")
-public class MenuItemManager {
-	
-	public String GLASS_PANE = (EGlow.getDebugUtil().getMinorVersion() <= 12) ? "STAINED_GLASS_PANE" : "CYAN_STAINED_GLASS_PANE";
-	private String GUNPOWDER = (EGlow.getDebugUtil().getMinorVersion() <= 12) ? "SULPHUR" : "GUNPOWDER";
-	private String PLAYER_HEAD = (EGlow.getDebugUtil().getMinorVersion() <= 12) ? "SKULL_ITEM" : "PLAYER_HEAD";
-	public String CLOCK = (EGlow.getDebugUtil().getMinorVersion() <= 12) ? "WATCH" : "CLOCK";
+public class MenuItemManager extends MenuManager {
+	public String GLASS_PANE = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) ? "STAINED_GLASS_PANE" : "CYAN_STAINED_GLASS_PANE";
+	private String GUNPOWDER = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) ? "SULPHUR" : "GUNPOWDER";
+	private String PLAYER_HEAD = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) ? "SKULL_ITEM" : "PLAYER_HEAD";
+	public String CLOCK = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) ? "WATCH" : "CLOCK";
 	
 	//When custom GUI is a thing this one will not be needed anymore
 	/**
@@ -38,7 +38,7 @@ public class MenuItemManager {
 	 * @return Item as Itemstack
 	 */
 	public ItemStack createItem(Material mat, String name, int numb, String... lores) {
-		ItemStack item = (EGlow.getDebugUtil().getMinorVersion() <= 12 && numb != 0) ? new ItemStack(mat, 1, (short) numb) : new ItemStack(mat);
+		ItemStack item = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12 && numb != 0) ? new ItemStack(mat, 1, (short) numb) : new ItemStack(mat);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
 		
@@ -65,7 +65,7 @@ public class MenuItemManager {
 	 * @return Item as Itemstack
 	 */
 	public ItemStack createItem(Material mat, String name, int numb, List<String> lores) {
-		ItemStack item = (EGlow.getDebugUtil().getMinorVersion() <= 12 && numb != 0) ? new ItemStack(mat, 1, (short) numb) : new ItemStack(mat);
+		ItemStack item = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12 && numb != 0) ? new ItemStack(mat, 1, (short) numb) : new ItemStack(mat);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
 		
@@ -93,7 +93,7 @@ public class MenuItemManager {
 	 * @return Item as Itemstack
 	 */
 	public ItemStack createItem(Material mat, String name, int numb, List<String> lores, int model) {
-		ItemStack item = (EGlow.getDebugUtil().getMinorVersion() <= 12 && numb != 0) ? new ItemStack(mat, 1, (short) numb) : new ItemStack(mat);
+		ItemStack item = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12 && numb != 0) ? new ItemStack(mat, 1, (short) numb) : new ItemStack(mat);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
 		
@@ -126,7 +126,7 @@ public class MenuItemManager {
 		try {
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
 			
-			if (EGlow.getDebugUtil().getMinorVersion() <= 12) {
+			if (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) {
 				meta.setOwner(player.getDisplayName());
 			} else {
 				meta.setOwningPlayer(player.getPlayer());
@@ -155,6 +155,9 @@ public class MenuItemManager {
 		
 		meta.setColor(Color.fromRGB(red, green, blue));
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+		
+		if (ProtocolVersion.SERVER_VERSION.getNetworkId() > 751)
+			meta.addItemFlags(ItemFlag.valueOf("HIDE_DYE"));
 		
 		item.setItemMeta(meta);
 		return item;
@@ -199,8 +202,8 @@ public class MenuItemManager {
 	 */
 	private String[] createColorLore(IEGlowPlayer player, String color) {
 		List<String> prelores = new ArrayList<>();
-		IEGlowEffect eglowColor = EGlow.getDataManager().getEGlowEffect(color.replace("-", ""));
-		IEGlowEffect eglowEffect = EGlow.getDataManager().getEGlowEffect("blink" + color.replace("-", "") + "slow");
+		IEGlowEffect eglowColor = getInstance().getDataManager().getEGlowEffect(color.replace("-", ""));
+		IEGlowEffect eglowEffect = getInstance().getDataManager().getEGlowEffect("blink" + color.replace("-", "") + "slow");
 		
 		prelores.add(Message.GUI_LEFT_CLICK.get() + Message.COLOR.get(color));
 		prelores.add(Message.GUI_COLOR_PERMISSION.get() + hasPermission(player, eglowColor.getPermission()));
@@ -266,5 +269,9 @@ public class MenuItemManager {
 	 */
 	public String hasPermission(IEGlowPlayer player, String permission) {
 		return (player.getPlayer().hasPermission(permission)) ? Message.GUI_YES.get() : Message.GUI_NO.get();
+	}
+
+	public EGlow getInstance() {
+		return EGlow.getInstance();
 	}
 }

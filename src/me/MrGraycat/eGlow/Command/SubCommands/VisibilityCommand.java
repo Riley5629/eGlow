@@ -5,7 +5,6 @@ import me.MrGraycat.eGlow.Command.SubCommand;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
-import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class VisibilityCommand extends SubCommand {
@@ -57,7 +56,7 @@ public class VisibilityCommand extends SubCommand {
 			ePlayer.setGlowVisibility(newVisibility);
 			
 			if (oldVisibility != newVisibility) 
-				PacketUtil.forceUpdateGlow(ePlayer);
+				getInstance().getPacketUtil().forceUpdateGlow(ePlayer);
 			
 			ChatUtil.sendMsgWithPrefix(sender, Message.VISIBILITY_CHANGE.get(newVisibility.getVisibility()));
 		} else {

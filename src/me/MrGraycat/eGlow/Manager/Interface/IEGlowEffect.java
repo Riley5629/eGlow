@@ -9,12 +9,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Addon.NPCs.Citizens.EGlowCitizensTrait;
+import me.MrGraycat.eGlow.Addon.Citizens.EGlowCitizensTrait;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import net.citizensnpcs.api.npc.NPC;
 
 public class IEGlowEffect {
+	private EGlow instance = EGlow.getInstance();
 	
 	private ConcurrentHashMap<Object, Integer> activeEntities = new ConcurrentHashMap<Object, Integer>();
 	private List<ChatColor> effectLoop = new ArrayList<ChatColor>();
@@ -114,10 +115,10 @@ public class IEGlowEffect {
 			IEGlowPlayer eglowEntity = null;
 			
 			if (entity instanceof Player)
-				eglowEntity = EGlow.getDataManager().getEGlowPlayer((Player) entity);
+				eglowEntity = getInstance().getDataManager().getEGlowPlayer((Player) entity);
 			
 			try {
-				if (EGlow.getCitizensAddon() != null && entity instanceof NPC)
+				if (instance.getCitizensAddon() != null && entity instanceof NPC)
 					eglowEntity = ((NPC) entity).getOrAddTrait(EGlowCitizensTrait.class).getEGlowNPC();
 			} catch(NoSuchMethodError e) {
 				ChatUtil.sendToConsoleWithPrefix("&cYour Citizens version is outdated please use 2.0.27 or later");
@@ -149,10 +150,10 @@ public class IEGlowEffect {
 						IEGlowPlayer eglowEntity = null;
 						
 						if (entity instanceof Player)
-							eglowEntity = EGlow.getDataManager().getEGlowPlayer((Player) entity);
+							eglowEntity = getInstance().getDataManager().getEGlowPlayer((Player) entity);
 						
 						try {
-							if (EGlow.getCitizensAddon() != null && entity instanceof NPC)
+							if (instance.getCitizensAddon() != null && entity instanceof NPC)
 								eglowEntity = ((NPC) entity).getOrAddTrait(EGlowCitizensTrait.class).getEGlowNPC();
 						} catch(NoSuchMethodError e) {
 							ChatUtil.sendToConsoleWithPrefix("&cYour Citizens version is outdated please use 2.0.27 or later");
@@ -185,7 +186,11 @@ public class IEGlowEffect {
 						activeEntities.replace(entity, progress + 1);
 					}
 				}
-			}.runTaskTimerAsynchronously(EGlow.getInstance(), 1, effectDelay);
+			}.runTaskTimerAsynchronously(instance, 1, effectDelay);
 		}
+	}
+	
+	private EGlow getInstance() {
+		return this.instance;
 	}
 }

@@ -16,25 +16,28 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import me.neznamy.yamlassist.YamlAssist;
 
 public class EGlowMainConfig {
+	private EGlow instance;
+	
 	private static YamlConfiguration config;
 	private static File configFile;
 	
-	public EGlowMainConfig() {
+	public EGlowMainConfig(EGlow instance) {
+		setInstance(instance);
 		load();
 	}
 	
 	private void load() {
-		configFile = new File(EGlow.getInstance().getDataFolder(), "Config.yml");
+		configFile = new File(getInstance().getDataFolder(), "Config.yml");
 		
 		try {
-			if (!EGlow.getInstance().getDataFolder().exists()) {
-				EGlow.getInstance().getDataFolder().mkdirs();
+			if (!getInstance().getDataFolder().exists()) {
+				getInstance().getDataFolder().mkdirs();
 			}
 			
 			if (!configFile.exists()) {
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4Config.yml not found&f! &eCreating&f...");
 				configFile.getParentFile().mkdirs();
-				EGlow.getInstance().saveResource("Config.yml", false);
+				getInstance().saveResource("Config.yml", false);
 			} else {
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &aLoading main config&f.");
 			}
@@ -45,7 +48,7 @@ public class EGlowMainConfig {
 			registerCustomPermissions();
 			
 			if (!config.isConfigurationSection("Command-alias")) {
-				File oldFile = new File(EGlow.getInstance().getDataFolder(), "OLDConfig.yml");
+				File oldFile = new File(getInstance().getDataFolder(), "OLDConfig.yml");
 				
 				if (oldFile.exists())
 					oldFile.delete();
@@ -75,7 +78,7 @@ public class EGlowMainConfig {
 			config = null;
 			configFile = null;
 			
-			configFile = new File(EGlow.getInstance().getDataFolder(), "Config.yml");
+			configFile = new File(getInstance().getDataFolder(), "Config.yml");
 			config = new YamlConfiguration();
 			config.load(configFile);
 			
@@ -305,8 +308,18 @@ public class EGlowMainConfig {
 		
 		for (String name : getForceGlowList()) {
 			try {
-				EGlow.getInstance().getServer().getPluginManager().addPermission(new Permission("eglow.force." + name.toLowerCase()));
+				getInstance().getServer().getPluginManager().addPermission(new Permission("eglow.force." + name.toLowerCase()));
 			} catch (Exception ignored) {}
 		}
+	}
+	
+	//Setters
+	private void setInstance(EGlow instance) {
+		this.instance = instance;
+	}
+
+	//Getters
+	private EGlow getInstance() {
+		return this.instance;
 	}
 }

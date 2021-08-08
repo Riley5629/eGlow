@@ -1,4 +1,4 @@
-package me.MrGraycat.eGlow.Addon.NPCs.Citizens;
+package me.MrGraycat.eGlow.Addon.Citizens;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -6,7 +6,6 @@ import net.citizensnpcs.api.trait.TraitInfo;
 import net.citizensnpcs.trait.ScoreboardTrait;
 
 public class CitizensAddon {
-	
 	/**
 	 * Loads in the custom EGlow trait for citizen NPC's
 	 * @exception IllegalArgumentException thrown when the trait is already registered (Ignored)

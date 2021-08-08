@@ -7,7 +7,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Config.*;
 import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig.Effect;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
@@ -20,8 +19,8 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 public class EGlowEffectMenu extends PaginatedMenu {
 	private ConcurrentHashMap<Integer, String> effects = new ConcurrentHashMap<>();	
 	
-	public EGlowEffectMenu(MenuMetadata menuMetadata) {
-		super(menuMetadata);
+	public EGlowEffectMenu(Player player) {
+		super(player);
 	}
 
 	@Override
@@ -37,7 +36,7 @@ public class EGlowEffectMenu extends PaginatedMenu {
 	@Override
 	public void handleMenu(InventoryClickEvent e) {
 		Player player = (Player) e.getWhoClicked();
-		IEGlowPlayer eGlowPlayer = EGlow.getDataManager().getEGlowPlayer(player);
+		IEGlowPlayer eGlowPlayer = getInstance().getDataManager().getEGlowPlayer(player);
 		ClickType clickType = e.getClick();
 		int clickedSlot = e.getSlot();
 		
@@ -78,14 +77,14 @@ public class EGlowEffectMenu extends PaginatedMenu {
 		break;
 		case(33):
 			if (page == 1) {
-				new EGlowMainMenu(MenuManager.getMenuMetadata(eGlowPlayer.getPlayer())).openInventory();
+				new EGlowMainMenu(eGlowPlayer.getPlayer()).openInventory();
 			} else {
 				page = page - 1;
 				super.openInventory();
 			}
 			break;
 		case(34):
-			if (EGlow.getDataManager().getCustomEffects().size() > (page * getMaxItemsPerPage())) {
+			if (getInstance().getDataManager().getCustomEffects().size() > (page * getMaxItemsPerPage())) {
 				page = page + 1;
 				super.openInventory();
 			}
@@ -103,12 +102,12 @@ public class EGlowEffectMenu extends PaginatedMenu {
 
 	@Override
 	public void setMenuItems() {
-		IEGlowPlayer p = EGlow.getDataManager().getEGlowPlayer(menuMetadata.getOwner());
+		IEGlowPlayer p = getInstance().getDataManager().getEGlowPlayer(menuMetadata.getOwner());
 		effects = new ConcurrentHashMap<>();
 		UpdateMainEffectsNavigationBar(p);
 		
 		for (String effect : Effect.GET_ALL_EFFECTS.get()) {
-			IEGlowEffect Eeffect = EGlow.getDataManager().getEGlowEffect(effect.toLowerCase());
+			IEGlowEffect Eeffect = getInstance().getDataManager().getEGlowEffect(effect.toLowerCase());
 			if (Eeffect == null)
 				continue;
 			
@@ -160,8 +159,8 @@ public class EGlowEffectMenu extends PaginatedMenu {
 	private Material getMaterial(String effect) {
 		String mat = Effect.GET_MATERIAL.getString(effect).toUpperCase();
 		try {
-			if (mat.equals("SAPLING") && EGlow.getDebugUtil().getMinorVersion() >= 13) mat = "SPRUCE_SAPLING";
-			if (mat.equals("PUMPKIN") && EGlow.getDebugUtil().getMinorVersion() >= 13) mat = "CARVED_PUMPKIN";
+			if (mat.equals("SAPLING") && ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 13) mat = "SPRUCE_SAPLING";
+			if (mat.equals("PUMPKIN") && ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 13) mat = "CARVED_PUMPKIN";
 			return Material.valueOf(mat);
 		} catch (IllegalArgumentException | NullPointerException e) {
 			ChatUtil.sendToConsoleWithPrefix("Material: " + mat + " for effect " + effect + "is not valid.");

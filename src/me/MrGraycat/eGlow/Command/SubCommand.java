@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Addon.NPCs.Citizens.EGlowCitizensTrait;
+import me.MrGraycat.eGlow.Addon.Citizens.EGlowCitizensTrait;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
@@ -13,7 +13,6 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 
 public abstract class SubCommand {
-	
 	public abstract String getName();
 	public abstract String getDescription();
 	public abstract String getPermission();
@@ -44,7 +43,7 @@ public abstract class SubCommand {
 	public IEGlowPlayer getTarget(CommandSender sender, String[] args) {
 		if (args.length >= 2) {
 			if (args[1].toLowerCase().contains("npc:")) {
-				if (EGlow.getCitizensAddon() == null) {
+				if (getInstance().getCitizensAddon() == null) {
 					ChatUtil.sendMsgWithPrefix(sender, Message.CITIZENS_NOT_INSTALLED.get());
 					return null;
 				}
@@ -72,7 +71,7 @@ public abstract class SubCommand {
 					return null;
 				}
 				
-				if (!EGlow.getCitizensAddon().traitCheck(npc)) {
+				if (!getInstance().getCitizensAddon().traitCheck(npc)) {
 					ChatUtil.sendMsg(sender, Message.PREFIX.get() + "&cYour Citizens plugin is outdated&f!");
 					return null;
 				}
@@ -90,7 +89,7 @@ public abstract class SubCommand {
 					return null;
 				}
 				
-				IEGlowPlayer ePlayer = EGlow.getDataManager().getEGlowPlayer(player);
+				IEGlowPlayer ePlayer = getInstance().getDataManager().getEGlowPlayer(player);
 				
 				if (ePlayer.isInBlockedWorld() && args.length >= 3 && !args[2].equalsIgnoreCase("glowonjoin")) {
 					ChatUtil.sendMsgWithPrefix(sender, Message.OTHER_PLAYER_IN_DISABLED_WORLD.get(ePlayer));
@@ -101,5 +100,8 @@ public abstract class SubCommand {
 			}
 		}
 		return null;
+	}
+	public EGlow getInstance() {
+		return EGlow.getInstance();
 	}
 }
