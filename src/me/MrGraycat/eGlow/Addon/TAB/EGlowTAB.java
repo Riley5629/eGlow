@@ -86,7 +86,7 @@ public class EGlowTAB implements Listener {
 						updateTABValues(p, false);
 					}
 				} catch (Exception e) {
-					ChatUtil.reportError(e);
+					e.printStackTrace();
 				}
 			}
 		}.runTaskAsynchronously(getInstance());

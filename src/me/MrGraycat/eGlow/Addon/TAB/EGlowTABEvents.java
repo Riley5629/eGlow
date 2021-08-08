@@ -11,7 +11,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.API.Event.GlowColorChangeEvent;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import me.neznamy.tab.api.EnumProperty;
 import me.neznamy.tab.api.TABAPI;
 import me.neznamy.tab.api.TabPlayer;
@@ -67,9 +66,9 @@ public class EGlowTABEvents implements Listener {
 						getInstance().getDataManager().TABProxyUpdateRequest(event.getPlayer(), event.getColor());	
 					
 				} catch (ConcurrentModificationException ex2) {
-					//Ignore cause by updating to fast
+					//Ignore caused by updating to fast
 				} catch (Exception ex) {
-					ChatUtil.reportError(ex);
+					ex.printStackTrace();
 				}
 			}
 		}.runTaskAsynchronously(getInstance());		
