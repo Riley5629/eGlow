@@ -38,7 +38,7 @@ public class ChatUtil {
 			return text;
 		
 		if (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 15)
-			return ChatColor.translateAlternateColorCodes('&', text);
+			return text.replace("&", "§");
 		
 		Matcher match = rgb.matcher(text);
 		while(match.find()) {
@@ -46,7 +46,7 @@ public class ChatUtil {
 			text = text.replace(color, me.MrGraycat.eGlow.Util.Text.ChatColor.of(color) + "");
 			match = rgb.matcher(text);
 		}
-		return ChatColor.translateAlternateColorCodes('&', text);
+		return text.replace("&", "§");
 	}
 	
 	//TODO
