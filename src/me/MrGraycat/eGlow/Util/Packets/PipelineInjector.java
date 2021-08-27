@@ -79,6 +79,9 @@ public class PipelineInjector{
 	public void uninject(IEGlowPlayer eglowPlayer) {
 		Channel channel = (Channel) getInstance().getNMSHook().getChannel(eglowPlayer.getPlayer());
 		if (channel.pipeline().names().contains(DECODER_NAME)) channel.pipeline().remove(DECODER_NAME);
+		
+		if (glowingEntities.containsValue(eglowPlayer))
+			glowingEntities.remove(eglowPlayer.getPlayer().getEntityId());
 	}
 	
 	@SuppressWarnings("unchecked")
