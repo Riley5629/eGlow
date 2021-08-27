@@ -96,7 +96,7 @@ public class PacketUtil {
 		
 		if (sendPackets && EGlowMainConfig.OptionFeatureTeamPackets()) {
 			if (getInstance().getTABAddon() != null) {
-				if (!getInstance().getTABAddon().isUnlimitedNametagModeEnabled())
+				if (getInstance().getTABAddon().isUnlimitedNametagModeEnabled())
 					return;
 			}		
 			
