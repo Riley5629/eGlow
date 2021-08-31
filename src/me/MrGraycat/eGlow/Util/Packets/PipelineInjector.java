@@ -25,6 +25,10 @@ public class PipelineInjector{
 	public HashMap<Integer, IEGlowPlayer> glowingEntities = new HashMap<Integer, IEGlowPlayer>();
 	
 	public void inject(IEGlowPlayer eglowPlayer) {
+		if (getInstance().getTABAddon() != null && !getInstance().getTABAddon().handlePackets()) {
+			return;
+		}
+		
 		Channel channel = (Channel) getInstance().getNMSHook().getChannel(eglowPlayer.getPlayer());
 		
 		if (!channel.pipeline().names().contains("packet_handler"))
@@ -77,6 +81,10 @@ public class PipelineInjector{
 	}
 
 	public void uninject(IEGlowPlayer eglowPlayer) {
+		if (getInstance().getTABAddon() != null && !getInstance().getTABAddon().handlePackets()) {
+			return;
+		}
+		
 		Channel channel = (Channel) getInstance().getNMSHook().getChannel(eglowPlayer.getPlayer());
 		if (channel.pipeline().names().contains(DECODER_NAME)) channel.pipeline().remove(DECODER_NAME);
 		
@@ -107,7 +115,7 @@ public class PipelineInjector{
 				if (!ePlayer.getTeamName().equals(teamName))
 					continue;
 			} else {
-				if (getInstance().getTABAddon().isUnlimitedNametagModeEnabled())
+				if (!getInstance().getTABAddon().handlePackets())
 					continue;
 			}
 			

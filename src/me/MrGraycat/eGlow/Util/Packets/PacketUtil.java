@@ -1,8 +1,6 @@
 package me.MrGraycat.eGlow.Util.Packets;
 
-import java.util.List;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import com.google.common.collect.Sets;
 
@@ -32,12 +30,9 @@ public class PacketUtil {
 				continue;
 			
 			if (sendPackets && EGlowMainConfig.OptionFeatureTeamPackets()) {
-				if (getInstance().getTABAddon() == null) {
+				if (getInstance().getTABAddon() == null || getInstance().getTABAddon().handlePackets()) {
 					try {getInstance().getNMSHook().sendPacket(ePlayer, new PacketPlayOutScoreboardTeam(ep.getTeamName(), (getInstance().getVaultAddon() != null) ? getInstance().getVaultAddon().getPlayerTagPrefix(ep) : "", (getInstance().getVaultAddon() != null) ? getInstance().getVaultAddon().getPlayerTagSuffix(ep) : "", (EGlowMainConfig.OptionShowNametag() ? "always" : "never"), (EGlowMainConfig.OptionDoTeamCollision() ? "always" : "never"), Sets.newHashSet(ep.getDisplayName()), 21).setColor(EnumChatFormat.valueOf(ep.getActiveColor().name())).toNMS(pVersion));} catch (Exception e) {}
-				} else {
-					if (!getInstance().getTABAddon().isUnlimitedNametagModeEnabled())
-						try {getInstance().getNMSHook().sendPacket(ePlayer, new PacketPlayOutScoreboardTeam(ep.getTeamName(), (getInstance().getVaultAddon() != null) ? getInstance().getVaultAddon().getPlayerTagPrefix(ep) : "", (getInstance().getVaultAddon() != null) ? getInstance().getVaultAddon().getPlayerTagSuffix(ep) : "", (EGlowMainConfig.OptionShowNametag() ? "always" : "never"), (EGlowMainConfig.OptionDoTeamCollision() ? "always" : "never"), Sets.newHashSet(ep.getDisplayName()), 21).setColor(EnumChatFormat.valueOf(ep.getActiveColor().name())).toNMS(pVersion));} catch (Exception e) {}
-				}		
+				}	
 			}
 			
 			if (!ePlayer.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT) && ep.getGlowStatus()) {
@@ -68,20 +63,17 @@ public class PacketUtil {
 					return;
 				
 				if (to.getVersion().getMinorVersion() >= 8) {
-					for (IEGlowPlayer players : getInstance().getDataManager().getEGlowPlayers()) {
-						getInstance().getNMSHook().sendPacket(players, new PacketPlayOutScoreboardTeam(to.getTeamName()).toNMS(to.getVersion()));
+					if (getInstance().getTABAddon() == null || getInstance().getTABAddon().handlePackets()) {
+						for (IEGlowPlayer players : getInstance().getDataManager().getEGlowPlayers()) {
+							getInstance().getNMSHook().sendPacket(players, new PacketPlayOutScoreboardTeam(to.getTeamName()).toNMS(to.getVersion()));
+						}
 					}
 				}
+				
 				if (join) {
-					if (getInstance().getTABAddon() == null) {
+					if (getInstance().getTABAddon() == null || getInstance().getTABAddon().handlePackets()) {
 						for (IEGlowPlayer players : getInstance().getDataManager().getEGlowPlayers()) {
 							getInstance().getNMSHook().sendPacket(players, new PacketPlayOutScoreboardTeam(to.getTeamName(), (getInstance().getVaultAddon() != null) ? getInstance().getVaultAddon().getPlayerTagPrefix(to) : "", (getInstance().getVaultAddon() != null) ? getInstance().getVaultAddon().getPlayerTagSuffix(to) : "", (EGlowMainConfig.OptionShowNametag() ? "always" : "never"), (EGlowMainConfig.OptionDoTeamCollision() ? "always" : "never"), Sets.newHashSet(to.getDisplayName()), 21).setColor(EnumChatFormat.RESET).toNMS(to.getVersion()));
-						}
-					} else {
-						if (!getInstance().getTABAddon().isUnlimitedNametagModeEnabled()) {
-							for (IEGlowPlayer players : getInstance().getDataManager().getEGlowPlayers()) {
-								getInstance().getNMSHook().sendPacket(players, new PacketPlayOutScoreboardTeam(to.getTeamName(), (getInstance().getVaultAddon() != null) ? getInstance().getVaultAddon().getPlayerTagPrefix(to) : "", (getInstance().getVaultAddon() != null) ? getInstance().getVaultAddon().getPlayerTagSuffix(to) : "", (EGlowMainConfig.OptionShowNametag() ? "always" : "never"), (EGlowMainConfig.OptionDoTeamCollision() ? "always" : "never"), Sets.newHashSet(to.getDisplayName()), 21).setColor(EnumChatFormat.RESET).toNMS(to.getVersion()));
-							}
 						}
 					}	
 				}
@@ -95,10 +87,8 @@ public class PacketUtil {
 		PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam(teamName, prefix, suffix, (EGlowMainConfig.OptionShowNametag() ? "always" : "never"), (EGlowMainConfig.OptionDoTeamCollision() ? "always" : "never"), 21).setColor(color);
 		
 		if (sendPackets && EGlowMainConfig.OptionFeatureTeamPackets()) {
-			if (getInstance().getTABAddon() != null) {
-				if (getInstance().getTABAddon().isUnlimitedNametagModeEnabled())
-					return;
-			}		
+			if (getInstance().getTABAddon() != null && !getInstance().getTABAddon().handlePackets())
+				return;
 			
 			if (entity == null) 
 				return;
@@ -137,7 +127,7 @@ public class PacketUtil {
 			e1.printStackTrace();
 		} 
 		
-		if (status) {	
+		if (status) {
 			if (!getInstance().getPipelineInjector().glowingEntities.containsKey(glowingEntityID))
 				getInstance().getPipelineInjector().glowingEntities.put(glowingEntityID, entity);
 			
@@ -259,26 +249,6 @@ public class PacketUtil {
 			}
 			break;
 		}		
-	}
-	
-	//TODO could remove player (center) itself
-	public List<Player> playersInRangeOfPlayer(Player center) {
-		List<Player> playersInRange = center.getWorld().getPlayers();
-		
-		for (Player p : playersInRange) {
-			Location diff = center.getLocation().subtract(p.getLocation());
-
-			if (diff.getX() > 50 && diff.getZ() > 50 && diff.getX() < -50 && diff.getZ() < -50)
-				playersInRange.remove(p);
-		}
-		return playersInRange;
-	}
-	
-	@SuppressWarnings("unused")
-	private boolean inRange(Location loc1, Location loc2) {
-		if (Math.abs(loc1.getX() - loc2.getX()) > 50 || 
-			Math.abs(loc1.getZ() - loc2.getZ()) > 50) return false;
-		return Math.sqrt(Math.pow(loc1.getX()-loc2.getX(), 2) + Math.pow(loc1.getZ()-loc2.getZ(), 2)) <= 50;
 	}
 	
 	public void setSendTeamPackets(boolean status) {

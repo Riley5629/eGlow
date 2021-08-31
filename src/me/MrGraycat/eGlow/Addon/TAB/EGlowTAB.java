@@ -185,8 +185,14 @@ public class EGlowTAB implements Listener {
 		return this.nametagPrefixSuffixEnabled;
 	}
 	
-	public boolean isTeamPacketBlockerActive() {
+	private boolean isTeamPacketBlockerActive() {
 		return this.isTeamBlockingActive;
+	}
+	
+	public boolean handlePackets() {
+		if (isTeamPacketBlockerActive() || isUnlimitedNametagModeEnabled())
+			return false;
+		return true;
 	}
 	
 	/**
