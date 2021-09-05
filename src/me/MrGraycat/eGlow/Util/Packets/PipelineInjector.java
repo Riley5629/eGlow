@@ -24,11 +24,7 @@ public class PipelineInjector{
 	private final String DECODER_NAME = "eGlowReader";
 	public HashMap<Integer, IEGlowPlayer> glowingEntities = new HashMap<Integer, IEGlowPlayer>();
 	
-	public void inject(IEGlowPlayer eglowPlayer) {
-		if (getInstance().getTABAddon() != null && !getInstance().getTABAddon().handlePackets()) {
-			return;
-		}
-		
+	public void inject(IEGlowPlayer eglowPlayer) {		
 		Channel channel = (Channel) getInstance().getNMSHook().getChannel(eglowPlayer.getPlayer());
 		
 		if (!channel.pipeline().names().contains("packet_handler"))
@@ -46,6 +42,11 @@ public class PipelineInjector{
 				
 				public void write(ChannelHandlerContext context, Object packet, ChannelPromise channelPromise) throws Exception {		
 					if (getInstance().getNMSHook().nms.PacketPlayOutScoreboardTeam.isInstance(packet)) {
+						if (getInstance().getTABAddon() != null && !getInstance().getTABAddon().handlePackets()) {
+							super.write(context, packet, channelPromise);
+							return;
+						}
+						
 						modifyPlayers(packet);
 					}
 
