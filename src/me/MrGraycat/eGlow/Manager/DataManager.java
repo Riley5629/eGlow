@@ -29,9 +29,9 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 public class DataManager implements PluginMessageListener {	
 	private EGlow instance;
 	
-	private static Map<String, IEGlowPlayer> dataPlayers = new ConcurrentHashMap<String, IEGlowPlayer>();
-	private static ConcurrentHashMap<String, IEGlowEffect> dataEffects = new ConcurrentHashMap<String, IEGlowEffect>();
-	private static ConcurrentHashMap<String, IEGlowEffect> dataCustomEffects = new ConcurrentHashMap<String, IEGlowEffect>();
+	private static Map<String, IEGlowPlayer> dataPlayers = new ConcurrentHashMap<>();
+	private static ConcurrentHashMap<String, IEGlowEffect> dataEffects = new ConcurrentHashMap<>();
+	private static ConcurrentHashMap<String, IEGlowEffect> dataCustomEffects = new ConcurrentHashMap<>();
 	
 	//Server
 	public DataManager(EGlow instance) {
@@ -87,7 +87,7 @@ public class DataManager implements PluginMessageListener {
 						effect.setDelay(EGlowMainConfig.getPlayerSlowDelay());
 					}
 					
-					effect = getEGlowEffect("fast" + name + "fast");
+					effect = getEGlowEffect("blink" + name + "fast");
 					
 					if (effect != null) {
 						effect.setDisplayName((EGlowMainConfig.OptionUseGUIColorAsChatColor()) ? Message.GUI_COLOR.get(configName) : Message.COLOR.get(configName) + " §f(" + Message.COLOR.get("effect-blink") + " " + Message.COLOR.get("fast") + "§f)");
@@ -170,7 +170,7 @@ public class DataManager implements PluginMessageListener {
 	
 	private void addEGlowEffect(String name, String displayName, String permissionNode, ChatColor color) {
 		if (!dataEffects.containsKey(name.toLowerCase()))
-			dataEffects.put(name.toLowerCase(), new IEGlowEffect(name, displayName, permissionNode, 20, color));
+			dataEffects.put(name.toLowerCase(), new IEGlowEffect(name, displayName, permissionNode, 0, color));
 	}
 	
 	private void addEGlowEffect(String name, String displayName, String permissionNode, int delay, ChatColor... colors) {
