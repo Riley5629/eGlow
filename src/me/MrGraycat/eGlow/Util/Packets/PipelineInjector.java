@@ -42,7 +42,7 @@ public class PipelineInjector{
 				
 				public void write(ChannelHandlerContext context, Object packet, ChannelPromise channelPromise) throws Exception {		
 					if (getInstance().getNMSHook().nms.PacketPlayOutScoreboardTeam.isInstance(packet)) {
-						if (getInstance().getTABAddon() != null && !getInstance().getTABAddon().handlePackets()) {
+						if (getInstance().getTABAddon() != null && getInstance().getTABAddon().blockEGlowPackets()) {
 							super.write(context, packet, channelPromise);
 							return;
 						}
@@ -82,7 +82,7 @@ public class PipelineInjector{
 	}
 
 	public void uninject(IEGlowPlayer eglowPlayer) {
-		if (getInstance().getTABAddon() != null && !getInstance().getTABAddon().handlePackets()) {
+		if (getInstance().getTABAddon() != null && getInstance().getTABAddon().blockEGlowPackets()) {
 			return;
 		}
 		
@@ -116,7 +116,7 @@ public class PipelineInjector{
 				if (!ePlayer.getTeamName().equals(teamName))
 					continue;
 			} else {
-				if (!getInstance().getTABAddon().handlePackets())
+				if (getInstance().getTABAddon().blockEGlowPackets())
 					continue;
 			}
 			

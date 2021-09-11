@@ -15,11 +15,9 @@ import me.MrGraycat.eGlow.Addon.Citizens.CitizensAddon;
 import me.MrGraycat.eGlow.Addon.Disguises.IDisguiseAddon;
 import me.MrGraycat.eGlow.Addon.Disguises.LibDisguiseAddon;
 import me.MrGraycat.eGlow.Addon.Placeholders.EGlowPlaceholderAPI;
-import me.MrGraycat.eGlow.Addon.TAB.EGlowTAB;
-import me.MrGraycat.eGlow.Addon.TAB.EGlowTABEvents;
+import me.MrGraycat.eGlow.Addon.TAB.TABAddon;
 import me.MrGraycat.eGlow.Command.EGlowCommand;
 import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig;
-import me.MrGraycat.eGlow.Config.EGlowCustomMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig;
 import me.MrGraycat.eGlow.Config.Playerdata.EGlowPlayerdataManager;
@@ -41,7 +39,6 @@ public class EGlow extends JavaPlugin {
 	private EGlowMainConfig mainConfig;
 	private EGlowMessageConfig messageConfig;
 	private EGlowPlayerdataManager playerdataConfig;
-	private EGlowCustomMainConfig customMainConfig;
 	private EGlowCustomEffectsConfig effectsConfig;
 	
 	//Events
@@ -62,13 +59,13 @@ public class EGlow extends JavaPlugin {
 	private CitizensAddon citizensAddon;
 	private IDisguiseAddon iDisguiseAddon;
 	private LibDisguiseAddon libDisguiseAddon;
-	private EGlowTAB tabAddon;
+	private TABAddon tabAddon;
 	private VaultAddon vaultAddon;
 	
 	@Override
 	public void onEnable() {
 		setInstance(this);
-		setAPI(new EGlowAPI(this));
+		setAPI(new EGlowAPI());
 		setDebugUtil(new DebugUtil());
 		
 		if (versionIsCompactible()) {
@@ -76,7 +73,6 @@ public class EGlow extends JavaPlugin {
 			
 			setMainConfig(new EGlowMainConfig(getInstance()));
 			setMessageConfig(new EGlowMessageConfig(getInstance()));
-			//TODO customMainConfig = new EGlowCustomMainConfig();
 			setCustomEffectConfig(new EGlowCustomEffectsConfig(getInstance()));
 			
 			setPlayerdataManager(new EGlowPlayerdataManager(getInstance()));
@@ -131,9 +127,10 @@ public class EGlow extends JavaPlugin {
 				if (getDebugUtil().pluginCheck("LibsDisguises"))
 					setLibDisguiseAddon(new LibDisguiseAddon(getInstance()));
 				if (getDebugUtil().pluginCheck("TAB") && tabAddon == null) {
-					setTABAddon(new EGlowTAB(getInstance()));
+					setTABAddon(new TABAddon(getInstance()));
 				} else {
-					getServer().getPluginManager().registerEvents(new EGlowTABEvents(getInstance()), getInstance());
+					//TODO check if required
+					//getServer().getPluginManager().registerEvents(new EGlowTABOldEvents(getInstance()), getInstance());
 				}
 					
 				getDebugUtil().addonCheck();
@@ -197,11 +194,6 @@ public class EGlow extends JavaPlugin {
 		this.messageConfig = messageConfig;
 	}
 	
-	@SuppressWarnings("unused")
-	private void setCustomGUIConfig(EGlowCustomMainConfig customMainConfig) {
-		this.customMainConfig = customMainConfig;
-	}
-	
 	private void setCustomEffectConfig(EGlowCustomEffectsConfig effectsConfig) {
 		this.effectsConfig = effectsConfig;
 	}
@@ -246,7 +238,7 @@ public class EGlow extends JavaPlugin {
 		this.libDisguiseAddon = libDisguiseAddon;
 	}
 	
-	private void setTABAddon(EGlowTAB tabAddon) {
+	private void setTABAddon(TABAddon tabAddon) {
 		this.tabAddon = tabAddon;
 	}
 	
@@ -273,10 +265,6 @@ public class EGlow extends JavaPlugin {
 	
 	public EGlowMessageConfig getMessageConfig() {
 		return this.messageConfig;
-	}
-	
-	public EGlowCustomMainConfig getCustomGUIConfig() {
-		return this.customMainConfig;
 	}
 	
 	public EGlowCustomEffectsConfig getCustomEffectConfig() {
@@ -323,7 +311,7 @@ public class EGlow extends JavaPlugin {
 		return this.libDisguiseAddon;
 	}
 	
-	public EGlowTAB getTABAddon() {
+	public TABAddon getTABAddon() {
 		return this.tabAddon;
 	}
 	

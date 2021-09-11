@@ -68,7 +68,7 @@ public class ReloadCommand extends SubCommand {
 				}
 				
 				if (EGlowMainConfig.getWorldCheckEnabled()) {
-					if (ePlayer.isInBlockedWorld() && ePlayer.getGlowStatus() || ePlayer.getFakeGlowStatus()) {
+					if (ePlayer.isInBlockedWorld() && (ePlayer.getGlowStatus() || ePlayer.getFakeGlowStatus())) {
 						ePlayer.toggleGlow();
 						ePlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
 						ChatUtil.sendMsgWithPrefix(ePlayer.getPlayer(), Message.WORLD_BLOCKED_RELOAD.get());
@@ -101,7 +101,7 @@ public class ReloadCommand extends SubCommand {
 			    ChatUtil.reportError(e);
 			}
 			
-			if (getInstance().getTABAddon() != null && getInstance().getTABAddon().installedOnBukkit() && EGlowMainConfig.OptionAdvancedTABIntegration() && !TABAPI.isUnlimitedNameTagModeEnabled())
+			if (getInstance().getTABAddon() != null && getInstance().getTABAddon().getTABOnBukkit() && !getInstance().getTABAddon().getTABNewVersion() && EGlowMainConfig.OptionAdvancedTABIntegration() && !TABAPI.isUnlimitedNameTagModeEnabled())
 				TABAPI.enableUnlimitedNameTagModePermanently();
 			
 			ChatUtil.sendMsgWithPrefix(sender, Message.RELOAD_SUCCESS.get());
