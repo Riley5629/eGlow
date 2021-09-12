@@ -16,7 +16,6 @@ import me.MrGraycat.eGlow.Addon.TAB.Listeners.EGlowTABNew;
 import me.MrGraycat.eGlow.Addon.TAB.Listeners.EGlowTABOld;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import me.neznamy.tab.api.EnumProperty;
 import me.neznamy.tab.api.TABAPI;
 import me.neznamy.tab.api.TabAPI;
@@ -36,13 +35,12 @@ public class TABAddon {
 	public TABAddon(EGlow instance) {
 		setInstance(instance);
 		
-		if (getInstance().getDebugUtil().pluginCheck("TAB") && !getInstance().getDebugUtil().getPlugin("TAB").getClass().getName().startsWith("me.neznamy.tab")) {
+		if (getInstance().getDebugUtil().pluginCheck("TAB") && getInstance().getDebugUtil().getPlugin("TAB").getClass().getName().startsWith("me.neznamy.tab")) {
 			setTABOnBukkit(true);
 			loadConfigSettings();
 			startGroupUpdateChecker();
 			
 			new EGlowTABListenerUniv(getInstance());
-			
 			if (getTABNewVersion()) {
 				new EGlowTABNew(getInstance());
 			} else {
@@ -66,9 +64,7 @@ public class TABAddon {
 	public void loadConfigSettings() {
 		String tabVersion = ((Plugin) getInstance().getDebugUtil().getPlugin("TAB")).getDescription().getVersion();
 		
-		ChatUtil.sendToConsole(tabVersion.replace("/\\D/g", "")); //TODO test & remove 
-		
-		if (Integer.valueOf(tabVersion.replace("/\\D/g", "")) >= 300) {
+		if (Integer.valueOf(tabVersion.replaceAll("[^\\d]", "")) >= 300) {
 			setTABNewVersion(true);
 			setTABNametagPrefixSuffixEnabled(TabAPI.getInstance().getConfig().getBoolean("scoreboard-teams.enabled", false));
 			setTABTeamPacketBlockingEnabled(TabAPI.getInstance().getConfig().getBoolean("scoreboard-teams.anti-override", false));
@@ -93,8 +89,8 @@ public class TABAddon {
 	}
 	
 	public void updateTABPlayer(IEGlowPlayer ePlayer, ChatColor glowColor) {
-		if (TABAPI.getPlayer(ePlayer.getUUID()) != null) {
-			TabPlayer tabPlayer = getInstance().getTABAddon().getTABPlayer(ePlayer.getUUID());
+		if (getTABPlayer(ePlayer.getUUID()) != null) {
+			TabPlayer tabPlayer = getTABPlayer(ePlayer.getUUID());
 			
 			String tagPrefix = "";
 			String color = (glowColor.equals(ChatColor.RESET)) ? "" : glowColor + "";

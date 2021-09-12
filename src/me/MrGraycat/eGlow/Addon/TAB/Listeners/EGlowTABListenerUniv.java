@@ -9,7 +9,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.API.Event.GlowColorChangeEvent;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.neznamy.tab.api.TABAPI;
 
 public class EGlowTABListenerUniv implements Listener { 	
 	private EGlow instance;
@@ -27,7 +26,7 @@ public class EGlowTABListenerUniv implements Listener {
 					return;
 				}				
 				
-				if (event.getPlayer() != null && TABAPI.getPlayer(event.getPlayerUUID()) != null) {
+				if (event.getPlayer() != null && getInstance().getTABAddon().getTABPlayer(event.getPlayer().getUniqueId()) != null) {
 					IEGlowPlayer ePlayer = getInstance().getDataManager().getEGlowPlayer(event.getPlayer());
 					
 					getInstance().getTABAddon().updateTABPlayer(ePlayer, event.getChatColor());
