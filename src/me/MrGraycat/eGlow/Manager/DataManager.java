@@ -61,7 +61,7 @@ public class DataManager implements PluginMessageListener {
 	}
 	
 	//Effects
-	private void addEGlowEffects() {
+	public void addEGlowEffects() {
 		IEGlowEffect effect;
 		
 		for (ChatColor color : ChatColor.values()) {
@@ -85,6 +85,7 @@ public class DataManager implements PluginMessageListener {
 					if (effect != null) {
 						effect.setDisplayName((EGlowMainConfig.OptionUseGUIColorAsChatColor()) ? Message.GUI_COLOR.get(configName) : Message.COLOR.get(configName) + " §f(" + Message.COLOR.get("effect-blink") + " " + Message.COLOR.get("slow") + "§f)");
 						effect.setDelay(EGlowMainConfig.getPlayerSlowDelay());
+						effect.reloadEffect();
 					}
 					
 					effect = getEGlowEffect("blink" + name + "fast");
@@ -92,12 +93,13 @@ public class DataManager implements PluginMessageListener {
 					if (effect != null) {
 						effect.setDisplayName((EGlowMainConfig.OptionUseGUIColorAsChatColor()) ? Message.GUI_COLOR.get(configName) : Message.COLOR.get(configName) + " §f(" + Message.COLOR.get("effect-blink") + " " + Message.COLOR.get("fast") + "§f)");
 						effect.setDelay(EGlowMainConfig.getPlayerFastDelay());
+						effect.reloadEffect();
 					}
 				}
 			}
 		}
 		
-		if (!dataEffects.contains("rainbowslow")) {
+		if (!dataEffects.containsKey("rainbowslow")) {
 			addEGlowEffect("rainbowslow", (EGlowMainConfig.OptionUseGUIColorAsChatColor()) ? Message.GUI_COLOR.get("effect-rainbow") : Message.COLOR.get("effect-rainbow") + " §f(" + Message.COLOR.get("slow") + "§f)", "eglow.effect.rainbow", EGlowMainConfig.getPlayerSlowDelay(), ChatColor.RED, ChatColor.GOLD, ChatColor.YELLOW, ChatColor.GREEN, ChatColor.AQUA, ChatColor.BLUE, ChatColor.LIGHT_PURPLE);
 			addEGlowEffect("rainbowfast", (EGlowMainConfig.OptionUseGUIColorAsChatColor()) ? Message.GUI_COLOR.get("effect-rainbow") : Message.COLOR.get("effect-rainbow") + " §f(" + Message.COLOR.get("fast") + "§f)", "eglow.effect.rainbow", EGlowMainConfig.getPlayerFastDelay(), ChatColor.RED, ChatColor.GOLD, ChatColor.YELLOW, ChatColor.GREEN, ChatColor.AQUA, ChatColor.BLUE, ChatColor.LIGHT_PURPLE);
 		} else {
@@ -106,6 +108,7 @@ public class DataManager implements PluginMessageListener {
 			if (effect != null) {
 				effect.setDisplayName((EGlowMainConfig.OptionUseGUIColorAsChatColor()) ? Message.GUI_COLOR.get("effect-rainbow") : Message.COLOR.get("effect-rainbow") + " §f(" + Message.COLOR.get("slow") + "§f)");
 				effect.setDelay(EGlowMainConfig.getPlayerSlowDelay());
+				effect.reloadEffect();
 			}
 			
 			effect = getEGlowEffect("rainbowfast");
@@ -113,6 +116,7 @@ public class DataManager implements PluginMessageListener {
 			if (effect != null) {
 				effect.setDisplayName((EGlowMainConfig.OptionUseGUIColorAsChatColor()) ? Message.GUI_COLOR.get("effect-rainbow") : Message.COLOR.get("effect-rainbow") + " §f(" + Message.COLOR.get("fast") + "§f)");
 				effect.setDelay(EGlowMainConfig.getPlayerFastDelay());
+				effect.reloadEffect();
 			}
 		}
 		
