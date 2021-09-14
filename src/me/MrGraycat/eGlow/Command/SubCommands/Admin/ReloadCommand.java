@@ -46,6 +46,7 @@ public class ReloadCommand extends SubCommand {
 	@Override
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
 		if (getInstance().getMainConfig().reloadConfig() && getInstance().getMessageConfig().reloadConfig() && getInstance().getCustomEffectConfig().reloadConfig()) {
+			getInstance().getDataManager().addEGlowEffects();
 			getInstance().getDataManager().addCustomEffects();
 			for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
 				if (getInstance().getVaultAddon() != null)
