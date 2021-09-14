@@ -6,6 +6,7 @@ import java.net.URL;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -94,11 +95,13 @@ public class EGlow extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		runPlayerCheckOnDisable();
-		getServer().getServicesManager().unregisterAll(this);
-		Bukkit.getScheduler().cancelTasks(this);
-		API = null;
-		instance = null;
+		try {
+			runPlayerCheckOnDisable();
+			getServer().getServicesManager().unregisterAll(this);
+			Bukkit.getScheduler().cancelTasks(this);
+			API = null;
+			instance = null;
+		} catch (IllegalPluginAccessException e) {}
 	}
 	
 	private boolean versionIsCompactible() {
@@ -128,9 +131,6 @@ public class EGlow extends JavaPlugin {
 					setLibDisguiseAddon(new LibDisguiseAddon(getInstance()));
 				if (getDebugUtil().pluginCheck("TAB") && tabAddon == null) {
 					setTABAddon(new TABAddon(getInstance()));
-				} else {
-					//TODO check if required
-					//getServer().getPluginManager().registerEvents(new EGlowTABOldEvents(getInstance()), getInstance());
 				}
 					
 				getDebugUtil().addonCheck();
