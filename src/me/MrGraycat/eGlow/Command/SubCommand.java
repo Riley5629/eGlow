@@ -91,6 +91,11 @@ public abstract class SubCommand {
 				
 				IEGlowPlayer ePlayer = getInstance().getDataManager().getEGlowPlayer(player);
 				
+				if (ePlayer == null) {
+					ChatUtil.sendMsgWithPrefix(sender, Message.PLAYER_NOT_FOUND.get());
+					return null;
+				}
+				
 				if (ePlayer.isInBlockedWorld() && args.length >= 3 && !args[2].equalsIgnoreCase("glowonjoin")) {
 					ChatUtil.sendMsgWithPrefix(sender, Message.OTHER_PLAYER_IN_DISABLED_WORLD.get(ePlayer));
 					return null;
