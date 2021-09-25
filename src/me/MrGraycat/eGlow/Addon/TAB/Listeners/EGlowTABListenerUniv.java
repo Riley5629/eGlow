@@ -2,9 +2,12 @@ package me.MrGraycat.eGlow.Addon.TAB.Listeners;
 
 import java.util.ConcurrentModificationException;
 
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.API.Event.GlowColorChangeEvent;
@@ -20,25 +23,34 @@ public class EGlowTABListenerUniv implements Listener {
 	
 	@EventHandler
 	public void onColorChange(GlowColorChangeEvent event) {
-		try {
-			if (getInstance().getTABAddon() != null && getInstance().getTABAddon().getTABOnBukkit()) {
-				if (!getInstance().getTABAddon().getTABTeamPacketBlockingEnabled() && !getInstance().getTABAddon().getTABNametagPrefixSuffixEnabled()) {
-					return;
-				}				
-				
-				if (event.getPlayer() != null && getInstance().getTABAddon().getTABPlayer(event.getPlayer().getUniqueId()) != null) {
-					IEGlowPlayer ePlayer = getInstance().getDataManager().getEGlowPlayer(event.getPlayer());
-					
-					getInstance().getTABAddon().updateTABPlayer(ePlayer, event.getChatColor());
+		Player player = event.getPlayer();
+		ChatColor chatColor = event.getChatColor();
+		String color = event.getColor();
+		
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				try {
+					if (getInstance().getTABAddon() != null && getInstance().getTABAddon().getTABOnBukkit()) {
+						if (!getInstance().getTABAddon().getTABTeamPacketBlockingEnabled() && !getInstance().getTABAddon().getTABNametagPrefixSuffixEnabled()) {
+							return;
+						}				
+						
+						if (player != null && getInstance().getTABAddon().getTABPlayer(player.getUniqueId()) != null) {
+							IEGlowPlayer ePlayer = getInstance().getDataManager().getEGlowPlayer(player);
+							
+							getInstance().getTABAddon().updateTABPlayer(ePlayer, chatColor);
+						}
+					} else if (getInstance().getDebugUtil().onBungee()) {
+						getInstance().getDataManager().TABProxyUpdateRequest(player, color);	
+					}
+				} catch (ConcurrentModificationException ex2) {
+					//Ignore caused by updating to fast
+				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
-			} else if (getInstance().getDebugUtil().onBungee()) {
-				getInstance().getDataManager().TABProxyUpdateRequest(event.getPlayer(), event.getColor());	
 			}
-		} catch (ConcurrentModificationException ex2) {
-			//Ignore caused by updating to fast
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		}.runTaskAsynchronously(getInstance());
 	}
 	
 	@EventHandler
