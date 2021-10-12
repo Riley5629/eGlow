@@ -36,6 +36,7 @@ public class EGlowEventListener implements Listener {
 		}
 	}
 	
+	
 	@EventHandler
 	public void PlayerConnectEvent(PlayerJoinEvent e) {
 		PlayerConnect(e.getPlayer(), e.getPlayer().getUniqueId());

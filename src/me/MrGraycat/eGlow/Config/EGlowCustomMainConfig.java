@@ -11,13 +11,13 @@ import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import me.neznamy.yamlassist.YamlAssist;
 
-public class EGlowCustomGUIConfig {
+public class EGlowCustomMainConfig {
 	private EGlow instance;
 	
-	private YamlConfiguration config;
-	private File configFile;
+	private static YamlConfiguration config;
+	private static File configFile;
 	
-	public EGlowCustomGUIConfig(EGlow instance) {
+	public EGlowCustomMainConfig(EGlow instance) {
 		setInstance(instance);
 		load();
 	}
@@ -78,52 +78,46 @@ public class EGlowCustomGUIConfig {
 		}
 	}
 	
-	public enum ItemInfo {
-		SLOT,
-		MATERIAL,
-		MATERIAL_ON,
-		MATERIAL_OFF,
-		NAME,
-		META,
-		META_ON,
-		META_OFF,
-		LORES,
-		LEFT_CLICK,
-		RIGHT_CLICK,
-		ANY_CLICK;
+	public enum ItemKey {
+		SLOTS("Slot"),
+		MATERIAL("Material"),
+		NAME("Name"),
+		META("Meta"),
+		LORES("Lores");
+		
+		private String itemKey;
+		
+		private ItemKey(String itemKey) {
+			this.itemKey = itemKey;
+		}
+		
+		public String getItemKey() {
+			return this.itemKey;
+		}
 	}
 	
 	public boolean getEnabled() {
-		return getConfig().getBoolean("Enable");
-	}
-	
-	public String getTitle() {
-		return ChatUtil.translateColors(getConfig().getString("title"));
+		return config.getBoolean("Enable");
 	}
 	
 	public int getRows() {
-		return getConfig().getInt("Rows");
+		return config.getInt("Rows");
 	}
 	
 	public Set<String> getItems() {
-		return getConfig().getConfigurationSection("items").getKeys(false);
+		return config.getConfigurationSection("Items").getKeys(false);
+	}
+ 	
+	public String getItemInfo(String item, ItemKey key) {
+		return config.getString("Items" + item + "." + key.getItemKey());
 	}
 	
 	//Setters
-	@SuppressWarnings("unused")
-	private void setConfig(YamlConfiguration config) {
-		this.config = config;
-	}
-	
 	private void setInstance(EGlow instance) {
 		this.instance = instance;
 	}
 
 	//Getters
-	public YamlConfiguration getConfig() {
-		return this.config;
-	}
-	
 	private EGlow getInstance() {
 		return this.instance;
 	}

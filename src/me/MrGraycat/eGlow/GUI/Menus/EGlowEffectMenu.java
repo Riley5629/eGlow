@@ -127,8 +127,6 @@ public class EGlowEffectMenu extends PaginatedMenu {
 			int model = getModelID(effect);
 			ArrayList<String> lores = new ArrayList<>();
 			
-			
-			
 			for (String lore : Effect.GET_LORES.getList(effect)) {
 				lore = ChatUtil.translateColors(lore.replace("%effect_name%", Eeffect.getDisplayName()).replace("%effect_has_permission%", hasPermission(p, Eeffect.getPermission())));
 				lores.add(lore);

@@ -29,7 +29,6 @@ public class EGlowPlayerdataSQLite {
 		
 		if (testMySQLConnection()) {
 			ChatUtil.sendToConsoleWithPrefix("&aSuccessfully loaded Playerdata database.");
-			setWALMode();
 		} else {
 			ChatUtil.sendToConsoleWithPrefix("&cFailed to load Playerdata database!.");
 		}
@@ -156,36 +155,6 @@ public class EGlowPlayerdataSQLite {
 		}
 	}
 
-	private boolean setWALMode() {
-		Connection con = null;
-		PreparedStatement ps = null;
-		ResultSet res = null;
-		
-		String statement = "";
-		
-		try {
-			con = sqlite.getConnection();
-			DatabaseMetaData dbm = con.getMetaData();
-			res = dbm.getTables(null, null, "eglow", null);
-			
-			if (!res.next()) {
-				statement = "pragma journal_mode=wal";
-			} 
-			
-			if (statement.isEmpty() || statement.equals(""))
-				return true;
-			
-			ps = con.prepareStatement(statement);
-			try {ps.executeUpdate();} catch(Exception e) {}
-			return true;
-		} catch(SQLException e) {
-			ChatUtil.reportError(e);
-			return false;
-		} finally {
-			closeMySQLConnection(con, ps, res);
-		}
-	}
-	
 	private boolean setupMySQLConnection() {
 		File dbFile = new File(getInstance().getDataFolder(), "Playerdata.db;PRAGMA journal_mode=WAL;");
 		

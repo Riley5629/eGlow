@@ -140,7 +140,7 @@ public class DataManager implements PluginMessageListener {
 			String permission = "eglow.effect." + effectName.toLowerCase();
 			
 			if (!oldEffects.isEmpty() && oldEffects.contains(effectName.toLowerCase())) {
-				IEGlowEffect effect = getEGlowEffect(effectName.toLowerCase());
+				IEGlowEffect effect = getEGlowEffect(effectName);
 				
 				if (effect != null) {
 					effect.setDisplayName(displayName);
@@ -259,7 +259,7 @@ public class DataManager implements PluginMessageListener {
 			public void run() {
 				Bukkit.getPluginManager().callEvent(new GlowColorChangeEvent(player.getPlayer(), player.getUUID(), player.getActiveColor(), player.getGlowStatus()));	
 			}
-		}.runTask(EGlow.getInstance());
+		}.runTask(getInstance());
 	}
 	
 	//Setters

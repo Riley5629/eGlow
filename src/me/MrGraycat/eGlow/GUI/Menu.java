@@ -13,14 +13,11 @@ import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.GUI.Manager.MenuItemManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public abstract class Menu extends MenuItemManager implements InventoryHolder {
 	protected MenuMetadata menuMetadata;
 	protected Inventory inventory;
-	
-	protected int page = 1;
 	
 	public Menu(Player player) {
 		this.menuMetadata = getMenuMetadata(player);
@@ -37,10 +34,6 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 		menuMetadata.getOwner().openInventory(inventory);
 	}
 	
-	public MenuMetadata getMenuMetdata() {
-		return this.menuMetadata;
-	}
-	
 	@Override
 	public Inventory getInventory() {
 		return inventory;
@@ -54,21 +47,6 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 	 */
 	public void enableGlow(Player player, ClickType clickType, String effectName) {
 		IEGlowPlayer eGlowPlayer = getInstance().getDataManager().getEGlowPlayer(player);
-		
-		if (eGlowPlayer.isInBlockedWorld()) {
-			ChatUtil.sendMsgWithPrefix(player, Message.WORLD_BLOCKED.get());
-			return;
-		}
-		
-		if (eGlowPlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-			ChatUtil.sendMsgWithPrefix(player, Message.DISGUISE_BLOCKED.get());
-			return;
-		}
-		
-		if (EGlowMainConfig.OptionDisableGlowWhenInvisible() && eGlowPlayer.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
-			ChatUtil.sendMsgWithPrefix(player, Message.INVISIBILITY_BLOCKED.get());
-			return;
-		}
 		
 		if (clickType.equals(ClickType.LEFT)) {
 			if (getInstance().getDataManager().getEGlowEffect(effectName) != null) {

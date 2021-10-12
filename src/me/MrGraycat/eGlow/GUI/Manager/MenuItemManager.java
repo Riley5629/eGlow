@@ -6,14 +6,11 @@ import java.util.List;
 
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import me.MrGraycat.eGlow.EGlow;
@@ -31,138 +28,6 @@ public class MenuItemManager extends MenuManager {
 	private String PLAYER_HEAD = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) ? "SKULL_ITEM" : "PLAYER_HEAD";
 	public String CLOCK = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) ? "WATCH" : "CLOCK";
 	
-	public enum ItemInfo {
-		MATERIAL,
-		NAME,
-		META,
-		RGB,
-		RENDER_SKIN,
-		LORES,
-		SLOT,
-		SLOTS,
-		ANY_CLICK,
-		LEFT_CLICK,
-		RIGHT_CLICK,
-		VIEW_CONDITION;
-	}
-	
-	public ItemStack createItem(String itemName, MenuMetadata menuMeta, YamlConfiguration config) {
-		Player player = null;
-		
-		if (menuMeta != null) {
-			 player = menuMeta.getOwner();
-			 IEGlowPlayer ePlayer = getInstance().getDataManager().getEGlowPlayer(player);
-			 
-			 String viewCondition = getItemInfoString(itemName, config, ItemInfo.VIEW_CONDITION);
-			 if (!viewCondition.isEmpty()) {
-				 if (viewCondition.equalsIgnoreCase("%has_effect_with_speed%") && !hasEffect(ePlayer))
-					 itemName = itemName + "_locked";
-				 
-				 if (viewCondition.equalsIgnoreCase("%is_glowing%") && !(ePlayer.getFakeGlowStatus() || ePlayer.getGlowStatus()))
-					 itemName = itemName + "_locked";
-				 
-				 if (viewCondition.contains("%has_permission:")) {
-					 String permission = (viewCondition.split("%has_permission:")[1]).replace("%", "");
-					 if (!player.hasPermission(permission))
-						 itemName = itemName + "_locked";
-				 }
-			 }
-		}
-
-		Material material;
-		
-		try {
-			material = Material.valueOf(getItemInfoString(itemName, config, ItemInfo.MATERIAL));
-		} catch (IllegalArgumentException e) {
-			switch(getItemInfoString(itemName, config, ItemInfo.MATERIAL)) {
-			case("DEFAULT_GLASS_PANE"):
-				material = Material.valueOf(GLASS_PANE);
-				break;
-			case("DEFAULT_PLAYER_HEAD"):
-				material = Material.valueOf(PLAYER_HEAD);
-				break;
-			case("DEFAULT_GUNPOWDER"):
-				material = Material.valueOf(GUNPOWDER);
-				break;
-			default:
-				material = Material.valueOf("DIRT");
-				break;
-			}
-		}
-		
-		
-		//boolean enchanted = getItemInfoBoolean(itemName, config, ItemInfo.ENCHANTED);
-		
-		String rgb = getItemInfoString(itemName, config, ItemInfo.RGB);
-		String displayName = ChatUtil.translateColors(getItemInfoString(itemName, config, ItemInfo.NAME));
-		int meta = getItemInfoInteger(itemName, config, ItemInfo.META);
-		//int data = getItemInfoInteger(itemName, config, ItemInfo.DATA);
-		
-		List<String> lores = getTranslatedLores(player, getItemInfoStringList(itemName, config, ItemInfo.LORES));
-
-		ItemStack itemStack = createItem(material, displayName, meta, lores);
-		
-		ItemMeta itemMeta = itemStack.getItemMeta();
-		itemMeta.setDisplayName(displayName);
-		itemMeta.setLore(lores);
-		itemStack.setItemMeta(itemMeta);
-		
-		if (!rgb.isEmpty()) {
-			String[] split = rgb.split(",");
-			addCustomItemColor(itemStack, Color.fromRGB(Integer.valueOf(split[0]), Integer.valueOf(split[1]), Integer.valueOf(split[2])));
-		}
-		
-		if (getItemInfoBoolean(itemName, config, ItemInfo.RENDER_SKIN))
-			addPlayerSkullSkin(itemStack, player);
-		//addCustomItemClickCommands(itemStack, leftClickCommands, rightClickCommands);
-		addItemFlags(itemStack);
-		return itemStack;
-	}
-	
-	private List<String> getTranslatedLores(Player player, List<String> lores) {
-		IEGlowPlayer ePlayer = EGlow.getInstance().getDataManager().getEGlowPlayer(player);
-		List<String> newLores = new ArrayList<String>();
-		
-		for (String lore : lores) {
-			if (lore.contains("%has_permission:")) {
-				String permission = (lore.split("%has_permission:")[1]).replace("%", "");
-				lore = lore.replace("%has_permission:" + permission +"%", hasPermission(player, permission));
-			}
-			
-			if (lore.contains("%is_glowing%")) {
-				lore = lore.replace("%is_glowing%", ((ePlayer.getFakeGlowStatus() || ePlayer.getGlowStatus()) ? Message.GUI_YES.get() : Message.GUI_NO.get()));
-			}
-			
-			if (lore.contains("%last_glow%")) {
-				lore = lore.replace("%last_glow%", ChatUtil.getEffectChatName(ePlayer));
-			}
-			
-			if (lore.contains("%effect_speed%")) {
-				String effect = ePlayer.getEffect().getName();
-				String speed = "";
-				
-				if (effect.contains("slow")) {
-					speed = Message.COLOR.get("slow");
-				}
-				
-				if (effect.contains("fast")) {
-					speed = Message.COLOR.get("fast");
-				}
-				
-				lore = lore.replace("%effect_speed%", speed);
-			}
-			
-			if (lore.contains("%glowonjoin_status%")) {
-				lore = lore.replace("%glowonjoin_status%", (ePlayer.getGlowOnJoin()) ? Message.GUI_YES.get() : Message.GUI_NO.get());
-			}
-			
-			lore = ChatUtil.translateColors(lore);
-			newLores.add(lore);
-		}
-		
-		return newLores;
-	}
-	
 	//When custom GUI is a thing this one will not be needed anymore
 	/**
 	 * Create an itemstack
@@ -176,6 +41,7 @@ public class MenuItemManager extends MenuManager {
 		ItemStack item = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12 && numb != 0) ? new ItemStack(mat, 1, (short) numb) : new ItemStack(mat);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
+		
 		meta.setDisplayName(ChatUtil.translateColors(name));
 		
 		for (String text : lores) {
@@ -214,7 +80,6 @@ public class MenuItemManager extends MenuManager {
 			meta.setLore(lore);
 		
 		item.setItemMeta(meta);
-		
 		return item;
 	}
 	
@@ -247,10 +112,6 @@ public class MenuItemManager extends MenuManager {
 		return item;
 	}
 	
-	public ItemStack createCustomItem(String itemName, YamlConfiguration config) {
-		return null;
-	}
-	
 	/**
 	 * Create the skull of the player
 	 * @param player which is looking at the gui
@@ -265,37 +126,16 @@ public class MenuItemManager extends MenuManager {
 		try {
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
 			
-			
 			if (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) {
 				meta.setOwner(player.getDisplayName());
 			} else {
 				meta.setOwningPlayer(player.getPlayer());
 			}
-
+			
 			item.setItemMeta(meta);
 			return item;
 		} catch (ConcurrentModificationException e) {
 			//Fail-safe when the server is unable to get the skin
-			return item;
-		}
-	}
-	
-	public ItemStack addPlayerSkullSkin(ItemStack item, Player player) {
-		try {
-			if (!item.getType().equals(Material.valueOf(PLAYER_HEAD)))
-				return item;
-
-			SkullMeta meta = (SkullMeta) item.getItemMeta();
-			
-			if (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) {
-				meta.setOwner(player.getDisplayName());
-			} else {
-				meta.setOwningPlayer(player.getPlayer());
-			}
-			
-			item.setItemMeta(meta);
-			return item;
-		} catch (Exception e) {
 			return item;
 		}
 	}
@@ -322,32 +162,6 @@ public class MenuItemManager extends MenuManager {
 		item.setItemMeta(meta);
 		return item;
 	}
-	
-    public ItemStack addCustomItemColor(ItemStack item, Color color) {
-        ItemMeta meta = item.getItemMeta();
-        
-        if (meta instanceof LeatherArmorMeta) {
-        	((LeatherArmorMeta) meta).setColor(color);
-        } else if (meta instanceof PotionMeta) {
-        	((PotionMeta) meta).setColor(color);
-        }
-       
-        item.setItemMeta(meta);
-        return item;
-    }
-    
-    public ItemStack addItemFlags(ItemStack item) {
-    	ItemMeta meta = item.getItemMeta();
-
-    	meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_POTION_EFFECTS);
-    	
-        if (ProtocolVersion.SERVER_VERSION.getNetworkId() > 751)
-			meta.addItemFlags(ItemFlag.valueOf("HIDE_DYE"));
-    	
-        item.setItemMeta(meta);
-        
-    	return item;
-    }
 	
 	/**
 	 * Create item based on the glow status
@@ -455,61 +269,6 @@ public class MenuItemManager extends MenuManager {
 	 */
 	public String hasPermission(IEGlowPlayer player, String permission) {
 		return (player.getPlayer().hasPermission(permission)) ? Message.GUI_YES.get() : Message.GUI_NO.get();
-	}
-	
-	public String hasPermission(Player player, String permission) {
-		return (player.hasPermission(permission)) ? Message.GUI_YES.get() : Message.GUI_NO.get();
-	}
-	
-	public List<String> getItemSlots(String item, YamlConfiguration config) {
-		int slot = getItemInfoInteger(item, config, ItemInfo.SLOT);
-		List<String> slots = getItemInfoStringList(item, config, ItemInfo.SLOTS);
-		
-		if (slot != -1) {
-			slots.add(String.valueOf(slot));
-		}
-		
-		return slots;
-	}
-	
-	private String getItemInfoString(String item, YamlConfiguration config, ItemInfo key) {
-		if (config.contains("items." + item + "." + key.toString().toLowerCase())) {
-			return config.getString("items." + item + "." + key.toString().toLowerCase());
-		} else {
-			return "";
-		}
-	}
-	
-	private int getItemInfoInteger(String item, YamlConfiguration config, ItemInfo key) {
-		if (config.contains("items." + item + "." + key.toString().toLowerCase())) {
-			return config.getInt("items." + item + "." + key.toString().toLowerCase());
-		} else {
-			return -1;
-		}	
-	}
-	
-	protected Boolean getItemInfoBoolean(String item, YamlConfiguration config, ItemInfo key) {
-		try {
-			return config.getBoolean("items." + item + "." + key.toString().toLowerCase());
-		} catch (Exception e) {
-			return false;
-		}	
-	}
-	
-	protected List<String> getItemInfoStringList(String item, YamlConfiguration config, ItemInfo key) {
-		if (config.contains("items." + item + "." + key.toString().toLowerCase())) {
-			return config.getStringList("items." + item + "." + key.toString().toLowerCase());
-		} else {
-			return new ArrayList<>();
-		}
-	}
-	
-	public List<String> getItemInteractionStringList(String item, YamlConfiguration config, ItemInfo key) {
-		if (config.contains("items." + item + ".interaction." + key.toString().toLowerCase())) {
-			return config.getStringList("items." + item + ".interaction." + key.toString().toLowerCase());
-		} else {
-			return new ArrayList<>();
-		}
 	}
 
 	public EGlow getInstance() {

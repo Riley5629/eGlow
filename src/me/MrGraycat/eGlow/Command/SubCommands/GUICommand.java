@@ -40,14 +40,6 @@ public class GUICommand extends SubCommand {
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
 		if (ePlayer.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
 			 ChatUtil.sendMsgWithPrefix(sender, Message.UNSUPPORTED_GLOW.get());
-		
-		//OriginalMenu menu = getInstance().getDataManager().getOriginalMenu("customgui");//new OriginalMenu(new File(getInstance().getDataFolder(), "CustomGUI.yml").getPath());
-		//menu.setMenuItems();
-		
-		new EGlowMainMenu(ePlayer.getPlayer()).openInventory();
-		//new EGlowCustomMainMenu(ePlayer.getPlayer(), menu).openInventory();
-		
-		
-		
+		 new EGlowMainMenu(ePlayer.getPlayer()).openInventory();
 	}
 }
