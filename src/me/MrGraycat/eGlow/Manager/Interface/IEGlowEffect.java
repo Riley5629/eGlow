@@ -94,10 +94,12 @@ public class IEGlowEffect {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					if (getActiveEntities().isEmpty()) {
+					if (getActiveEntities() == null)
+						activeEntities = new ConcurrentHashMap<>();
+					
+					if (getActiveEntities().isEmpty())
 						cancel();
-					}
-
+					
 					for (Object entity : getActiveEntities().keySet()) {
 						int progress = getActiveEntities().get(entity);
 						IEGlowPlayer eglowEntity = null;
@@ -181,8 +183,7 @@ public class IEGlowEffect {
 	}
 	
 	public void setDisplayName(String displayName) {
-		if (this.displayName!= null && !this.displayName.equals(displayName))
-			this.displayName = displayName;
+		this.displayName = displayName;
 	}
 	
 	private void setPermission(String permissionNode) {
