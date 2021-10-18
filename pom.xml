@@ -116,6 +116,22 @@
       <groupId>com.googlecode.json-simple</groupId>
       <artifactId>json-simple</artifactId>
      </exclusion>
+     <exclusion>
+      <groupId>com.github.NEZNAMY.TAB</groupId>
+      <artifactId>velocity-1.1.0</artifactId>
+     </exclusion>
+     <exclusion>
+      <groupId>com.github.NEZNAMY.TAB</groupId>
+      <artifactId>bungeecord</artifactId>
+     </exclusion>
+     <exclusion>
+      <groupId>org.bstats</groupId>
+      <artifactId>bstats-bungeecord</artifactId>
+     </exclusion>
+     <exclusion>
+      <groupId>org.bstats</groupId>
+      <artifactId>bstats-base</artifactId>
+     </exclusion>
     </exclusions>
    </dependency>
   
@@ -212,6 +228,34 @@
      <exclusion>
 	  <groupId>net.md-5</groupId>
       <artifactId>bungeecord-chat</artifactId>
+     </exclusion>
+     <exclusion>
+      <groupId>net.kyori</groupId>
+      <artifactId>examination-string</artifactId>
+     </exclusion>
+     <exclusion>
+      <groupId>net.kyori</groupId>
+      <artifactId>examination-api</artifactId>
+     </exclusion>
+     <exclusion>
+      <groupId>org.checkerframework</groupId>
+      <artifactId>checker-qual</artifactId>
+     </exclusion>
+     <exclusion>
+      <groupId>net.kyori</groupId>
+      <artifactId>adventure-api</artifactId>
+     </exclusion>
+     <exclusion>
+      <groupId>net.kyori</groupId>
+      <artifactId>adventure-key</artifactId>
+     </exclusion>
+     <exclusion>
+      <groupId>net.kyori</groupId>
+      <artifactId>adventure-text-minimessage</artifactId>
+     </exclusion>
+     <exclusion>
+      <groupId>org.jetbrains</groupId>
+      <artifactId>annotations</artifactId>
      </exclusion>
     </exclusions>
    </dependency>
