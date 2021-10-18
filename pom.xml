@@ -71,7 +71,7 @@
    <!-- iDisguise -->
    <repository>
     <id>robingrether-repo</id>
-    <url>https://repo.robingrether.de/</url>
+    <url>http://repo.robingrether.de/</url>
    </repository>
    
    <!-- LibsDisguises -->
@@ -92,7 +92,7 @@
    <dependency>
     <groupId>com.github.NEZNAMY</groupId>
     <artifactId>YamlAssist</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <exclusions>
 	 <exclusion>
  	  <groupId>org.yaml</groupId>
