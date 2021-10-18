@@ -110,6 +110,7 @@ public class EGlowMainConfig {
 		addIfMissing("Tagname.tagPrefix", "%prefix%");
 		addIfMissing("Tagname.tagSuffix", "%suffix%");
 		addIfMissing("Force-glow.Bypass-blocked-worlds", false);
+		addIfMissing("Options.Send-invisibility-notification", true);
 		addIfMissing("Options.Advanced-TAB-integration", false);
 		addIfMissing("Options.Disable-glow-when-invisible", true);
 	}
@@ -188,6 +189,10 @@ public class EGlowMainConfig {
 	
 	public static boolean OptionDisableGlowWhenInvisible() {
 		return config.getBoolean("Options.Disable-glow-when-invisible");
+	}
+	
+	public static boolean OptionSendInvisibilityNotification() {
+		return config.getBoolean("Options.Send-invisibility-notification");
 	}
 	
 	public static boolean OptionRenderPlayerSkulls() {

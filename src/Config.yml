@@ -56,6 +56,7 @@ Tagname:
 #Some optional options
 Options:
   Disable-glow-when-invisible: true #Disable the glow effect while being invisible. (1.13 and above)
+  Send-invisibility-notification: true #Toggle invisibility notifications
   Render-player-skulls: true #Toggle skins rendering on playerskulls.
   Default-glow-on-join-value: true #Default value to use for the glowonjoin setting.
   Send-target-notification: true #Toggle notification for targeted player (when using /eglow set <player>).
