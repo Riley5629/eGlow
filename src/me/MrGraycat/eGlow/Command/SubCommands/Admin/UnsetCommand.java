@@ -43,13 +43,15 @@ public class UnsetCommand extends SubCommand {
 			if (eTarget == null)
 				continue;;
 			
-			if (eTarget.getFakeGlowStatus() || eTarget.getGlowStatus())
+			if (eTarget.getFakeGlowStatus() || eTarget.getGlowStatus()) {
 				eTarget.toggleGlow();
-			
-			if (eTarget.getEntityType().equals("PLAYER") && EGlowMainConfig.OptionSendTargetNotification())
-				ChatUtil.sendMsgWithPrefix(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.DISABLE_GLOW.get());
+				
+				if (eTarget.getEntityType().equals("PLAYER") && EGlowMainConfig.OptionSendTargetNotification())
+					ChatUtil.sendMsgWithPrefix(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.DISABLE_GLOW.get());
+			}
+				
+
 			ChatUtil.sendMsgWithPrefix(sender, Message.OTHER_CONFIRM_OFF.get(eTarget));
-			continue;
 		}	
 	}
 }
