@@ -1,5 +1,7 @@
 package me.MrGraycat.eGlow.Command.SubCommands.Admin;
 
+import java.util.List;
+
 import org.bukkit.command.CommandSender;
 
 import me.MrGraycat.eGlow.Command.SubCommand;
@@ -43,71 +45,74 @@ public class SetCommand extends SubCommand {
 
 	@Override
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
-		IEGlowPlayer eTarget = getTarget(sender, args);
-		IEGlowEffect effect = null;
+		List<IEGlowPlayer> eTargets = getTarget(sender, args);
 		
-		if (eTarget == null)
-			return;
-		
-		switch(args.length) {
-		case(3):
-			effect = getInstance().getDataManager().getEGlowEffect(args[2].toLowerCase().replace("off", "none").replace("disable", "none"));
-			break;
-		case(4):
-			if (args[2].equalsIgnoreCase("glowonjoin") && Boolean.valueOf(args[3].toLowerCase()) != null) {
-				eTarget.setGlowOnJoin(Boolean.valueOf(args[3].toLowerCase()));
-				ChatUtil.sendMsgWithPrefix(sender, Message.OTHER_GLOW_ON_JOIN_CONFIRM.get(eTarget, args[3].toLowerCase()));
-				return;
+		for (IEGlowPlayer eTarget : eTargets) {
+			IEGlowEffect effect = null;
+			
+			if (eTarget == null)
+				continue;
+			
+			switch(args.length) {
+			case(3):
+				effect = getInstance().getDataManager().getEGlowEffect(args[2].toLowerCase().replace("off", "none").replace("disable", "none"));
+				break;
+			case(4):
+				if (args[2].equalsIgnoreCase("glowonjoin") && Boolean.valueOf(args[3].toLowerCase()) != null) {
+					eTarget.setGlowOnJoin(Boolean.valueOf(args[3].toLowerCase()));
+					ChatUtil.sendMsgWithPrefix(sender, Message.OTHER_GLOW_ON_JOIN_CONFIRM.get(eTarget, args[3].toLowerCase()));
+					continue;
 
+				}
+				effect = getInstance().getDataManager().getEGlowEffect(args[2] + args[3]);
+				break;
+			case(5):
+				effect = getInstance().getDataManager().getEGlowEffect(args[2] + args[3] + args[4]);
+				break;
 			}
-			effect = getInstance().getDataManager().getEGlowEffect(args[2] + args[3]);
-			break;
-		case(5):
-			effect = getInstance().getDataManager().getEGlowEffect(args[2] + args[3] + args[4]);
-			break;
-		}
-		
-		if (effect == null) {
-			sendSyntax(sender, "", true);
-			sendSyntax(sender, getSyntax()[0], false);
-			sendSyntax(sender, getSyntax()[1], false);
-			sendSyntax(sender, getSyntax()[2], false);
-			sendSyntax(sender, getSyntax()[3], false);
-			return;
-		}
-		
-		if (eTarget.getEntityType().equals("PLAYER")) {
-			if (eTarget.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-				ChatUtil.sendMsgWithPrefix(ePlayer.getPlayer(), Message.OTHER_PLAYER_DISGUISE.get());
+			
+			if (effect == null) {
+				sendSyntax(sender, "", true);
+				sendSyntax(sender, getSyntax()[0], false);
+				sendSyntax(sender, getSyntax()[1], false);
+				sendSyntax(sender, getSyntax()[2], false);
+				sendSyntax(sender, getSyntax()[3], false);
 				return;
 			}
 			
-			if (EGlowMainConfig.OptionDisableGlowWhenInvisible() && eTarget.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
-				ChatUtil.sendMsgWithPrefix(ePlayer.getPlayer(), Message.OTHER_PLAYER_INVISIBLE.get());
-				return;
+			if (eTarget.getEntityType().equals("PLAYER")) {
+				if (eTarget.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
+					ChatUtil.sendMsgWithPrefix(ePlayer.getPlayer(), Message.OTHER_PLAYER_DISGUISE.get());
+					continue;
+				}
+				
+				if (EGlowMainConfig.OptionDisableGlowWhenInvisible() && eTarget.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
+					ChatUtil.sendMsgWithPrefix(ePlayer.getPlayer(), Message.OTHER_PLAYER_INVISIBLE.get());
+					continue;
+				}
 			}
-		}
-		
-		if (effect.getName().equals("none")) {
-			if (eTarget.getGlowStatus())
-				eTarget.toggleGlow();
 			
-			if (eTarget.getEntityType().equals("PLAYER") && EGlowMainConfig.OptionSendTargetNotification() && !eTarget.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
-				ChatUtil.sendMsgWithPrefix(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.DISABLE_GLOW.get());
-			ChatUtil.sendMsgWithPrefix(sender, Message.OTHER_CONFIRM_OFF.get(eTarget));
-			return;
-		}
-		
-		if (!eTarget.isSameGlow(effect)) {
-			eTarget.disableGlow(true);
-			eTarget.activateGlow(effect);
+			if (effect.getName().equals("none")) {
+				if (eTarget.getGlowStatus())
+					eTarget.toggleGlow();
+				
+				if (eTarget.getEntityType().equals("PLAYER") && EGlowMainConfig.OptionSendTargetNotification() && !eTarget.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
+					ChatUtil.sendMsgWithPrefix(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.DISABLE_GLOW.get());
+				ChatUtil.sendMsgWithPrefix(sender, Message.OTHER_CONFIRM_OFF.get(eTarget));
+				continue;
+			}
 			
-			if (eTarget.getEntityType().equals("PLAYER") && EGlowMainConfig.OptionSendTargetNotification() && !eTarget.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
-				ChatUtil.sendMsgWithPrefix(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.NEW_GLOW.get(effect.getDisplayName()));
+			if (!eTarget.isSameGlow(effect)) {
+				eTarget.disableGlow(true);
+				eTarget.activateGlow(effect);
+				
+				if (eTarget.getEntityType().equals("PLAYER") && EGlowMainConfig.OptionSendTargetNotification() && !eTarget.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
+					ChatUtil.sendMsgWithPrefix(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.NEW_GLOW.get(effect.getDisplayName()));
+				ChatUtil.sendMsgWithPrefix(sender, Message.OTHER_CONFIRM.get(eTarget, effect.getDisplayName()));
+				continue;
+			}
+			
 			ChatUtil.sendMsgWithPrefix(sender, Message.OTHER_CONFIRM.get(eTarget, effect.getDisplayName()));
-			return;
 		}
-		
-		ChatUtil.sendMsgWithPrefix(sender, Message.OTHER_CONFIRM.get(eTarget, effect.getDisplayName()));
 	}
 }

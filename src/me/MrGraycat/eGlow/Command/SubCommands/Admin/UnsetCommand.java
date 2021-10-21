@@ -1,5 +1,7 @@
 package me.MrGraycat.eGlow.Command.SubCommands.Admin;
 
+import java.util.List;
+
 import org.bukkit.command.CommandSender;
 import me.MrGraycat.eGlow.Command.SubCommand;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
@@ -35,17 +37,19 @@ public class UnsetCommand extends SubCommand {
 
 	@Override
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
-		IEGlowPlayer eTarget = getTarget(sender, args);
+		List<IEGlowPlayer> eTargets = getTarget(sender, args);
 		
-		if (eTarget == null)
-			return;
-		
-		if (eTarget.getFakeGlowStatus() || eTarget.getGlowStatus())
-			eTarget.toggleGlow();
-		
-		if (eTarget.getEntityType().equals("PLAYER") && EGlowMainConfig.OptionSendTargetNotification())
-			ChatUtil.sendMsgWithPrefix(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.DISABLE_GLOW.get());
-		ChatUtil.sendMsgWithPrefix(sender, Message.OTHER_CONFIRM_OFF.get(eTarget));
-		return;
+		for (IEGlowPlayer eTarget : eTargets) {
+			if (eTarget == null)
+				continue;;
+			
+			if (eTarget.getFakeGlowStatus() || eTarget.getGlowStatus())
+				eTarget.toggleGlow();
+			
+			if (eTarget.getEntityType().equals("PLAYER") && EGlowMainConfig.OptionSendTargetNotification())
+				ChatUtil.sendMsgWithPrefix(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.DISABLE_GLOW.get());
+			ChatUtil.sendMsgWithPrefix(sender, Message.OTHER_CONFIRM_OFF.get(eTarget));
+			continue;
+		}	
 	}
 }

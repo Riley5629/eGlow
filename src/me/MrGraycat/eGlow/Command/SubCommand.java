@@ -1,5 +1,8 @@
 package me.MrGraycat.eGlow.Command;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -40,8 +43,10 @@ public abstract class SubCommand {
 	 * @param args command args to retreive the required info
 	 * @return IEGlowEntity instance of the targeted player/npc
 	 */
-	public IEGlowPlayer getTarget(CommandSender sender, String[] args) {
+	public List<IEGlowPlayer> getTarget(CommandSender sender, String[] args) {
 		if (args.length >= 2) {
+			List<IEGlowPlayer> results = new ArrayList<>();
+			
 			if (args[1].toLowerCase().contains("npc:")) {
 				if (getInstance().getCitizensAddon() == null) {
 					ChatUtil.sendMsgWithPrefix(sender, Message.CITIZENS_NOT_INSTALLED.get());
@@ -76,12 +81,19 @@ public abstract class SubCommand {
 					return null;
 				}
 				try {
-					return npc.getOrAddTrait(EGlowCitizensTrait.class).getEGlowNPC();
+					results.add(npc.getOrAddTrait(EGlowCitizensTrait.class).getEGlowNPC());
+					
+					return results;
 				} catch(NoSuchMethodError e) {
 					ChatUtil.sendToConsoleWithPrefix("&cYour Citizens version is outdated please use 2.0.27 or later");
 				}
 				
 			} else {
+				if (args[1].equalsIgnoreCase("*") || args[1].equalsIgnoreCase("all")) {
+					results.addAll(getInstance().getDataManager().getEGlowPlayers());
+					return results;
+				}
+				
 				Player player = Bukkit.getPlayer(args[1].toLowerCase());
 				
 				if (player == null) {
@@ -101,7 +113,9 @@ public abstract class SubCommand {
 					return null;
 				}
 				
-				return ePlayer;
+				results.add(ePlayer);
+				
+				return results;
 			}
 		}
 		return null;
