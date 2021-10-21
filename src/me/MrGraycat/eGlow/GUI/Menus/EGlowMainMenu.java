@@ -105,7 +105,7 @@ public class EGlowMainMenu extends Menu {
 							return;
 						}
 						
-						if (eGlowPlayer.getPlayer().hasPermission(eGlowPlayer.getEffect().getPermission())) {
+						if (eGlowPlayer.getPlayer().hasPermission(eGlowPlayer.getEffect().getPermission()) || eGlowPlayer.isForcedGlow(eGlowPlayer.getEffect())) {
 							eGlowPlayer.toggleGlow();
 						} else {
 							ChatUtil.sendMsgWithPrefix(player, Message.NO_PERMISSION.get());

@@ -61,7 +61,7 @@ public class ToggleCommand extends SubCommand {
 					return;
 				}
 				
-				if (ePlayer.getPlayer().hasPermission(ePlayer.getEffect().getPermission())) {
+				if (ePlayer.getPlayer().hasPermission(ePlayer.getEffect().getPermission()) || ePlayer.isForcedGlow(ePlayer.getEffect())) {
 					ePlayer.toggleGlow();
 				} else {
 					ChatUtil.sendMsgWithPrefix(sender, Message.NO_PERMISSION.get());

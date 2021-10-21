@@ -36,6 +36,8 @@ public class IEGlowPlayer {
 
 	private IEGlowEffect glowEffect;
 
+	private List<IEGlowEffect> forcedEffects = new ArrayList<>();
+	
 	private boolean glowOnJoin;
 	private boolean activeOnQuit;
 	private boolean saveData = false;
@@ -217,15 +219,36 @@ public class IEGlowPlayer {
 		return this.version;
 	}
 	
-	public IEGlowEffect getForceGlow() {
+	public void setupForceGlows() {
 		if (!EGlowMainConfig.getForceGlowEnabled() || getPlayer() == null || isInBlockedWorld() && !EGlowMainConfig.getForceGlowBypassBlockedWorlds())
-			return null;
+			return;
 		
 		for (String permission : EGlowMainConfig.getForceGlowList()) {
+			if (getPlayer().hasPermission("eglow.force." + permission.toLowerCase())) {
+				IEGlowEffect effect = getInstance().getDataManager().getEGlowEffect(EGlowMainConfig.getForceGlowEffect(permission));
+				
+				if (!forcedEffects.contains(effect))
+					forcedEffects.add(effect);
+			}	
+		}
+	}
+	
+	public boolean isForcedGlow(IEGlowEffect effect) {
+		if (forcedEffects.contains(effect))
+			return true;
+		return false;
+	}
+	
+	public IEGlowEffect getForceGlow() {
+		if (forcedEffects.isEmpty() || !EGlowMainConfig.getForceGlowEnabled() || getPlayer() == null || isInBlockedWorld() && !EGlowMainConfig.getForceGlowBypassBlockedWorlds())
+			return null;
+		
+		return forcedEffects.get(0);
+		/*for (String permission : EGlowMainConfig.getForceGlowList()) {
 			if (getPlayer().hasPermission("eglow.force." + permission.toLowerCase()))
 				return getInstance().getDataManager().getEGlowEffect(EGlowMainConfig.getForceGlowEffect(permission));
 		}
-		return null;
+		return null;*/
 	}
 	
 	public boolean isInBlockedWorld() {
