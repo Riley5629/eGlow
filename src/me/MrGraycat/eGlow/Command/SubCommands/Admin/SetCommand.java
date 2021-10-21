@@ -108,8 +108,6 @@ public class SetCommand extends SubCommand {
 				
 				if (eTarget.getEntityType().equals("PLAYER") && EGlowMainConfig.OptionSendTargetNotification() && !eTarget.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
 					ChatUtil.sendMsgWithPrefix(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.NEW_GLOW.get(effect.getDisplayName()));
-				ChatUtil.sendMsgWithPrefix(sender, Message.OTHER_CONFIRM.get(eTarget, effect.getDisplayName()));
-				continue;
 			}
 			
 			ChatUtil.sendMsgWithPrefix(sender, Message.OTHER_CONFIRM.get(eTarget, effect.getDisplayName()));
