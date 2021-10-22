@@ -37,8 +37,13 @@ public class ChatUtil {
 		if (text == null || text.isEmpty())
 			return text;
 		
-		if (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 15)
+		try {
+			if (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 15)
+				return text.replace("&", "§");
+		} catch (NullPointerException e) {
 			return text.replace("&", "§");
+		}
+		
 		
 		Matcher match = rgb.matcher(text);
 		while(match.find()) {
