@@ -99,7 +99,7 @@ public class NMSStorage {
 			this.CHANNEL = getFields(this.NetworkManager, Channel.class).get(0);
 			this.getHandle = getMethod(this.CraftPlayer, new String[] { "getHandle" });
 			this.sendPacket = getMethod(this.PlayerConnection, new String[] { "sendPacket", "func_147359_a" }, new Class[] { this.Packet });
-			this.setFlag = getMethod(this.EntityPlayer, new String[] { "setFlag" }, int.class, boolean.class);
+			this.setFlag = getMethod(this.EntityPlayer, new String[] { "setFlag", "setEntityFlag" }, int.class, boolean.class);
 			this.getDataWatcher = getMethod(this.EntityPlayer, new String[] {"getDataWatcher"});
 		
 			this.EnumChatFormat = (Class)getNMSClass(new String[] { "net.minecraft.EnumChatFormat", "EnumChatFormat" });
