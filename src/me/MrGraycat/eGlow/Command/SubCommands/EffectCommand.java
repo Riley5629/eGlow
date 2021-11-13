@@ -86,7 +86,7 @@ public class EffectCommand extends SubCommand {
 			if (!ePlayer.isSameGlow(effect)) {
 				ePlayer.disableGlow(true);
 				ePlayer.activateGlow(effect);
-				ChatUtil.sendToConsole(effect.getDisplayName());
+				ChatUtil.sendMsgWithPrefix(sender, Message.NEW_GLOW.get(effect.getDisplayName()));
 
 				if (ePlayer.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
 					ChatUtil.sendMsgWithPrefix(sender, Message.UNSUPPORTED_GLOW.get());
