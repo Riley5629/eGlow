@@ -52,6 +52,11 @@ public class DataManager implements PluginMessageListener {
 		return (dataPlayers.containsKey(player.getUniqueId().toString())) ? dataPlayers.get(player.getUniqueId().toString()) : null;
 	}
 	
+	public IEGlowPlayer getEGlowPlayer(String name) {
+		Player player = Bukkit.getPlayer(name);
+		return (dataPlayers.containsKey(player.getUniqueId().toString())) ? dataPlayers.get(player.getUniqueId().toString()) : null;
+	}
+	
 	public Collection<IEGlowPlayer> getEGlowPlayers() {
 		return dataPlayers.values();
 	}

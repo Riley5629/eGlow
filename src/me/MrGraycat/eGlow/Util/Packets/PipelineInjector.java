@@ -2,9 +2,6 @@ package me.MrGraycat.eGlow.Util.Packets;
 
 import java.util.*;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
 import io.netty.channel.*;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
@@ -48,6 +45,8 @@ public class PipelineInjector{
 						}
 						
 						modifyPlayers(packet);
+						super.write(context, packet, channelPromise);
+						return;
 					}
 
 					if (getInstance().getNMSHook().nms.PacketPlayOutEntityMetadata.isInstance(packet)) {
@@ -104,26 +103,20 @@ public class PipelineInjector{
 		Collection<String> newList = new ArrayList<>();
 		
 		for (String entry : players) {
-			Player p = Bukkit.getPlayer(entry);
-			IEGlowPlayer ePlayer = (p != null) ? getInstance().getDataManager().getEGlowPlayer(p) : null;
+			IEGlowPlayer ePlayer = EGlow.getInstance().getDataManager().getEGlowPlayer(entry);
 			
-			if (p == null) {
+			if (ePlayer == null) {
 				newList.add(entry);
 				continue;
 			}
 			
-			if (getInstance().getTABAddon() == null) {
-				if (!ePlayer.getTeamName().equals(teamName))
-					continue;
-			} else {
-				if (getInstance().getTABAddon().blockEGlowPackets())
-					continue;
-			}
+			if (!ePlayer.getTeamName().equals(teamName))
+				continue;
 			
 			newList.add(entry);
-			getInstance().getNMSHook().nms.PacketPlayOutScoreboardTeam_PLAYERS.set(packetPlayOutScoreboardTeam, newList);
-		}		
-		return;
+		}	
+		
+		EGlow.getInstance().getNMSHook().nms.PacketPlayOutScoreboardTeam_PLAYERS.set(packetPlayOutScoreboardTeam, newList);
 	}
 
 	private boolean blockPackets = true;
