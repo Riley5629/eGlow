@@ -30,9 +30,10 @@ public class TABAddon {
 	
 	public TABAddon(EGlow instance) {
 		setInstance(instance);
-		String tabVersion = ((Plugin) getInstance().getDebugUtil().getPlugin("TAB")).getDescription().getVersion();
+		Plugin tabPlugin = ((Plugin) getInstance().getDebugUtil().getPlugin("TAB"));
+		String version = (tabPlugin != null) ? tabPlugin.getDescription().getVersion() : "0";
 		
-		if (Integer.valueOf(tabVersion.replaceAll("[^\\d]", "")) >= 300) {
+		if (Integer.valueOf(version.replaceAll("[^\\d]", "")) >= 300) {
 			if (getInstance().getDebugUtil().pluginCheck("TAB") && getInstance().getDebugUtil().getPlugin("TAB").getClass().getName().startsWith("me.neznamy.tab")) {
 				setTABOnBukkit(true);
 				loadConfigSettings();
@@ -44,7 +45,8 @@ public class TABAddon {
 			if (getTABOnBukkit() || getInstance().getDebugUtil().onBungee())
 				new EGlowTABListenerUniv(getInstance());
 		} else {
-			ChatUtil.sendToConsoleWithPrefix("&cWarning&f! &cThis version of eGlow required TAB 3.0.0 or higher!");
+			if (getInstance().getDebugUtil().pluginCheck("TAB"))
+				ChatUtil.sendToConsoleWithPrefix("&cWarning&f! &cThis version of eGlow required TAB 3.0.0 or higher!");
 		}
 	}
 	
