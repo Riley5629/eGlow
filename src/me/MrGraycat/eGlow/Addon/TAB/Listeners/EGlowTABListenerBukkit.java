@@ -8,10 +8,10 @@ import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.neznamy.tab.platforms.bukkit.event.TabLoadEvent;
 
-public class EGlowTABNew implements Listener {
+public class EGlowTABListenerBukkit implements Listener {
 	private EGlow instance;
 	
-	public EGlowTABNew(EGlow instance) {
+	public EGlowTABListenerBukkit(EGlow instance) {
 		setInstance(instance);
 		getInstance().getServer().getPluginManager().registerEvents(this, getInstance());
 	}
