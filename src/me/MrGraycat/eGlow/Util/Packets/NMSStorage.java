@@ -98,9 +98,9 @@ public class NMSStorage {
 			this.NETWORK_MANAGER = getFields(this.PlayerConnection, this.NetworkManager).get(0);
 			this.CHANNEL = getFields(this.NetworkManager, Channel.class).get(0);
 			this.getHandle = getMethod(this.CraftPlayer, new String[] { "getHandle" });
-			this.sendPacket = getMethod(this.PlayerConnection, new String[] { "sendPacket", "func_147359_a" }, new Class[] { this.Packet });
-			this.setFlag = getMethod(this.EntityPlayer, new String[] { "setFlag", "setEntityFlag" }, int.class, boolean.class);
-			this.getDataWatcher = getMethod(this.EntityPlayer, new String[] {"getDataWatcher"});
+			this.sendPacket = getMethod(this.PlayerConnection, new String[] { "a", "sendPacket", "func_147359_a" }, new Class[] { this.Packet });
+			this.setFlag = getMethod(this.EntityPlayer, new String[] { "b", "setFlag", "setEntityFlag" }, int.class, boolean.class);
+			this.getDataWatcher = getMethod(this.EntityPlayer, new String[] {"ai", "getDataWatcher"});
 		
 			this.EnumChatFormat = (Class)getNMSClass(new String[] { "net.minecraft.EnumChatFormat", "EnumChatFormat" });
 			this.IChatBaseComponent = getNMSClass(new String[] { "net.minecraft.network.chat.IChatBaseComponent", "IChatBaseComponent" });
@@ -118,7 +118,8 @@ public class NMSStorage {
 		    this.DataWatcherItem_VALUE = getFields(this.DataWatcherItem, Object.class).get(0);
 		    this.DataWatcherObject_SLOT = getFields(this.DataWatcherObject, int.class).get(0);
 		    this.DataWatcherObject_SERIALIZER = getFields(this.DataWatcherObject, this.DataWatcherSerializer).get(0);
-			this.DataWatcher_REGISTER = this.DataWatcher.getMethod("register", new Class[] { this.DataWatcherObject, Object.class });
+			//this.DataWatcher_REGISTER = this.DataWatcher.getMethod("register", new Class[] { this.DataWatcherObject, Object.class });
+			this.DataWatcher_REGISTER = getMethod(this.DataWatcher, new String[] {"a", "register"}, new Class[] {this.DataWatcherObject, Object.class});
 			
 			this.PacketPlayOutEntityMetadata = getNMSClass(new String[] { "net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata", "PacketPlayOutEntityMetadata", "Packet40EntityMetadata" });
 			this.newPacketPlayOutEntityMetadata = this.PacketPlayOutEntityMetadata.getConstructor(new Class[] { int.class, this.DataWatcher, boolean.class });
@@ -130,9 +131,9 @@ public class NMSStorage {
 			this.newScoreboardTeam = this.ScoreboardTeam.getConstructor(new Class[] { this.Scoreboard, String.class });
 			
 		    if (this.minorVersion >= 13) {
-		      this.ScoreboardTeam_setPrefix = this.ScoreboardTeam.getMethod("setPrefix", new Class[] { this.IChatBaseComponent });
-		      this.ScoreboardTeam_setSuffix = this.ScoreboardTeam.getMethod("setSuffix", new Class[] { this.IChatBaseComponent });
-		      this.ScoreboardTeam_setColor = this.ScoreboardTeam.getMethod("setColor", new Class[] { this.EnumChatFormat });
+		      this.ScoreboardTeam_setPrefix = getMethod(this.ScoreboardTeam, new String[] {"b", "setPrefix"}, new Class[] { this.IChatBaseComponent });
+		      this.ScoreboardTeam_setSuffix = getMethod(this.ScoreboardTeam, new String[] {"c", "setSuffix"}, new Class[] { this.IChatBaseComponent });
+		      this.ScoreboardTeam_setColor = getMethod(this.ScoreboardTeam, new String[] {"a", "setColor"}, new Class[] { this.EnumChatFormat });
 		    } else {
 		      this.ScoreboardTeam_setPrefix = getMethod(this.ScoreboardTeam, new String[] { "setPrefix", "func_96666_b" }, new Class[] { String.class });
 		      this.ScoreboardTeam_setSuffix = getMethod(this.ScoreboardTeam, new String[] { "setSuffix", "func_96662_c" }, new Class[] { String.class });
@@ -141,8 +142,8 @@ public class NMSStorage {
 			this.EnumNameTagVisibility = getNMSClass(new String[] { "net.minecraft.world.scores.ScoreboardTeamBase$EnumNameTagVisibility", "ScoreboardTeamBase$EnumNameTagVisibility", "EnumNameTagVisibility" });
 			this.EnumTeamPush = getNMSClass(new String[] { "net.minecraft.world.scores.ScoreboardTeamBase$EnumTeamPush", "ScoreboardTeamBase$EnumTeamPush" });
 		    this.ScoreboardTeam_setNameTagVisibility = getMethod(this.ScoreboardTeam, new String[] { "setNameTagVisibility", "a" }, new Class[] { this.EnumNameTagVisibility });
-		    this.ScoreboardTeam_setCollisionRule = this.ScoreboardTeam.getMethod("setCollisionRule", new Class[] { this.EnumTeamPush });
-		    this.ScoreboardTeam_getPlayerNameSet = getMethod(this.ScoreboardTeam, new String[] { "getPlayerNameSet", "func_96670_d" }, new Class[0]);
+		    this.ScoreboardTeam_setCollisionRule = getMethod(this.ScoreboardTeam, new String[] {"a", "setCollisionRule"}, new Class[] { this.EnumTeamPush });
+		    this.ScoreboardTeam_getPlayerNameSet = getMethod(this.ScoreboardTeam, new String[] { "g", "getPlayerNameSet", "func_96670_d" }, new Class[0]);
 		    
 		    this.PacketPlayOutScoreboardTeam = getNMSClass(new String[] { "net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam", "PacketPlayOutScoreboardTeam", "Packet209SetScoreboardTeam" });
 			this.PacketPlayOutScoreboardTeam_NAME = getFields(this.PacketPlayOutScoreboardTeam, String.class).get(0);

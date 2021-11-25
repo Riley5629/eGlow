@@ -84,12 +84,16 @@ public class DataWatcher {
 		DataWatcher watcher = new DataWatcher();
 		List<Object> items = null;
 
-		if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 17) {
-			items = (List<Object>)nmsWatcher.getClass().getMethod("getAll", new Class[0]).invoke(nmsWatcher, new Object[0]);
-		} else {
+		if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 18) {
 			items = (List<Object>)nmsWatcher.getClass().getMethod("c", new Class[0]).invoke(nmsWatcher, new Object[0]);
+		} else {
+			if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 17) {
+				items = (List<Object>)nmsWatcher.getClass().getMethod("getAll", new Class[0]).invoke(nmsWatcher, new Object[0]);
+			} else {
+				items = (List<Object>)nmsWatcher.getClass().getMethod("c", new Class[0]).invoke(nmsWatcher, new Object[0]);
+			}
 		}
-		 
+ 
 		if (items != null) {
 			for (Object watchableObject : items) {
 				DataWatcherItem w = DataWatcherItem.fromNMS(watchableObject);

@@ -6,7 +6,6 @@ import java.io.IOException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.MrGraycat.eGlow.Command.SubCommand;
@@ -83,7 +82,7 @@ public class ConvertCommand extends SubCommand {
 									if (!keepActive) cancel();
 									if (counter >= files.length - 1) {
 										ChatUtil.sendMsgWithPrefix(sender, "&fFinished conversion of &e" + files.length + "&fentries. " + ((failed) ? "(&cSome have failed&f)" : ""));
-										if (!failed) {try {FileUtils.deleteDirectory(playerFolder);} catch (IOException e) {}}
+										if (!failed) {playerFolder.delete();}
 										keepActive = false;
 										cancel();
 									}
