@@ -101,7 +101,7 @@
     </exclusions>
    </dependency>
    
-   <!-- TAB -->
+   <!-- TAB 
    <dependency>
     <groupId>com.github.NEZNAMY</groupId>
     <artifactId>TAB</artifactId>
@@ -133,7 +133,7 @@
       <artifactId>bstats-base</artifactId>
      </exclusion>
     </exclusions>
-   </dependency>
+   </dependency> -->
   
    <!-- Citizens -->
    <dependency>
