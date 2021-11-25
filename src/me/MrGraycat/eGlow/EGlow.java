@@ -129,7 +129,7 @@ public class EGlow extends JavaPlugin {
 					setIDisguiseAddon(new IDisguiseAddon(getInstance()));
 				if (getDebugUtil().pluginCheck("LibsDisguises"))
 					setLibDisguiseAddon(new LibDisguiseAddon(getInstance()));
-				if (getDebugUtil().pluginCheck("TAB") && tabAddon == null) {
+				if (tabAddon == null) {
 					setTABAddon(new TABAddon(getInstance()));
 				}
 					
