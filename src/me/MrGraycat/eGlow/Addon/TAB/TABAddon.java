@@ -1,23 +1,19 @@
 package me.MrGraycat.eGlow.Addon.TAB;
 
-import java.io.File;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Addon.TAB.Listeners.EGlowTABListenerUniv;
-import me.MrGraycat.eGlow.Addon.TAB.Listeners.EGlowTABNew;
-import me.MrGraycat.eGlow.Addon.TAB.Listeners.EGlowTABOld;
+import me.MrGraycat.eGlow.Addon.TAB.Listeners.EGlowTABListenerBukkit;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.neznamy.tab.api.EnumProperty;
-import me.neznamy.tab.api.TABAPI;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import me.neznamy.tab.api.TabAPI;
 import me.neznamy.tab.api.TabPlayer;
 
@@ -34,25 +30,26 @@ public class TABAddon {
 	
 	public TABAddon(EGlow instance) {
 		setInstance(instance);
+		String tabVersion = ((Plugin) getInstance().getDebugUtil().getPlugin("TAB")).getDescription().getVersion();
 		
-		if (getInstance().getDebugUtil().pluginCheck("TAB") && getInstance().getDebugUtil().getPlugin("TAB").getClass().getName().startsWith("me.neznamy.tab")) {
-			setTABOnBukkit(true);
-			loadConfigSettings();
-			startGroupUpdateChecker();
-			
-			new EGlowTABListenerUniv(getInstance());
-			if (getTABNewVersion()) {
-				new EGlowTABNew(getInstance());
-			} else {
-				new EGlowTABOld(getInstance());
+		if (Integer.valueOf(tabVersion.replaceAll("[^\\d]", "")) >= 300) {
+			if (getInstance().getDebugUtil().pluginCheck("TAB") && getInstance().getDebugUtil().getPlugin("TAB").getClass().getName().startsWith("me.neznamy.tab")) {
+				setTABOnBukkit(true);
+				loadConfigSettings();
+				startGroupUpdateChecker();
+
+				new EGlowTABListenerBukkit(getInstance());
 			}
-		} else if (getInstance().getDebugUtil().onBungee()) {
-			new EGlowTABListenerUniv(getInstance());
+			
+			if (getTABOnBukkit() || getInstance().getDebugUtil().onBungee())
+				new EGlowTABListenerUniv(getInstance());
+		} else {
+			ChatUtil.sendToConsoleWithPrefix("&cWarning&f! &cThis version of eGlow required TAB 3.0.0 or higher!");
 		}
 	}
 	
 	public TabPlayer getTABPlayer(UUID uuid) {
-		return (this.TAB_New) ? TabAPI.getInstance().getPlayer(uuid) : TABAPI.getPlayer(uuid);
+		return TabAPI.getInstance().getPlayer(uuid);
 	}
 	
 	public boolean blockEGlowPackets() {
@@ -70,6 +67,10 @@ public class TABAddon {
 			setTABTeamPacketBlockingEnabled(TabAPI.getInstance().getConfig().getBoolean("scoreboard-teams.anti-override", false));
 			
 			if (EGlowMainConfig.OptionAdvancedTABIntegration() && TabAPI.getInstance().getFeatureManager().getFeature("nametagx") != null) {
+				//https://github.com/NEZNAMY/TAB/blob/38031737455a2a7849d59169651faba56184c1b6/shared/src/main/java/me/neznamy/tab/shared/TAB.java#L299
+				//nametag16 normal, nametagx unlimited
+					
+				
 				/*
 				 * Old code: TABAPI.enableUnlimitedNameTagModePermanently();
 				 * This isn't possible in TAB 3.0.0 yet.
@@ -77,14 +78,8 @@ public class TABAddon {
 			}
 				
 		} else {
-			File tabConfigFile = new File("plugins/TAB/config.yml");
-			YamlConfiguration tabConfig = YamlConfiguration.loadConfiguration(tabConfigFile);
-			
-			setTABNametagPrefixSuffixEnabled(tabConfig.getBoolean("change-nametag-prefix-suffix")); 
-			setTABTeamPacketBlockingEnabled((tabConfig.contains("anti-override.scoreboard-teams")) ? tabConfig.getBoolean("anti-override.scoreboard-teams") : true);
-		
-			if (EGlowMainConfig.OptionAdvancedTABIntegration() && !TABAPI.isUnlimitedNameTagModeEnabled())
-				TABAPI.enableUnlimitedNameTagModePermanently();
+			ChatUtil.sendToConsoleWithPrefix("&cWarning&f! &cThis version of eGlow required TAB 3.0.0 or higher!");
+			//TODO user is using outdated version of TAB tell them to update or learn to read
 		}
 	}
 	
@@ -95,19 +90,14 @@ public class TABAddon {
 			String tagPrefix = "";
 			String color = (glowColor.equals(ChatColor.RESET)) ? "" : glowColor + "";
 			
-			try {tagPrefix = tabPlayer.getOriginalValue(EnumProperty.TAGPREFIX);} catch(Exception ex) {tagPrefix = "";}
+			try {
+				TabAPI.getInstance().getTeamManager().getOriginalPrefix(tabPlayer);
+			}  catch(Exception ex) {
+				tagPrefix = "";
+			}
 			
 			try {
-				if (getInstance().getTABAddon().getTABNewVersion() || !EGlowMainConfig.OptionAdvancedTABIntegration()) {
-					tabPlayer.setValueTemporarily(EnumProperty.TAGPREFIX, (!tagPrefix.isEmpty()) ? tagPrefix + color : color);
-				} else {
-					String customTagName = "";
-					
-					try {customTagName = tabPlayer.getOriginalValue(EnumProperty.CUSTOMTAGNAME);} catch(Exception ex) {customTagName = ePlayer.getPlayer().getName();}
-
-					tabPlayer.setValueTemporarily(EnumProperty.CUSTOMTAGNAME, tagPrefix.replace("%eglow_glowcolor%", "") + customTagName);
-					tabPlayer.setValueTemporarily(EnumProperty.TAGPREFIX, color);
-				}
+				TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, (!tagPrefix.isEmpty()) ? tagPrefix + color : color);
 			} catch (IllegalStateException e) {
 				//Ignored :I
 			}

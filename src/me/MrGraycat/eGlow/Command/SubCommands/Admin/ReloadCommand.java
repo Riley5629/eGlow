@@ -14,7 +14,6 @@ import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
-import me.neznamy.tab.api.TABAPI;
 
 public class ReloadCommand extends SubCommand {
 
@@ -102,8 +101,8 @@ public class ReloadCommand extends SubCommand {
 			    ChatUtil.reportError(e);
 			}
 			
-			if (getInstance().getTABAddon() != null && getInstance().getTABAddon().getTABOnBukkit() && !getInstance().getTABAddon().getTABNewVersion() && EGlowMainConfig.OptionAdvancedTABIntegration() && !TABAPI.isUnlimitedNameTagModeEnabled())
-				TABAPI.enableUnlimitedNameTagModePermanently();
+			//if (getInstance().getTABAddon() != null && getInstance().getTABAddon().getTABOnBukkit() && !getInstance().getTABAddon().getTABNewVersion() && EGlowMainConfig.OptionAdvancedTABIntegration() && !TABAPI.isUnlimitedNameTagModeEnabled())
+				//TABAPI.enableUnlimitedNameTagModePermanently();
 			
 			ChatUtil.sendMsgWithPrefix(sender, Message.RELOAD_SUCCESS.get());
 		} else {
