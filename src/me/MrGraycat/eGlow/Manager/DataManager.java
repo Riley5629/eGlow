@@ -56,11 +56,8 @@ public class DataManager implements PluginMessageListener {
 		Player player = Bukkit.getPlayer(name);
 		
 		//Prevent kick loop caused by for example npc's
-		if (player == null) {
+		if (player == null)
 			return null;
-		}
-			
-		
 		return (dataPlayers.containsKey(player.getUniqueId().toString())) ? dataPlayers.get(player.getUniqueId().toString()) : null;
 	}
 	
