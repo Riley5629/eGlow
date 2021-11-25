@@ -81,10 +81,6 @@ public class PipelineInjector{
 	}
 
 	public void uninject(IEGlowPlayer eglowPlayer) {
-		if (getInstance().getTABAddon() != null && getInstance().getTABAddon().blockEGlowPackets()) {
-			return;
-		}
-		
 		Channel channel = (Channel) getInstance().getNMSHook().getChannel(eglowPlayer.getPlayer());
 		if (channel.pipeline().names().contains(DECODER_NAME)) channel.pipeline().remove(DECODER_NAME);
 		
@@ -112,7 +108,7 @@ public class PipelineInjector{
 			
 			if (!ePlayer.getTeamName().equals(teamName))
 				continue;
-			
+
 			newList.add(entry);
 		}	
 		
