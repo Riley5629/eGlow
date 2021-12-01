@@ -81,7 +81,7 @@ public class EGlow extends JavaPlugin {
 			
 			setNMSHook(new NMSHook());
 			setPacketUtil(new PacketUtil(getInstance()));
-			setPipelineInjector(new PipelineInjector(getInstance()));
+			setPipelineInjector(new PipelineInjector());
 			
 			registerEventsAndCommands();
 			checkForUpdates();
