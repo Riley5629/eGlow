@@ -109,7 +109,12 @@ public class EGlowEventListener implements Listener {
 				if (!getInstance().isUpToDate() && EGlowMainConfig.OptionSendUpdateNotifications() && p.hasPermission("eglow.option.update"))
 					ChatUtil.sendMsgWithPrefix(p, "&aA new update is available&f!");
 				
-				instance.getPacketUtil().updatePlayerNEW(eglowPlayer);
+				new BukkitRunnable() {
+					@Override
+					public void run() {
+						instance.getPacketUtil().updatePlayerNEW(eglowPlayer);
+					}
+				}.runTask(getInstance());
 				
 				if (instance.getVaultAddon() != null)
 					instance.getVaultAddon().updatePlayerTabname(eglowPlayer);
