@@ -163,7 +163,7 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 				break;
 				case("set"):
 					if (sender.hasPermission("eglow.command.set")) {
-						suggestions = new ArrayList<>(Arrays.asList("npc:ID" ,"npc:s", "npc:sel", "npc:selected"));
+						suggestions = new ArrayList<>(Arrays.asList("npc:ID" ,"npc:s", "npc:sel", "npc:selected", "*"));
 						
 						for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 							suggestions.add(p.getName());
@@ -172,7 +172,7 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 				break;
 				case("unset"):
 					if (sender.hasPermission("eglow.command.unset")) {
-						suggestions = new ArrayList<>(Arrays.asList("npc:ID" ,"npc:s", "npc:sel", "npc:selected"));
+						suggestions = new ArrayList<>(Arrays.asList("npc:ID" ,"npc:s", "npc:sel", "npc:selected", "*"));
 						
 						for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 							suggestions.add(p.getName());
