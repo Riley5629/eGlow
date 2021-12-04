@@ -101,8 +101,8 @@ public class ReloadCommand extends SubCommand {
 			    ChatUtil.reportError(e);
 			}
 			
-			//if (getInstance().getTABAddon() != null && getInstance().getTABAddon().getTABOnBukkit() && !getInstance().getTABAddon().getTABNewVersion() && EGlowMainConfig.OptionAdvancedTABIntegration() && !TABAPI.isUnlimitedNameTagModeEnabled())
-				//TABAPI.enableUnlimitedNameTagModePermanently();
+			//if (getInstance().getTABAddon() != null && getInstance().getTABAddon().getTABOnBukkit() && EGlowMainConfig.OptionAdvancedTABIntegration())
+				//getInstance().getTABAddon().loadConfigSettings();
 			
 			ChatUtil.sendMsgWithPrefix(sender, Message.RELOAD_SUCCESS.get());
 		} else {
