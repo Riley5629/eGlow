@@ -17,6 +17,7 @@ import me.MrGraycat.eGlow.Addon.Disguises.IDisguiseAddon;
 import me.MrGraycat.eGlow.Addon.Disguises.LibDisguiseAddon;
 import me.MrGraycat.eGlow.Addon.Placeholders.EGlowPlaceholderAPI;
 import me.MrGraycat.eGlow.Addon.TAB.TABAddon;
+import me.MrGraycat.eGlow.Addon.TAB.Listeners.EGlowTABListenerUniv;
 import me.MrGraycat.eGlow.Command.EGlowCommand;
 import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
@@ -129,8 +130,11 @@ public class EGlow extends JavaPlugin {
 					setIDisguiseAddon(new IDisguiseAddon(getInstance()));
 				if (getDebugUtil().pluginCheck("LibsDisguises"))
 					setLibDisguiseAddon(new LibDisguiseAddon(getInstance()));
-				if (tabAddon == null) {
+				if (getDebugUtil().pluginCheck("TAB")) {
 					setTABAddon(new TABAddon(getInstance()));
+				} else {
+					if (getDebugUtil().onBungee())
+						new EGlowTABListenerUniv(getInstance());
 				}
 					
 				getDebugUtil().addonCheck();
