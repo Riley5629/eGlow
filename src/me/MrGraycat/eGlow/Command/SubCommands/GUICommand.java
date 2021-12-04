@@ -1,7 +1,6 @@
  package me.MrGraycat.eGlow.Command.SubCommands;
 
 import org.bukkit.command.CommandSender;
-
 import me.MrGraycat.eGlow.Command.SubCommand;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.GUI.Menus.EGlowMainMenu;
@@ -37,17 +36,10 @@ public class GUICommand extends SubCommand {
 	}
 
 	@Override
-	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
+	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {	
 		if (ePlayer.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
 			 ChatUtil.sendMsgWithPrefix(sender, Message.UNSUPPORTED_GLOW.get());
 		
-		//OriginalMenu menu = getInstance().getDataManager().getOriginalMenu("customgui");//new OriginalMenu(new File(getInstance().getDataFolder(), "CustomGUI.yml").getPath());
-		//menu.setMenuItems();
-		
 		new EGlowMainMenu(ePlayer.getPlayer()).openInventory();
-		//new EGlowCustomMainMenu(ePlayer.getPlayer(), menu).openInventory();
-		
-		
-		
 	}
 }
