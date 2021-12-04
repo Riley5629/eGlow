@@ -10,12 +10,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Addon.TAB.Listeners.EGlowTABListenerUniv;
-import me.MrGraycat.eGlow.Addon.TAB.Listeners.EGlowTABListenerBukkit;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Addon.TAB.Listeners.EGlowTABListenerBukkit;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import me.neznamy.tab.api.Property;
 import me.neznamy.tab.api.TabAPI;
 import me.neznamy.tab.api.TabPlayer;
+import me.neznamy.tab.api.config.ConfigurationFile;
+import me.neznamy.tab.platforms.bukkit.features.unlimitedtags.NameTagX;
+import me.neznamy.tab.shared.TabConstants;
 
 public class TABAddon {	
 	private EGlow instance;
@@ -40,10 +44,10 @@ public class TABAddon {
 				startGroupUpdateChecker();
 
 				new EGlowTABListenerBukkit(getInstance());
+				
+				if (!getInstance().getDebugUtil().onBungee())
+					new EGlowTABListenerUniv(getInstance());
 			}
-			
-			if (getTABOnBukkit() || getInstance().getDebugUtil().onBungee())
-				new EGlowTABListenerUniv(getInstance());
 		} else {
 			if (getInstance().getDebugUtil().pluginCheck("TAB"))
 				ChatUtil.sendToConsoleWithPrefix("&cWarning&f! &cThis version of eGlow required TAB 3.0.0 or higher!");
@@ -62,26 +66,33 @@ public class TABAddon {
 	
 	public void loadConfigSettings() {
 		String tabVersion = ((Plugin) getInstance().getDebugUtil().getPlugin("TAB")).getDescription().getVersion();
+		ConfigurationFile tabConfig = TabAPI.getInstance().getConfig();
 		
 		if (Integer.valueOf(tabVersion.replaceAll("[^\\d]", "")) >= 300) {
 			setTABNewVersion(true);
-			setTABNametagPrefixSuffixEnabled(TabAPI.getInstance().getConfig().getBoolean("scoreboard-teams.enabled", false));
-			setTABTeamPacketBlockingEnabled(TabAPI.getInstance().getConfig().getBoolean("scoreboard-teams.anti-override", false));
+			setTABNametagPrefixSuffixEnabled(tabConfig.getBoolean("scoreboard-teams.enabled", false));
+			setTABTeamPacketBlockingEnabled(tabConfig.getBoolean("scoreboard-teams.anti-override", false));
 			
-			if (EGlowMainConfig.OptionAdvancedTABIntegration() && TabAPI.getInstance().getFeatureManager().getFeature("nametagx") != null) {
-				//https://github.com/NEZNAMY/TAB/blob/38031737455a2a7849d59169651faba56184c1b6/shared/src/main/java/me/neznamy/tab/shared/TAB.java#L299
-				//nametag16 normal, nametagx unlimited
+			if (EGlowMainConfig.OptionAdvancedTABIntegration()) {
+				if (!tabConfig.getBoolean("scoreboard-teams.unlimited-nametag-mode.enabled", false)) {
+					tabConfig.set("scoreboard-teams.unlimited-nametag-mode.enabled", true);
+					ChatUtil.sendToConsoleWithPrefix("&6Enabling unlimited-nametag-mode in TAB since the advancedTABIntegration setting is enabled&f!");
 					
-				
-				/*
-				 * Old code: TABAPI.enableUnlimitedNameTagModePermanently();
-				 * This isn't possible in TAB 3.0.0 yet.
-				 */
-			}
-				
+					if (TabAPI.getInstance().getFeatureManager().isFeatureEnabled("nametag16")) {
+						ChatUtil.sendToConsoleWithPrefix("&cDisabling normal TAB nametags&f...");
+						TabAPI.getInstance().getFeatureManager().unregisterFeature("nametag16");
+					}
+					
+					if (!TabAPI.getInstance().getFeatureManager().isFeatureEnabled("nametagx")) {
+						ChatUtil.sendToConsoleWithPrefix("&aEnabling custom TAB nametags&f...");
+						TabAPI.getInstance().getFeatureManager().registerFeature("nametagx", new NameTagX(EGlow.getInstance()));
+					}
+						
+					ChatUtil.sendToConsoleWithPrefix("&aAdvanced-TAB-Integration has been setup&f!");
+				}
+			}	
 		} else {
 			ChatUtil.sendToConsoleWithPrefix("&cWarning&f! &cThis version of eGlow required TAB 3.0.0 or higher!");
-			//TODO user is using outdated version of TAB tell them to update or learn to read
 		}
 	}
 	
@@ -93,13 +104,26 @@ public class TABAddon {
 			String color = (glowColor.equals(ChatColor.RESET)) ? "" : glowColor + "";
 			
 			try {
-				TabAPI.getInstance().getTeamManager().getOriginalPrefix(tabPlayer);
+				tagPrefix = TabAPI.getInstance().getTeamManager().getOriginalPrefix(tabPlayer);
 			}  catch(Exception ex) {
 				tagPrefix = "";
 			}
 			
 			try {
-				TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, (!tagPrefix.isEmpty()) ? tagPrefix + color : color);
+				if (!EGlowMainConfig.OptionAdvancedTABIntegration()) {
+					TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, (!tagPrefix.isEmpty()) ? tagPrefix + color : color);
+				} else {
+					Property propertyCustomTagName = tabPlayer.getProperty(TabConstants.Property.CUSTOMTAGNAME);
+					
+					if (propertyCustomTagName == null) {
+						TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, (!tagPrefix.isEmpty()) ? tagPrefix + color : color);
+					} else {
+						if (!propertyCustomTagName.getCurrentRawValue().equals(tagPrefix))
+							propertyCustomTagName.setTemporaryValue(tagPrefix);
+							
+						TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, color);
+					}
+				}
 			} catch (IllegalStateException e) {
 				//Ignored :I
 			}
