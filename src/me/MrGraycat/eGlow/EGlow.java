@@ -132,10 +132,9 @@ public class EGlow extends JavaPlugin {
 					setLibDisguiseAddon(new LibDisguiseAddon(getInstance()));
 				if (getDebugUtil().pluginCheck("TAB")) {
 					setTABAddon(new TABAddon(getInstance()));
-				} else {
-					if (getDebugUtil().onBungee())
-						new EGlowTABListenerUniv(getInstance());
-				}
+				} 
+				
+				new EGlowTABListenerUniv(getInstance());
 					
 				getDebugUtil().addonCheck();
 			}

@@ -9,7 +9,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Addon.TAB.Listeners.EGlowTABListenerUniv;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Addon.TAB.Listeners.EGlowTABListenerBukkit;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
@@ -42,11 +41,8 @@ public class TABAddon {
 				setTABOnBukkit(true);
 				loadConfigSettings();
 				startGroupUpdateChecker();
-
-				new EGlowTABListenerBukkit(getInstance());
 				
-				if (!getInstance().getDebugUtil().onBungee())
-					new EGlowTABListenerUniv(getInstance());
+				new EGlowTABListenerBukkit(getInstance());
 			}
 		} else {
 			if (getInstance().getDebugUtil().pluginCheck("TAB"))
@@ -118,8 +114,10 @@ public class TABAddon {
 					if (propertyCustomTagName == null) {
 						TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, (!tagPrefix.isEmpty()) ? tagPrefix + color : color);
 					} else {
-						if (!propertyCustomTagName.getCurrentRawValue().equals(tagPrefix))
-							propertyCustomTagName.setTemporaryValue(tagPrefix);
+						String originalTagName = propertyCustomTagName.getOriginalRawValue();
+						
+						if (!propertyCustomTagName.getCurrentRawValue().equals(tagPrefix + originalTagName))
+							propertyCustomTagName.setTemporaryValue(tagPrefix + originalTagName);
 							
 						TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, color);
 					}
