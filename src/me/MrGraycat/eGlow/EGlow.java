@@ -131,7 +131,11 @@ public class EGlow extends JavaPlugin {
 				if (getDebugUtil().pluginCheck("LibsDisguises"))
 					setLibDisguiseAddon(new LibDisguiseAddon(getInstance()));
 				if (getDebugUtil().pluginCheck("TAB")) {
-					setTABAddon(new TABAddon(getInstance()));
+					try {
+						setTABAddon(new TABAddon(getInstance()));
+					} catch (NoClassDefFoundError e) {
+						ChatUtil.sendToConsoleWithPrefix("&cWarning&f! &cThis version of eGlow required TAB 3.0.0 or higher!");
+					}
 				} 
 				
 				new EGlowTABListenerUniv(getInstance());
