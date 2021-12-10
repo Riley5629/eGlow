@@ -99,6 +99,9 @@ public class TABAddon {
 			String tagPrefix = "";
 			String color = (glowColor.equals(ChatColor.RESET)) ? "" : glowColor + "";
 			
+			if (TabAPI.getInstance().getTeamManager() == null)
+				return;
+			
 			try {
 				tagPrefix = TabAPI.getInstance().getTeamManager().getOriginalPrefix(tabPlayer);
 			}  catch(Exception ex) {
