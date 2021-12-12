@@ -60,7 +60,8 @@ public class IEGlowPlayer {
 		} else {
 			this.glowVisibility = GlowVisibility.ALL;
 		}
-			
+		
+		setupForceGlows();
 	}
 	
 	public IEGlowPlayer(NPC npc) {
@@ -68,8 +69,6 @@ public class IEGlowPlayer {
 		this.citizensNPC = npc;
 		this.name = npc.getFullName();
 	}
-	
-	
 	
 	// Glowing stuff
 	public void setGlowing(boolean status, boolean fake) {
