@@ -25,7 +25,7 @@ public class TABAddon {
 	
 	//Bukkit
 	private boolean TAB_Bukkit;
-	private boolean TAB_New;
+	private boolean TAB_New = false;
 	private boolean TAB_NametagPrefixSuffixEnabled;
 	private boolean TAB_TeamPacketBlockingEnabled;
 	private boolean groupUpdateCheckerEnabled;

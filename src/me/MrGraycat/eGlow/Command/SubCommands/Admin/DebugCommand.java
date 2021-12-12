@@ -1,6 +1,8 @@
 package me.MrGraycat.eGlow.Command.SubCommands.Admin;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import me.MrGraycat.eGlow.Command.SubCommand;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
@@ -36,7 +38,17 @@ public class DebugCommand extends SubCommand {
 	@Override
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
 		ChatUtil.sendMsg(sender, "&f&m                        &r &fDebug info for &eeGlow: &f&m                          ");
-		getInstance().getDebugUtil().sendDebug(sender);
+		IEGlowPlayer target = ePlayer;
+		if (args.length >= 2) {
+			Player player = Bukkit.getPlayer(args[1]);
+			
+			if (player != null) {
+				IEGlowPlayer eTarget = getInstance().getDataManager().getEGlowPlayer(player);
+				target = eTarget;
+			}	
+		}
+		
+		getInstance().getDebugUtil().sendDebug(sender, target);
 		ChatUtil.sendMsg(sender, "&f&m                                                                               ");
 	}
 }

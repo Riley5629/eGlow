@@ -179,6 +179,11 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 						}
 					}
 				break;
+				case("debug"):
+					for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+						suggestions.add(p.getName());
+					}
+					break;
 				default:
 					if (getInstance().getDataManager().isValidEffect(args[0], false))
 						suggestions = new ArrayList<>(Arrays.asList("slow", "fast"));
