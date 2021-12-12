@@ -113,6 +113,12 @@ public class EGlowCustomEffectsConfig {
 			return config.getInt(effect.getConfigPath().replace("%effect%", value));
 		}
 		
+		public double getDouble(String value) {
+			if (!config.contains(effect.getConfigPath().replace("%effect%", value)))
+				return 1;
+			return config.getDouble(effect.getConfigPath().replace("%effect%", value));
+		}
+		
 		public String getString(String value) {
 			return config.getString(effect.getConfigPath().replace("%effect%", value));
 		}

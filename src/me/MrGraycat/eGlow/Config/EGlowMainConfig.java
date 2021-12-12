@@ -164,19 +164,19 @@ public class EGlowMainConfig {
 	}
 	
 	public static int getPlayerSlowDelay() {
-		return config.getInt("Delays.Player.Slow") * 20;
+		return (int) (config.getDouble("Delays.Player.Slow") * 20);
 	}
 	
 	public static int getPlayerFastDelay() {
-		return config.getInt("Delays.Player.Fast") * 20;
+		return (int) (config.getDouble("Delays.Player.Fast") * 20);
 	}
 	
 	public static int getNPCSlowDelay() {
-		return config.getInt("Delays.NPC.Slow") * 20;
+		return (int) (config.getDouble("Delays.NPC.Slow") * 20);
 	}
 	
 	public static int getNPCFastDelay() {
-		return config.getInt("Delays.NPC.Fast") * 20;
+		return (int) (config.getDouble("Delays.NPC.Fast") * 20);
 	}
 	
 	public static boolean OptionEnableCommandAlias() {

@@ -144,7 +144,7 @@ public class DataManager implements PluginMessageListener {
 			}
 			
 			String displayName = ChatUtil.translateColors(Effect.GET_NAME.getString(effectName));
-			int delay = Effect.GET_DELAY.getInt(effectName) * 20;
+			int delay = (int) (Effect.GET_DELAY.getDouble(effectName) * 20);
 			List<String> colors = Effect.GET_COLORS.getList(effectName);
 			String permission = "eglow.effect." + effectName.toLowerCase();
 			
