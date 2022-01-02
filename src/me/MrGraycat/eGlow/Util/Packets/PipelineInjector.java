@@ -86,7 +86,7 @@ public class PipelineInjector{
 	
 	@SuppressWarnings("unchecked")
 	private void modifyPlayers(Object packetPlayOutScoreboardTeam) throws Exception {
-		if (!blockPackets || !EGlowMainConfig.OptionFeaturePacketBlocker())
+		if (!blockPackets || !EGlowMainConfig.OptionFeaturePacketBlocker() || EGlow.getInstance().getTABAddon() != null)
 			return;
 		
 		String teamName = EGlow.getInstance().getNMSHook().nms.PacketPlayOutScoreboardTeam_NAME.get(packetPlayOutScoreboardTeam).toString();
