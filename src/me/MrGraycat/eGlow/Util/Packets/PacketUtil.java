@@ -31,7 +31,7 @@ public class PacketUtil {
 			
 			if (sendPackets && EGlowMainConfig.OptionFeatureTeamPackets()) {
 				if (getInstance().getTABAddon() == null || !getInstance().getTABAddon().blockEGlowPackets()) {
-					try {getInstance().getNMSHook().sendPacket(ePlayer, new PacketPlayOutScoreboardTeam(ep.getTeamName(), (getInstance().getVaultAddon() != null) ? getInstance().getVaultAddon().getPlayerTagPrefix(ep) : "", (getInstance().getVaultAddon() != null) ? getInstance().getVaultAddon().getPlayerTagSuffix(ep) : "", (EGlowMainConfig.OptionShowNametag() ? "always" : "never"), (EGlowMainConfig.OptionDoTeamCollision() ? "always" : "never"), Sets.newHashSet(ep.getDisplayName()), 21).setColor(EnumChatFormat.valueOf(ep.getActiveColor().name())).toNMS(pVersion));} catch (Exception e) {}
+					try {getInstance().getNMSHook().sendPacket(ePlayer, new PacketPlayOutScoreboardTeam(ep.getTeamName(), (getInstance().getVaultAddon() != null) ? getInstance().getVaultAddon().getPlayerTagPrefix(ep) : "", (getInstance().getVaultAddon() != null) ? getInstance().getVaultAddon().getPlayerTagSuffix(ep) : "", (EGlowMainConfig.OptionShowNametag() ? "always" : "never"), (EGlowMainConfig.OptionDoTeamCollision() ? "always" : "never"), Sets.newHashSet(ep.getDisplayName()), 21).setColor(EnumChatFormat.valueOf(ep.getActiveColor().name())).toNMS(pVersion));} catch (Exception e) {e.printStackTrace();}
 				}	
 			}
 			
