@@ -52,6 +52,12 @@ public class PipelineInjector{
 							PacketPlayOutEntityMetadata packetPlayOutEntityMetadata = null;
 							IEGlowPlayer glowingTarget = glowingEntities.get(entityID);
 							
+							if (glowingTarget == null) {
+								if (glowingEntities.containsKey(entityID))
+									glowingEntities.remove(entityID);
+								super.write(context, channel, channelPromise);
+							}
+							
 							GlowVisibility gv = eglowPlayer.getGlowVisibility();
 							
 							if (gv.equals(GlowVisibility.UNSUPPORTEDCLIENT) || gv.equals(GlowVisibility.NONE) || //Player can't see the glow & has it enabled
