@@ -40,6 +40,11 @@ public class GUICommand extends SubCommand {
 		if (ePlayer.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
 			 ChatUtil.sendMsgWithPrefix(sender, Message.UNSUPPORTED_GLOW.get());
 		
+		if (ePlayer.isInBlockedWorld()) {
+			ChatUtil.sendMsgWithPrefix(sender, Message.WORLD_BLOCKED.get());
+			return;
+		}
+		
 		new EGlowMainMenu(ePlayer.getPlayer()).openInventory();
 	}
 }
