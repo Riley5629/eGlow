@@ -56,6 +56,7 @@ public class PipelineInjector{
 								if (glowingEntities.containsKey(entityID))
 									glowingEntities.remove(entityID);
 								super.write(context, channel, channelPromise);
+								return;
 							}
 							
 							GlowVisibility gv = eglowPlayer.getGlowVisibility();
