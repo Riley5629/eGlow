@@ -26,7 +26,7 @@
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.2.1</version>
         <configuration>
-            <finalName>eGlow 3.1.0 1.9.4-1.17</finalName>
+            <finalName>eGlow 3.1.4 1.9.4-1.18.1</finalName>
         	<outputDirectory>C:\Users\Moors\Desktop</outputDirectory>
         	<relocations>
              <relocation>
@@ -105,7 +105,7 @@
    <dependency>
     <groupId>com.github.NEZNAMY</groupId>
     <artifactId>TAB</artifactId>
-    <version>2.9.0</version>
+    <version>3.0.2</version>
     <scope>provided</scope>
     <exclusions>
      <exclusion>
@@ -132,9 +132,26 @@
       <groupId>org.bstats</groupId>
       <artifactId>bstats-base</artifactId>
      </exclusion>
+     <exclusion>
+     	<groupId>net.luckperms</groupId>
+     	<artifactId>api</artifactId>
+     </exclusion>
+     <exclusion>
+     	<groupId>com.github.NEZNAMY.TAB</groupId>
+     	<artifactId>tab-bungeecord</artifactId>
+     </exclusion>
     </exclusions>
    </dependency> -->
   
+   <!-- LuckPerms -->
+   <dependency>
+	<groupId>net.luckperms</groupId>
+    <artifactId>api</artifactId>
+    <version>5.4</version>
+    <type>jar</type>
+    <scope>provided</scope>
+   </dependency>
+
    <!-- Citizens -->
    <dependency>
     <groupId>net.citizensnpcs</groupId>
