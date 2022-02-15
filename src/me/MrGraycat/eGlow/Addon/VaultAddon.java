@@ -7,25 +7,21 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.DebugUtil;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.milkbowl.vault.chat.Chat;
 
 public class VaultAddon {
-	private EGlow instance;
-	
-	private boolean PAPI = false;
 	private Chat chat;
 	
 	/**
 	 * Get vault's chat & check if PlaceholderAPI is installed for placeholder support
 	 */
-	public VaultAddon(EGlow instance) {
-		setInstance(instance);
-		RegisteredServiceProvider<Chat> rsp = getInstance().getServer().getServicesManager().getRegistration(Chat.class);
-		PAPI = getInstance().getDebugUtil().pluginCheck("PlaceholderAPI");
-		
+	public VaultAddon() {
+		RegisteredServiceProvider<Chat> rsp = EGlow.getInstance().getServer().getServicesManager().getRegistration(Chat.class);
+
 		if (rsp != null)
 			chat = (Chat) rsp.getProvider();
 	}
@@ -47,7 +43,7 @@ public class VaultAddon {
 		if (format.contains("%prefix%") || format.contains("%suffix%"))
 			format = format.replace("%prefix%", getPlayerPrefix(player)).replace("%suffix%", getPlayerSuffix(player));
 		
-		if (PAPI)
+		if (DebugUtil.isPAPIInstalled())
 			format = PlaceholderAPI.setPlaceholders(p, format);
 		
 		p.setPlayerListName(ChatUtil.translateColors(format));	
@@ -68,7 +64,7 @@ public class VaultAddon {
 		if (prefix.contains("%prefix%"))
 			prefix = prefix.replace("%prefix%", getPlayerPrefix(player));
 		
-		if (PAPI)
+		if (DebugUtil.isPAPIInstalled())
 			prefix = PlaceholderAPI.setPlaceholders(p, prefix);
 		
 		if (prefix.length() > 14 && ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12)
@@ -92,7 +88,7 @@ public class VaultAddon {
 		if (suffix.contains("%suffix%"))
 			suffix = suffix.replace("%suffix%", getPlayerSuffix(player));
 		
-		if (PAPI)
+		if (DebugUtil.isPAPIInstalled())
 			suffix = PlaceholderAPI.setPlaceholders(p, suffix);
 		
 		return (!suffix.isEmpty()) ? ChatUtil.translateColors(suffix) : "";
@@ -104,7 +100,7 @@ public class VaultAddon {
 	 * @return Vault prefix + glow color (cut to 16 chars if needed)
 	 */
 	private String getPlayerPrefix(IEGlowPlayer player) {
-		if (getInstance().getVaultAddon() == null || chat == null)
+		if (EGlow.getInstance().getVaultAddon() == null || chat == null)
 			return "";
 		
 		Player p = player.getPlayer();
@@ -121,7 +117,7 @@ public class VaultAddon {
 	 * @return Vault suffix + glow color (cut to 16 chars if needed)
 	 */
 	private String getPlayerSuffix(IEGlowPlayer player) {
-		if (getInstance().getVaultAddon() == null || chat == null)
+		if (EGlow.getInstance().getVaultAddon() == null || chat == null)
 			return "";
 		
 		Player p = player.getPlayer();
@@ -130,15 +126,5 @@ public class VaultAddon {
 		if (suffix != null && !suffix.equals(""))
 			return (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12 && suffix.length() > 16) ? suffix.substring(0,16) : suffix;
 		return "";
-	}
-	
-	//Setters
-	private void setInstance(EGlow instance) {
-		this.instance = instance;
-	}
-
-	//Getters
-	private EGlow getInstance() {
-		return this.instance;
 	}
 }

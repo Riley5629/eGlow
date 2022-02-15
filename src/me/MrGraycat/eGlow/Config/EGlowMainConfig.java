@@ -16,28 +16,22 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import me.neznamy.yamlassist.YamlAssist;
 
 public class EGlowMainConfig {
-	private EGlow instance;
-	
+
 	private static YamlConfiguration config;
 	private static File configFile;
 	
-	public EGlowMainConfig(EGlow instance) {
-		setInstance(instance);
-		load();
-	}
-	
-	private void load() {
-		configFile = new File(getInstance().getDataFolder(), "Config.yml");
+	public static void initialize() {
+		configFile = new File(EGlow.getInstance().getDataFolder(), "Config.yml");
 		
 		try {
-			if (!getInstance().getDataFolder().exists()) {
-				getInstance().getDataFolder().mkdirs();
+			if (!EGlow.getInstance().getDataFolder().exists()) {
+				EGlow.getInstance().getDataFolder().mkdirs();
 			}
 			
 			if (!configFile.exists()) {
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4Config.yml not found&f! &eCreating&f...");
 				configFile.getParentFile().mkdirs();
-				getInstance().saveResource("Config.yml", false);
+				EGlow.getInstance().saveResource("Config.yml", false);
 			} else {
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &aLoading main config&f.");
 			}
@@ -48,14 +42,14 @@ public class EGlowMainConfig {
 			registerCustomPermissions();
 			
 			if (!config.isConfigurationSection("Command-alias")) {
-				File oldFile = new File(getInstance().getDataFolder(), "OLDConfig.yml");
+				File oldFile = new File(EGlow.getInstance().getDataFolder(), "OLDConfig.yml");
 				
 				if (oldFile.exists())
 					oldFile.delete();
 				
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &cDetected old main config&f! &eRenamed it to OLDConfig&f! &eReconfiguring might be required&f!");
 				configFile.renameTo(oldFile);
-				load();
+				initialize();
 			}
 			
 			configCheck();
@@ -70,7 +64,7 @@ public class EGlowMainConfig {
 		}
 	}
 	
-	public boolean reloadConfig() {
+	public static boolean reloadConfig() {
 		YamlConfiguration configBackup = config;
 		File configFileBackup = configFile;
 		
@@ -78,7 +72,7 @@ public class EGlowMainConfig {
 			config = null;
 			configFile = null;
 			
-			configFile = new File(getInstance().getDataFolder(), "Config.yml");
+			configFile = new File(EGlow.getInstance().getDataFolder(), "Config.yml");
 			config = new YamlConfiguration();
 			config.load(configFile);
 			
@@ -100,7 +94,7 @@ public class EGlowMainConfig {
 		}
 	}
 	
-	private void configCheck() {
+	private static void configCheck() {
 		addIfMissing("Tabname.Enable", false);
 		addIfMissing("Tabname.tabPrefix", "%prefix%");
 		addIfMissing("Tabname.tabName", "&r%name%");
@@ -115,7 +109,7 @@ public class EGlowMainConfig {
 		addIfMissing("Options.Disable-glow-when-invisible", true);
 	}
 	
-	private void addIfMissing(String path, Object value) {
+	private static void addIfMissing(String path, Object value) {
 		try {
 			if (!config.contains(path)) {
 				config.set(path, value);
@@ -307,24 +301,14 @@ public class EGlowMainConfig {
 		return (config.contains("Options.Disable-prefix-in-GUI")) ? config.getBoolean("Options.Disable-prefix-in-GUI") : false;
 	}
 	
-	private void registerCustomPermissions() {
+	private static void registerCustomPermissions() {
 		if (!getForceGlowEnabled())
 			return;
 		
 		for (String name : getForceGlowList()) {
 			try {
-				getInstance().getServer().getPluginManager().addPermission(new Permission("eglow.force." + name.toLowerCase()));
+				EGlow.getInstance().getServer().getPluginManager().addPermission(new Permission("eglow.force." + name.toLowerCase()));
 			} catch (Exception ignored) {}
 		}
-	}
-	
-	//Setters
-	private void setInstance(EGlow instance) {
-		this.instance = instance;
-	}
-
-	//Getters
-	private EGlow getInstance() {
-		return this.instance;
 	}
 }

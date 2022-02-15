@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
+import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
@@ -20,14 +21,11 @@ import me.libraryaddict.disguise.events.UndisguiseEvent;
  * Versions: 1.12-1.16
  */
 public class LibDisguiseAddon implements Listener {
-	private EGlow instance;
-	
 	/**
 	 * Register LibDisguise disguise events
 	 */
-	public LibDisguiseAddon(EGlow instance) {
-		setInstance(instance);
-		getInstance().getServer().getPluginManager().registerEvents(this, getInstance());
+	public LibDisguiseAddon() {
+		EGlow.getInstance().getServer().getPluginManager().registerEvents(this, EGlow.getInstance());
 	}
 
 	
@@ -47,7 +45,7 @@ public class LibDisguiseAddon implements Listener {
 			
 			if (entity instanceof Player) {
 				Player player = (Player) entity;
-				IEGlowPlayer eglowPlayer = getInstance().getDataManager().getEGlowPlayer(player);
+				IEGlowPlayer eglowPlayer = DataManager.getEGlowPlayer(player);
 			
 				if (eglowPlayer != null && eglowPlayer.getGlowStatus() || eglowPlayer != null && eglowPlayer.getFakeGlowStatus()) {
 					eglowPlayer.setGlowDisableReason(GlowDisableReason.DISGUISE);
@@ -65,7 +63,7 @@ public class LibDisguiseAddon implements Listener {
 			
 			if (entity instanceof Player) {
 				Player player = (Player) event.getDisguised();
-				IEGlowPlayer eglowPlayer = getInstance().getDataManager().getEGlowPlayer(player);
+				IEGlowPlayer eglowPlayer = DataManager.getEGlowPlayer(player);
 				
 				if (eglowPlayer != null && eglowPlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
 					eglowPlayer.toggleGlow();
@@ -77,15 +75,5 @@ public class LibDisguiseAddon implements Listener {
 			ChatUtil.sendToConsoleWithPrefix("&cLibsDisguise isn't up to date &f!");
 			ex.printStackTrace();
 		}
-	}
-	
-	//Setters
-	private void setInstance(EGlow instance) {
-		this.instance = instance;
-	}
-
-	//Getters
-	private EGlow getInstance() {
-		return this.instance;
 	}
 }

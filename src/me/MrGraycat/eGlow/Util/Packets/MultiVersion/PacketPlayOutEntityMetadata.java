@@ -1,6 +1,7 @@
 package me.MrGraycat.eGlow.Util.Packets.MultiVersion;
 
 import me.MrGraycat.eGlow.EGlow;
+import me.MrGraycat.eGlow.Util.Packets.NMSHook;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.Datawatcher.DataWatcher;
 
 public class PacketPlayOutEntityMetadata extends PacketPlayOut {
@@ -15,6 +16,6 @@ public class PacketPlayOutEntityMetadata extends PacketPlayOut {
 	
 	@Override
 	public Object toNMS(ProtocolVersion clientVersion) throws Exception {
-		return EGlow.getInstance().getNMSHook().nms.newPacketPlayOutEntityMetadata.newInstance(entityId, dataWatcher.toNMS(), true);
+		return NMSHook.nms.newPacketPlayOutEntityMetadata.newInstance(entityId, dataWatcher.toNMS(), true);
 	}
 }

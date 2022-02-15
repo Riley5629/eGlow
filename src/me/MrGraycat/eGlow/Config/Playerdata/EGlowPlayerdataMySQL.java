@@ -8,7 +8,6 @@ import java.sql.SQLException;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
-import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
@@ -16,15 +15,13 @@ import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class EGlowPlayerdataMySQL {
-	private EGlow instance;
-	
+
 	MysqlDataSource mysql;
 
 	/**
 	 * Initialise externam playerdata using MySQL
 	 */
-	public EGlowPlayerdataMySQL(EGlow instance) {
-		setInstance(instance);
+	public EGlowPlayerdataMySQL() {
 		setupMySQLConnection();
 		
 		if (testMySQLConnection()) {
@@ -75,7 +72,7 @@ public class EGlowPlayerdataMySQL {
 					ePlayer.setGlowDisableReason(GlowDisableReason.valueOf(res.getString("glowDisableReason")));
 				}
 			} else {
-				getInstance().getPlayerdataManager().setDefaultValues(ePlayer);
+				EGlowPlayerdataManager.setDefaultValues(ePlayer);
 			}
 		} catch(SQLException e) {
 			ChatUtil.reportError(e);
@@ -228,15 +225,5 @@ public class EGlowPlayerdataMySQL {
 			if (res != null)
 				res.close();
 		} catch (SQLException e) {}
-	}
-	
-	//Setters
-	private void setInstance(EGlow instance) {
-		this.instance = instance;
-	}
-
-	//Getters
-	private EGlow getInstance() {
-		return this.instance;
 	}
 }

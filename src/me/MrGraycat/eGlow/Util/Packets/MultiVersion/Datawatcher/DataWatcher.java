@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import me.MrGraycat.eGlow.EGlow;
+import me.MrGraycat.eGlow.Util.Packets.NMSHook;
 import me.MrGraycat.eGlow.Util.Packets.NMSStorage;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
 
@@ -45,7 +45,7 @@ public class DataWatcher {
 	 * @throws Exception - if something fails
 	 */
 	public Object toNMS() throws Exception {
-		NMSStorage nms = EGlow.getInstance().getNMSHook().nms;
+		NMSStorage nms = NMSHook.nms;
 		Object nmsWatcher = nms.newDataWatcher.newInstance(new Object[] {null});
 		
 		if (nms.newDataWatcher.getParameterCount() == 1) {

@@ -1,41 +1,37 @@
 package me.MrGraycat.eGlow.Config.Playerdata;
 
-import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.ConfigType;
 
 public class EGlowPlayerdataManager {
-	private EGlow instance;
-	
-	private EGlowPlayerdataSQLite sqlite;
-	private Object mysql;
+	private static EGlowPlayerdataSQLite sqlite;
+	private static Object mysql;
 	
 	/**
 	 * Initialise the playerdata storage config/mysql
 	 */
-	public EGlowPlayerdataManager(EGlow instance) {
-		setInstance(instance);
+	public static void initialize() {
 		switch((EGlowMainConfig.useMySQL()) ? ConfigType.MYSQL : ConfigType.SQLITE) {
 		case SQLITE:
-			sqlite = new EGlowPlayerdataSQLite(getInstance());
+			sqlite = new EGlowPlayerdataSQLite();
 			break;
 		case MYSQL:
 			try {
 				Class.forName("com.mysql.cj.jdbc.MysqlDataSource");
-				mysql = new EGlowPlayerdataMySQL8(getInstance());
+				mysql = new EGlowPlayerdataMySQL8();
 			} catch(ClassNotFoundException e) {
-				mysql = new EGlowPlayerdataMySQL(getInstance());
+				mysql = new EGlowPlayerdataMySQL();
 			}
 			break;
 		}
 	}
-	
+
 	/**
 	 * Load a players data into eGlow
 	 * @param ePlayer player to load data from
 	 */
-	public void loadPlayerdata(IEGlowPlayer ePlayer) {
+	public static void loadPlayerdata(IEGlowPlayer ePlayer) {
 		switch((EGlowMainConfig.useMySQL()) ? ConfigType.MYSQL : ConfigType.SQLITE) {
 		case SQLITE:
 			if (sqlite == null)
@@ -60,7 +56,7 @@ public class EGlowPlayerdataManager {
 	 * Save the data for the given player
 	 * @param ePlayer player to save the data for
 	 */
-	public void savePlayerdata(IEGlowPlayer ePlayer) {
+	public static void savePlayerdata(IEGlowPlayer ePlayer) {
 		if (!ePlayer.getSaveData())
 			return;
 		
@@ -88,7 +84,7 @@ public class EGlowPlayerdataManager {
 	 * Save the data for the given player
 	 * @param ePlayer player to save the data for
 	 */
-	public boolean savePlayerdata(String uuid, String lastGlowData, boolean glowOnJoin, boolean activeOnQuit, String glowVisibility, String glowDisableReason) {
+	public static boolean savePlayerdata(String uuid, String lastGlowData, boolean glowOnJoin, boolean activeOnQuit, String glowVisibility, String glowDisableReason) {
 		switch((EGlowMainConfig.useMySQL()) ? ConfigType.MYSQL : ConfigType.SQLITE) {
 		case SQLITE:
 			if (sqlite == null)
@@ -112,19 +108,9 @@ public class EGlowPlayerdataManager {
 	 * Set non initialised player values
 	 * @param ePlayer to set the uninitialised values for
 	 */
-	public void setDefaultValues(IEGlowPlayer ePlayer) {
+	public static void setDefaultValues(IEGlowPlayer ePlayer) {
 		ePlayer.setActiveOnQuit(false);
 		ePlayer.setDataFromLastGlow("none");
 		ePlayer.setGlowOnJoin(EGlowMainConfig.OptionDefaultGlowOnJoinValue());
-	}
-	
-	//Setters
-	private void setInstance(EGlow instance) {
-		this.instance = instance;
-	}
-
-	//Getters
-	public EGlow getInstance() {
-		return this.instance;
 	}
 }

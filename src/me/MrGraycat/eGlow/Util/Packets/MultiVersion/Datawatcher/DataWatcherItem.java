@@ -1,6 +1,6 @@
 package me.MrGraycat.eGlow.Util.Packets.MultiVersion.Datawatcher;
 
-import me.MrGraycat.eGlow.EGlow;
+import me.MrGraycat.eGlow.Util.Packets.NMSHook;
 import me.MrGraycat.eGlow.Util.Packets.NMSStorage;
 
 public class DataWatcherItem {
@@ -27,7 +27,7 @@ public class DataWatcherItem {
 	 * @throws Exception - if something fails
 	 */
 	public static DataWatcherItem fromNMS(Object nmsItem) throws Exception {
-		NMSStorage nms = EGlow.getInstance().getNMSHook().nms;
+		NMSStorage nms = NMSHook.nms;
 		if (nms.minorVersion >= 9) {
 			Object nmsObject = nms.DataWatcherItem_TYPE.get(nmsItem);
 			//DataWatcherObject object = new DataWatcherObject((int) DataWatcherItem.getValue(nmsObject, "a"), DataWatcherItem.getValue(nmsObject, "b"));

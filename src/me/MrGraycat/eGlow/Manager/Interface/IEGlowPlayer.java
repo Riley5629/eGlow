@@ -12,16 +12,16 @@ import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Addon.Citizens.EGlowCitizensTrait;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
+import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Util.EnumUtil.*;
+import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.EnumChatFormat;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.trait.ScoreboardTrait;
 
-public class IEGlowPlayer {
-	private EGlow instance = EGlow.getInstance();
-	
+public class IEGlowPlayer {	
 	private String entityType;
 	
 	private NPC citizensNPC;
@@ -79,7 +79,7 @@ public class IEGlowPlayer {
 		
 		switch (entityType) {
 		case ("PLAYER"):
-			instance.getPacketUtil().updateGlowing(this, status);
+			PacketUtil.updateGlowing(this, status);
 			break;
 		case ("NPC"):
 			citizensNPC.data().setPersistent(NPC.GLOWING_METADATA, status);
@@ -113,7 +113,7 @@ public class IEGlowPlayer {
 			
 			switch(getEntityType()) {
 			case("PLAYER"):
-				instance.getPacketUtil().updateScoreboardTeam(getInstance().getDataManager().getEGlowPlayer(getPlayer()), getTeamName(), ((instance.getVaultAddon() != null) ? instance.getVaultAddon().getPlayerTagPrefix(this) : "") + color, (instance.getVaultAddon() != null) ? instance.getVaultAddon().getPlayerTagSuffix(this) : "", true, true, EnumChatFormat.valueOf(color.name()));
+				PacketUtil.updateScoreboardTeam(DataManager.getEGlowPlayer(getPlayer()), getTeamName(), ((EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagPrefix(this) : "") + color, (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagSuffix(this) : "", true, true, EnumChatFormat.valueOf(color.name()));
 				//prefix = "" + color
 			break;
 			case("NPC"):
@@ -126,9 +126,9 @@ public class IEGlowPlayer {
 		if (getEntityType().equals("NPC"))
 			return;
 		
-		if (instance.getVaultAddon() != null)
-			instance.getVaultAddon().updatePlayerTabname(this);
-		getInstance().getDataManager().sendAPIEvent(this, fake);
+		if (EGlow.getInstance().getVaultAddon() != null)
+			EGlow.getInstance().getVaultAddon().updatePlayerTabname(this);
+		DataManager.sendAPIEvent(this, fake);
 	}
 	
 	public boolean isSameGlow(IEGlowEffect newGlowEffect) {
@@ -159,9 +159,9 @@ public class IEGlowPlayer {
 		if (getFakeGlowStatus() || getGlowStatus()) {
 			disableGlow(false);
 			setFakeGlowStatus(false);
-			getInstance().getDataManager().sendAPIEvent(this, false);
-			if (instance.getVaultAddon() != null)
-				instance.getVaultAddon().updatePlayerTabname(this);
+			DataManager.sendAPIEvent(this, false);
+			if (EGlow.getInstance().getVaultAddon() != null)
+				EGlow.getInstance().getVaultAddon().updatePlayerTabname(this);
 		} else {
 			activateGlow();
 		}
@@ -174,10 +174,10 @@ public class IEGlowPlayer {
 			}
 			
 			if (hardReset)
-				setEffect(getInstance().getDataManager().getEGlowEffect("none"));
+				setEffect(DataManager.getEGlowEffect("none"));
 			
 			if (getPlayer() != null)
-				instance.getPacketUtil().updateScoreboardTeam(getInstance().getDataManager().getEGlowPlayer(getPlayer()), getTeamName(), (instance.getVaultAddon() != null) ? instance.getVaultAddon().getPlayerTagPrefix(this) : "", (instance.getVaultAddon() != null) ? instance.getVaultAddon().getPlayerTagSuffix(this) : "", true, true, EnumChatFormat.RESET);
+				PacketUtil.updateScoreboardTeam(DataManager.getEGlowPlayer(getPlayer()), getTeamName(), (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagPrefix(this) : "", (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagSuffix(this) : "", true, true, EnumChatFormat.RESET);
 			
 			if (this.citizensNPC != null)
 				citizensNPC.getOrAddTrait(ScoreboardTrait.class).setColor(ChatColor.RESET);
@@ -224,7 +224,7 @@ public class IEGlowPlayer {
 		
 		for (String permission : EGlowMainConfig.getForceGlowList()) {
 			if (getPlayer().hasPermission("eglow.force." + permission.toLowerCase())) {
-				IEGlowEffect effect = getInstance().getDataManager().getEGlowEffect(EGlowMainConfig.getForceGlowEffect(permission));
+				IEGlowEffect effect = DataManager.getEGlowEffect(EGlowMainConfig.getForceGlowEffect(permission));
 				
 				if (!forcedEffects.contains(effect))
 					forcedEffects.add(effect);
@@ -401,7 +401,7 @@ public class IEGlowPlayer {
 		if (lastGlow.contains("SOLID:") || lastGlow.contains("EFFECT:"))
 			lastGlow = lastGlow.replace("SOLID:", "").replace("EFFECT:", "");
 		
-		IEGlowEffect effect = getInstance().getDataManager().getEGlowEffect(lastGlow);
+		IEGlowEffect effect = DataManager.getEGlowEffect(lastGlow);
 		setEffect(effect);
 	}
 	
@@ -411,9 +411,5 @@ public class IEGlowPlayer {
 	
 	public String getLastGlow() {
 		return (getEffect() != null) ? getEffect().getName() : "none";
-	}
-
-	private EGlow getInstance() {
-		return this.instance;
 	}
 }

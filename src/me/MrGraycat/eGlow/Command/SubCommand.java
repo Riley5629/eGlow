@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Addon.Citizens.EGlowCitizensTrait;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
+import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import net.citizensnpcs.api.CitizensAPI;
@@ -90,7 +91,7 @@ public abstract class SubCommand {
 				
 			} else {
 				if (args[1].equalsIgnoreCase("*") || args[1].equalsIgnoreCase("all")) {
-					results.addAll(getInstance().getDataManager().getEGlowPlayers());
+					results.addAll(DataManager.getEGlowPlayers());
 					return results;
 				}
 				
@@ -101,7 +102,7 @@ public abstract class SubCommand {
 					return null;
 				}
 				
-				IEGlowPlayer ePlayer = getInstance().getDataManager().getEGlowPlayer(player);
+				IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(player);
 				
 				if (ePlayer == null) {
 					ChatUtil.sendMsgWithPrefix(sender, Message.PLAYER_NOT_FOUND.get());
@@ -120,6 +121,7 @@ public abstract class SubCommand {
 		}
 		return null;
 	}
+	
 	public EGlow getInstance() {
 		return EGlow.getInstance();
 	}

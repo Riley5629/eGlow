@@ -7,15 +7,17 @@ import java.net.URL;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.IllegalPluginAccessException;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.MrGraycat.eGlow.API.EGlowAPI;
+import me.MrGraycat.eGlow.Addon.LuckPermsAddon;
+import me.MrGraycat.eGlow.Addon.PlaceholderAPIAddon;
 import me.MrGraycat.eGlow.Addon.VaultAddon;
 import me.MrGraycat.eGlow.Addon.Citizens.CitizensAddon;
 import me.MrGraycat.eGlow.Addon.Disguises.IDisguiseAddon;
 import me.MrGraycat.eGlow.Addon.Disguises.LibDisguiseAddon;
-import me.MrGraycat.eGlow.Addon.Placeholders.EGlowPlaceholderAPI;
 import me.MrGraycat.eGlow.Addon.TAB.TABAddon;
 import me.MrGraycat.eGlow.Addon.TAB.Listeners.EGlowTABListenerUniv;
 import me.MrGraycat.eGlow.Command.EGlowCommand;
@@ -27,8 +29,6 @@ import me.MrGraycat.eGlow.Event.EGlowEventListener;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Util.DebugUtil;
 import me.MrGraycat.eGlow.Util.Packets.NMSHook;
-import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
-import me.MrGraycat.eGlow.Util.Packets.PipelineInjector;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
@@ -36,27 +36,7 @@ public class EGlow extends JavaPlugin {
 	private static EGlow instance;
 	private static EGlowAPI API;
 	private boolean UP_TO_DATE = true;
-	
-	//Configs
-	private EGlowMainConfig mainConfig;
-	private EGlowMessageConfig messageConfig;
-	private EGlowPlayerdataManager playerdataConfig;
-	private EGlowCustomEffectsConfig effectsConfig;
-	
-	//Events
-	private EGlowEventListener eventListener;
-	
-	//Managers
-	private DataManager dataManager;
-	
-	//Packets
-	private NMSHook nmsHook;
-	private PacketUtil packetUtil;
-	private PipelineInjector pipelineInjector;
-	
-	//chat/text
-	private DebugUtil debugUtil;
-	
+
 	//Addons
 	private CitizensAddon citizensAddon;
 	private IDisguiseAddon iDisguiseAddon;
@@ -68,28 +48,21 @@ public class EGlow extends JavaPlugin {
 	public void onEnable() {
 		setInstance(this);
 		setAPI(new EGlowAPI());
-		setDebugUtil(new DebugUtil());
 		
 		if (versionIsCompactible()) {
 			ProtocolVersion.SERVER_VERSION = ProtocolVersion.fromServerString(Bukkit.getBukkitVersion().split("-")[0]);
+
+			loadConfigs();
 			
-			setMainConfig(new EGlowMainConfig(getInstance()));
-			setMessageConfig(new EGlowMessageConfig(getInstance()));
-			setCustomEffectConfig(new EGlowCustomEffectsConfig(getInstance()));
-			
-			setPlayerdataManager(new EGlowPlayerdataManager(getInstance()));
-			setDataManager(new DataManager(getInstance()));
-			
-			setNMSHook(new NMSHook());
-			setPacketUtil(new PacketUtil(getInstance()));
-			setPipelineInjector(new PipelineInjector());
+			DataManager.initialize();
+			NMSHook.initialize();
 			
 			registerEventsAndCommands();
 			checkForUpdates();
 			runAddonHooks();
 			runPlayerCheckOnEnable();
 		} else {
-			ChatUtil.sendToConsole("Disabling eGlow! Your server version is not compactible! (" + getDebugUtil().getServerVersion() + ")");
+			ChatUtil.sendToConsole("Disabling eGlow! Your server version is not compactible! (" + DebugUtil.getServerVersion() + ")");
 			getServer().getPluginManager().disablePlugin(this);
 		}
 	}
@@ -97,50 +70,64 @@ public class EGlow extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		try {
-			runPlayerCheckOnDisable();
-			getServer().getServicesManager().unregisterAll(this);
-			Bukkit.getScheduler().cancelTasks(this);
+			//runPlayerCheckOnDisable();
+			//getServer().getServicesManager().unregisterAll(this);
+			//Bukkit.getScheduler().cancelTasks(this);
 			API = null;
 			instance = null;
 		} catch (IllegalPluginAccessException e) {}
 	}
 	
 	private boolean versionIsCompactible() {
-		if (getDebugUtil().getServerVersion().equals("v_1_9_R1") || getDebugUtil().getMinorVersion() < 9 || getDebugUtil().getMinorVersion() > 18)
+		if (DebugUtil.getServerVersion().equals("v_1_9_R1") || DebugUtil.getMinorVersion() < 9 || DebugUtil.getMinorVersion() > 18)
 			return false;
 		return true;
 	}
 	
+	private void loadConfigs() {
+		EGlowMainConfig.initialize();
+		EGlowMessageConfig.initialize();
+		EGlowCustomEffectsConfig.initialize();
+		EGlowPlayerdataManager.initialize();
+	}
+	
 	private void registerEventsAndCommands() {
-		getCommand("eglow").setExecutor(new EGlowCommand(getInstance()));
-		setEventListener(new EGlowEventListener(getInstance()));
+		getCommand("eglow").setExecutor(new EGlowCommand());
+		new EGlowEventListener();
 	}
 
 	private void runAddonHooks() {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				if (getDebugUtil().pluginCheck("Vault"))
-					setVaultAddon(new VaultAddon(getInstance()));
-				if (getDebugUtil().pluginCheck("PlaceholderAPI"))
-					new EGlowPlaceholderAPI(getInstance());
-				if (getDebugUtil().pluginCheck("Citizens") && citizensAddon == null)
-					setCitizensAddon(citizensAddon = new CitizensAddon());
-				if (getDebugUtil().pluginCheck("iDisguise"))
-					setIDisguiseAddon(new IDisguiseAddon(getInstance()));
-				if (getDebugUtil().pluginCheck("LibsDisguises"))
-					setLibDisguiseAddon(new LibDisguiseAddon(getInstance()));
-				if (getDebugUtil().pluginCheck("TAB")) {
+				if (DebugUtil.pluginCheck("PlaceholderAPI"))
+					new PlaceholderAPIAddon();
+				if (DebugUtil.pluginCheck("Vault"))
+					setVaultAddon(new VaultAddon());
+				if (DebugUtil.pluginCheck("Citizens") && citizensAddon == null)
+					setCitizensAddon(new CitizensAddon());
+				if (DebugUtil.pluginCheck("iDisguise"))
+					setIDisguiseAddon(new IDisguiseAddon());
+				if (DebugUtil.pluginCheck("LibsDisguises"))
+					setLibDisguiseAddon(new LibDisguiseAddon());
+				if (DebugUtil.pluginCheck("TAB")) {
 					try {
-						setTABAddon(new TABAddon(getInstance()));
-					} catch (NoClassDefFoundError e) {
-						ChatUtil.sendToConsoleWithPrefix("&cWarning&f! &cThis version of eGlow required TAB 3.0.0 or higher!");
+						Plugin TAB_Plugin = ((Plugin) DebugUtil.getPlugin("TAB"));
+						
+						if (TAB_Plugin != null && TAB_Plugin.getClass().getName().startsWith("me.neznamy.tab"))
+							setTABAddon(new TABAddon(TAB_Plugin));
+					} catch (NoClassDefFoundError e) {			
+						ChatUtil.sendToConsoleWithPrefix("&cWarning&f! &cThis version of eGlow requires TAB 3.1.0 or higher!");
 					}
 				} 
 				
-				new EGlowTABListenerUniv(getInstance());
-					
-				getDebugUtil().addonCheck();
+				EGlow.getInstance().getServer().getPluginManager().registerEvents(new EGlowTABListenerUniv(), getInstance());
+				
+				if (DebugUtil.pluginCheck("LuckPerms")) {
+					new LuckPermsAddon();
+				}
+				
+				DebugUtil.addonCheck();
 			}
 		}.runTask(this);
 	}
@@ -148,20 +135,20 @@ public class EGlow extends JavaPlugin {
 	private void runPlayerCheckOnEnable() {
 		if (!getServer().getOnlinePlayers().isEmpty()) {
 			for (Player player : getServer().getOnlinePlayers()) {
-				if (getDataManager().getEGlowPlayer(player) == null)
-					getEventListener().PlayerConnect(player, player.getUniqueId());
+				if (DataManager.getEGlowPlayer(player) == null)
+					EGlowEventListener.PlayerConnect(player, player.getUniqueId());
 			}
 		}
 	}
 	
-	private void runPlayerCheckOnDisable() {
+	/*private void runPlayerCheckOnDisable() {
 		if (!getServer().getOnlinePlayers().isEmpty()) {
 			for (Player player : getServer().getOnlinePlayers()) {
-				if (getDataManager().getEGlowPlayer(player) == null)
-					getEventListener().PlayerDisconnect(player, true);
+				if (DataManager.getEGlowPlayer(player) == null)
+					EGlowEventListener.PlayerDisconnect(player, true);
 			}
 		}
-	}
+	}*/
 	
 	private void checkForUpdates() {
 		  try { 			
@@ -192,47 +179,7 @@ public class EGlow extends JavaPlugin {
 	private void setUpToDate(boolean up_to_date) {
 		this.UP_TO_DATE = up_to_date;
 	}
-	
-	private void setMainConfig(EGlowMainConfig mainConfig) {
-		this.mainConfig = mainConfig;
-	}
-	
-	private void setMessageConfig(EGlowMessageConfig messageConfig) {
-		this.messageConfig = messageConfig;
-	}
-	
-	private void setCustomEffectConfig(EGlowCustomEffectsConfig effectsConfig) {
-		this.effectsConfig = effectsConfig;
-	}
-	
-	private void setEventListener(EGlowEventListener eventListener) {
-		this.eventListener = eventListener;
-	}
-	
-	private void setPlayerdataManager(EGlowPlayerdataManager playerdataConfig) {
-		this.playerdataConfig = playerdataConfig;
-	}
-	
-	private void setDataManager(DataManager dataManager) {
-		this.dataManager = dataManager;
-	}
-	
-	private void setNMSHook(NMSHook nmsHook) {
-		this.nmsHook = nmsHook;
-	}
-	
-	private void setPacketUtil(PacketUtil packetUtil) {
-		this.packetUtil = packetUtil;
-	}
-	
-	private void setPipelineInjector(PipelineInjector pipelineInjector) {
-		this.pipelineInjector = pipelineInjector;
-	}
-	
-	private void setDebugUtil(DebugUtil debugUtil) {
-		this.debugUtil = debugUtil;
-	}
-	
+
 	private void setCitizensAddon(CitizensAddon citizensAddon) {
 		this.citizensAddon = citizensAddon;
 	}
@@ -265,47 +212,7 @@ public class EGlow extends JavaPlugin {
 	public boolean isUpToDate() {
 		return UP_TO_DATE;
 	}
-	
-	public EGlowMainConfig getMainConfig() {
-		return this.mainConfig;
-	}
-	
-	public EGlowMessageConfig getMessageConfig() {
-		return this.messageConfig;
-	}
-	
-	public EGlowCustomEffectsConfig getCustomEffectConfig() {
-		return this.effectsConfig;
-	}
-	
-	public EGlowEventListener getEventListener() {
-		return this.eventListener;
-	}
-	
-	public EGlowPlayerdataManager getPlayerdataManager() {
-		return this.playerdataConfig;
-	}
-	
-	public DataManager getDataManager() {
-		return this.dataManager;
-	}
-	
-	public NMSHook getNMSHook() {
-		return this.nmsHook;
-	}
-	
-	public PacketUtil getPacketUtil() {
-		return this.packetUtil;
-	}
-	
-	public PipelineInjector getPipelineInjector() {
-		return this.pipelineInjector;
-	}
-	
-	public DebugUtil getDebugUtil() {
-		return this.debugUtil;
-	}
-	
+
 	public CitizensAddon getCitizensAddon() {
 		return this.citizensAddon;
 	}

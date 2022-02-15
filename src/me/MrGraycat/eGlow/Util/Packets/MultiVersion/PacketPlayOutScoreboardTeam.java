@@ -3,7 +3,7 @@ package me.MrGraycat.eGlow.Util.Packets.MultiVersion;
 import java.util.Collection;
 import java.util.Collections;
 
-import me.MrGraycat.eGlow.EGlow;
+import me.MrGraycat.eGlow.Util.Packets.NMSHook;
 import me.MrGraycat.eGlow.Util.Packets.NMSStorage;
 
 public class PacketPlayOutScoreboardTeam extends PacketPlayOut {
@@ -68,7 +68,7 @@ public class PacketPlayOutScoreboardTeam extends PacketPlayOut {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Object toNMS(ProtocolVersion clientVersion) throws Exception {
-		NMSStorage nms = EGlow.getInstance().getNMSHook().nms;
+		NMSStorage nms = NMSHook.nms;
 		
 		String prefix = playerPrefix;
 		String suffix = playerSuffix;
@@ -81,8 +81,8 @@ public class PacketPlayOutScoreboardTeam extends PacketPlayOut {
 	    ((Collection) nms.ScoreboardTeam_getPlayerNameSet.invoke(team, new Object[0])).addAll(players);
 	    
 		if (nms.minorVersion >= 13) {
-			if (prefix != null && prefix.length() > 0) nms.ScoreboardTeam_setPrefix.invoke(team, new Object[] { EGlow.getInstance().getNMSHook().stringToComponent(IChatBaseComponent.optimizedComponent(prefix).toString(clientVersion)) }); 
-			if (suffix != null && suffix.length() > 0) nms.ScoreboardTeam_setSuffix.invoke(team, new Object[] { EGlow.getInstance().getNMSHook().stringToComponent(IChatBaseComponent.optimizedComponent(suffix).toString(clientVersion)) }); 
+			if (prefix != null && prefix.length() > 0) nms.ScoreboardTeam_setPrefix.invoke(team, new Object[] { NMSHook.stringToComponent(IChatBaseComponent.optimizedComponent(prefix).toString(clientVersion)) }); 
+			if (suffix != null && suffix.length() > 0) nms.ScoreboardTeam_setSuffix.invoke(team, new Object[] { NMSHook.stringToComponent(IChatBaseComponent.optimizedComponent(suffix).toString(clientVersion)) }); 
 			EnumChatFormat format = color != null ? color : EnumChatFormat.lastColorsOf(prefix);
 			nms.ScoreboardTeam_setColor.invoke(team, new Object[] { ((Object[])nms.EnumChatFormat.getMethod("values", new Class[0]).invoke(null, new Object[0]))[format.ordinal()] });
 		} else {

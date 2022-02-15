@@ -27,32 +27,29 @@ import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class DataManager implements PluginMessageListener {	
-	private EGlow instance;
-	
 	private static Map<String, IEGlowPlayer> dataPlayers = new ConcurrentHashMap<>();
 	private static ConcurrentHashMap<String, IEGlowEffect> dataEffects = new ConcurrentHashMap<>();
 	private static ConcurrentHashMap<String, IEGlowEffect> dataCustomEffects = new ConcurrentHashMap<>();
 	
 	//Server
-	public DataManager(EGlow instance) {
-		setInstance(instance);
+	public static void initialize() {
 		addEGlowEffects();
-		getInstance().getServer().getMessenger().registerOutgoingPluginChannel(getInstance(), "eglow:bungee");
-		getInstance().getServer().getMessenger().registerIncomingPluginChannel(getInstance(), "eglow:bungee", this);
+		EGlow.getInstance().getServer().getMessenger().registerOutgoingPluginChannel(EGlow.getInstance(), "eglow:bungee");
+		EGlow.getInstance().getServer().getMessenger().registerIncomingPluginChannel(EGlow.getInstance(), "eglow:bungee", new DataManager());
 	}
 	
 	//Entities
-	public IEGlowPlayer addEGlowPlayer(Player player, String UUID) {
+	public static IEGlowPlayer addEGlowPlayer(Player player, String UUID) {
 		if (!dataPlayers.containsKey(UUID))
 			dataPlayers.put(UUID, new IEGlowPlayer(player));
 		return dataPlayers.get(UUID);
 	}
 	
-	public IEGlowPlayer getEGlowPlayer(Player player) {
+	public static IEGlowPlayer getEGlowPlayer(Player player) {
 		return (dataPlayers.containsKey(player.getUniqueId().toString())) ? dataPlayers.get(player.getUniqueId().toString()) : null;
 	}
 	
-	public IEGlowPlayer getEGlowPlayer(String name) {
+	public static IEGlowPlayer getEGlowPlayer(String name) {
 		Player player = Bukkit.getPlayer(name);
 		
 		//Prevent kick loop caused by for example npc's
@@ -61,16 +58,16 @@ public class DataManager implements PluginMessageListener {
 		return (dataPlayers.containsKey(player.getUniqueId().toString())) ? dataPlayers.get(player.getUniqueId().toString()) : null;
 	}
 	
-	public Collection<IEGlowPlayer> getEGlowPlayers() {
+	public static Collection<IEGlowPlayer> getEGlowPlayers() {
 		return dataPlayers.values();
 	}
 	
-	public void removeEGlowPlayer(Player p) {
+	public static void removeEGlowPlayer(Player p) {
 		dataPlayers.remove(p.getUniqueId().toString());
 	}
 	
 	//Effects
-	public void addEGlowEffects() {
+	public static void addEGlowEffects() {
 		IEGlowEffect effect;
 		
 		for (ChatColor color : ChatColor.values()) {
@@ -132,9 +129,9 @@ public class DataManager implements PluginMessageListener {
 		addCustomEffects();
 	}
 
-	private ArrayList<String> oldEffects = new ArrayList<>();
+	private static ArrayList<String> oldEffects = new ArrayList<>();
 
-	public void addCustomEffects() {
+	public static void addCustomEffects() {
 		ArrayList<String> newEffects = new ArrayList<>();
 		
 		for (String effectName : Effect.GET_ALL_EFFECTS.get()) {
@@ -157,10 +154,10 @@ public class DataManager implements PluginMessageListener {
 					effect.setColors(colors);
 				}
 				oldEffects.remove(effectName.toLowerCase());
-				getInstance().getServer().getPluginManager().removePermission(permission);
+				EGlow.getInstance().getServer().getPluginManager().removePermission(permission);
 			} else {
 				addEGlowEffect(effectName.toLowerCase(), displayName, "eglow.effect." + effectName.toLowerCase(), delay, colors);
-				try {getInstance().getServer().getPluginManager().addPermission(new Permission(permission, "Activate " + effectName + " effect.", PermissionDefault.FALSE));} catch (IllegalArgumentException e) {}//Permission already registered ;)}
+				try {EGlow.getInstance().getServer().getPluginManager().addPermission(new Permission(permission, "Activate " + effectName + " effect.", PermissionDefault.FALSE));} catch (IllegalArgumentException e) {}//Permission already registered ;)}
 			}
 			
 			newEffects.add(effectName.toLowerCase());
@@ -181,17 +178,17 @@ public class DataManager implements PluginMessageListener {
 		oldEffects = newEffects;
 	}
 	
-	private void addEGlowEffect(String name, String displayName, String permissionNode, ChatColor color) {
+	private static void addEGlowEffect(String name, String displayName, String permissionNode, ChatColor color) {
 		if (!dataEffects.containsKey(name.toLowerCase()))
 			dataEffects.put(name.toLowerCase(), new IEGlowEffect(name, displayName, permissionNode, 0, color));
 	}
 	
-	private void addEGlowEffect(String name, String displayName, String permissionNode, int delay, ChatColor... colors) {
+	private static void addEGlowEffect(String name, String displayName, String permissionNode, int delay, ChatColor... colors) {
 		if (!dataEffects.containsKey(name.toLowerCase()))
 			dataEffects.put(name.toLowerCase(), new IEGlowEffect(name, displayName, permissionNode, delay, colors));
 	}
 	
-	private void addEGlowEffect(String name, String displayName, String permissionNode, int delay, List<String> colors) {
+	private static void addEGlowEffect(String name, String displayName, String permissionNode, int delay, List<String> colors) {
 		for (String color : colors) {
 			try {
 				color = color.toLowerCase().replace("dark", "dark_").replace("light", "_light").replace("purple", "dark_purple").replace("pink", "light_purple").replace("none", "reset");
@@ -206,35 +203,35 @@ public class DataManager implements PluginMessageListener {
 			dataCustomEffects.put(name.toLowerCase(), new IEGlowEffect(name, displayName, permissionNode, delay, colors));
 	}
 	
-	public List<IEGlowEffect> getEGlowEffects() {
+	public static List<IEGlowEffect> getEGlowEffects() {
 		List<IEGlowEffect> effects = new ArrayList<IEGlowEffect>();
 		
 		dataEffects.forEach((key, value) -> { effects.add(value); });
 		return effects;
 	}
 	
-	public List<IEGlowEffect> getCustomEffects() {
+	public static List<IEGlowEffect> getCustomEffects() {
 		List<IEGlowEffect> effects = new ArrayList<IEGlowEffect>();
 		
 		dataCustomEffects.forEach((key, value) -> { effects.add(value); });
 		return effects;
 	}
 	
-	public boolean isValidEffect(String name, boolean containsSpeed) {
+	public static boolean isValidEffect(String name, boolean containsSpeed) {
 		return (containsSpeed) ? (dataEffects.containsKey(name.toLowerCase()) || dataCustomEffects.containsKey(name.toLowerCase())) : (dataEffects.containsKey(name.toLowerCase() + "slow") && dataEffects.containsKey(name.toLowerCase() + "fast"));
 	}
 	
-	public boolean isValidSpeed(String speed) {
+	public static boolean isValidSpeed(String speed) {
 		speed = speed.toLowerCase();
 		
 		return (speed.equals("slow") || speed.equals("fast")) ? true : false;
 	}
 	
-	public boolean isCustomEffect(String name) {
+	public static boolean isCustomEffect(String name) {
 		return (dataCustomEffects.containsKey(name)) ? true : false;
 	}
 	
-	public IEGlowEffect getEGlowEffect(String name) {
+	public static IEGlowEffect getEGlowEffect(String name) {
 		if (dataEffects.containsKey(name.toLowerCase()))
 			return dataEffects.get(name.toLowerCase());
 		if (dataCustomEffects.containsKey(name.toLowerCase()))
@@ -242,7 +239,7 @@ public class DataManager implements PluginMessageListener {
 		return null;
 	}
 	
-	private void removeCustomEGlowEffect(String name) {
+	private static void removeCustomEGlowEffect(String name) {
 		if (dataCustomEffects.containsKey(name.toLowerCase()))
 			dataCustomEffects.remove(name.toLowerCase());
 	}
@@ -253,15 +250,15 @@ public class DataManager implements PluginMessageListener {
 		
 	}
 	
-	public void TABProxyUpdateRequest(Player player, String glowColor) {
+	public static void TABProxyUpdateRequest(Player player, String glowColor) {
 		ByteArrayDataOutput out = ByteStreams.newDataOutput();
 		out.writeUTF("TABProxyUpdateRequest");
 		out.writeUTF(player.getUniqueId().toString());
 		out.writeUTF(glowColor);
-		Bukkit.getServer().sendPluginMessage(getInstance(), "eglow:bungee", out.toByteArray());
+		Bukkit.getServer().sendPluginMessage(EGlow.getInstance(), "eglow:bungee", out.toByteArray());
 	}
 	
-	public void sendAPIEvent(IEGlowPlayer player, boolean fake) {
+	public static void sendAPIEvent(IEGlowPlayer player, boolean fake) {
 		if (fake) return;
 		new BukkitRunnable() {
 			@Override
@@ -269,15 +266,5 @@ public class DataManager implements PluginMessageListener {
 				Bukkit.getPluginManager().callEvent(new GlowColorChangeEvent(player.getPlayer(), player.getUUID(), player.getActiveColor(), player.getGlowStatus()));	
 			}
 		}.runTask(EGlow.getInstance());
-	}
-	
-	//Setters
-	private void setInstance(EGlow instance) {
-		this.instance = instance;
-	}
-
-	//Getters
-	private EGlow getInstance() {
-		return this.instance;
 	}
 }

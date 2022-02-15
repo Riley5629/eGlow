@@ -10,16 +10,15 @@ import org.bukkit.potion.PotionEffectType;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
+import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class EGlowEventListener113AndAbove implements Listener {
-	private EGlow instance;
-	
-	public EGlowEventListener113AndAbove(EGlow instance) {
-		setInstance(instance);
-		getInstance().getServer().getPluginManager().registerEvents(this, getInstance());
+
+	public EGlowEventListener113AndAbove() {
+		EGlow.getInstance().getServer().getPluginManager().registerEvents(this, EGlow.getInstance());
 	}
 	
 	@EventHandler
@@ -27,7 +26,7 @@ public class EGlowEventListener113AndAbove implements Listener {
 		Entity entity = e.getEntity();
 		
 		if (entity instanceof Player) {
-			IEGlowPlayer ep = getInstance().getDataManager().getEGlowPlayer((Player) entity);
+			IEGlowPlayer ep = DataManager.getEGlowPlayer((Player) entity);
 
 			if (ep == null)
 				return;
@@ -58,15 +57,5 @@ public class EGlowEventListener113AndAbove implements Listener {
 					ep.setGlowDisableReason(GlowDisableReason.NONE);	
 			}
 		}
-	}
-	
-	//Setters
-	private void setInstance(EGlow instance) {
-		this.instance = instance;
-	}
-
-	//Getters
-	private EGlow getInstance() {
-		return this.instance;
 	}
 }

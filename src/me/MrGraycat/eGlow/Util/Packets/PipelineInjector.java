@@ -5,20 +5,20 @@ import java.util.*;
 import io.netty.channel.*;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.DebugUtil;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowTargetMode;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.PacketPlayOut;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.PacketPlayOutEntityMetadata;
 
 public class PipelineInjector{
-	public PipelineInjector() {}
+	private static final String DECODER_NAME = "eGlowReader";
+	public static HashMap<Integer, IEGlowPlayer> glowingEntities = new HashMap<Integer, IEGlowPlayer>();
 	
-	private final String DECODER_NAME = "eGlowReader";
-	public HashMap<Integer, IEGlowPlayer> glowingEntities = new HashMap<Integer, IEGlowPlayer>();
-	
-	public void inject(IEGlowPlayer eglowPlayer) {		
-		Channel channel = (Channel) EGlow.getInstance().getNMSHook().getChannel(eglowPlayer.getPlayer());
+	public static void inject(IEGlowPlayer eglowPlayer) {		
+		Channel channel = (Channel) NMSHook.getChannel(eglowPlayer.getPlayer());
 		
 		if (!channel.pipeline().names().contains("packet_handler"))
 			return;
@@ -34,7 +34,7 @@ public class PipelineInjector{
 				}
 				
 				public void write(ChannelHandlerContext context, Object packet, ChannelPromise channelPromise) throws Exception {		
-					if (EGlow.getInstance().getNMSHook().nms.PacketPlayOutScoreboardTeam.isInstance(packet)) {
+					if (NMSHook.nms.PacketPlayOutScoreboardTeam.isInstance(packet)) {
 						if (EGlow.getInstance().getTABAddon() != null && EGlow.getInstance().getTABAddon().blockEGlowPackets()) {
 							super.write(context, packet, channelPromise);
 							return;
@@ -45,7 +45,7 @@ public class PipelineInjector{
 						return;
 					}
 
-					if (EGlow.getInstance().getNMSHook().nms.PacketPlayOutEntityMetadata.isInstance(packet)) {
+					if (NMSHook.nms.PacketPlayOutEntityMetadata.isInstance(packet)) {
 						Integer entityID = (Integer) PacketPlayOut.getField(packet, "a");
 					
 						if (glowingEntities.containsKey(entityID)) {
@@ -68,7 +68,7 @@ public class PipelineInjector{
 								return;
 							}
 
-							packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(EGlow.getInstance(), entityID, EGlow.getInstance().getNMSHook().setGlowFlag(glowingTarget.getEntity(), true)/*eglowEntity*/);
+							packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(EGlow.getInstance(), entityID, NMSHook.setGlowFlag(glowingTarget.getEntity(), true)/*eglowEntity*/);
 							super.write(context, packetPlayOutEntityMetadata.toNMS(eglowPlayer.getVersion()), channelPromise);
 							return;
 						}
@@ -83,8 +83,8 @@ public class PipelineInjector{
 		}
 	}
 
-	public void uninject(IEGlowPlayer eglowPlayer) {
-		Channel channel = (Channel) EGlow.getInstance().getNMSHook().getChannel(eglowPlayer.getPlayer());
+	public static void uninject(IEGlowPlayer eglowPlayer) {
+		Channel channel = (Channel) NMSHook.getChannel(eglowPlayer.getPlayer());
 		if (channel.pipeline().names().contains(DECODER_NAME)) channel.pipeline().remove(DECODER_NAME);
 		
 		if (glowingEntities.containsValue(eglowPlayer))
@@ -92,17 +92,20 @@ public class PipelineInjector{
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void modifyPlayers(Object packetPlayOutScoreboardTeam) throws Exception {
-		if (!blockPackets || !EGlowMainConfig.OptionFeaturePacketBlocker() || EGlow.getInstance().getTABAddon() != null)
+	private static void modifyPlayers(Object packetPlayOutScoreboardTeam) throws Exception {
+		if (!blockPackets || !EGlowMainConfig.OptionFeaturePacketBlocker())
 			return;
 		
-		String teamName = EGlow.getInstance().getNMSHook().nms.PacketPlayOutScoreboardTeam_NAME.get(packetPlayOutScoreboardTeam).toString();
-		Collection<String> players = (Collection<String>) EGlow.getInstance().getNMSHook().nms.PacketPlayOutScoreboardTeam_PLAYERS.get(packetPlayOutScoreboardTeam);
+		if (EGlow.getInstance().getTABAddon() != null && DebugUtil.TABInstalled() && EGlow.getInstance().getTABAddon().getTABSupported())
+			return;
+		
+		String teamName = NMSHook.nms.PacketPlayOutScoreboardTeam_NAME.get(packetPlayOutScoreboardTeam).toString();
+		Collection<String> players = (Collection<String>) NMSHook.nms.PacketPlayOutScoreboardTeam_PLAYERS.get(packetPlayOutScoreboardTeam);
 		if (players == null) return;
 		Collection<String> newList = new ArrayList<>();
 		
 		for (String entry : players) {
-			IEGlowPlayer ePlayer = EGlow.getInstance().getDataManager().getEGlowPlayer(entry);
+			IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(entry);
 			
 			if (ePlayer == null) {
 				newList.add(entry);
@@ -115,16 +118,16 @@ public class PipelineInjector{
 			newList.add(entry);
 		}	
 		
-		EGlow.getInstance().getNMSHook().nms.PacketPlayOutScoreboardTeam_PLAYERS.set(packetPlayOutScoreboardTeam, newList);
+		NMSHook.nms.PacketPlayOutScoreboardTeam_PLAYERS.set(packetPlayOutScoreboardTeam, newList);
 	}
 
-	private boolean blockPackets = true;
+	private static boolean blockPackets = true;
 	
-	public boolean blockPackets() {
-		return this.blockPackets;
+	public static boolean blockPackets() {
+		return blockPackets;
 	}
 
-	public void setBlockPackets(boolean blockPackets) {
-		this.blockPackets = blockPackets;
+	public static void setBlockPackets(boolean blockPacketss) {
+		blockPackets = blockPacketss;
 	}
 }

@@ -11,13 +11,15 @@ import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class DebugUtil {
-	private final String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-	private final int minorVersion =  Integer.parseInt(version.split("_")[1]);
-	private PluginManager pm = Bukkit.getPluginManager();
-	private boolean protocolSupport;
-	private boolean viaVersion;
+	private static final String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+	private static final int minorVersion =  Integer.parseInt(version.split("_")[1]);
+	private static PluginManager pm = Bukkit.getPluginManager();
 	
-	public void sendDebug(CommandSender sender, IEGlowPlayer ePlayer) {
+	private static boolean placeholderapi;
+	private static boolean protocolSupport;
+	private static boolean viaVersion;
+	
+	public static void sendDebug(CommandSender sender, IEGlowPlayer ePlayer) {
 		String plugins = " ";
 
 		if (ePlayer != null) {
@@ -50,40 +52,49 @@ public class DebugUtil {
 		
 		sender.sendMessage(ChatUtil.translateColors(plugins.substring(0, plugins.length() - 2)));
 
-		if (EGlow.getInstance().getTABAddon() != null && !EGlow.getInstance().getTABAddon().getTABNewVersion())
-			sender.sendMessage(ChatUtil.translateColors("&cThis eGlow version requires a minimum TAB version of 3.0.0&f!"));
+		if (EGlow.getInstance().getTABAddon() != null && !EGlow.getInstance().getTABAddon().getTABLegacyVersion())
+			sender.sendMessage(ChatUtil.translateColors("&cThis eGlow version requires a minimum TAB version of 3.1.0&f!"));
 	}
 	
-	public String getServerVersion() {
+	public static String getServerVersion() {
 		return version;
 	}
 	
-	public int getMinorVersion() {
+	public static int getMinorVersion() {
 		return minorVersion;
 	}
 	
-	public boolean isProtocolSupportInstalled() {
+	public static boolean isProtocolSupportInstalled() {
 		return protocolSupport;
 	}
 	
-	public boolean isViaVersionInstalled() {
+	public static boolean isViaVersionInstalled() {
 		return viaVersion;
 	}
 	
-	public void addonCheck() {
+	public static void addonCheck() {
+		placeholderapi = pluginCheck("PlaceholderAPI");
 		protocolSupport = pluginCheck("ProtocolSupport");
 		viaVersion = pluginCheck("ViaVersion");
 	}
 	
-	public boolean onBungee() {
+	public static boolean onBungee() {
 		return (SpigotConfig.bungee && !Bukkit.getServer().getOnlineMode()) ? true : false;
 	}
 	
-	public boolean pluginCheck(String plugin) {
+	public static boolean pluginCheck(String plugin) {
 		return (pm.getPlugin(plugin) != null && pm.getPlugin(plugin).isEnabled()) ? true : false;
 	}
 	
-	public Plugin getPlugin(String plugin) {
+	public static Plugin getPlugin(String plugin) {
 		return pm.getPlugin(plugin);
+	}
+	
+	public static boolean TABInstalled() {
+		return (pluginCheck("TAB") && getPlugin("TAB").getClass().getName().startsWith("me.neznamy.tab"));
+	}
+	
+	public static boolean isPAPIInstalled() {
+		return placeholderapi;
 	}
 }

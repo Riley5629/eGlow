@@ -11,6 +11,7 @@ import me.MrGraycat.eGlow.Config.*;
 import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig.Effect;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.GUI.*;
+import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.*;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
@@ -36,7 +37,7 @@ public class EGlowEffectMenu extends PaginatedMenu {
 	@Override
 	public void handleMenu(InventoryClickEvent e) {
 		Player player = (Player) e.getWhoClicked();
-		IEGlowPlayer eGlowPlayer = getInstance().getDataManager().getEGlowPlayer(player);
+		IEGlowPlayer eGlowPlayer = DataManager.getEGlowPlayer(player);
 		ClickType clickType = e.getClick();
 		int clickedSlot = e.getSlot();
 		
@@ -84,7 +85,7 @@ public class EGlowEffectMenu extends PaginatedMenu {
 			}
 			break;
 		case(34):
-			if (getInstance().getDataManager().getCustomEffects().size() > (page * getMaxItemsPerPage())) {
+			if (DataManager.getCustomEffects().size() > (page * getMaxItemsPerPage())) {
 				page = page + 1;
 				super.openInventory();
 			}
@@ -102,12 +103,12 @@ public class EGlowEffectMenu extends PaginatedMenu {
 
 	@Override
 	public void setMenuItems() {
-		IEGlowPlayer p = getInstance().getDataManager().getEGlowPlayer(menuMetadata.getOwner());
+		IEGlowPlayer p = DataManager.getEGlowPlayer(menuMetadata.getOwner());
 		effects = new ConcurrentHashMap<>();
 		UpdateMainEffectsNavigationBar(p);
 		
 		for (String effect : Effect.GET_ALL_EFFECTS.get()) {
-			IEGlowEffect Eeffect = getInstance().getDataManager().getEGlowEffect(effect.toLowerCase());
+			IEGlowEffect Eeffect = DataManager.getEGlowEffect(effect.toLowerCase());
 			if (Eeffect == null)
 				continue;
 			

@@ -9,27 +9,30 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.API.Enum.*;
+import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.*;
+import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
+import me.MrGraycat.eGlow.Util.Packets.PipelineInjector;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class EGlowAPI {
 	/**
 	 * Get the IEGlowEntity from eGlow
-	 * @param player player to get the IEGlowEntity for
+	 * @param player player to get the IEGlowPlayer for
 	 * @return IEGlowEntity instance for the player
 	 */
 	public IEGlowPlayer getEGlowPlayer(Player player) {
-		return EGlow.getInstance().getDataManager().getEGlowPlayer(player);
+		return DataManager.getEGlowPlayer(player);
 	}
 	
 	/**
 	 * Get the IEGlowEntity from eGlow
-	 * @param uuid uuid to get the IEGlowEntity for
+	 * @param uuid uuid to get the IEGlowPlayer for
 	 * @return IEGlowEntity instance for the uuid
 	 */
 	public IEGlowPlayer getEGlowPlayer(UUID uuid) {
 		Player p = Bukkit.getPlayer(uuid);
-		return EGlow.getInstance().getDataManager().getEGlowPlayer(p);
+		return DataManager.getEGlowPlayer(p);
 	}
 	
 	/**
@@ -38,7 +41,7 @@ public class EGlowAPI {
 	 * @return IEGlowEffect is found, null if not
 	 */
 	public IEGlowEffect getEGlowEffect(String name) {
-		IEGlowEffect effect = EGlow.getInstance().getDataManager().getEGlowEffect(name);
+		IEGlowEffect effect = DataManager.getEGlowEffect(name);
 		
 		if (effect == null)
 			ChatUtil.sendToConsoleWithPrefix("(API) Unable to find effect for name: " + name);
@@ -86,7 +89,7 @@ public class EGlowAPI {
 				if (player == null)
 					return;
 				
-				IEGlowEffect effect = EGlow.getInstance().getDataManager().getEGlowEffect(color.toString());
+				IEGlowEffect effect = DataManager.getEGlowEffect(color.toString());
 				player.activateGlow(effect);
 			}
 		}.runTaskLaterAsynchronously(EGlow.getInstance(), 1);
@@ -104,7 +107,7 @@ public class EGlowAPI {
 				if (player == null)
 					return;
 				
-				IEGlowEffect effect = EGlow.getInstance().getDataManager().getEGlowEffect(blink.toString());
+				IEGlowEffect effect = DataManager.getEGlowEffect(blink.toString());
 				player.activateGlow(effect);
 			}
 		}.runTaskLaterAsynchronously(EGlow.getInstance(), 1);
@@ -122,7 +125,7 @@ public class EGlowAPI {
 				if (player == null)
 					return;
 				
-				IEGlowEffect effect = EGlow.getInstance().getDataManager().getEGlowEffect(effects.toString());
+				IEGlowEffect effect = DataManager.getEGlowEffect(effects.toString());
 				player.activateGlow(effect);
 			}
 		}.runTaskLaterAsynchronously(EGlow.getInstance(), 1);
@@ -155,7 +158,7 @@ public class EGlowAPI {
 		
 		sender.addGlowTarget(receiver);
 
-		EGlow.getInstance().getPacketUtil().forceUpdateGlow(sender);	
+		PacketUtil.forceUpdateGlow(sender);	
 	}
 	
 	/**
@@ -168,7 +171,7 @@ public class EGlowAPI {
 			return;
 		
 		sender.removeGlowTarget(receiver);
-		EGlow.getInstance().getPacketUtil().forceUpdateGlow(sender);	
+		PacketUtil.forceUpdateGlow(sender);	
 	}
 	
 	/**
@@ -181,19 +184,19 @@ public class EGlowAPI {
 			return;
 		
 		sender.setGlowTargets(receivers);
-		EGlow.getInstance().getPacketUtil().forceUpdateGlow(sender);	
+		PacketUtil.forceUpdateGlow(sender);	
 	}
 	
 	/**
 	 * reset custom receivers for a player
-	 * @param sender player to reset the csutom receivers for
+	 * @param sender player to reset the custom receivers for
 	 */
 	public void resetCustomGlowReceivers(IEGlowPlayer sender) {
 		if (sender == null)
 			return;
 		
 		sender.resetGlowTargets();;
-		EGlow.getInstance().getPacketUtil().forceUpdateGlow(sender);	
+		PacketUtil.forceUpdateGlow(sender);	
 	}
 	
 	/**
@@ -201,7 +204,7 @@ public class EGlowAPI {
 	 * @param status true to send packets, false for nothing
 	 */
 	public void setSendTeamPackets(boolean status) {
-		EGlow.getInstance().getPacketUtil().setSendTeamPackets(status);
+		PacketUtil.setSendTeamPackets(status);
 	}
 	
 	/**
@@ -209,6 +212,6 @@ public class EGlowAPI {
 	 * @param status true for packet blocking, false for nothing
 	 */
 	public void setPacketBlockerStatus(boolean status) {
-		EGlow.getInstance().getPipelineInjector().setBlockPackets(status);	
+		PipelineInjector.setBlockPackets(status);	
 	}
 }

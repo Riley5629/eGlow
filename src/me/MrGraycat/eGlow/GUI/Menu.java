@@ -11,6 +11,7 @@ import org.bukkit.inventory.InventoryHolder;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.GUI.Manager.MenuItemManager;
+import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
@@ -46,16 +47,16 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 	 * @param effectName effect to check for solid/blink/effect
 	 */
 	public void enableGlow(Player player, ClickType clickType, String effectName) {
-		IEGlowPlayer eGlowPlayer = getInstance().getDataManager().getEGlowPlayer(player);
+		IEGlowPlayer eGlowPlayer = DataManager.getEGlowPlayer(player);
 		
 		if (clickType.equals(ClickType.LEFT)) {
-			if (getInstance().getDataManager().getEGlowEffect(effectName) != null) {
-				IEGlowEffect color = getInstance().getDataManager().getEGlowEffect(effectName);
+			if (DataManager.getEGlowEffect(effectName) != null) {
+				IEGlowEffect color = DataManager.getEGlowEffect(effectName);
 			
 				if (color == null)
 					return;
 				
-				if (!(player.hasPermission(color.getPermission()) || getInstance().getDataManager().isCustomEffect(color.getName()) && player.getPlayer().hasPermission("eglow.effect.*"))) {
+				if (!(player.hasPermission(color.getPermission()) || DataManager.isCustomEffect(color.getName()) && player.getPlayer().hasPermission("eglow.effect.*"))) {
 					ChatUtil.sendMsgWithPrefix(player, Message.NO_PERMISSION.get());
 					return;
 				}
@@ -67,8 +68,8 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 					
 				eGlowPlayer.activateGlow(color);
 				ChatUtil.sendMsgWithPrefix(player, Message.NEW_GLOW.get(color.getDisplayName()));
-			} else if (getInstance().getDataManager().getEGlowEffect(effectName + "slow") != null) { //for rainbow effect 
-				IEGlowEffect effect = getInstance().getDataManager().getEGlowEffect(effectName + "slow");
+			} else if (DataManager.getEGlowEffect(effectName + "slow") != null) { //for rainbow effect 
+				IEGlowEffect effect = DataManager.getEGlowEffect(effectName + "slow");
 				
 				if (!player.hasPermission(effect.getPermission())) {
 					ChatUtil.sendMsgWithPrefix(player, Message.NO_PERMISSION.get());
@@ -85,7 +86,7 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 			}
 				
 		} else if (clickType.equals(ClickType.RIGHT)){
-			IEGlowEffect effect = getInstance().getDataManager().getEGlowEffect("blink" + effectName + "slow");
+			IEGlowEffect effect = DataManager.getEGlowEffect("blink" + effectName + "slow");
 
 			if (effect == null)
 				return;
@@ -115,10 +116,10 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 			IEGlowEffect eGlowEffect = null;
 			
 			if (effect.contains("slow"))
-				eGlowEffect = getInstance().getDataManager().getEGlowEffect(effect.replace("slow", "fast"));
+				eGlowEffect = DataManager.getEGlowEffect(effect.replace("slow", "fast"));
 			
 			if (effect.contains("fast"))
-				eGlowEffect = getInstance().getDataManager().getEGlowEffect(effect.replace("fast", "slow"));
+				eGlowEffect = DataManager.getEGlowEffect(effect.replace("fast", "slow"));
 			
 			player.activateGlow(eGlowEffect);
 			ChatUtil.sendMsgWithPrefix(menuMetadata.getOwner(), Message.NEW_GLOW.get(eGlowEffect.getDisplayName()));
@@ -143,7 +144,7 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 		
 		inventory.setItem(28, createPlayerSkull(p));
 		inventory.setItem(30, createGlowingStatus(p));
-		inventory.setItem(31, createItem(Material.NETHER_STAR, Message.GUI_COLOR.get("effect-rainbow"), 0, Message.GUI_LEFT_CLICK.get() + Message.COLOR.get("effect-rainbow"), Message.GUI_EFFECT_PERMISSION.get() + ((p.getPlayer().hasPermission(getInstance().getDataManager().getEGlowEffect("rainbowslow").getPermission()) ? Message.GUI_YES.get() : Message.GUI_NO.get()))));
+		inventory.setItem(31, createItem(Material.NETHER_STAR, Message.GUI_COLOR.get("effect-rainbow"), 0, Message.GUI_LEFT_CLICK.get() + Message.COLOR.get("effect-rainbow"), Message.GUI_EFFECT_PERMISSION.get() + ((p.getPlayer().hasPermission(DataManager.getEGlowEffect("rainbowslow").getPermission()) ? Message.GUI_YES.get() : Message.GUI_NO.get()))));
 		if (hasEffect(p))
 			inventory.setItem(32, createItem(Material.valueOf(CLOCK), Message.GUI_SPEED_ITEM_NAME.get(), 0, createSpeedLore(p)));
 		

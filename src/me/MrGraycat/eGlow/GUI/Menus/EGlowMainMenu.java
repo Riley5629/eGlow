@@ -8,6 +8,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.GUI.Menu;
+import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
@@ -31,7 +32,7 @@ public class EGlowMainMenu extends Menu {
 	@Override
 	public void handleMenu(InventoryClickEvent e) {
 		Player player = (Player) e.getWhoClicked();
-		IEGlowPlayer eGlowPlayer = getInstance().getDataManager().getEGlowPlayer(player);
+		IEGlowPlayer eGlowPlayer = DataManager.getEGlowPlayer(player);
 		ClickType clickType = e.getClick();
 		int clickedSlot = e.getSlot();
 		
@@ -140,7 +141,7 @@ public class EGlowMainMenu extends Menu {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				IEGlowPlayer p = getInstance().getDataManager().getEGlowPlayer(menuMetadata.getOwner());
+				IEGlowPlayer p = DataManager.getEGlowPlayer(menuMetadata.getOwner());
 				
 				UpdateMainNavigationBar(p);
 				

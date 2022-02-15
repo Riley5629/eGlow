@@ -9,10 +9,10 @@ import me.MrGraycat.eGlow.Util.Packets.MultiVersion.Datawatcher.DataWatcherRegis
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class NMSHook {
-	public DataWatcherRegistry registry;
-	public NMSStorage nms;
+	public static DataWatcherRegistry registry;
+	public static NMSStorage nms;
 	
-	public NMSHook() {
+	public static void initialize() {
 		try {
 			nms = new NMSStorage();
 			registry = new DataWatcherRegistry(nms);
@@ -20,8 +20,8 @@ public class NMSHook {
 			e.printStackTrace();
 		}
 	}
-	
-	public Object getChannel(Player p) {
+
+	public static Object getChannel(Player p) {
 		if (nms.CHANNEL == null) return null;
 		try {
 			return nms.CHANNEL.get(nms.NETWORK_MANAGER.get(nms.PLAYER_CONNECTION.get(nms.getHandle.invoke(p))));
@@ -31,20 +31,20 @@ public class NMSHook {
 		} 
 	}
 	
-	public void sendPacket(Player p, Object nmsPacket) throws Exception {
+	public static void sendPacket(Player p, Object nmsPacket) throws Exception {
 		nms.sendPacket.invoke(nms.PLAYER_CONNECTION.get(nms.getHandle.invoke(p)), nmsPacket);
 	}
 	
-	public void sendPacket(IEGlowPlayer ep, Object nmsPacket) throws Exception {
+	public static void sendPacket(IEGlowPlayer ep, Object nmsPacket) throws Exception {
 		nms.sendPacket.invoke(nms.PLAYER_CONNECTION.get(nms.getHandle.invoke(ep.getPlayer())), nmsPacket);
 	}
 	
-	public Object stringToComponent(String json) throws Exception {
+	public static Object stringToComponent(String json) throws Exception {
 		if (json == null) return null;
 		return nms.ChatSerializer_DESERIALIZE.invoke(null, json);
 	}
 	
-	public DataWatcher setGlowFlag(Object entity, boolean status) {
+	public static DataWatcher setGlowFlag(Object entity, boolean status) {
 		try {
 			Object nmsPlayer = nms.getHandle.invoke(entity);
 			DataWatcher dw = DataWatcher.fromNMS(nms.getDataWatcher.invoke(nmsPlayer));

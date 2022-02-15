@@ -16,6 +16,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
+import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
@@ -202,8 +203,8 @@ public class MenuItemManager extends MenuManager {
 	 */
 	private String[] createColorLore(IEGlowPlayer player, String color) {
 		List<String> prelores = new ArrayList<>();
-		IEGlowEffect eglowColor = getInstance().getDataManager().getEGlowEffect(color.replace("-", ""));
-		IEGlowEffect eglowEffect = getInstance().getDataManager().getEGlowEffect("blink" + color.replace("-", "") + "slow");
+		IEGlowEffect eglowColor = DataManager.getEGlowEffect(color.replace("-", ""));
+		IEGlowEffect eglowEffect = DataManager.getEGlowEffect("blink" + color.replace("-", "") + "slow");
 		
 		prelores.add(Message.GUI_LEFT_CLICK.get() + Message.COLOR.get(color));
 		prelores.add(Message.GUI_COLOR_PERMISSION.get() + hasPermission(player, eglowColor.getPermission()));

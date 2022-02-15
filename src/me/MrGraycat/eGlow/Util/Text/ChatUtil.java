@@ -8,8 +8,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
+import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
 
@@ -110,6 +110,6 @@ public class ChatUtil {
 	}
 	
 	public static String getEffectName(String effect) {
-		return "&e" + effect + " &f(" + EGlow.getInstance().getDataManager().getEGlowEffect(effect).getDisplayName() + "&f)";
+		return "&e" + effect + " &f(" + DataManager.getEGlowEffect(effect).getDisplayName() + "&f)";
 	}
 }

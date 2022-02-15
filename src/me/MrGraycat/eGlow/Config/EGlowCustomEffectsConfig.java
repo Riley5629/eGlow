@@ -12,28 +12,22 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import me.neznamy.yamlassist.YamlAssist;
 
 public class EGlowCustomEffectsConfig {
-	private EGlow instance;
-	
+
 	private static YamlConfiguration config;
 	private static File configFile;
 	
-	public EGlowCustomEffectsConfig(EGlow instance) {
-		setInstance(instance);
-		load();
-	}
-	
-	public void load() {
-		configFile = new File(getInstance().getDataFolder(), "CustomEffects.yml");
+	public static void initialize() {
+		configFile = new File(EGlow.getInstance().getDataFolder(), "CustomEffects.yml");
 		
 		try {
-			if (!getInstance().getDataFolder().exists()) {
-				getInstance().getDataFolder().mkdirs();
+			if (!EGlow.getInstance().getDataFolder().exists()) {
+				EGlow.getInstance().getDataFolder().mkdirs();
 			}
 			
 			if (!configFile.exists()) {
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4CustomEffects.yml not found&f! &eCreating&f...");
 				configFile.getParentFile().mkdirs();
-				getInstance().saveResource("CustomEffects.yml", false);
+				EGlow.getInstance().saveResource("CustomEffects.yml", false);
 			} else {
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &aLoading CustomEffects config&f.");
 			}
@@ -51,7 +45,7 @@ public class EGlowCustomEffectsConfig {
 		}
 	}
 	
-	public boolean reloadConfig() {
+	public static boolean reloadConfig() {
 		YamlConfiguration configBackup = config;
 		File configFileBackup = configFile;
 		
@@ -59,7 +53,7 @@ public class EGlowCustomEffectsConfig {
 			config = null;
 			configFile = null;
 			
-			configFile = new File(getInstance().getDataFolder(), "CustomEffects.yml");
+			configFile = new File(EGlow.getInstance().getDataFolder(), "CustomEffects.yml");
 			config = new YamlConfiguration();
 			config.load(configFile);
 			return true;
@@ -126,15 +120,5 @@ public class EGlowCustomEffectsConfig {
 		public List<String> getList(String value) {
 			return config.getStringList(effect.getConfigPath().replace("%effect%", value));
 		}
-	}
-	
-	//Setters
-	private void setInstance(EGlow instance) {
-		this.instance = instance;
-	}
-
-	//Getters
-	private EGlow getInstance() {
-		return this.instance;
 	}
 }

@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import me.MrGraycat.eGlow.Command.SubCommand;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
+import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
@@ -55,7 +56,7 @@ public class SetCommand extends SubCommand {
 			
 			switch(args.length) {
 			case(3):
-				effect = getInstance().getDataManager().getEGlowEffect(args[2].toLowerCase().replace("off", "none").replace("disable", "none"));
+				effect = DataManager.getEGlowEffect(args[2].toLowerCase().replace("off", "none").replace("disable", "none"));
 				break;
 			case(4):
 				if (args[2].equalsIgnoreCase("glowonjoin") && Boolean.valueOf(args[3].toLowerCase()) != null) {
@@ -64,10 +65,10 @@ public class SetCommand extends SubCommand {
 					continue;
 
 				}
-				effect = getInstance().getDataManager().getEGlowEffect(args[2] + args[3]);
+				effect = DataManager.getEGlowEffect(args[2] + args[3]);
 				break;
 			case(5):
-				effect = getInstance().getDataManager().getEGlowEffect(args[2] + args[3] + args[4]);
+				effect = DataManager.getEGlowEffect(args[2] + args[3] + args[4]);
 				break;
 			}
 			

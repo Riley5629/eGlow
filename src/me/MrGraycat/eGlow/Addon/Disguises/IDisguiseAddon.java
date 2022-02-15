@@ -9,6 +9,7 @@ import de.robingrether.idisguise.api.DisguiseEvent;
 import de.robingrether.idisguise.api.UndisguiseEvent;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
+import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
@@ -19,16 +20,15 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
  * Versions: 1.9-1.13 (Currently discontinued)
  */
 public class IDisguiseAddon implements Listener {
-	private EGlow instance;
-	private DisguiseAPI api;
 
+	private DisguiseAPI DisguiseAPI_Addon;
+	
 	/**
 	 * Register IDisguise disguise events & api
 	 */
-	public IDisguiseAddon(EGlow instance) {
-		setInstance(instance);
-		getInstance().getServer().getPluginManager().registerEvents(this, getInstance());
-		setAPI(getInstance().getServer().getServicesManager().getRegistration(DisguiseAPI.class).getProvider());
+	public IDisguiseAddon() {
+		setDisguiseAPIAddon(EGlow.getInstance().getServer().getServicesManager().getRegistration(DisguiseAPI.class).getProvider());
+		EGlow.getInstance().getServer().getPluginManager().registerEvents(this, EGlow.getInstance());
 	}
 	
 	/**
@@ -37,12 +37,12 @@ public class IDisguiseAddon implements Listener {
 	 * @return true is disguised, false if not
 	 */
 	public boolean isDisguised(Player player) {
-		return getAPI().isDisguised(player);
+		return getDisguiseAPIAddon().isDisguised(player);
 	}
 	
 	@EventHandler
 	public void onDisguise(DisguiseEvent event) {
-		IEGlowPlayer player = getInstance().getDataManager().getEGlowPlayer(event.getPlayer());
+		IEGlowPlayer player = DataManager.getEGlowPlayer(event.getPlayer());
 		
 		if (player != null && player.getGlowStatus() || player != null && player.getFakeGlowStatus()) {
 			player.setGlowDisableReason(GlowDisableReason.DISGUISE);
@@ -53,7 +53,7 @@ public class IDisguiseAddon implements Listener {
 	
 	@EventHandler
 	public void onUnDisguise(UndisguiseEvent event) {
-		IEGlowPlayer player = getInstance().getDataManager().getEGlowPlayer(event.getPlayer());
+		IEGlowPlayer player = DataManager.getEGlowPlayer(event.getPlayer());
 		
 		if (player != null && player.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
 			player.toggleGlow();
@@ -62,21 +62,12 @@ public class IDisguiseAddon implements Listener {
 		}
 	}
 	
-	//Setters
-	private void setInstance(EGlow instance) {
-		this.instance = instance;
+	//Getter
+	public DisguiseAPI getDisguiseAPIAddon() {
+		return this.DisguiseAPI_Addon;
 	}
-	
-	private void setAPI(DisguiseAPI api) {
-		this.api = api;
-	}
-	
-	//Getters
-	private DisguiseAPI getAPI() {
-		return this.api;
-	}
-	
-	private EGlow getInstance() {
-		return this.instance;
+	//Setter
+	private void setDisguiseAPIAddon(DisguiseAPI api) {
+		this.DisguiseAPI_Addon = api;
 	}
 }

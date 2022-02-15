@@ -2,8 +2,8 @@ package me.MrGraycat.eGlow.Util.Packets.MultiVersion;
 
 import org.bukkit.entity.Player;
 
-import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.DebugUtil;
 import us.myles.ViaVersion.api.Via;
 
 public enum ProtocolVersion {
@@ -70,7 +70,7 @@ public enum ProtocolVersion {
 		this.friendlyName = friendlyName;
 		if (toString().equals("UNKNOWN")) {
 			try {
-				minorVersion = EGlow.getInstance().getDebugUtil().getMinorVersion();
+				minorVersion = DebugUtil.getMinorVersion();
 			} catch (Throwable t) {
 				minorVersion = 999;
 			}
@@ -107,7 +107,7 @@ public enum ProtocolVersion {
 	}
 	
 	public static ProtocolVersion getPlayerVersion(IEGlowPlayer p) {
-		if (EGlow.getInstance().getDebugUtil().isProtocolSupportInstalled()) {
+		if (DebugUtil.isProtocolSupportInstalled()) {
 			int version = getProtocolVersionPS(p.getPlayer());
 			if (version < ProtocolVersion.SERVER_VERSION.getNetworkId()) {
 				return ProtocolVersion.fromNumber(version);
@@ -115,7 +115,7 @@ public enum ProtocolVersion {
 				
 		}
 		
-		if (EGlow.getInstance().getDebugUtil().isViaVersionInstalled()) {
+		if (DebugUtil.isViaVersionInstalled()) {
 			return ProtocolVersion.fromNumber(getProtocolVersionVia(p.getPlayer()));
 		}
 		return ProtocolVersion.SERVER_VERSION;

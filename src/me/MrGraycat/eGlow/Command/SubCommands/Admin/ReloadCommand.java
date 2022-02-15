@@ -8,8 +8,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.MrGraycat.eGlow.Command.SubCommand;
+import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMessageConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
+import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
@@ -44,13 +47,13 @@ public class ReloadCommand extends SubCommand {
 
 	@Override
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
-		if (getInstance().getMainConfig().reloadConfig() && getInstance().getMessageConfig().reloadConfig() && getInstance().getCustomEffectConfig().reloadConfig()) {
-			getInstance().getDataManager().addEGlowEffects();
-			getInstance().getDataManager().addCustomEffects();
+		if (EGlowMainConfig.reloadConfig() && EGlowMessageConfig.reloadConfig() && EGlowCustomEffectsConfig.reloadConfig()) {
+			DataManager.addEGlowEffects();
+			DataManager.addCustomEffects();
 			for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
 				if (getInstance().getVaultAddon() != null)
 					getInstance().getVaultAddon().updatePlayerTabname(ePlayer);
-				ePlayer = getInstance().getDataManager().getEGlowPlayer(onlinePlayer);
+				ePlayer = DataManager.getEGlowPlayer(onlinePlayer);
 				
 				if (ePlayer == null)
 					break;
@@ -68,10 +71,12 @@ public class ReloadCommand extends SubCommand {
 				}
 				
 				if (EGlowMainConfig.getWorldCheckEnabled()) {
-					if (ePlayer.isInBlockedWorld() && (ePlayer.getGlowStatus() || ePlayer.getFakeGlowStatus())) {
-						ePlayer.toggleGlow();
-						ePlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
-						ChatUtil.sendMsgWithPrefix(ePlayer.getPlayer(), Message.WORLD_BLOCKED_RELOAD.get());
+					if (ePlayer.isInBlockedWorld()) {
+						if (ePlayer.getGlowStatus() || ePlayer.getFakeGlowStatus()) {
+							ePlayer.toggleGlow();
+							ePlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
+							ChatUtil.sendMsgWithPrefix(ePlayer.getPlayer(), Message.WORLD_BLOCKED_RELOAD.get());
+						}
 					} else {
 						if (ePlayer.getGlowDisableReason() != null && ePlayer.getGlowDisableReason().equals(GlowDisableReason.BLOCKEDWORLD)) {
 							ePlayer.toggleGlow();

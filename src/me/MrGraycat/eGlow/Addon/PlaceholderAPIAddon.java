@@ -1,33 +1,30 @@
-package me.MrGraycat.eGlow.Addon.Placeholders;
+package me.MrGraycat.eGlow.Addon;
 
 import org.bukkit.entity.Player;
 
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
+import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
-public class EGlowPlaceholderAPI extends PlaceholderExpansion {
-	
-	private EGlow instance;
-	
+public class PlaceholderAPIAddon extends PlaceholderExpansion {
 	/**
 	 * Register all eGlow placeholders in PlaceholderAPI
 	 */
-	public EGlowPlaceholderAPI(EGlow instance) {
-		setInstance(instance);
+	public PlaceholderAPIAddon() {
 		register();
 	}
 	
 	@Override
 	public String getAuthor() {
-		return getInstance().getDescription().getAuthors().toString();
+		return EGlow.getInstance().getDescription().getAuthors().toString();
 	}
 
 	@Override
 	public String getVersion() {
-		return getInstance().getDescription().getVersion();
+		return EGlow.getInstance().getDescription().getVersion();
 	}
 
 	@Override
@@ -42,7 +39,7 @@ public class EGlowPlaceholderAPI extends PlaceholderExpansion {
 	
 	@Override
 	public boolean canRegister() {
-		return getInstance() != null;
+		return EGlow.getInstance() != null;
 	}
 	
 	@Override
@@ -62,7 +59,7 @@ public class EGlowPlaceholderAPI extends PlaceholderExpansion {
     	if (player == null)
     		return "";
     	
-        IEGlowPlayer eglowPlayer = getInstance().getDataManager().getEGlowPlayer(player);
+        IEGlowPlayer eglowPlayer = DataManager.getEGlowPlayer(player);
         
         if (eglowPlayer == null)
         	return "";
@@ -85,14 +82,4 @@ public class EGlowPlaceholderAPI extends PlaceholderExpansion {
         }
         return null;
     }
-    
-	//Setters
-	private void setInstance(EGlow instance) {
-		this.instance = instance;
-	}
-
-	//Getters
-	private EGlow getInstance() {
-		return this.instance;
-	}
 }

@@ -12,28 +12,22 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import me.neznamy.yamlassist.YamlAssist;
 
 public class EGlowMessageConfig {
-	private EGlow instance;
-	
+
 	private static YamlConfiguration config;
-	private File configFile;
+	private static File configFile;
 	
-	public EGlowMessageConfig(EGlow instance) {
-		setInstance(instance);
-		load();
-	}
-	
-	private void load() {
-		configFile = new File(getInstance().getDataFolder(), "Messages.yml");
+	public static void initialize() {
+		configFile = new File(EGlow.getInstance().getDataFolder(), "Messages.yml");
 		
 		try {
-			if (!getInstance().getDataFolder().exists()) {
-				getInstance().getDataFolder().mkdirs();
+			if (!EGlow.getInstance().getDataFolder().exists()) {
+				EGlow.getInstance().getDataFolder().mkdirs();
 			}
 			
 			if (!configFile.exists()) {
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4Messages.yml not found&f! &eCreating&f...");
 				configFile.getParentFile().mkdirs();
-				getInstance().saveResource("Messages.yml", false);
+				EGlow.getInstance().saveResource("Messages.yml", false);
 			} else {
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &aLoading messages config&f.");
 			}
@@ -42,14 +36,14 @@ public class EGlowMessageConfig {
 			config.load(configFile);
 			
 			if (!config.isConfigurationSection("main")) {
-				File oldFile = new File(getInstance().getDataFolder(), "OLDMessages.yml");
+				File oldFile = new File(EGlow.getInstance().getDataFolder(), "OLDMessages.yml");
 				
 				if (oldFile.exists())
 					oldFile.delete();
 				
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &cDetected old messages config&f! &eRenamed it to OLDMessages&f! &eReconfiguring might be required&f!");
 				configFile.renameTo(oldFile);
-				load();
+				initialize();
 			}
 			
 			configCheck();
@@ -64,7 +58,7 @@ public class EGlowMessageConfig {
 		}
 	}
 	
-	public boolean reloadConfig() {
+	public static boolean reloadConfig() {
 		YamlConfiguration configBackup = config;
 		File configFileBackup = configFile;
 		
@@ -72,7 +66,7 @@ public class EGlowMessageConfig {
 			config = null;
 			configFile = null;
 			
-			configFile = new File(getInstance().getDataFolder(), "Messages.yml");
+			configFile = new File(EGlow.getInstance().getDataFolder(), "Messages.yml");
 			config = new YamlConfiguration();
 			config.load(configFile);
 			return true;
@@ -239,7 +233,7 @@ public class EGlowMessageConfig {
 		}
 	}
 	
-	private void configCheck() {
+	private static void configCheck() {
 		addIfMissing("gui.custom-effect-item-name", "&eCustom effects menu");
 		addIfMissing("gui.misc-click-to-open", "&9Click to open&f.");
 		addIfMissing("gui.misc-previous-page", "&e< Previous page");
@@ -254,7 +248,7 @@ public class EGlowMessageConfig {
 		addIfMissing("main.other-glow-player-disguise", "&e%target% &cis in disguise which disabled the glow&f.");
 	}
 	
-	private void addIfMissing(String path, String text) {
+	private static void addIfMissing(String path, String text) {
 		try {
 			if (!config.contains(path)) {
 				config.set(path, text);
@@ -263,15 +257,5 @@ public class EGlowMessageConfig {
 		} catch (Exception e) {
 			ChatUtil.reportError(e);
 		}
-	}
-	
-	//Setters
-	private void setInstance(EGlow instance) {
-		this.instance = instance;
-	}
-
-	//Getters
-	private EGlow getInstance() {
-		return this.instance;
 	}
 }

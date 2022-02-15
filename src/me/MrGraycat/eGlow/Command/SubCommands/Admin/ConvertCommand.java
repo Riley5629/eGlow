@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.MrGraycat.eGlow.Command.SubCommand;
+import me.MrGraycat.eGlow.Config.Playerdata.EGlowPlayerdataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
@@ -89,7 +90,7 @@ public class ConvertCommand extends SubCommand {
 
 									playerConfig.load(new File(getInstance().getDataFolder() + File.separator + "/PlayerData/" + File.separator + files[counter].getName()));
 									
-									if (getInstance().getPlayerdataManager().savePlayerdata(files[counter].getName().replace(".yml", ""), playerConfig.getString("lastGlowData"), playerConfig.getBoolean("glowOnJoin"), playerConfig.getBoolean("activeOnQuit"), playerConfig.getString("glowVisibility"), playerConfig.getString("glowDisableReason"))) {
+									if (EGlowPlayerdataManager.savePlayerdata(files[counter].getName().replace(".yml", ""), playerConfig.getString("lastGlowData"), playerConfig.getBoolean("glowOnJoin"), playerConfig.getBoolean("activeOnQuit"), playerConfig.getString("glowVisibility"), playerConfig.getString("glowDisableReason"))) {
 										File file = files[counter];
 										file.delete();
 									} else {failed = true;}
