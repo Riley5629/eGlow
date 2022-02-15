@@ -6,21 +6,17 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.API.Event.GlowColorChangeEvent;
+import me.MrGraycat.eGlow.Addon.TAB.TABAddon;
+import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.DebugUtil;
 
 public class EGlowTABListenerUniv implements Listener { 	
-	private EGlow instance;
-	
-	public EGlowTABListenerUniv(EGlow instance) {
-		setInstance(instance);
-		getInstance().getServer().getPluginManager().registerEvents(this, getInstance());
-	}
-	
+
 	@EventHandler
 	public void onColorChange(GlowColorChangeEvent event) {
 		Player player = event.getPlayer();
@@ -31,18 +27,16 @@ public class EGlowTABListenerUniv implements Listener {
 			@Override
 			public void run() {
 				try {
-					if (getInstance().getTABAddon() != null && getInstance().getTABAddon().getTABOnBukkit()) {
-						if (!getInstance().getTABAddon().getTABTeamPacketBlockingEnabled() && !getInstance().getTABAddon().getTABNametagPrefixSuffixEnabled()) {
-							return;
-						}				
-						
-						if (player != null && getInstance().getTABAddon().getTABPlayer(player.getUniqueId()) != null) {
-							IEGlowPlayer ePlayer = getInstance().getDataManager().getEGlowPlayer(player);
+					TABAddon TAB_Addon = EGlow.getInstance().getTABAddon();
+					
+					if (TAB_Addon != null && TAB_Addon.blockEGlowPackets()) {
+						if (player != null && TAB_Addon.getTABPlayer(player.getUniqueId()) != null) {
+							IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(player);
 							
-							getInstance().getTABAddon().updateTABPlayer(ePlayer, chatColor);
+							TAB_Addon.updateTABPlayer(ePlayer, chatColor);
 						}
-					} else if (getInstance().getDebugUtil().onBungee()) {
-						getInstance().getDataManager().TABProxyUpdateRequest(player, color);	
+					} else if (DebugUtil.onBungee()) {
+						DataManager.TABProxyUpdateRequest(player, color);	
 					}
 				} catch (ConcurrentModificationException ex2) {
 					//Ignore caused by updating to fast
@@ -50,23 +44,6 @@ public class EGlowTABListenerUniv implements Listener {
 					ex.printStackTrace();
 				}
 			}
-		}.runTaskAsynchronously(getInstance());
+		}.runTaskAsynchronously(EGlow.getInstance());
 	}
-	
-	@EventHandler
-	public void onDisconnect(PlayerQuitEvent event) {
-		if (getInstance().getTABAddon() != null)
-			getInstance().getTABAddon().getStoredGroups().remove(event.getPlayer());
-	}
-	
-	//Setters
-	private void setInstance(EGlow instance) {
-		this.instance = instance;
-	}
-
-	//Getters
-	private EGlow getInstance() {
-		return this.instance;
-	}
-
 }
