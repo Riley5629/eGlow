@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
@@ -56,6 +57,10 @@ public class DataManager implements PluginMessageListener {
 		if (player == null)
 			return null;
 		return (dataPlayers.containsKey(player.getUniqueId().toString())) ? dataPlayers.get(player.getUniqueId().toString()) : null;
+	}
+	
+	public static IEGlowPlayer getEGlowPlayer(UUID uuid) {
+		return (dataPlayers.containsKey(uuid.toString())) ? dataPlayers.get(uuid.toString()) : null;
 	}
 	
 	public static Collection<IEGlowPlayer> getEGlowPlayers() {
