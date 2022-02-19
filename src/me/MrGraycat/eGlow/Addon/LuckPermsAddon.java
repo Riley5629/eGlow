@@ -32,9 +32,12 @@ public class LuckPermsAddon implements Listener {
 			if (EGlow.getInstance() == null)
 				return;
 			
+			if (event.getUser() == null || event.getUser().getUsername() == null)
+				return;
+			
 			new BukkitRunnable() {
 				public void run() {
-					IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(event.getUser().getUsername());
+					IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(event.getUser().getUniqueId());
 					
 					if (ePlayer == null)
 						return;
@@ -48,7 +51,7 @@ public class LuckPermsAddon implements Listener {
 						}
 					}
 				}
-			}.runTaskLater(EGlow.getInstance(), 5);
+			}.runTaskLaterAsynchronously(EGlow.getInstance(), 10);
 		});
 		
 		LP_EventBus.subscribe(GroupDataRecalculateEvent.class, event -> {
@@ -67,7 +70,7 @@ public class LuckPermsAddon implements Listener {
 						}
 					}
 				}
-			}.runTaskLater(EGlow.getInstance(), 5);
+			}.runTaskLaterAsynchronously(EGlow.getInstance(), 10);
 		});
 	}
 }
