@@ -70,9 +70,6 @@ public class EGlow extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		try {
-			//runPlayerCheckOnDisable();
-			//getServer().getServicesManager().unregisterAll(this);
-			//Bukkit.getScheduler().cancelTasks(this);
 			API = null;
 			instance = null;
 		} catch (IllegalPluginAccessException e) {}
@@ -141,15 +138,6 @@ public class EGlow extends JavaPlugin {
 		}
 	}
 	
-	/*private void runPlayerCheckOnDisable() {
-		if (!getServer().getOnlinePlayers().isEmpty()) {
-			for (Player player : getServer().getOnlinePlayers()) {
-				if (DataManager.getEGlowPlayer(player) == null)
-					EGlowEventListener.PlayerDisconnect(player, true);
-			}
-		}
-	}*/
-	
 	private void checkForUpdates() {
 		  try { 			
 			URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=63295");
@@ -201,7 +189,7 @@ public class EGlow extends JavaPlugin {
 	}
 	
 	//Getter
-	public static  EGlow getInstance() {
+	public static EGlow getInstance() {
 		return EGlow.instance;
 	}
 	
