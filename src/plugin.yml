@@ -1,6 +1,6 @@
 name: eGlow
 main: me.MrGraycat.eGlow.EGlow
-version: 3.1.4-PRE2
+version: 3.1.4-PRE3
 api-version: 1.13
 softdepend: [TAB,Citizens,PlaceholderAPI,Vault,iDisguise,LibsDisguises,ViaVersion,ProtocolSupport,LuckPerms]
 author: MrGraycat
@@ -68,6 +68,7 @@ permissions:
     eglow.command.list: true
     eglow.command.toggle: true
     eglow.command.visibility: true
+    eglow.option.glowstate: true
     eglow.option.glowonjoin: true
   eglow.admin.*:
    description: Gives access to admin commands.
@@ -213,6 +214,9 @@ permissions:
   eglow.option.glowonjoin:
    description: Gives access to glow on join.
    default: true
+  eglow.option.glowstate:
+   description: Mention the glow state on join.
+   default: false
   eglow.option.update:
    description: Gives access to receive update notifications.
    default: false
