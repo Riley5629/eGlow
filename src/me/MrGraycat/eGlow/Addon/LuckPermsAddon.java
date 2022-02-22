@@ -2,6 +2,7 @@ package me.MrGraycat.eGlow.Addon;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -29,48 +30,52 @@ public class LuckPermsAddon implements Listener {
 		VaultAddon Vault_Addon = EGlow.getInstance().getVaultAddon();
 		
 		LP_EventBus.subscribe(UserDataRecalculateEvent.class, event -> {
-			if (EGlow.getInstance() == null)
-				return;
-			
-			if (event.getUser() == null || event.getUser().getUsername() == null)
-				return;
-			
-			new BukkitRunnable() {
-				public void run() {
-					IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(event.getUser().getUniqueId());
-					
-					if (ePlayer == null)
-						return;
-					
-					if (TAB_Addon != null && TAB_Addon.getTABSupported() && TAB_Addon.blockEGlowPackets()) {
-						TAB_Addon.updateTABPlayer(ePlayer, ePlayer.getActiveColor());
-					} else {
-						if (Vault_Addon != null) {
-							Vault_Addon.updatePlayerTabname(ePlayer);
-							PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(), Vault_Addon.getPlayerTagPrefix(ePlayer) + ePlayer.getActiveColor(), Vault_Addon.getPlayerTagSuffix(ePlayer), true, true, EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
-						}
-					}
-				}
-			}.runTaskLaterAsynchronously(EGlow.getInstance(), 10);
-		});
-		
-		LP_EventBus.subscribe(GroupDataRecalculateEvent.class, event -> {
-			if (EGlow.getInstance() == null)
-				return;
-			
-			new BukkitRunnable() {
-				public void run() {
-					for (IEGlowPlayer ePlayer : DataManager.getEGlowPlayers()) {
+			try {
+				if (EGlow.getInstance() == null)
+					return;
+				
+				if (event.getUser() == null || event.getUser().getUsername() == null)
+					return;
+				
+				new BukkitRunnable() {
+					public void run() {
+						IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(event.getUser().getUniqueId());
+						
+						if (ePlayer == null)
+							return;
+						
 						if (TAB_Addon != null && TAB_Addon.getTABSupported() && TAB_Addon.blockEGlowPackets()) {
 							TAB_Addon.updateTABPlayer(ePlayer, ePlayer.getActiveColor());
 						} else {
 							if (Vault_Addon != null) {
+								Vault_Addon.updatePlayerTabname(ePlayer);
 								PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(), Vault_Addon.getPlayerTagPrefix(ePlayer) + ePlayer.getActiveColor(), Vault_Addon.getPlayerTagSuffix(ePlayer), true, true, EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
 							}
 						}
 					}
-				}
-			}.runTaskLaterAsynchronously(EGlow.getInstance(), 10);
+				}.runTaskLaterAsynchronously(EGlow.getInstance(), 10);
+			} catch (IllegalPluginAccessException e) {}	
+		});
+		
+		LP_EventBus.subscribe(GroupDataRecalculateEvent.class, event -> {
+			try {
+				if (EGlow.getInstance() == null)
+					return;
+				
+				new BukkitRunnable() {
+					public void run() {
+						for (IEGlowPlayer ePlayer : DataManager.getEGlowPlayers()) {
+							if (TAB_Addon != null && TAB_Addon.getTABSupported() && TAB_Addon.blockEGlowPackets()) {
+								TAB_Addon.updateTABPlayer(ePlayer, ePlayer.getActiveColor());
+							} else {
+								if (Vault_Addon != null) {
+									PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(), Vault_Addon.getPlayerTagPrefix(ePlayer) + ePlayer.getActiveColor(), Vault_Addon.getPlayerTagSuffix(ePlayer), true, true, EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
+								}
+							}
+						}
+					}
+				}.runTaskLaterAsynchronously(EGlow.getInstance(), 10);
+			} catch (IllegalPluginAccessException e) {}
 		});
 	}
 }
