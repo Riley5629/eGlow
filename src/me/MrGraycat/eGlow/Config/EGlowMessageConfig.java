@@ -97,6 +97,10 @@ public class EGlowMessageConfig {
 		DISABLE_GLOW("main.glow-disable"),
 		GLOW_REMOVED("main.glow-removed"),
 		VISIBILITY_CHANGE("main.glow-visibility-change"),
+		VISIBILITY_ALL("main.glow-visibility-all"),
+		VISIBILITY_OWN("main.glow-visibility-own"),
+		VISIBILITY_NONE("main.glow-visibility-none"),
+		VISIBILITY_UNSUPPORTED("main.glow-visibility-unsupported-version"),
 		UNSUPPORTED_GLOW("main.glow-unsupported"),
 		OTHER_CONFIRM("main.other-glow-player-confirm"),
 		OTHER_CONFIRM_OFF("main.other-glow-player-confirm-off"),
@@ -107,6 +111,8 @@ public class EGlowMessageConfig {
 		TARGET_NOTIFICATION_PREFIX("main.other-glow-target-notification-prefix"),
 		RELOAD_SUCCESS("main.reload-success"),
 		RELOAD_FAIL("main.reload-fail"),
+		GLOWING_STATE_ON_JOIN("main.glowing-state-on-join"),
+		NON_GLOWING_STATE_ON_JOIN("main.non-glowing-state-on-join"),
 		NO_LAST_GLOW("main.argument-no-last-glow"),
 		INCORRECT_USAGE("main.argument-incorrect-usage"),
 		PLAYER_NOT_FOUND("main.argument-player-not-found"),
@@ -177,8 +183,15 @@ public class EGlowMessageConfig {
 				return get(Message.COLOR, value);
 			case NEW_GLOW:
 				return getColorValue(msg.getConfigPath(), "%glowname%", value);
+			case GLOWING_STATE_ON_JOIN:
+				return getColorValue(msg.getConfigPath(), "%glowname%", value);
 			case VISIBILITY_CHANGE:
-				return getColorValue(msg.getConfigPath(), "%value%", value);
+				switch (value.toLowerCase()) {
+				case("unsupportedclient"):
+					return getColorValue(msg.getConfigPath(), "%value%", Message.VISIBILITY_UNSUPPORTED.get());
+				default:
+					return getColorValue(msg.getConfigPath(), "%value%", Message.valueOf("VISIBILITY_" + value).get());
+				}
 			case INCORRECT_USAGE:
 				return getColorValue(msg.getConfigPath(), "%command%", value);
 			default:
@@ -246,6 +259,12 @@ public class EGlowMessageConfig {
 		addIfMissing("main.invisibility-glow-enabled", "&aRe-enabling you glow as you're no longer invisible&f.");
 		addIfMissing("main.other-glow-player-invisible", "&e%target% &cis invisible which disables the glow&f.");
 		addIfMissing("main.other-glow-player-disguise", "&e%target% &cis in disguise which disabled the glow&f.");
+		addIfMissing("main.glow-visibility-all", "All");
+		addIfMissing("main.glow-visibility-own", "Own");
+		addIfMissing("main.glow-visibility-none", "None");
+		addIfMissing("main.glow-visibility-unsupported-version", "Unsupported version");
+		addIfMissing("main.glowing-state-on-join", "&fYou are now glowing&f! &f[&e%glowname%&f]");
+		addIfMissing("main.non-glowing-state-on-join", "&fYou're not glowing.");
 	}
 	
 	private static void addIfMissing(String path, String text) {

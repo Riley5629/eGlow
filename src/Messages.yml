@@ -11,6 +11,10 @@ main:
   glow-disable: "&fYour glow has been disabled!"
   glow-removed: "&cDisabling glow&f! &eThe effect your were using got removed."
   glow-visibility-change: "&fYou will now only see the following glows: &e%value%"
+  glow-visibility-all: "All"
+  glow-visibility-own: "Own"
+  glow-visibility-none: "None"
+  glow-visibility-unsupported-version: "Unsupported client"
   glow-unsupported: "&cYou won't be able to see the glow effect as your client version doesn't support it&f!"
 
   other-glow-player-confirm: "&e%target% &fis now glowing! &f[%glowname%&f]"
@@ -23,6 +27,9 @@ main:
 
   reload-success: "&aReloaded successfull!"
   reload-fail: "&cReload failed&f."
+
+  glowing-state-on-join: "&fYou are now glowing&f! &f[&e%glowname%&f]"
+  non-glowing-state-on-join: "&fYou're not glowing."
 
   argument-no-last-glow: " &cYou don't have any last known glows."
   argument-incorrect-usage: "&cIncorrect usage&f! %command%"

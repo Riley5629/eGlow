@@ -107,6 +107,7 @@ public class EGlowMainConfig {
 		addIfMissing("Options.Send-invisibility-notification", true);
 		addIfMissing("Options.Advanced-TAB-integration", false);
 		addIfMissing("Options.Disable-glow-when-invisible", true);
+		addIfMissing("Options.Mention-glow-state-on-join", false);
 	}
 	
 	private static void addIfMissing(String path, Object value) {
@@ -299,6 +300,10 @@ public class EGlowMainConfig {
 	
 	public static boolean OptionDisablePrefixInGUI() {
 		return (config.contains("Options.Disable-prefix-in-GUI")) ? config.getBoolean("Options.Disable-prefix-in-GUI") : false;
+	}
+	
+	public static boolean OptionMentionGlowState() {
+		return (config.contains("Options.Mention-glow-state-on-join")) ? config.getBoolean("Options.Mention-glow-state-on-join") : false;
 	}
 	
 	private static void registerCustomPermissions() {
