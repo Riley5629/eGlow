@@ -15,7 +15,6 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class ConvertCommand extends SubCommand {
 	private boolean keepActive = false;
-	private boolean failed = false;
 	private int counter = 0;
 	
 	@Override
@@ -62,8 +61,6 @@ public class ConvertCommand extends SubCommand {
 					File playerFolder = new File(getInstance().getDataFolder() + File.separator + "PlayerData");
 					YamlConfiguration playerConfig = new YamlConfiguration();
 					File[] files;
-					counter = 0;
-					failed = false;
 					
 					if (playerFolder.exists()) {
 						files = playerFolder.listFiles();
@@ -82,8 +79,8 @@ public class ConvertCommand extends SubCommand {
 								try {
 									if (!keepActive) cancel();
 									if (counter >= files.length - 1) {
-										ChatUtil.sendMsgWithPrefix(sender, "&fFinished conversion of &e" + files.length + "&fentries. " + ((failed) ? "(&cSome have failed&f)" : ""));
-										if (!failed) {playerFolder.delete();}
+										ChatUtil.sendMsgWithPrefix(sender, "&fFinished conversion of &e" + files.length + "&fentries.");
+										playerFolder.delete();
 										keepActive = false;
 										cancel();
 									}
@@ -93,7 +90,8 @@ public class ConvertCommand extends SubCommand {
 									if (EGlowPlayerdataManager.savePlayerdata(files[counter].getName().replace(".yml", ""), playerConfig.getString("lastGlowData"), playerConfig.getBoolean("glowOnJoin"), playerConfig.getBoolean("activeOnQuit"), playerConfig.getString("glowVisibility"), playerConfig.getString("glowDisableReason"))) {
 										File file = files[counter];
 										file.delete();
-									} else {failed = true;}
+									}
+									
 									counter++;
 								} catch (IOException | InvalidConfigurationException e) {}	
 							}
