@@ -59,6 +59,7 @@ Options:
   Send-invisibility-notification: true #Toggle invisibility notifications
   Render-player-skulls: true #Toggle skins rendering on playerskulls.
   Default-glow-on-join-value: true #Default value to use for the glowonjoin setting.
+  Mention-glow-state-on-join: false #When a player joins eGlow will send a message like: You are (not) glowing (color)
   Send-target-notification: true #Toggle notification for targeted player (when using /eglow set <player>).
   PermissionCheck-on-join: false #Check if player still has the required permissions for that glow (on join).
   Send-update-notifications: true #Toggle update notifications.
