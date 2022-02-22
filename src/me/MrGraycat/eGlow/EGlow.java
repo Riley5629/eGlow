@@ -6,7 +6,6 @@ import java.net.URL;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -69,10 +68,7 @@ public class EGlow extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		try {
-			API = null;
-			instance = null;
-		} catch (IllegalPluginAccessException e) {}
+		runPlayerCheckOnDisable();
 	}
 	
 	private boolean versionIsCompactible() {
@@ -134,6 +130,15 @@ public class EGlow extends JavaPlugin {
 			for (Player player : getServer().getOnlinePlayers()) {
 				if (DataManager.getEGlowPlayer(player) == null)
 					EGlowEventListener.PlayerConnect(player, player.getUniqueId());
+			}
+		}
+	}
+	
+	private void runPlayerCheckOnDisable() {
+		if (!getServer().getOnlinePlayers().isEmpty()) {
+			for (Player player : getServer().getOnlinePlayers()) {
+				if (DataManager.getEGlowPlayer(player) == null)
+					EGlowEventListener.PlayerDisconnect(player, true);
 			}
 		}
 	}
