@@ -8,6 +8,7 @@ import us.myles.ViaVersion.api.Via;
 
 public enum ProtocolVersion {
 	UNKNOWN		(999, "Unknown"),
+	v1_18_2		(758, "1.18.2"),
 	v1_18		(757, "1.18(.1)"),
 	v1_17_1		(756, "1.17.1"),
 	v1_17		(755, "1.17"),
