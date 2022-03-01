@@ -201,7 +201,7 @@ public class PacketUtil {
 					try {NMSHook.sendPacket(ePlayer.getPlayer(), packetPlayOutEntityMetadata.toNMS(ePlayer.getVersion()));} catch (Exception e) {e.printStackTrace();}
 					break;
 				case OWN:
-					if (p.equals(ep.getPlayer())) {
+					if (p.equals(ePlayer.getPlayer())) {
 						packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(EGlow.getInstance(), p.getEntityId(), NMSHook.setGlowFlag(p, isGlowing));
 						try {NMSHook.sendPacket(ePlayer.getPlayer(), packetPlayOutEntityMetadata.toNMS(ePlayer.getVersion()));} catch (Exception e) {e.printStackTrace();}
 					} else {
