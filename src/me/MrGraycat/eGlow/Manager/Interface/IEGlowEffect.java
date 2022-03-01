@@ -101,6 +101,10 @@ public class IEGlowEffect {
 						cancel();
 					
 					for (Object entity : getActiveEntities().keySet()) {
+						if (getActiveEntities().get(entity) == null) {
+							continue;
+						}
+							
 						int progress = getActiveEntities().get(entity);
 						IEGlowPlayer eglowEntity = null;
 
