@@ -41,6 +41,7 @@ public class EGlow extends JavaPlugin {
 	private IDisguiseAddon iDisguiseAddon;
 	private LibDisguiseAddon libDisguiseAddon;
 	private TABAddon tabAddon;
+	private LuckPermsAddon lpAddon;
 	private VaultAddon vaultAddon;
 	
 	@Override
@@ -68,6 +69,9 @@ public class EGlow extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
+		if (getLPAddon() != null) {
+			getLPAddon().unload();
+		}
 		runPlayerCheckOnDisable();
 	}
 	
@@ -110,14 +114,14 @@ public class EGlow extends JavaPlugin {
 						if (TAB_Plugin != null && TAB_Plugin.getClass().getName().startsWith("me.neznamy.tab"))
 							setTABAddon(new TABAddon(TAB_Plugin));
 					} catch (NoClassDefFoundError e) {			
-						ChatUtil.sendToConsoleWithPrefix("&cWarning&f! &cThis version of eGlow requires TAB 3.1.0 or higher!");
+						ChatUtil.sendToConsoleWithPrefix("&cWarning&f! &cThis version of eGlow requires TAB 3.2.0 or higher!");
 					}
 				} 
 				
 				EGlow.getInstance().getServer().getPluginManager().registerEvents(new EGlowTABListenerUniv(), getInstance());
 				
 				if (DebugUtil.pluginCheck("LuckPerms")) {
-					new LuckPermsAddon();
+					setLPAddon(new LuckPermsAddon());
 				}
 				
 				DebugUtil.addonCheck();
@@ -189,6 +193,10 @@ public class EGlow extends JavaPlugin {
 		this.tabAddon = tabAddon;
 	}
 	
+	private void setLPAddon(LuckPermsAddon lpAddon) {
+		this.lpAddon = lpAddon;
+	}
+	
 	private void setVaultAddon(VaultAddon vaultAddon) {
 		this.vaultAddon = vaultAddon;
 	}
@@ -220,6 +228,10 @@ public class EGlow extends JavaPlugin {
 	
 	public TABAddon getTABAddon() {
 		return this.tabAddon;
+	}
+	
+	public LuckPermsAddon getLPAddon() {
+		return this.lpAddon;
 	}
 	
 	public VaultAddon getVaultAddon() {

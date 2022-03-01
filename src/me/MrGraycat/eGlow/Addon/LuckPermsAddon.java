@@ -14,10 +14,14 @@ import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.EnumChatFormat;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.event.EventBus;
+import net.luckperms.api.event.EventSubscription;
 import net.luckperms.api.event.group.GroupDataRecalculateEvent;
 import net.luckperms.api.event.user.UserDataRecalculateEvent;
 
 public class LuckPermsAddon implements Listener {
+	
+    private EventSubscription<UserDataRecalculateEvent> luckPermsSub;
+    private EventSubscription<GroupDataRecalculateEvent> luckPermsSub2;
 	
 	public LuckPermsAddon() {
 		RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
@@ -29,7 +33,7 @@ public class LuckPermsAddon implements Listener {
 		TABAddon TAB_Addon = EGlow.getInstance().getTABAddon();
 		VaultAddon Vault_Addon = EGlow.getInstance().getVaultAddon();
 		
-		LP_EventBus.subscribe(UserDataRecalculateEvent.class, event -> {
+		luckPermsSub = LP_EventBus.subscribe(UserDataRecalculateEvent.class, event -> {
 			try {
 				if (EGlow.getInstance() == null)
 					return;
@@ -57,7 +61,7 @@ public class LuckPermsAddon implements Listener {
 			} catch (IllegalPluginAccessException e) {}	
 		});
 		
-		LP_EventBus.subscribe(GroupDataRecalculateEvent.class, event -> {
+		luckPermsSub2 = LP_EventBus.subscribe(GroupDataRecalculateEvent.class, event -> {
 			try {
 				if (EGlow.getInstance() == null)
 					return;
@@ -77,5 +81,10 @@ public class LuckPermsAddon implements Listener {
 				}.runTaskLaterAsynchronously(EGlow.getInstance(), 10);
 			} catch (IllegalPluginAccessException e) {}
 		});
+	}
+	
+	public void unload() {
+		luckPermsSub.close();
+		luckPermsSub2.close();
 	}
 }
