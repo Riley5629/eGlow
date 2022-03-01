@@ -69,6 +69,15 @@ public class PlaceholderAPIAddon extends PlaceholderExpansion {
         	return (eglowPlayer.getGlowStatus() && !eglowPlayer.getFakeGlowStatus()) ? eglowPlayer.getActiveColor() + "" : "";
         case("colorchar"):
         	return (eglowPlayer.getGlowStatus() && !eglowPlayer.getFakeGlowStatus()) ? eglowPlayer.getActiveColor().getChar() + "" : "r";	
+        case("lastglow"):
+        	return (eglowPlayer.getLastGlowName());
+        case("glow_visibility"):
+        	switch (eglowPlayer.getGlowVisibility()) {
+			case UNSUPPORTEDCLIENT:
+				return Message.VISIBILITY_UNSUPPORTED.get();
+			default:
+				return Message.valueOf("VISIBILITY_" + eglowPlayer.getGlowVisibility().toString()).get();
+			}
         case("selectedglow"):
         	return (!eglowPlayer.getGlowStatus() && !eglowPlayer.getFakeGlowStatus()) ? Message.COLOR.get("none") : ChatUtil.getEffectChatName(eglowPlayer);
         case("selectedglow_raw"):
