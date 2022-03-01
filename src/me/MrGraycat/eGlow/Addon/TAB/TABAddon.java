@@ -35,12 +35,9 @@ public class TABAddon {
 			ChatUtil.sendToConsoleWithPrefix("&cWarning&f! &cThis version of eGlow requires TAB 3.1.0 or higher!");
 			return;
 		}
-		
-		setTABSupported(true);
+
 		setTABLegacyVersion((TAB_Version >= 310) ? false : true);
-		
 		setTABUtil((getTABLegacyVersion()) ? new TABLegacyUtil() : new TABUtil());
-		
 		loadTABSettings();
 		
 		TabAPI.getInstance().getEventBus().register(TabLoadEvent.class, event -> {
@@ -67,6 +64,8 @@ public class TABAddon {
 				}
 			}.runTaskAsynchronously(EGlow.getInstance());
 		});
+		
+		setTABSupported(true);
 	}
 	
 	public void loadTABSettings() {

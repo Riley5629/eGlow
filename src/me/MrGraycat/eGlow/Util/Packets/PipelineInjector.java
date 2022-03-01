@@ -35,9 +35,16 @@ public class PipelineInjector{
 				
 				public void write(ChannelHandlerContext context, Object packet, ChannelPromise channelPromise) throws Exception {		
 					if (NMSHook.nms.PacketPlayOutScoreboardTeam.isInstance(packet)) {
-						if (EGlow.getInstance().getTABAddon() != null && EGlow.getInstance().getTABAddon().blockEGlowPackets()) {
-							super.write(context, packet, channelPromise);
-							return;
+						if (DebugUtil.TABInstalled()) {
+							if (EGlow.getInstance().getTABAddon() == null) {
+								super.write(context, packet, channelPromise);
+								return;
+							} else {
+								if (!EGlow.getInstance().getTABAddon().getTABSupported() || EGlow.getInstance().getTABAddon().blockEGlowPackets()) {
+									super.write(context, packet, channelPromise);
+									return;
+								}
+							}
 						}
 						
 						modifyPlayers(packet);
@@ -94,9 +101,6 @@ public class PipelineInjector{
 	@SuppressWarnings("unchecked")
 	private static void modifyPlayers(Object packetPlayOutScoreboardTeam) throws Exception {
 		if (!blockPackets || !EGlowMainConfig.OptionFeaturePacketBlocker())
-			return;
-		
-		if (EGlow.getInstance().getTABAddon() != null && DebugUtil.TABInstalled() && EGlow.getInstance().getTABAddon().getTABSupported())
 			return;
 		
 		String teamName = NMSHook.nms.PacketPlayOutScoreboardTeam_NAME.get(packetPlayOutScoreboardTeam).toString();
