@@ -79,7 +79,9 @@ public class EffectCommand extends SubCommand {
 		
 		if (ePlayer.getPlayer().hasPermission(effect.getPermission()) || DataManager.isCustomEffect(effect.getName()) && ePlayer.getPlayer().hasPermission("eglow.effect.*")) {
 			if (effect.getName().equals("none") && ePlayer.getGlowStatus()) {
-					ePlayer.toggleGlow();
+				if (ePlayer.getGlowStatus() || ePlayer.getFakeGlowStatus()) {
+					ePlayer.disableGlow(false);
+				}
 				ChatUtil.sendMsgWithPrefix(sender, Message.DISABLE_GLOW.get());
 				return;
 			}
