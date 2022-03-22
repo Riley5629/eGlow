@@ -94,7 +94,7 @@ public class DataManager implements PluginMessageListener {
 					effect = getEGlowEffect("blink" + name + "slow");
 					
 					if (effect != null) {
-						effect.setDisplayName((EGlowMainConfig.OptionUseGUIColorAsChatColor()) ? Message.GUI_COLOR.get(configName) : Message.COLOR.get(configName) + " §f(" + Message.COLOR.get("effect-blink") + " " + Message.COLOR.get("slow") + "§f)");
+						effect.setDisplayName((EGlowMainConfig.OptionUseGUIColorAsChatColor()) ? Message.GUI_COLOR.get(configName) : Message.COLOR.get(configName) + " §f(" + Message.COLOR.get("effect-blink") + ((Message.COLOR.get("effect-blink").isEmpty()) ? "" : " ") + Message.COLOR.get("slow") + "§f)");
 						effect.setDelay(EGlowMainConfig.getPlayerSlowDelay());
 						effect.reloadEffect();
 					}
@@ -102,7 +102,7 @@ public class DataManager implements PluginMessageListener {
 					effect = getEGlowEffect("blink" + name + "fast");
 					
 					if (effect != null) {
-						effect.setDisplayName((EGlowMainConfig.OptionUseGUIColorAsChatColor()) ? Message.GUI_COLOR.get(configName) : Message.COLOR.get(configName) + " §f(" + Message.COLOR.get("effect-blink") + " " + Message.COLOR.get("fast") + "§f)");
+						effect.setDisplayName((EGlowMainConfig.OptionUseGUIColorAsChatColor()) ? Message.GUI_COLOR.get(configName) : Message.COLOR.get(configName) + " §f(" + Message.COLOR.get("effect-blink") + ((Message.COLOR.get("effect-blink").isEmpty()) ? "" : " ") + Message.COLOR.get("fast") + "§f)");
 						effect.setDelay(EGlowMainConfig.getPlayerFastDelay());
 						effect.reloadEffect();
 					}
