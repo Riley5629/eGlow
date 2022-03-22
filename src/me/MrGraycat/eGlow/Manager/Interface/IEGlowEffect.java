@@ -100,49 +100,44 @@ public class IEGlowEffect {
 					if (getActiveEntities().isEmpty())
 						cancel();
 					
-					for (Object entity : getActiveEntities().keySet()) {
-						if (getActiveEntities().get(entity) == null) {
-							continue;
-						}
-							
-						int progress = getActiveEntities().get(entity);
-						IEGlowPlayer eglowEntity = null;
+					getActiveEntities().forEach((entity, progress) -> {
+					IEGlowPlayer eglowEntity = null;
 
-						if (entity instanceof Player)
-							eglowEntity = DataManager.getEGlowPlayer((Player) entity);
+					if (entity instanceof Player)
+						eglowEntity = DataManager.getEGlowPlayer((Player) entity);
 
-						try {
-							if (EGlow.getInstance().getCitizensAddon() != null && entity instanceof NPC)
-								eglowEntity = ((NPC) entity).getOrAddTrait(EGlowCitizensTrait.class).getEGlowNPC();
-						} catch (NoSuchMethodError e) {
-							ChatUtil.sendToConsoleWithPrefix("&cYour Citizens version is outdated please use 2.0.27 or later");
-						}
-
-						if (eglowEntity == null) {
-							getActiveEntities().remove(entity);
-							continue;
-						}
-
-						ChatColor color = effectLoop.get(progress);
-
-						if (color.equals(ChatColor.RESET)) {
-							eglowEntity.setColor(color, false, true);
-						} else {
-							eglowEntity.setColor(color, true, false);
-						}
-
-						if (effectLoop.size() == 1) {
-							eglowEntity.setColor(color, true, false);
-							continue;
-						}
-
-						if (progress == effectLoop.size() - 1) {
-							getActiveEntities().replace(entity, 0);
-							continue;
-						}
-
-						getActiveEntities().replace(entity, progress + 1);
+					try {
+						if (EGlow.getInstance().getCitizensAddon() != null && entity instanceof NPC)
+							eglowEntity = ((NPC) entity).getOrAddTrait(EGlowCitizensTrait.class).getEGlowNPC();
+					} catch (NoSuchMethodError e) {
+						ChatUtil.sendToConsoleWithPrefix("&cYour Citizens version is outdated please use 2.0.27 or later");
 					}
+
+					if (eglowEntity == null) {
+						getActiveEntities().remove(entity);
+						return;
+					}
+
+					ChatColor color = effectLoop.get(progress);
+
+					if (color.equals(ChatColor.RESET)) {
+						eglowEntity.setColor(color, false, true);
+					} else {
+						eglowEntity.setColor(color, true, false);
+					}
+
+					if (effectLoop.size() == 1) {
+						eglowEntity.setColor(color, true, false);
+						return;
+					}
+
+					if (progress == effectLoop.size() - 1) {
+						getActiveEntities().replace(entity, 0);
+						return;
+					}
+
+					getActiveEntities().replace(entity, progress + 1);
+					});
 				}
 			}.runTaskTimerAsynchronously(EGlow.getInstance(), 1, effectDelay));		
 		}
