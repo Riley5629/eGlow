@@ -91,11 +91,17 @@ public class PipelineInjector{
 	}
 
 	public static void uninject(IEGlowPlayer eglowPlayer) {
-		Channel channel = (Channel) NMSHook.getChannel(eglowPlayer.getPlayer());
-		if (channel.pipeline().names().contains(DECODER_NAME)) channel.pipeline().remove(DECODER_NAME);
-		
 		if (glowingEntities.containsValue(eglowPlayer))
 			glowingEntities.remove(eglowPlayer.getPlayer().getEntityId());
+		
+		try {
+			Channel channel = (Channel) NMSHook.getChannel(eglowPlayer.getPlayer());
+			if (channel.pipeline().names().contains(DECODER_NAME)) channel.pipeline().remove(DECODER_NAME);
+		} catch (NoSuchElementException e) {
+			//for whatever reason this rarely throws
+            //java.util.NoSuchElementException: eGlowReader
+		}
+		
 	}
 	
 	@SuppressWarnings("unchecked")
