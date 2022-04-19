@@ -3,9 +3,10 @@ package me.MrGraycat.eGlow.Command;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-import org.bukkit.Bukkit;
+import org.bukkit .Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
@@ -27,13 +28,14 @@ import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class EGlowCommand implements CommandExecutor, TabExecutor {
-	private ArrayList<String> colors = new ArrayList<String>(Arrays.asList("red","darkred", "gold", "yellow", "green", "darkgreen", "aqua", "darkaqua", "blue", "darkblue", "purple", "pink", "white", "gray", "darkgray", "black", "none"));
-	private ArrayList<SubCommand> subcmds = new ArrayList<>();
+	private final ArrayList<String> colors = new ArrayList<>(Arrays.asList("red","darkred", "gold", "yellow", "green", "darkgreen", "aqua", "darkaqua", "blue", "darkblue", "purple", "pink", "white", "gray", "darkgray", "black", "none"));
+	private final ArrayList<SubCommand> subcmds = new ArrayList<>();
 	
 	/**
 	 * Register the subcommands & command alias if enabled
 	 */
 	public EGlowCommand() {
+
 		try{
 		    final Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 		    String alias = EGlowMainConfig.OptionCommandAlias();
@@ -152,7 +154,7 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 				break;
 				case("convert"):
 					if (sender.hasPermission("eglow.command.convert")) {
-						suggestions = new ArrayList<>(Arrays.asList("stop"));
+						suggestions = new ArrayList<>(Collections.singletonList("stop"));
 						
 						for (int i = 1 ; i <= 10 ; i ++) {
 							suggestions.add(i + "");

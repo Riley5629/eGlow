@@ -10,10 +10,10 @@ import org.bukkit.event.HandlerList;
 public class GlowColorChangeEvent extends Event {
 	private static final HandlerList handlers = new HandlerList();
 	
-	private Player player;
-	private UUID UUID;
-	private ChatColor color;
-	private boolean isGlowing;
+	private final Player player;
+	private final UUID UUID;
+	private final ChatColor color;
+	private final boolean isGlowing;
 	
 	public GlowColorChangeEvent(Player player, UUID uuid, ChatColor color, boolean isGlowing) {
 		this.player = player;
@@ -48,7 +48,7 @@ public class GlowColorChangeEvent extends Event {
 	
 	/**
 	 * Get the char of the glow color
-	 * @return glow color char as String which would go after the & or ง
+	 * @return glow color char as String which would go after the & or ยง
 	 */
 	public String getColorChar() {
 		return (color == null || color.equals(ChatColor.RESET) || !isGlowing) ? "" :  String.valueOf(color.getChar());

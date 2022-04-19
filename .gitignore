@@ -5,3 +5,5 @@ bin
 target
 dependency-reduced-pom.xml
 src/plugin.yml.bak
+/.idea/
+eGlow.iml

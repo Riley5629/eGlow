@@ -62,11 +62,11 @@ public enum ProtocolVersion {
 	
 	public static ProtocolVersion SERVER_VERSION;
 	
-	private int networkId;
-	private String friendlyName;
+	private final int networkId;
+	private final String friendlyName;
 	private int minorVersion;
 	
-	private ProtocolVersion(int networkId, String friendlyName){
+	ProtocolVersion(int networkId, String friendlyName){
 		this.networkId = networkId;
 		this.friendlyName = friendlyName;
 		if (toString().equals("UNKNOWN")) {
@@ -125,8 +125,7 @@ public enum ProtocolVersion {
 	private static int getProtocolVersionPS(Player p) {
 		try {
 			Object protocolVersion = Class.forName("protocolsupport.api.ProtocolSupportAPI").getMethod("getProtocolVersion", Player.class).invoke(null, p);
-			int ver = (int) protocolVersion.getClass().getMethod("getId").invoke(protocolVersion);
-			return ver;
+			return (int) protocolVersion.getClass().getMethod("getId").invoke(protocolVersion);
 		} catch (Throwable e) {
 			return 0;
 		}

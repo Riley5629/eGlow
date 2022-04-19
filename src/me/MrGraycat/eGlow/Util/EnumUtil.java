@@ -15,9 +15,9 @@ public class EnumUtil {
 		NONE("NONE"),
 		UNSUPPORTEDCLIENT("UNSUPPORTEDCLIENT");
 		
-		private String visibility;
+		private final String visibility;
 		
-		private GlowVisibility(String visibility) {
+		GlowVisibility(String visibility) {
 			this.visibility = visibility;
 		}
 		
@@ -38,9 +38,9 @@ public class EnumUtil {
 		INVISIBLE("INVISIBLE"),
 		NONE("NONE");
 		
-		private String reason;
+		private final String reason;
 		
-		private GlowDisableReason(String reason) {
+		GlowDisableReason(String reason) {
 			this.reason = reason;
 		}
 		
@@ -60,9 +60,9 @@ public class EnumUtil {
 		ALLOWED("ALLOW"),
 		UNKNOWN("NONE");
 		
-		private String action;
+		private final String action;
 		
-		private GlowWorldAction(String action) {
+		GlowWorldAction(String action) {
 			this.action = action;
 		}
 		
@@ -80,9 +80,9 @@ public class EnumUtil {
 		ALL("ALL"),
 		CUSTOM("CUSTOM");
 		
-		private String target;
+		private final String target;
 		
-		private GlowTargetMode(String target) {
+		GlowTargetMode(String target) {
 			this.target = target;
 		}
 		
@@ -100,9 +100,9 @@ public class EnumUtil {
 		SQLITE("SQLITE"),
 		MYSQL("MYSQL");
 		
-		private String configType;
+		private final String configType;
 		
-		private ConfigType(String configType) {
+		ConfigType(String configType) {
 			this.configType = configType;
 		}
 		
@@ -115,9 +115,9 @@ public class EnumUtil {
 		PLAYER("Player"),
 		CITIZENS("CitzensNPC");
 		
-		private String EntityType;
+		private final String EntityType;
 		
-		private EntityType(String EntityType) {
+		EntityType(String EntityType) {
 			this.EntityType = EntityType;
 		}
 		

@@ -37,14 +37,7 @@ public class DataWatcherItem {
 			//return new DataWatcherItem(new DataWatcherObject((int) getValue(nmsItem, "b"), getValue(nmsItem, "a")), getValue(nmsItem, "c"));
 		}
 	}
-	
-	/**
-	 * Returns value of a field
-	 * @param obj - object to get value from
-	 * @param field - name of field to get
-	 * @return value of field
-	 * @throws Exception - if something fails
-	 */
+
 	/*public static Object getValue(Object obj, String field) throws Exception {
 		Field f = obj.getClass().getDeclaredField(field);
 		f.setAccessible(true);

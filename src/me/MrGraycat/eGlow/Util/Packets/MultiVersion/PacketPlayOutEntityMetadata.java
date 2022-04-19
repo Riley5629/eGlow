@@ -1,15 +1,14 @@
 package me.MrGraycat.eGlow.Util.Packets.MultiVersion;
 
-import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Util.Packets.NMSHook;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.Datawatcher.DataWatcher;
 
 public class PacketPlayOutEntityMetadata extends PacketPlayOut {
 
-	private int entityId;
-	private DataWatcher dataWatcher;
+	private final int entityId;
+	private final DataWatcher dataWatcher;
 
-	public PacketPlayOutEntityMetadata(EGlow instance, int entityId, DataWatcher dataWatcher) {
+	public PacketPlayOutEntityMetadata(int entityId, DataWatcher dataWatcher) {
 		this.entityId = entityId;
 		this.dataWatcher = dataWatcher;
 	}

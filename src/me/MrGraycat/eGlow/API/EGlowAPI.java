@@ -62,7 +62,7 @@ public class EGlowAPI {
 	
 	/**
 	 * Enable a specific effect for a player
-	 * @param player to active the effect for
+	 * @param player to activate the effect for
 	 * @param effect to enable
 	 */
 	public void enableGlow(IEGlowPlayer player, IEGlowEffect effect) {
@@ -79,7 +79,7 @@ public class EGlowAPI {
 	
 	/**
 	 * Enable a solid glow color for a player
-	 * @param player to active the glow for
+	 * @param player to activate the glow for
 	 * @param color to enable
 	 */
 	public void enableGlow(IEGlowPlayer player, EGlowColor color) {
@@ -195,7 +195,7 @@ public class EGlowAPI {
 		if (sender == null)
 			return;
 		
-		sender.resetGlowTargets();;
+		sender.resetGlowTargets();
 		PacketUtil.forceUpdateGlow(sender);	
 	}
 	

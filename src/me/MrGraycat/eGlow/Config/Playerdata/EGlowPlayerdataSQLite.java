@@ -19,7 +19,7 @@ import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class EGlowPlayerdataSQLite {
-	private ConcurrentHashMap<String, String> SavingQueue = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<String, String> SavingQueue = new ConcurrentHashMap<>();
 	
 	SQLiteDataSource sqlite;
 
@@ -47,8 +47,8 @@ public class EGlowPlayerdataSQLite {
 			SavingQueue.remove(playerUUID);
 			
 			ePlayer.setDataFromLastGlow(data[0]);
-			ePlayer.setGlowOnJoin(Boolean.valueOf(data[1]));
-			ePlayer.setActiveOnQuit(Boolean.valueOf(data[2]));
+			ePlayer.setGlowOnJoin(Boolean.parseBoolean(data[1]));
+			ePlayer.setActiveOnQuit(Boolean.parseBoolean(data[2]));
 			ePlayer.setGlowVisibility(GlowVisibility.valueOf(data[3]));
 			ePlayer.setGlowDisableReason(GlowDisableReason.valueOf(data[4]));
 			return;
@@ -57,7 +57,7 @@ public class EGlowPlayerdataSQLite {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet res = null;
-		String statement = "";
+		String statement;
 		
 		statement = "SELECT * FROM eglow WHERE UUID='" + playerUUID + "'";
 		
@@ -103,7 +103,6 @@ public class EGlowPlayerdataSQLite {
 	/**
 	 * Save the data for the given player
 	 * @param ePlayer player to save the data for
-	 * @throws InterruptedException 
 	 */
 	public void savePlayerdata(IEGlowPlayer ePlayer) {
 		//TODO NEW STUFF HERE
@@ -180,8 +179,8 @@ public class EGlowPlayerdataSQLite {
 					ps = con.prepareStatement(statement);
 					
 					ps.setString(1, playerUUID);
-					ps.setBoolean(2, Boolean.valueOf(splitValues[1]));
-					ps.setBoolean(3, Boolean.valueOf(splitValues[2]));
+					ps.setBoolean(2, Boolean.parseBoolean(splitValues[1]));
+					ps.setBoolean(3, Boolean.parseBoolean(splitValues[2]));
 					ps.setString(4, splitValues[0]);
 					ps.setString(5, splitValues[3]);
 					ps.setString(6, splitValues[4]);
@@ -204,7 +203,6 @@ public class EGlowPlayerdataSQLite {
 		}
 		
 		isActive = false;
-		return;
 	}
 	
 	public boolean savePlayerdata(String uuid, String lastGlowData, boolean glowOnJoin, boolean activeOnQuit, String glowVisibility, String glowDisableReason) {
@@ -215,7 +213,7 @@ public class EGlowPlayerdataSQLite {
 		
 		Connection con = null;
 		PreparedStatement ps = null;
-		String statement = "";
+		String statement;
 		
 		statement = "INSERT OR REPLACE INTO eglow (UUID, glowOnJoin, activeOnQuit, lastGlowData, glowVisibility, glowDisableReason)" + " VALUES(?,?,?,?,?,?)";
 		
@@ -273,11 +271,13 @@ public class EGlowPlayerdataSQLite {
 				statement = "CREATE TABLE eglow (UUID VARCHAR(255) NOT NULL, glowOnJoin BOOLEAN, activeOnQuit BOOLEAN, lastGlowData VARCHAR(255), glowVisibility VARCHAR(255), glowDisableReason VARCHAR(255), PRIMARY KEY (UUID))";
 			} 
 			
-			if (statement.isEmpty() || statement.equals(""))
+			if (statement.isEmpty())
 				return true;
 			
 			ps = con.prepareStatement(statement);
-			try {ps.executeUpdate();} catch(Exception e) {}
+			try {ps.executeUpdate();} catch(Exception e) {
+				//Forgot why I ignore this
+			}
 			return true;
 		} catch(SQLException e) {
 			ChatUtil.reportError(e);
@@ -295,6 +295,8 @@ public class EGlowPlayerdataSQLite {
 				ps.close();
 			if (res != null)
 				res.close();
-		} catch (SQLException e) {}
+		} catch (SQLException e) {
+			//
+		}
 	}
 }

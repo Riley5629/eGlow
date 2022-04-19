@@ -24,7 +24,7 @@ public enum EnumChatFormat {
 	  ITALIC(20, 'o'),
 	  RESET(21, 'r');
 	  
-	  private static EnumChatFormat[] values;
+	  private static final EnumChatFormat[] values;
 	  
 	  public static final char colorChar = '\u00a7';
 	  
@@ -57,7 +57,7 @@ public enum EnumChatFormat {
 	  EnumChatFormat(int networkId, char character) {
 	    this.networkId = networkId;
 	    this.character = character;
-	    this.chatFormat = "ง" + character;
+	    this.chatFormat = "ยง" + character;
 	  }
 	  
 	  public int getNetworkId() {
@@ -117,21 +117,21 @@ public enum EnumChatFormat {
 	  }
 	  
 	  public static String getLastColors(String input) {
-			String result = "";
+			StringBuilder result = new StringBuilder();
 			int length = input.length();
 			for (int index = length - 1; index > -1; index--){
 				char section = input.charAt(index);
 				if ((section == colorChar) && (index < length - 1)){
 					char c = input.charAt(index + 1);
 					if ("0123456789AaBbCcDdEeFfKkLlMmNnOoRr".contains(c+"")) {
-						result = colorChar + "" + c + result;
+						result.insert(0, colorChar + "" + c);
 						if ("0123456789AaBbCcDdEeFfRr".contains(c+"")) {
 							break;
 						}
 					}
 				}
 			}
-			return result;
+			return result.toString();
 		}
 	
 	/*BLACK(0, '0', 0x000000),

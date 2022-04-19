@@ -23,30 +23,7 @@ public class VaultAddon {
 		RegisteredServiceProvider<Chat> rsp = EGlow.getInstance().getServer().getServicesManager().getRegistration(Chat.class);
 
 		if (rsp != null)
-			chat = (Chat) rsp.getProvider();
-	}
-
-	/**
-	 * Update the tabname of the player
-	 * @param player IEGlowEntity to update the tabname for
-	 */
-	public void updatePlayerTabname(IEGlowPlayer player) {
-		if (!EGlowMainConfig.setTabnameFormat())
-			return;
-		
-		Player p = player.getPlayer();
-		String format = EGlowMainConfig.getTabPrefix() + ((!EGlowMainConfig.getTabName().isEmpty()) ? EGlowMainConfig.getTabName() : player.getDisplayName()) + EGlowMainConfig.getTabSuffix();
-		
-		if (format.contains("%name%"))
-			format = format.replace("%name%", player.getDisplayName());
-		
-		if (format.contains("%prefix%") || format.contains("%suffix%"))
-			format = format.replace("%prefix%", getPlayerPrefix(player)).replace("%suffix%", getPlayerSuffix(player));
-		
-		if (DebugUtil.isPAPIInstalled())
-			format = PlaceholderAPI.setPlaceholders(p, format);
-		
-		p.setPlayerListName(ChatUtil.translateColors(format));	
+			chat = rsp.getProvider();
 	}
 	
 	/**
@@ -99,7 +76,7 @@ public class VaultAddon {
 	 * @param player IEGlowEntity to get the prefix from
 	 * @return Vault prefix + glow color (cut to 16 chars if needed)
 	 */
-	private String getPlayerPrefix(IEGlowPlayer player) {
+	public String getPlayerPrefix(IEGlowPlayer player) {
 		if (EGlow.getInstance().getVaultAddon() == null || chat == null)
 			return "";
 		
@@ -116,7 +93,7 @@ public class VaultAddon {
 	 * @param player IEGlowEntity to get the suffix from
 	 * @return Vault suffix + glow color (cut to 16 chars if needed)
 	 */
-	private String getPlayerSuffix(IEGlowPlayer player) {
+	public String getPlayerSuffix(IEGlowPlayer player) {
 		if (EGlow.getInstance().getVaultAddon() == null || chat == null)
 			return "";
 		

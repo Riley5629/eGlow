@@ -76,9 +76,7 @@ public class EGlow extends JavaPlugin {
 	}
 	
 	private boolean versionIsCompactible() {
-		if (DebugUtil.getServerVersion().equals("v_1_9_R1") || DebugUtil.getMinorVersion() < 9 || DebugUtil.getMinorVersion() > 18)
-			return false;
-		return true;
+		return !DebugUtil.getServerVersion().equals("v_1_9_R1") && DebugUtil.getMinorVersion() >= 9 && DebugUtil.getMinorVersion() <= 18;
 	}
 	
 	private void loadConfigs() {
@@ -109,12 +107,12 @@ public class EGlow extends JavaPlugin {
 					setLibDisguiseAddon(new LibDisguiseAddon());
 				if (DebugUtil.pluginCheck("TAB")) {
 					try {
-						Plugin TAB_Plugin = ((Plugin) DebugUtil.getPlugin("TAB"));
+						Plugin TAB_Plugin = DebugUtil.getPlugin("TAB");
 						
 						if (TAB_Plugin != null && TAB_Plugin.getClass().getName().startsWith("me.neznamy.tab"))
 							setTABAddon(new TABAddon(TAB_Plugin));
 					} catch (NoClassDefFoundError e) {			
-						ChatUtil.sendToConsoleWithPrefix("&cWarning&f! &cThis version of eGlow requires TAB 3.2.0 or higher!");
+						ChatUtil.sendToConsoleWithPrefix("&cWarning&f! &cThis version of eGlow requires TAB 3.1.0 or higher!");
 					}
 				} 
 				
@@ -155,13 +153,15 @@ public class EGlow extends JavaPlugin {
 			
 			if (currentVersion.contains("PRE")) {
 				String betaVersion = currentVersion.split("-")[0];
-				setUpToDate((betaVersion.equals(latestVersion)) ? false : true);
+				setUpToDate(!betaVersion.equals(latestVersion));
 			} else {
 				if (!latestVersion.contains(currentVersion)) {
 					setUpToDate(false);
 				}
 			}		
-	    } catch (Exception e) {}
+		  } catch (Exception e) {
+			  //None would care if this fails
+		  }
 	}
 	
 	//Setter

@@ -1,7 +1,7 @@
 package me.MrGraycat.eGlow.Util.Packets.MultiVersion;
 
 public class TextColor {
-	  private static EnumChatFormat[] legacyColors = EnumChatFormat.values();
+	  private static final EnumChatFormat[] legacyColors = EnumChatFormat.values();
 	  private Integer red;
 	  private Integer green;
 	  private Integer blue;
@@ -21,16 +21,16 @@ public class TextColor {
 	  }
 	  
 	  public TextColor(EnumChatFormat legacyColor) {
-	    this.red = Integer.valueOf(legacyColor.getRed());
-	    this.green = Integer.valueOf(legacyColor.getGreen());
-	    this.blue = Integer.valueOf(legacyColor.getBlue());
+	    this.red = legacyColor.getRed();
+	    this.green = legacyColor.getGreen();
+	    this.blue = legacyColor.getBlue();
 	    this.hexCode = legacyColor.getHexCode();
 	  }
 	  
 	  public TextColor(int red, int green, int blue) {
-	    this.red = Integer.valueOf(red);
-	    this.green = Integer.valueOf(green);
-	    this.blue = Integer.valueOf(blue);
+	    this.red = red;
+	    this.green = green;
+	    this.blue = blue;
 	  }
 	  
 	  private EnumChatFormat getClosestColor(int red, int green, int blue) {
@@ -62,31 +62,31 @@ public class TextColor {
 	  public int getRed() {
 	    if (this.red == null) {
 	      int hexColor = Integer.parseInt(this.hexCode.substring(1), 16);
-	      this.red = Integer.valueOf(hexColor >> 16 & 0xFF);
-	      this.green = Integer.valueOf(hexColor >> 8 & 0xFF);
-	      this.blue = Integer.valueOf(hexColor & 0xFF);
+	      this.red = hexColor >> 16 & 0xFF;
+	      this.green = hexColor >> 8 & 0xFF;
+	      this.blue = hexColor & 0xFF;
 	    } 
-	    return this.red.intValue();
+	    return this.red;
 	  }
 	  
 	  public int getGreen() {
 	    if (this.green == null) {
 	      int hexColor = Integer.parseInt(this.hexCode.substring(1), 16);
-	      this.red = Integer.valueOf(hexColor >> 16 & 0xFF);
-	      this.green = Integer.valueOf(hexColor >> 8 & 0xFF);
-	      this.blue = Integer.valueOf(hexColor & 0xFF);
+	      this.red = hexColor >> 16 & 0xFF;
+	      this.green = hexColor >> 8 & 0xFF;
+	      this.blue = hexColor & 0xFF;
 	    } 
-	    return this.green.intValue();
+	    return this.green;
 	  }
 	  
 	  public int getBlue() {
 	    if (this.blue == null) {
 	      int hexColor = Integer.parseInt(this.hexCode.substring(1), 16);
-	      this.red = Integer.valueOf(hexColor >> 16 & 0xFF);
-	      this.green = Integer.valueOf(hexColor >> 8 & 0xFF);
-	      this.blue = Integer.valueOf(hexColor & 0xFF);
+	      this.red = hexColor >> 16 & 0xFF;
+	      this.green = hexColor >> 8 & 0xFF;
+	      this.blue = hexColor & 0xFF;
 	    } 
-	    return this.blue.intValue();
+	    return this.blue;
 	  }
 	  
 	  public EnumChatFormat getLegacyColor() {

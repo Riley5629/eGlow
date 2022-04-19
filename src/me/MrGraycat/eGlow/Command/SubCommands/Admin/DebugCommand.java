@@ -46,8 +46,7 @@ public class DebugCommand extends SubCommand {
 			Player player = Bukkit.getPlayer(args[1]);
 			
 			if (player != null) {
-				IEGlowPlayer eTarget = DataManager.getEGlowPlayer(player);
-				target = eTarget;
+				target = DataManager.getEGlowPlayer(player);
 			}	
 		}
 		

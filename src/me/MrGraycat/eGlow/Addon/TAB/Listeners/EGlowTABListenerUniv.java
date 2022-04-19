@@ -32,7 +32,10 @@ public class EGlowTABListenerUniv implements Listener {
 					if (TAB_Addon != null && TAB_Addon.blockEGlowPackets()) {
 						if (player != null && TAB_Addon.getTABPlayer(player.getUniqueId()) != null) {
 							IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(player);
-							
+
+							if (ePlayer == null)
+								return;
+
 							TAB_Addon.updateTABPlayer(ePlayer, chatColor);
 						}
 					} else if (DebugUtil.onBungee()) {

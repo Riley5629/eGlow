@@ -51,12 +51,12 @@ public class ReloadCommand extends SubCommand {
 			DataManager.addEGlowEffects();
 			DataManager.addCustomEffects();
 			for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
-				if (getInstance().getVaultAddon() != null)
-					getInstance().getVaultAddon().updatePlayerTabname(ePlayer);
 				ePlayer = DataManager.getEGlowPlayer(onlinePlayer);
 				
 				if (ePlayer == null)
 					break;
+				
+				ePlayer.updatePlayerTabname();
 				
 				IEGlowEffect effect = ePlayer.getForceGlow();
 				

@@ -1,9 +1,6 @@
 package me.MrGraycat.eGlow.Manager.Interface;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -13,20 +10,22 @@ import me.MrGraycat.eGlow.Addon.Citizens.EGlowCitizensTrait;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Manager.DataManager;
+import me.MrGraycat.eGlow.Util.DebugUtil;
 import me.MrGraycat.eGlow.Util.EnumUtil.*;
 import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.EnumChatFormat;
 import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.trait.ScoreboardTrait;
 
 public class IEGlowPlayer {	
-	private String entityType;
+	private final String entityType;
 	
 	private NPC citizensNPC;
 	private Player player;
-	private String name;
+	private final String name;
 	private UUID uuid;
 	private ProtocolVersion version = ProtocolVersion.SERVER_VERSION;
 
@@ -36,7 +35,7 @@ public class IEGlowPlayer {
 
 	private IEGlowEffect glowEffect;
 
-	private List<IEGlowEffect> forcedEffects = new ArrayList<>();
+	private final List<IEGlowEffect> forcedEffects = new ArrayList<>();
 	
 	private boolean glowOnJoin;
 	private boolean activeOnQuit;
@@ -52,7 +51,7 @@ public class IEGlowPlayer {
 		this.player = player;
 		this.name = player.getName();
 		this.uuid = player.getUniqueId();
-		this.customTargetList = new ArrayList<Player>(Arrays.asList(player));
+		this.customTargetList = new ArrayList<>(Collections.singletonList(player));
 		this.version = ProtocolVersion.getPlayerVersion(this);
 		
 		if (this.version.getNetworkId() <= 110 && !this.version.getFriendlyName().equals("1.9.4")) {
@@ -126,15 +125,12 @@ public class IEGlowPlayer {
 		if (getEntityType().equals("NPC"))
 			return;
 		
-		if (EGlow.getInstance().getVaultAddon() != null)
-			EGlow.getInstance().getVaultAddon().updatePlayerTabname(this);
+		updatePlayerTabname();
 		DataManager.sendAPIEvent(this, fake);
 	}
 	
 	public boolean isSameGlow(IEGlowEffect newGlowEffect) {
-		if (getGlowStatus() && getEffect() != null && newGlowEffect.equals(getEffect()))
-			return true;
-		return false;	
+		return getGlowStatus() && getEffect() != null && newGlowEffect.equals(getEffect());
 	}
 	
 	public void activateGlow() {
@@ -160,8 +156,7 @@ public class IEGlowPlayer {
 			disableGlow(false);
 			setFakeGlowStatus(false);
 			DataManager.sendAPIEvent(this, false);
-			if (EGlow.getInstance().getVaultAddon() != null)
-				EGlow.getInstance().getVaultAddon().updatePlayerTabname(this);
+			updatePlayerTabname();
 		} else {
 			activateGlow();
 		}
@@ -185,6 +180,32 @@ public class IEGlowPlayer {
 			setActiveColor(ChatColor.RESET);
 			setGlowing(false, false);
 		}
+	}
+	
+	/**
+	 * Update the tabname of the player
+	 */
+	public void updatePlayerTabname() {
+		if (!EGlowMainConfig.setTabnameFormat())
+			return;
+		
+		if (getPlayer() == null)
+			return;
+		
+		String format = EGlowMainConfig.getTabPrefix() + ((!EGlowMainConfig.getTabName().isEmpty()) ? EGlowMainConfig.getTabName() : player.getDisplayName()) + EGlowMainConfig.getTabSuffix();
+		String prefix = (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerPrefix(this) : "";
+		String suffix = (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerSuffix(this) : "";
+		
+		if (format.contains("%name%"))
+			format = format.replace("%name%", player.getDisplayName());
+		
+		if (format.contains("%prefix%") || format.contains("%suffix%"))
+			format = format.replace("%prefix%", prefix).replace("%suffix%", suffix);
+		
+		if (DebugUtil.isPAPIInstalled())
+			format = PlaceholderAPI.setPlaceholders(getPlayer(), format);
+		
+		getPlayer().setPlayerListName(ChatUtil.translateColors(format));	
 	}
 	
 	public String getTeamName() {
@@ -219,7 +240,7 @@ public class IEGlowPlayer {
 	}
 	
 	public void setupForceGlows() {
-		if (!EGlowMainConfig.getForceGlowEnabled() || getPlayer() == null || isInBlockedWorld() && !EGlowMainConfig.getForceGlowBypassBlockedWorlds())
+		if (!EGlowMainConfig.getForceGlowEnabled() || getPlayer() == null || isInBlockedWorld() && EGlowMainConfig.getForceGlowBypassBlockedWorlds())
 			return;
 		
 		for (String permission : EGlowMainConfig.getForceGlowList()) {
@@ -233,13 +254,11 @@ public class IEGlowPlayer {
 	}
 	
 	public boolean isForcedGlow(IEGlowEffect effect) {
-		if (forcedEffects.contains(effect))
-			return true;
-		return false;
+		return forcedEffects.contains(effect);
 	}
 	
 	public IEGlowEffect getForceGlow() {
-		if (forcedEffects.isEmpty() || !EGlowMainConfig.getForceGlowEnabled() || getPlayer() == null || isInBlockedWorld() && !EGlowMainConfig.getForceGlowBypassBlockedWorlds())
+		if (forcedEffects.isEmpty() || !EGlowMainConfig.getForceGlowEnabled() || getPlayer() == null || isInBlockedWorld() && EGlowMainConfig.getForceGlowBypassBlockedWorlds())
 			return null;
 		
 		return forcedEffects.get(0);
@@ -332,8 +351,7 @@ public class IEGlowPlayer {
 	}
 	
 	public void removeGlowTarget(Player p) {
-		if (customTargetList.contains(p));
-			customTargetList.remove(p);
+		customTargetList.remove(p);
 		if (glowTarget.equals(GlowTargetMode.CUSTOM) && customTargetList.isEmpty())
 			setGlowTargetMode(GlowTargetMode.ALL);
 	}
@@ -342,17 +360,15 @@ public class IEGlowPlayer {
 		if (targets == null) {
 			customTargetList.clear();
 			customTargetList.add(player);
-			if (glowTarget.equals(GlowTargetMode.ALL))
-				setGlowTargetMode(GlowTargetMode.CUSTOM);
 		} else {
 			if (targets.contains(player))
 				targets.add(player);
 			
 			customTargetList = targets;
-			
-			if (glowTarget.equals(GlowTargetMode.ALL))
-				setGlowTargetMode(GlowTargetMode.CUSTOM);
 		}
+
+		if (glowTarget.equals(GlowTargetMode.ALL))
+			setGlowTargetMode(GlowTargetMode.CUSTOM);
 	}
 	
 	public void resetGlowTargets() {
@@ -390,7 +406,7 @@ public class IEGlowPlayer {
 	}
 	
 	public boolean getSaveData() {
-		return saveData;
+		return this.saveData;
 	}
 
 	public void setSaveData(boolean saveData) {

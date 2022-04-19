@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
-import org.spigotmc.SpigotConfig;
 
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
@@ -13,14 +12,14 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 public class DebugUtil {
 	private static final String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 	private static final int minorVersion =  Integer.parseInt(version.split("_")[1]);
-	private static PluginManager pm = Bukkit.getPluginManager();
+	private static final PluginManager pm = Bukkit.getPluginManager();
 	
 	private static boolean placeholderapi;
 	private static boolean protocolSupport;
 	private static boolean viaVersion;
 	
 	public static void sendDebug(CommandSender sender, IEGlowPlayer ePlayer) {
-		String plugins = " ";
+		StringBuilder plugins = new StringBuilder(" ");
 
 		if (ePlayer != null) {
 			ChatUtil.sendMsg(sender, "&fPlayer info (&e" + ePlayer.getDisplayName() + "&f)");
@@ -43,16 +42,16 @@ public class DebugUtil {
 			if (plugin.isEnabled()) {
 				String pluginText = (pluginName.equalsIgnoreCase("eGlow") || pluginName.equalsIgnoreCase("TAB") || pluginName.equalsIgnoreCase("PlaceholderAPI") || pluginName.equalsIgnoreCase("Citizens")) ? "&6" + pluginName + " &f(" + plugin.getDescription().getVersion() + "), " : "&a" + pluginName + "&f, ";
 				
-				plugins = plugins + pluginText;
+				plugins.append(pluginText);
 			} else {
-				plugins = plugins + "&c" + pluginName + "&f, ";
+				plugins.append("&c").append(pluginName).append("&f, ");
 			}
 		}
 		
 		
 		sender.sendMessage(ChatUtil.translateColors(plugins.substring(0, plugins.length() - 2)));
 
-		if (EGlow.getInstance().getTABAddon() != null && !EGlow.getInstance().getTABAddon().getTABLegacyVersion())
+		if (EGlow.getInstance().getTABAddon() != null && !EGlow.getInstance().getTABAddon().getTABSupported())
 			sender.sendMessage(ChatUtil.translateColors("&cThis eGlow version requires a minimum TAB version of 3.1.0&f!"));
 	}
 	
@@ -79,11 +78,12 @@ public class DebugUtil {
 	}
 	
 	public static boolean onBungee() {
-		return (SpigotConfig.bungee && !Bukkit.getServer().getOnlineMode()) ? true : false;
+		//TODO SpigotConfig.bungee
+		return !Bukkit.getServer().getOnlineMode();
 	}
 	
 	public static boolean pluginCheck(String plugin) {
-		return (pm.getPlugin(plugin) != null && pm.getPlugin(plugin).isEnabled()) ? true : false;
+		return pm.getPlugin(plugin) != null && pm.getPlugin(plugin).isEnabled();
 	}
 	
 	public static Plugin getPlugin(String plugin) {

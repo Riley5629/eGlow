@@ -50,23 +50,23 @@ public class ListCommand extends SubCommand {
 		ChatUtil.sendMsg(sender, ChatUtil.getEffectName("rainbowslow") + ", " + ChatUtil.getEffectName("rainbowfast"));
 		ChatUtil.sendMsg(sender,"&fCustom effects:");
 		
-		String text = "";
+		StringBuilder text = new StringBuilder();
 		int i = 1;
 		
 		for (String effect : Effect.GET_ALL_EFFECTS.get()) {
-			text = text + ChatUtil.getEffectName(effect) + ", ";
+			text.append(ChatUtil.getEffectName(effect)).append(", ");
 			
 			if (i == 3) {
-				ChatUtil.sendMsg(sender, text);
-				text = "";
+				ChatUtil.sendMsg(sender, text.toString());
+				text = new StringBuilder();
 				i = 0;
 			}
 			
 			i++;
 		}
 		
-		if (!text.isEmpty()) {
-			ChatUtil.sendMsg(sender, text);
+		if (text.length() > 0) {
+			ChatUtil.sendMsg(sender, text.toString());
 		}
 		
 		ChatUtil.sendMsg(sender,"&f&m                                                       ");

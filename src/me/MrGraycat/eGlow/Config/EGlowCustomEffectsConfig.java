@@ -85,10 +85,10 @@ public class EGlowCustomEffectsConfig {
 		GET_NAME("Effects.%effect%.GUI.Name"),
 		GET_LORES("Effects.%effect%.GUI.Lores");
 		
-		private Effect effect;
-		private String configPath;
+		private final Effect effect;
+		private final String configPath;
 		
-		private Effect(String configPath) {
+		Effect(String configPath) {
 			this.effect = this;
 			this.configPath = configPath;
 		}

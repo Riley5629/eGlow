@@ -134,7 +134,7 @@ public class EGlowMainConfig {
 	}
 	
 	public static List<String> getWorlds() {
-		List<String> worlds = new ArrayList<String>();
+		List<String> worlds = new ArrayList<>();
 		
 		for (String world : config.getStringList("World.Worlds")) {
 			worlds.add(world.toLowerCase());
@@ -211,7 +211,7 @@ public class EGlowMainConfig {
 	}	
 	
 	public static boolean OptionAdvancedTABIntegration() {
-		return (config.contains("Options.Advanced-TAB-integration")) ? config.getBoolean("Options.Advanced-TAB-integration") : false;
+		return config.contains("Options.Advanced-TAB-integration") && config.getBoolean("Options.Advanced-TAB-integration");
 	}
 
 	public static boolean useMySQL() {
@@ -239,7 +239,7 @@ public class EGlowMainConfig {
 	}
 	
 	public static boolean getMySQLUseSSL() {
-		return(config.contains("MySQL.useSSL")) ? config.getBoolean("MySQL.useSSL") : true;
+		return !config.contains("MySQL.useSSL") || config.getBoolean("MySQL.useSSL");
 	}
 	
 	public static boolean setTabnameFormat() {
@@ -272,38 +272,38 @@ public class EGlowMainConfig {
 	
 	//Hidden
 	public static boolean OptionDoTeamCollision() {
-		return (config.contains("Options.Collision")) ? config.getBoolean("Options.Collision") : true;
+		return !config.contains("Options.Collision") || config.getBoolean("Options.Collision");
 	}
 	public static boolean OptionShowNametag() {
-		return (config.contains("Options.Nametag")) ? config.getBoolean("Options.Nametag") : true;
+		return !config.contains("Options.Nametag") || config.getBoolean("Options.Nametag");
 	}
 	
 	public static boolean OptionUseGUIColorAsChatColor() {
-		return (config.contains("Options.Use-GUI-color-as-chat-color")) ? config.getBoolean("Options.Use-GUI-color-as-chat-color") : false;
+		return config.contains("Options.Use-GUI-color-as-chat-color") && config.getBoolean("Options.Use-GUI-color-as-chat-color");
 	}
 	
 	public static boolean OptionAddGlassToInv() {
-		return (config.contains("Options.Inventory-add-glass")) ? config.getBoolean("Options.Inventory-add-glass") : true;
+		return !config.contains("Options.Inventory-add-glass") || config.getBoolean("Options.Inventory-add-glass");
 	}
 	
 	public static boolean OptionRemoveScoreboardOnJoin() {
-		return (config.contains("Options.Remove-scoreboard-on-join")) ? config.getBoolean("Options.Remove-scoreboard-on-join") : true;
+		return !config.contains("Options.Remove-scoreboard-on-join") || config.getBoolean("Options.Remove-scoreboard-on-join");
 	}
 	
 	public static boolean OptionFeaturePacketBlocker() {
-		return (config.contains("Options.Feature-packet-blocker")) ? config.getBoolean("Options.Feature-packet-blocker") : true;
+		return !config.contains("Options.Feature-packet-blocker") || config.getBoolean("Options.Feature-packet-blocker");
 	}
 	
 	public static boolean OptionFeatureTeamPackets() {
-		return (config.contains("Options.Feature-team-packets")) ? config.getBoolean("Options.Feature-team-packets") : true;
+		return !config.contains("Options.Feature-team-packets") || config.getBoolean("Options.Feature-team-packets");
 	}
 	
 	public static boolean OptionDisablePrefixInGUI() {
-		return (config.contains("Options.Disable-prefix-in-GUI")) ? config.getBoolean("Options.Disable-prefix-in-GUI") : false;
+		return config.contains("Options.Disable-prefix-in-GUI") && config.getBoolean("Options.Disable-prefix-in-GUI");
 	}
 	
 	public static boolean OptionMentionGlowState() {
-		return (config.contains("Options.Mention-glow-state-on-join")) ? config.getBoolean("Options.Mention-glow-state-on-join") : false;
+		return config.contains("Options.Mention-glow-state-on-join") && config.getBoolean("Options.Mention-glow-state-on-join");
 	}
 	
 	private static void registerCustomPermissions() {

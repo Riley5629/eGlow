@@ -47,7 +47,16 @@ public class SetCommand extends SubCommand {
 	@Override
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
 		List<IEGlowPlayer> eTargets = getTarget(sender, args);
-		
+
+		if (eTargets == null) {
+			sendSyntax(sender, "", true);
+			sendSyntax(sender, getSyntax()[0], false);
+			sendSyntax(sender, getSyntax()[1], false);
+			sendSyntax(sender, getSyntax()[2], false);
+			sendSyntax(sender, getSyntax()[3], false);
+			return;
+		}
+
 		for (IEGlowPlayer eTarget : eTargets) {
 			IEGlowEffect effect = null;
 			
@@ -59,8 +68,8 @@ public class SetCommand extends SubCommand {
 				effect = DataManager.getEGlowEffect(args[2].toLowerCase().replace("off", "none").replace("disable", "none"));
 				break;
 			case(4):
-				if (args[2].equalsIgnoreCase("glowonjoin") && Boolean.valueOf(args[3].toLowerCase()) != null) {
-					eTarget.setGlowOnJoin(Boolean.valueOf(args[3].toLowerCase()));
+				if (args[2].equalsIgnoreCase("glowonjoin")) {
+					eTarget.setGlowOnJoin(Boolean.parseBoolean(args[3].toLowerCase()));
 					ChatUtil.sendMsgWithPrefix(sender, Message.OTHER_GLOW_ON_JOIN_CONFIRM.get(eTarget, args[3].toLowerCase()));
 					continue;
 

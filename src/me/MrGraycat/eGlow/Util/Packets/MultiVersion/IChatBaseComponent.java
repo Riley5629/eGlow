@@ -55,23 +55,23 @@ public class IChatBaseComponent {
 	}
 
 	public boolean isBold() {
-		return (this.bold == null) ? false : this.bold.booleanValue();
+		return this.bold != null && this.bold;
 	}
 
 	public boolean isItalic() {
-		return (this.italic == null) ? false : this.italic.booleanValue();
+		return this.italic != null && this.italic;
 	}
 
 	public boolean isUnderlined() {
-		return (this.underlined == null) ? false : this.underlined.booleanValue();
+		return this.underlined != null && this.underlined;
 	}
 
 	public boolean isStrikethrough() {
-		return (this.strikethrough == null) ? false : this.strikethrough.booleanValue();
+		return this.strikethrough != null && this.strikethrough;
 	}
 
 	public boolean isObfuscated() {
-		return (this.obfuscated == null) ? false : this.obfuscated.booleanValue();
+		return this.obfuscated != null && this.obfuscated;
 	}
 
 	public IChatBaseComponent setText(String text) {
@@ -134,19 +134,17 @@ public class IChatBaseComponent {
 				}
 			}
 			return component;
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			// TAB.getInstance().debug("Failed to parse json object: " + json);
 			return fromColoredText(json);
-		} catch (Exception e) {
-			// TAB.getInstance().getErrorManager().printError("Failed to read component: " +
-			// json, e);
-			return fromColoredText(json);
-		}
+		}// TAB.getInstance().getErrorManager().printError("Failed to read component: " +
+// json, e);
+
 	}
 
 	private static Boolean getBoolean(JSONObject jsonObject, String key) {
 		if (jsonObject.containsKey(key))
-			return Boolean.valueOf(Boolean.parseBoolean(String.valueOf(jsonObject.get(key))));
+			return Boolean.parseBoolean(String.valueOf(jsonObject.get(key)));
 		return null;
 	}
 
@@ -204,7 +202,7 @@ public class IChatBaseComponent {
 		IChatBaseComponent component = new IChatBaseComponent();
 		for (int i = 0; i < text.length(); i++) {
 			char c = text.charAt(i);
-			if (c == 'ง') {
+			if (c == 'ยง') {
 				i++;
 				if (i >= text.length())
 					break;
@@ -221,19 +219,19 @@ public class IChatBaseComponent {
 					}
 					switch (format) {
 					case BOLD:
-						component.setBold(Boolean.valueOf(true));
+						component.setBold(Boolean.TRUE);
 						break;
 					case ITALIC:
-						component.setItalic(Boolean.valueOf(true));
+						component.setItalic(Boolean.TRUE);
 						break;
 					case UNDERLINE:
-						component.setUnderlined(Boolean.valueOf(true));
+						component.setUnderlined(Boolean.TRUE);
 						break;
 					case STRIKETHROUGH:
-						component.setStrikethrough(Boolean.valueOf(true));
+						component.setStrikethrough(Boolean.TRUE);
 						break;
 					case OBFUSCATED:
-						component.setObfuscated(Boolean.valueOf(true));
+						component.setObfuscated(Boolean.TRUE);
 						break;
 					case RESET:
 						component = new IChatBaseComponent();
@@ -381,7 +379,7 @@ public class IChatBaseComponent {
 	public static IChatBaseComponent optimizedComponent(String text) {
 		if (text == null)
 			return null;
-		if (text.contains("#") || text.contains("&x") || text.contains("งx"))
+		if (text.contains("#") || text.contains("&x") || text.contains("ยงx"))
 			return fromColoredText(text);
 		return new IChatBaseComponent(text);
 	}

@@ -56,12 +56,11 @@ public class PipelineInjector{
 						Integer entityID = (Integer) PacketPlayOut.getField(packet, "a");
 					
 						if (glowingEntities.containsKey(entityID)) {
-							PacketPlayOutEntityMetadata packetPlayOutEntityMetadata = null;
+							PacketPlayOutEntityMetadata packetPlayOutEntityMetadata;
 							IEGlowPlayer glowingTarget = glowingEntities.get(entityID);
 							
 							if (glowingTarget == null) {
-								if (glowingEntities.containsKey(entityID))
-									glowingEntities.remove(entityID);
+								glowingEntities.remove(entityID);
 								super.write(context, channel, channelPromise);
 								return;
 							}
@@ -75,7 +74,7 @@ public class PipelineInjector{
 								return;
 							}
 
-							packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(EGlow.getInstance(), entityID, NMSHook.setGlowFlag(glowingTarget.getEntity(), true)/*eglowEntity*/);
+							packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(entityID, NMSHook.setGlowFlag(glowingTarget.getEntity(), true)/*eglowEntity*/);
 							super.write(context, packetPlayOutEntityMetadata.toNMS(eglowPlayer.getVersion()), channelPromise);
 							return;
 						}
@@ -86,7 +85,8 @@ public class PipelineInjector{
 				}
 			});
 		} catch (NoSuchElementException e) {
-			e.printStackTrace();
+			//for whatever reason this rarely throws
+			//java.util.NoSuchElementException: eGlowReader
 		}
 	}
 

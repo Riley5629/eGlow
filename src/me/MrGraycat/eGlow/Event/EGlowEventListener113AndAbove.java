@@ -39,6 +39,7 @@ public class EGlowEventListener113AndAbove implements Listener {
 						
 						if (EGlowMainConfig.OptionSendInvisibilityNotification())
 							ChatUtil.sendMsgWithPrefix(ep.getPlayer(), Message.INVISIBILITY_DISABLED.get());
+						return;
 					}
 				}
 				
@@ -51,9 +52,8 @@ public class EGlowEventListener113AndAbove implements Listener {
 							ChatUtil.sendMsgWithPrefix(ep.getPlayer(), Message.INVISIBILITY_ENABLED.get());
 					}
 				}
-				return;
 			} else {
-				if (ep != null && ep.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE))
+				if (ep.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE))
 					ep.setGlowDisableReason(GlowDisableReason.NONE);	
 			}
 		}

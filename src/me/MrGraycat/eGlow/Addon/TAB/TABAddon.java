@@ -2,13 +2,12 @@ package me.MrGraycat.eGlow.Addon.TAB;
 
 import java.util.UUID;
 
+import me.neznamy.tab.platforms.bukkit.features.unlimitedtags.BukkitNameTagX;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Addon.TAB.Util.TABLegacyUtil;
-import me.MrGraycat.eGlow.Addon.TAB.Util.TABUtil;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
@@ -21,51 +20,42 @@ import me.neznamy.tab.api.event.plugin.TabLoadEvent;
 import me.neznamy.tab.shared.TabConstants;
 
 public class TABAddon {
-	private Object TAB_Util;
-	
-	private boolean TAB_Supported;
-	private boolean TAB_Legacy_Version;
+	private boolean TAB_Supported = false;
 	private boolean TAB_NametagPrefixSuffixEnabled;
 	private boolean TAB_TeamPacketBlockingEnabled;
 	
 	public TABAddon(Plugin TAB_Plugin) {
-		int TAB_Version = (TAB_Plugin != null) ? Integer.valueOf(TAB_Plugin.getDescription().getVersion().replaceAll("[^\\d]", "")) : 0;
+		int TAB_Version = (TAB_Plugin != null) ? Integer.parseInt(TAB_Plugin.getDescription().getVersion().replaceAll("[^\\d]", "")) : 0;
 		
 		if (TAB_Version < 302) {
 			ChatUtil.sendToConsoleWithPrefix("&cWarning&f! &cThis version of eGlow requires TAB 3.1.0 or higher!");
 			return;
 		}
 
-		setTABLegacyVersion((TAB_Version >= 310) ? false : true);
-		setTABUtil((getTABLegacyVersion()) ? new TABLegacyUtil() : new TABUtil());
 		loadTABSettings();
 		
-		TabAPI.getInstance().getEventBus().register(TabLoadEvent.class, event -> {
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					try {
-						TABAddon TAB_Addon = EGlow.getInstance().getTABAddon();
-						TAB_Addon.loadTABSettings();
-						
-						if (TAB_Addon.blockEGlowPackets()) {
-							for (IEGlowPlayer ePlayer : DataManager.getEGlowPlayers()) {
-								if (ePlayer.getFakeGlowStatus() || ePlayer.getGlowStatus())
-									TAB_Addon.updateTABPlayer(ePlayer, ePlayer.getActiveColor());
-								continue;
-							}
-						} else {
-							cancel();
-							return;
+		TabAPI.getInstance().getEventBus().register(TabLoadEvent.class, event -> new BukkitRunnable() {
+			@Override
+			public void run() {
+				try {
+					TABAddon TAB_Addon = EGlow.getInstance().getTABAddon();
+					TAB_Addon.loadTABSettings();
+
+					if (TAB_Addon.blockEGlowPackets()) {
+						for (IEGlowPlayer ePlayer : DataManager.getEGlowPlayers()) {
+							if (ePlayer.getFakeGlowStatus() || ePlayer.getGlowStatus())
+								TAB_Addon.updateTABPlayer(ePlayer, ePlayer.getActiveColor());
 						}
-					} catch (Exception e) {
-						e.printStackTrace();
+					} else {
+						cancel();
 					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			}.runTaskAsynchronously(EGlow.getInstance());
-		});
+			}
+		}.runTaskAsynchronously(EGlow.getInstance()));
 		
-		setTABSupported(true);
+		setTABSupported();
 	}
 	
 	public void loadTABSettings() {
@@ -86,11 +76,7 @@ public class TABAddon {
 				
 				if (!TabAPI.getInstance().getFeatureManager().isFeatureEnabled(TabConstants.Feature.UNLIMITED_NAME_TAGS)) {
 					ChatUtil.sendToConsoleWithPrefix("&aEnabling custom TAB nametags&f...");
-					if (getTABLegacyVersion()) {
-						((TABLegacyUtil) getTABUtil()).registerFeature();
-					} else {
-						((TABUtil) getTABUtil()).registerFeature();
-					}
+					TabAPI.getInstance().getFeatureManager().registerFeature(TabConstants.Feature.UNLIMITED_NAME_TAGS, new BukkitNameTagX(EGlow.getInstance()));
 				}
 				
 				ChatUtil.sendToConsoleWithPrefix("&aAdvanced-TAB-Integration has been setup&f!");
@@ -104,7 +90,7 @@ public class TABAddon {
 		if (tabPlayer == null)
 			return;
 		
-		String tagPrefix = "";
+		String tagPrefix;
 		String color = (glowColor.equals(ChatColor.RESET)) ? "" : glowColor + "";
 		
 		if (TabAPI.getInstance().getTeamManager() == null)
@@ -133,7 +119,8 @@ public class TABAddon {
 					TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, color);
 				}
 			}
-		} catch (IllegalStateException e) {
+		} catch (IllegalStateException | NullPointerException e) {
+			//Wierd NPE on first join ignoring it
 			//Ignored :I
 		}
 	}
@@ -143,20 +130,12 @@ public class TABAddon {
 	}
 	
 	public boolean blockEGlowPackets() {
-		return (getTABNametagPrefixSuffixEnabled() && getTABTeamPacketBlockingEnabled()) ? true : false;
+		return (getTABNametagPrefixSuffixEnabled() && getTABTeamPacketBlockingEnabled());
 	}
 	
 	//Getter
-	public Object getTABUtil() {
-		return this.TAB_Util;
-	}
-	
 	public boolean getTABSupported() {
 		return this.TAB_Supported;
-	}
-	
-	public boolean getTABLegacyVersion() {
-		return this.TAB_Legacy_Version;
 	}
 	
 	public boolean getTABNametagPrefixSuffixEnabled() {
@@ -168,16 +147,8 @@ public class TABAddon {
 	}
 	
 	//Setter
-	private void setTABUtil(Object util) {
-		this.TAB_Util = util;
-	}
-	
-	private void setTABSupported(boolean status) {
-		this.TAB_Supported = status;
-	}
-	
-	private void setTABLegacyVersion(boolean status) {
-		this.TAB_Legacy_Version = status;
+	private void setTABSupported() {
+		this.TAB_Supported = true;
 	}
 	
 	private void setTABNametagPrefixSuffixEnabled(boolean status) {

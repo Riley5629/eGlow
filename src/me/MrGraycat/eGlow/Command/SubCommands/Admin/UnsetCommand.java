@@ -38,10 +38,15 @@ public class UnsetCommand extends SubCommand {
 	@Override
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
 		List<IEGlowPlayer> eTargets = getTarget(sender, args);
-		
+
+		if (eTargets == null) {
+			sendSyntax(sender, "", true);
+			return;
+		}
+
 		for (IEGlowPlayer eTarget : eTargets) {
 			if (eTarget == null)
-				continue;;
+				continue;
 			
 			if (eTarget.getFakeGlowStatus() || eTarget.getGlowStatus()) {
 				eTarget.toggleGlow();

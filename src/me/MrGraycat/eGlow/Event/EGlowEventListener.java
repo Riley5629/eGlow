@@ -115,12 +115,11 @@ public class EGlowEventListener implements Listener {
 				new BukkitRunnable() {
 					@Override
 					public void run() {
-						PacketUtil.updatePlayerNEW(eglowPlayer);
+						PacketUtil.updatePlayer(eglowPlayer);
 					}
 				}.runTask(EGlow.getInstance());
 				
-				if (EGlow.getInstance().getVaultAddon() != null)
-					EGlow.getInstance().getVaultAddon().updatePlayerTabname(eglowPlayer);
+				eglowPlayer.updatePlayerTabname();
 				
 				IEGlowEffect effect = eglowPlayer.getForceGlow();
 
@@ -169,7 +168,6 @@ public class EGlowEventListener implements Listener {
 				
 				if (EGlowMainConfig.OptionMentionGlowState() && eglowPlayer.getPlayer().hasPermission("eglow.option.glowstate"))
 					ChatUtil.sendMsgWithPrefix(eglowPlayer.getPlayer(), Message.NON_GLOWING_STATE_ON_JOIN.get());
-				return;
 			}
 		}.runTaskLaterAsynchronously(EGlow.getInstance(), 2L);
 	}
@@ -196,7 +194,7 @@ public class EGlowEventListener implements Listener {
 	
 	private static void PlayerDisconnectNext(IEGlowPlayer eglowPlayer) {
 		if (eglowPlayer != null) {
-			eglowPlayer.setActiveOnQuit((eglowPlayer.getFakeGlowStatus() || eglowPlayer.getGlowStatus()) ? true : false);
+			eglowPlayer.setActiveOnQuit(eglowPlayer.getFakeGlowStatus() || eglowPlayer.getGlowStatus());
 			EGlowPlayerdataManager.savePlayerdata(eglowPlayer);
 			//eglowPlayer.disableGlow(true);
 			

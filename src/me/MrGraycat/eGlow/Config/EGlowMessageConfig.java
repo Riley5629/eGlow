@@ -3,6 +3,7 @@ package me.MrGraycat.eGlow.Config;
 import java.io.File;
 import java.util.List;
 
+import me.MrGraycat.eGlow.Util.EnumUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.yaml.snakeyaml.error.YAMLException;
 
@@ -155,10 +156,10 @@ public class EGlowMessageConfig {
 		GUI_SPEED("gui.speed-speed"),
 		GUI_CUSTOM_EFFECTS_ITEM_NAME("gui.custom-effect-item-name");
 		
-		private Message msg;
-		private String configPath;
+		private final Message msg;
+		private final String configPath;
 		
-		private Message(String configPath) {
+		Message(String configPath) {
 			this.msg = this;
 			this.configPath = configPath;
 		}
@@ -186,18 +187,13 @@ public class EGlowMessageConfig {
 			case GLOWING_STATE_ON_JOIN:
 				return getColorValue(msg.getConfigPath(), "%glowname%", value);
 			case VISIBILITY_CHANGE:
-				switch (value.toLowerCase()) {
-				case("unsupportedclient"):
-					return getColorValue(msg.getConfigPath(), "%value%", Message.VISIBILITY_UNSUPPORTED.get());
-				default:
-					return getColorValue(msg.getConfigPath(), "%value%", Message.valueOf("VISIBILITY_" + value).get());
-				}
+				return (value.toUpperCase().equals(EnumUtil.GlowVisibility.UNSUPPORTEDCLIENT.toString())) ? getColorValue(msg.getConfigPath(), "%value%", Message.VISIBILITY_UNSUPPORTED.get()) : getColorValue(msg.getConfigPath(), "%value%", Message.valueOf("VISIBILITY_" + value).get());
 			case INCORRECT_USAGE:
 				return getColorValue(msg.getConfigPath(), "%command%", value);
 			default:
 				break;
 			}
-			return "Incorrect handled message for: " + msg.toString();
+			return "Incorrect handled message for: " + msg;
 		}
 		
 		public String get(IEGlowPlayer target, String value) {
@@ -209,7 +205,7 @@ public class EGlowMessageConfig {
 			default:
 				break;
 			}
-			return "Incorrect handled message for: " + msg.toString();
+			return "Incorrect handled message for: " + msg;
 		}
 		
 		public String get(IEGlowPlayer target) {

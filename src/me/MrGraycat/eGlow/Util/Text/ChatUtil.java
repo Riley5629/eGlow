@@ -39,9 +39,9 @@ public class ChatUtil {
 		
 		try {
 			if (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 15)
-				return text.replace("&", "ง");
+				return text.replace("&", "ยง");
 		} catch (NullPointerException e) {
-			return text.replace("&", "ง");
+			return text.replace("&", "ยง");
 		}
 		
 		
@@ -51,27 +51,9 @@ public class ChatUtil {
 			text = text.replace(color, me.MrGraycat.eGlow.Util.Text.ChatColor.of(color) + "");
 			match = rgb.matcher(text);
 		}
-		return text.replace("&", "ง");
+		return text.replace("&", "ยง");
 	}
-	
-	//TODO
-	/*private static String translateRGB(String text) {
-		Matcher m1 = rgb.matcher(text);
-		Matcher m2 = gradient.matcher(text);
-		
-		while(m1.find()) {
-			String hexcode = m1.group();
-			text = text.replace(hexcode, me.MrGraycat.eGlow.Util.Text.ChatColor.of(hexcode) + "");
-			m1 = rgb.matcher(text);
-		}
-		
-		while(m2.find()) {
-			
-		}
-		
-		return text;
-	}*/
-	
+
 	public static void sendMsg(Player player, String message) {
 		if (!message.isEmpty())
 			player.sendMessage(translateColors(message));

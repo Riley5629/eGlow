@@ -17,9 +17,9 @@ import com.google.common.base.Preconditions;
 public final class ChatColor {
     public static final char COLOR_CHAR = '\u00A7';
     public static final String ALL_CODES = "0123456789AaBbCcDdEeFfKkLlMmNnOoRrXx";
-    public static final Pattern STRIP_COLOR_PATTERN = Pattern.compile( "(?i)" + String.valueOf(COLOR_CHAR) + "[0-9A-FK-ORX]");
-    private static final Map<Character, ChatColor> BY_CHAR = new HashMap<Character, ChatColor>();
-    private static final Map<String, ChatColor> BY_NAME = new HashMap<String, ChatColor>();
+    public static final Pattern STRIP_COLOR_PATTERN = Pattern.compile( "(?i)" + COLOR_CHAR + "[0-9A-FK-ORX]");
+    private static final Map<Character, ChatColor> BY_CHAR = new HashMap<>();
+    private static final Map<String, ChatColor> BY_NAME = new HashMap<>();
 
     public static final ChatColor BLACK = new ChatColor('0', "black", new Color(0x000000));
     public static final ChatColor DARK_BLUE = new ChatColor('1', "dark_blue", new Color(0x0000AA));

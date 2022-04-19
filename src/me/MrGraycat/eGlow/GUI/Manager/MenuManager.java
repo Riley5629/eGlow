@@ -25,7 +25,7 @@ public class MenuManager {
 		}
 	}
 	
-	public class MenuMetadata {
+	public static class MenuMetadata {
 		private Player owner;
 		
 		public MenuMetadata(Player p) {

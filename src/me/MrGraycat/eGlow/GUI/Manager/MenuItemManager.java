@@ -25,10 +25,9 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 @SuppressWarnings("deprecation")
 public class MenuItemManager extends MenuManager {
 	public String GLASS_PANE = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) ? "STAINED_GLASS_PANE" : "CYAN_STAINED_GLASS_PANE";
-	private String GUNPOWDER = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) ? "SULPHUR" : "GUNPOWDER";
-	private String PLAYER_HEAD = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) ? "SKULL_ITEM" : "PLAYER_HEAD";
+	private final String GUNPOWDER = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) ? "SULPHUR" : "GUNPOWDER";
+	private final String PLAYER_HEAD = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) ? "SKULL_ITEM" : "PLAYER_HEAD";
 	public String CLOCK = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) ? "WATCH" : "CLOCK";
-	
 	//When custom GUI is a thing this one will not be needed anymore
 	/**
 	 * Create an itemstack
@@ -128,7 +127,7 @@ public class MenuItemManager extends MenuManager {
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
 			
 			if (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) {
-				meta.setOwner(player.getDisplayName());
+				meta.setOwner(player.getDisplayName()); //TODO this method will be removed at one point
 			} else {
 				meta.setOwningPlayer(player.getPlayer());
 			}
@@ -237,7 +236,7 @@ public class MenuItemManager extends MenuManager {
 	 * @return speed lore
 	 */
 	public String[] createSpeedLore(IEGlowPlayer player) {
-		List<String> prelores = new ArrayList<String>();
+		List<String> prelores = new ArrayList<>();
 		
 		if (player.getEffect() != null) {
 			String effect = player.getEffect().getName();
@@ -259,7 +258,7 @@ public class MenuItemManager extends MenuManager {
 	 * @return true if the player has an effect & has it enabled, false if not
 	 */
 	public boolean hasEffect(IEGlowPlayer player) {
-		return (player.getEffect() != null && (player.getGlowStatus() || player.getFakeGlowStatus()) && (player.getEffect().getName().contains("slow") || player.getEffect().getName().contains("fast"))) ? true : false;
+		return player.getEffect() != null && (player.getGlowStatus() || player.getFakeGlowStatus()) && (player.getEffect().getName().contains("slow") || player.getEffect().getName().contains("fast"));
 	}
 	
 	/**

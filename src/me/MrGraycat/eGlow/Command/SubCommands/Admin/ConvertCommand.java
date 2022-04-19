@@ -48,7 +48,6 @@ public class ConvertCommand extends SubCommand {
 			if (args[1].equalsIgnoreCase("stop")) {
 				ChatUtil.sendMsgWithPrefix(sender, "&fConverting has been &cstopped&f. " + ((!keepActive) ? "(&cno conversion started&f)" : ""));
 				keepActive = false;
-				return;
 			} else {
 				if (keepActive) {
 					ChatUtil.sendMsgWithPrefix(sender, "&fConversion already in progress!");
@@ -56,7 +55,7 @@ public class ConvertCommand extends SubCommand {
 				}
 				
 				try {
-					int delay = Integer.valueOf(args[1]);
+					int delay = Integer.parseInt(args[1]);
 					
 					File playerFolder = new File(getInstance().getDataFolder() + File.separator + "PlayerData");
 					YamlConfiguration playerConfig = new YamlConfiguration();
@@ -93,7 +92,9 @@ public class ConvertCommand extends SubCommand {
 									}
 									
 									counter++;
-								} catch (IOException | InvalidConfigurationException e) {}	
+								} catch (IOException | InvalidConfigurationException e) {
+									//Ignored to prevent error spam
+								}
 							}
 						}.runTaskTimerAsynchronously(getInstance(), 0L, delay * 20);
 					} else {

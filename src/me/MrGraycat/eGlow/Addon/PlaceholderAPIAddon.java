@@ -1,5 +1,6 @@
 package me.MrGraycat.eGlow.Addon;
 
+import me.MrGraycat.eGlow.Util.EnumUtil;
 import org.bukkit.entity.Player;
 
 import me.MrGraycat.eGlow.EGlow;
@@ -88,14 +89,9 @@ public class PlaceholderAPIAddon extends PlaceholderExpansion {
         case("glowstatus_join_raw"):
         	return (eglowPlayer.getGlowOnJoin()) ? "true" : "false";
         case("glow_visibility"):
-        	switch (eglowPlayer.getGlowVisibility()) {
-			case UNSUPPORTEDCLIENT:
-				return Message.VISIBILITY_UNSUPPORTED.get();
-			default:
-				return Message.valueOf("VISIBILITY_" + eglowPlayer.getGlowVisibility().toString()).get();
-			}
-        
-        //Depreciated placeholders will be removed in a future update
+			return (eglowPlayer.getGlowVisibility().equals(EnumUtil.GlowVisibility.UNSUPPORTEDCLIENT)) ? Message.VISIBILITY_UNSUPPORTED.get() : Message.valueOf("VISIBILITY_" + eglowPlayer.getGlowVisibility().toString()).get();
+
+		//Depreciated placeholders will be removed in a future update
         case("selectedglow"):
         	return "Use %eglow_activeglow%";
         case("selectedglow_raw"):

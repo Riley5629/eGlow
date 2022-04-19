@@ -22,7 +22,7 @@ public abstract class SubCommand {
 	public abstract String getPermission();
 	public abstract String[] getSyntax();
 	public abstract boolean isPlayerCmd();
-	public abstract void perform(CommandSender sender, IEGlowPlayer ePlayer, String args[]);
+	public abstract void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args);
 	
 	/**
 	 * Send correct command syntax

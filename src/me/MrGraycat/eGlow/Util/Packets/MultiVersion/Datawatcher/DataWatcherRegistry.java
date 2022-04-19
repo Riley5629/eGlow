@@ -48,7 +48,7 @@ public class DataWatcherRegistry {
 		 * @return map of values
 		 */
 		private Map<String, Object> getStaticFields(Class<?> clazz){
-			Map<String, Object> fields = new HashMap<String, Object>();
+			Map<String, Object> fields = new HashMap<>();
 			if (clazz == null) return fields;
 			for (Field field : clazz.getDeclaredFields()) {
 				field.setAccessible(true);

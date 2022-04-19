@@ -1,6 +1,7 @@
 package me.MrGraycat.eGlow.Manager.Interface;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -20,7 +21,7 @@ public class IEGlowEffect {
 	private BukkitTask effectRunnable;
 	
 	private ConcurrentHashMap<Object, Integer> activeEntities = new ConcurrentHashMap<>();
-	private List<ChatColor> effectLoop = new ArrayList<ChatColor>();
+	private List<ChatColor> effectLoop = new ArrayList<>();
 	private int effectDelay = 0;
 	
 	private String effectName;
@@ -32,10 +33,8 @@ public class IEGlowEffect {
 		setDisplayName(displayName);
 		setPermission(permissionNode);
 		setDelay(delay);
-		
-		for (ChatColor color : colors) {
-			effectLoop.add(color);
-		}
+
+		Collections.addAll(effectLoop, colors);
 	}
 	
 	public IEGlowEffect(String name, String displayName, String permissionNode, int delay, List<String> colors) {

@@ -28,9 +28,9 @@ import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class DataManager implements PluginMessageListener {	
-	private static Map<String, IEGlowPlayer> dataPlayers = new ConcurrentHashMap<>();
-	private static ConcurrentHashMap<String, IEGlowEffect> dataEffects = new ConcurrentHashMap<>();
-	private static ConcurrentHashMap<String, IEGlowEffect> dataCustomEffects = new ConcurrentHashMap<>();
+	private final static Map<String, IEGlowPlayer> dataPlayers = new ConcurrentHashMap<>();
+	private final static ConcurrentHashMap<String, IEGlowEffect> dataEffects = new ConcurrentHashMap<>();
+	private final static ConcurrentHashMap<String, IEGlowEffect> dataCustomEffects = new ConcurrentHashMap<>();
 	
 	//Server
 	public static void initialize() {
@@ -47,7 +47,7 @@ public class DataManager implements PluginMessageListener {
 	}
 	
 	public static IEGlowPlayer getEGlowPlayer(Player player) {
-		return (dataPlayers.containsKey(player.getUniqueId().toString())) ? dataPlayers.get(player.getUniqueId().toString()) : null;
+		return dataPlayers.getOrDefault(player.getUniqueId().toString(), null);
 	}
 	
 	public static IEGlowPlayer getEGlowPlayer(String name) {
@@ -56,11 +56,11 @@ public class DataManager implements PluginMessageListener {
 		//Prevent kick loop caused by for example npc's
 		if (player == null)
 			return null;
-		return (dataPlayers.containsKey(player.getUniqueId().toString())) ? dataPlayers.get(player.getUniqueId().toString()) : null;
+		return dataPlayers.getOrDefault(player.getUniqueId().toString(), null);
 	}
 	
 	public static IEGlowPlayer getEGlowPlayer(UUID uuid) {
-		return (dataPlayers.containsKey(uuid.toString())) ? dataPlayers.get(uuid.toString()) : null;
+		return dataPlayers.getOrDefault(uuid.toString(), null);
 	}
 	
 	public static Collection<IEGlowPlayer> getEGlowPlayers() {
@@ -162,7 +162,7 @@ public class DataManager implements PluginMessageListener {
 				EGlow.getInstance().getServer().getPluginManager().removePermission(permission);
 			} else {
 				addEGlowEffect(effectName.toLowerCase(), displayName, "eglow.effect." + effectName.toLowerCase(), delay, colors);
-				try {EGlow.getInstance().getServer().getPluginManager().addPermission(new Permission(permission, "Activate " + effectName + " effect.", PermissionDefault.FALSE));} catch (IllegalArgumentException e) {}//Permission already registered ;)}
+				try {EGlow.getInstance().getServer().getPluginManager().addPermission(new Permission(permission, "Activate " + effectName + " effect.", PermissionDefault.FALSE));} catch (IllegalArgumentException e) { /*Permission already registered*/ }
 			}
 			
 			newEffects.add(effectName.toLowerCase());
@@ -209,16 +209,16 @@ public class DataManager implements PluginMessageListener {
 	}
 	
 	public static List<IEGlowEffect> getEGlowEffects() {
-		List<IEGlowEffect> effects = new ArrayList<IEGlowEffect>();
+		List<IEGlowEffect> effects = new ArrayList<>();
 		
-		dataEffects.forEach((key, value) -> { effects.add(value); });
+		dataEffects.forEach((key, value) -> effects.add(value));
 		return effects;
 	}
 	
 	public static List<IEGlowEffect> getCustomEffects() {
-		List<IEGlowEffect> effects = new ArrayList<IEGlowEffect>();
+		List<IEGlowEffect> effects = new ArrayList<>();
 		
-		dataCustomEffects.forEach((key, value) -> { effects.add(value); });
+		dataCustomEffects.forEach((key, value) -> effects.add(value));
 		return effects;
 	}
 	
@@ -229,11 +229,11 @@ public class DataManager implements PluginMessageListener {
 	public static boolean isValidSpeed(String speed) {
 		speed = speed.toLowerCase();
 		
-		return (speed.equals("slow") || speed.equals("fast")) ? true : false;
+		return speed.equals("slow") || speed.equals("fast");
 	}
 	
 	public static boolean isCustomEffect(String name) {
-		return (dataCustomEffects.containsKey(name)) ? true : false;
+		return dataCustomEffects.containsKey(name);
 	}
 	
 	public static IEGlowEffect getEGlowEffect(String name) {
@@ -245,8 +245,7 @@ public class DataManager implements PluginMessageListener {
 	}
 	
 	private static void removeCustomEGlowEffect(String name) {
-		if (dataCustomEffects.containsKey(name.toLowerCase()))
-			dataCustomEffects.remove(name.toLowerCase());
+		dataCustomEffects.remove(name.toLowerCase());
 	}
 	
 	//API

@@ -14,7 +14,7 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 @SuppressWarnings({"rawtypes"})
 public class NMSStorage {
-	private String serverPackage;
+	private final String serverPackage;
 	public int minorVersion;
 	
 	public Class<?> Packet;
@@ -79,7 +79,7 @@ public class NMSStorage {
 	public Field DataWatcherObject_SERIALIZER;
 	public Class<?> DataWatcherRegistry;
 	private Class<?> DataWatcherSerializer;
-	
+
 	public NMSStorage() {
 		serverPackage = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 		minorVersion = Integer.parseInt(serverPackage.split("_")[1]);
@@ -89,29 +89,29 @@ public class NMSStorage {
 	@SuppressWarnings("unchecked")
 	public void initialiseValues() {
 		try {
-			this.Packet = getNMSClass(new String[] { "net.minecraft.network.protocol.Packet", "Packet" });
-			this.EntityPlayer = getNMSClass(new String[] { "net.minecraft.server.level.EntityPlayer", "EntityPlayer" });
+			this.Packet = getNMSClass("net.minecraft.network.protocol.Packet", "Packet");
+			this.EntityPlayer = getNMSClass("net.minecraft.server.level.EntityPlayer", "EntityPlayer");
 			this.CraftPlayer = Class.forName("org.bukkit.craftbukkit." + serverPackage + ".entity.CraftPlayer");
-			this.PlayerConnection = getNMSClass(new String[] { "net.minecraft.server.network.PlayerConnection", "PlayerConnection" });
-			this.NetworkManager = getNMSClass(new String[] { "net.minecraft.network.NetworkManager", "NetworkManager" });
+			this.PlayerConnection = getNMSClass("net.minecraft.server.network.PlayerConnection", "PlayerConnection");
+			this.NetworkManager = getNMSClass("net.minecraft.network.NetworkManager", "NetworkManager" );
 			this.PLAYER_CONNECTION = getFields(this.EntityPlayer, this.PlayerConnection).get(0);
 			this.NETWORK_MANAGER = getFields(this.PlayerConnection, this.NetworkManager).get(0);
 			this.CHANNEL = getFields(this.NetworkManager, Channel.class).get(0);
 			this.getHandle = getMethod(this.CraftPlayer, new String[] { "getHandle" });
-			this.sendPacket = getMethod(this.PlayerConnection, new String[] { "sendPacket", "a", "func_147359_a" }, new Class[] { this.Packet });
+			this.sendPacket = getMethod(this.PlayerConnection, new String[] { "sendPacket", "a", "func_147359_a" }, this.Packet);
 			this.setFlag = getMethod(this.EntityPlayer, new String[] { "setFlag", "b", "setEntityFlag" }, int.class, boolean.class);
 			this.getDataWatcher = getMethod(this.EntityPlayer, new String[] {"getDataWatcher", "ai"});
 		
 			this.EnumChatFormat = (Class)getNMSClass(new String[] { "net.minecraft.EnumChatFormat", "EnumChatFormat" });
-			this.IChatBaseComponent = getNMSClass(new String[] { "net.minecraft.network.chat.IChatBaseComponent", "IChatBaseComponent" });
-			this.ChatSerializer = getNMSClass(new String[] { "net.minecraft.network.chat.IChatBaseComponent$ChatSerializer", "IChatBaseComponent$ChatSerializer", "ChatSerializer" });
-			this.ChatSerializer_DESERIALIZE = getMethod(this.ChatSerializer, new String[] { "a", "func_150699_a" }, new Class[] { String.class });
+			this.IChatBaseComponent = getNMSClass("net.minecraft.network.chat.IChatBaseComponent", "IChatBaseComponent");
+			this.ChatSerializer = getNMSClass("net.minecraft.network.chat.IChatBaseComponent$ChatSerializer", "IChatBaseComponent$ChatSerializer", "ChatSerializer");
+			this.ChatSerializer_DESERIALIZE = getMethod(this.ChatSerializer, new String[] { "a", "func_150699_a" }, String.class);
 			
-			this.DataWatcher = getNMSClass(new String[] { "net.minecraft.network.syncher.DataWatcher", "DataWatcher" });
-		    this.DataWatcherItem = getNMSClass(new String[] { "net.minecraft.network.syncher.DataWatcher$Item", "DataWatcher$Item", "DataWatcher$WatchableObject", "WatchableObject" });
-		    this.DataWatcherObject = getNMSClass(new String[] { "net.minecraft.network.syncher.DataWatcherObject", "DataWatcherObject" });
-		    this.DataWatcherRegistry = getNMSClass(new String[] { "net.minecraft.network.syncher.DataWatcherRegistry", "DataWatcherRegistry" });
-		    this.DataWatcherSerializer = getNMSClass(new String[] { "net.minecraft.network.syncher.DataWatcherSerializer", "DataWatcherSerializer" });
+			this.DataWatcher = getNMSClass("net.minecraft.network.syncher.DataWatcher", "DataWatcher");
+		    this.DataWatcherItem = getNMSClass("net.minecraft.network.syncher.DataWatcher$Item", "DataWatcher$Item", "DataWatcher$WatchableObject", "WatchableObject");
+		    this.DataWatcherObject = getNMSClass("net.minecraft.network.syncher.DataWatcherObject", "DataWatcherObject" );
+		    this.DataWatcherRegistry = getNMSClass("net.minecraft.network.syncher.DataWatcherRegistry", "DataWatcherRegistry");
+		    this.DataWatcherSerializer = getNMSClass("net.minecraft.network.syncher.DataWatcherSerializer", "DataWatcherSerializer");
 		    this.newDataWatcher = this.DataWatcher.getConstructors()[0];
 		    this.newDataWatcherObject = this.DataWatcherObject.getConstructors()[0];
 		    this.DataWatcherItem_TYPE = getFields(this.DataWatcherItem, this.DataWatcherObject).get(0);
@@ -119,43 +119,43 @@ public class NMSStorage {
 		    this.DataWatcherObject_SLOT = getFields(this.DataWatcherObject, int.class).get(0);
 		    this.DataWatcherObject_SERIALIZER = getFields(this.DataWatcherObject, this.DataWatcherSerializer).get(0);
 			//this.DataWatcher_REGISTER = this.DataWatcher.getMethod("register", new Class[] { this.DataWatcherObject, Object.class });
-			this.DataWatcher_REGISTER = getMethod(this.DataWatcher, new String[] {"register", "a"}, new Class[] {this.DataWatcherObject, Object.class});
+			this.DataWatcher_REGISTER = getMethod(this.DataWatcher, new String[] {"register", "a"}, this.DataWatcherObject, Object.class);
 			
-			this.PacketPlayOutEntityMetadata = getNMSClass(new String[] { "net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata", "PacketPlayOutEntityMetadata", "Packet40EntityMetadata" });
-			this.newPacketPlayOutEntityMetadata = this.PacketPlayOutEntityMetadata.getConstructor(new Class[] { int.class, this.DataWatcher, boolean.class });
+			this.PacketPlayOutEntityMetadata = getNMSClass("net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata", "PacketPlayOutEntityMetadata", "Packet40EntityMetadata");
+			this.newPacketPlayOutEntityMetadata = this.PacketPlayOutEntityMetadata.getConstructor(int.class, this.DataWatcher, boolean.class);
 			this.PacketPlayOutEntityMetadata_LIST = getFields(this.PacketPlayOutEntityMetadata, List.class).get(0);
 			
-			this.Scoreboard = getNMSClass(new String[] { "net.minecraft.world.scores.Scoreboard", "Scoreboard" });
-			this.ScoreboardTeam = getNMSClass(new String[] { "net.minecraft.world.scores.ScoreboardTeam", "ScoreboardTeam" });
+			this.Scoreboard = getNMSClass("net.minecraft.world.scores.Scoreboard", "Scoreboard");
+			this.ScoreboardTeam = getNMSClass("net.minecraft.world.scores.ScoreboardTeam", "ScoreboardTeam");
 			this.newScoreboard = this.Scoreboard.getConstructor(new Class[0]);
-			this.newScoreboardTeam = this.ScoreboardTeam.getConstructor(new Class[] { this.Scoreboard, String.class });
+			this.newScoreboardTeam = this.ScoreboardTeam.getConstructor(this.Scoreboard, String.class);
 			
 		    if (this.minorVersion >= 13) {
-		      this.ScoreboardTeam_setPrefix = getMethod(this.ScoreboardTeam, new String[] {"setPrefix", "b"}, new Class[] { this.IChatBaseComponent });
-		      this.ScoreboardTeam_setSuffix = getMethod(this.ScoreboardTeam, new String[] {"setSuffix", "c"}, new Class[] { this.IChatBaseComponent });
-		      this.ScoreboardTeam_setColor = getMethod(this.ScoreboardTeam, new String[] {"setColor", "a"}, new Class[] { this.EnumChatFormat });
+		      this.ScoreboardTeam_setPrefix = getMethod(this.ScoreboardTeam, new String[] {"setPrefix", "b"}, this.IChatBaseComponent);
+		      this.ScoreboardTeam_setSuffix = getMethod(this.ScoreboardTeam, new String[] {"setSuffix", "c"}, this.IChatBaseComponent);
+		      this.ScoreboardTeam_setColor = getMethod(this.ScoreboardTeam, new String[] {"setColor", "a"}, this.EnumChatFormat);
 		    } else {
-		      this.ScoreboardTeam_setPrefix = getMethod(this.ScoreboardTeam, new String[] { "setPrefix", "func_96666_b" }, new Class[] { String.class });
-		      this.ScoreboardTeam_setSuffix = getMethod(this.ScoreboardTeam, new String[] { "setSuffix", "func_96662_c" }, new Class[] { String.class });
+		      this.ScoreboardTeam_setPrefix = getMethod(this.ScoreboardTeam, new String[] { "setPrefix", "func_96666_b" }, String.class);
+		      this.ScoreboardTeam_setSuffix = getMethod(this.ScoreboardTeam, new String[] { "setSuffix", "func_96662_c" }, String.class);
 		    }
 		    
-			this.EnumNameTagVisibility = getNMSClass(new String[] { "net.minecraft.world.scores.ScoreboardTeamBase$EnumNameTagVisibility", "ScoreboardTeamBase$EnumNameTagVisibility", "EnumNameTagVisibility" });
-			this.EnumTeamPush = getNMSClass(new String[] { "net.minecraft.world.scores.ScoreboardTeamBase$EnumTeamPush", "ScoreboardTeamBase$EnumTeamPush" });
-		    this.ScoreboardTeam_setNameTagVisibility = getMethod(this.ScoreboardTeam, new String[] { "setNameTagVisibility", "a" }, new Class[] { this.EnumNameTagVisibility });
-		    this.ScoreboardTeam_setCollisionRule = getMethod(this.ScoreboardTeam, new String[] { "setCollisionRule", "a"}, new Class[] { this.EnumTeamPush });
+			this.EnumNameTagVisibility = getNMSClass("net.minecraft.world.scores.ScoreboardTeamBase$EnumNameTagVisibility", "ScoreboardTeamBase$EnumNameTagVisibility", "EnumNameTagVisibility");
+			this.EnumTeamPush = getNMSClass("net.minecraft.world.scores.ScoreboardTeamBase$EnumTeamPush", "ScoreboardTeamBase$EnumTeamPush");
+		    this.ScoreboardTeam_setNameTagVisibility = getMethod(this.ScoreboardTeam, new String[] { "setNameTagVisibility", "a" }, this.EnumNameTagVisibility);
+		    this.ScoreboardTeam_setCollisionRule = getMethod(this.ScoreboardTeam, new String[] { "setCollisionRule", "a"}, this.EnumTeamPush);
 		    this.ScoreboardTeam_getPlayerNameSet = getMethod(this.ScoreboardTeam, new String[] { "getPlayerNameSet", "g", "func_96670_d" }, new Class[0]);
 		    
-		    this.PacketPlayOutScoreboardTeam = getNMSClass(new String[] { "net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam", "PacketPlayOutScoreboardTeam", "Packet209SetScoreboardTeam" });
+		    this.PacketPlayOutScoreboardTeam = getNMSClass("net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam", "PacketPlayOutScoreboardTeam", "Packet209SetScoreboardTeam");
 			this.PacketPlayOutScoreboardTeam_NAME = getFields(this.PacketPlayOutScoreboardTeam, String.class).get(0);
 			this.PacketPlayOutScoreboardTeam_PLAYERS = getFields(this.PacketPlayOutScoreboardTeam, Collection.class).get(0); 
 		    
 		   if (this.minorVersion >= 17) {
 			   this.PacketPlayOutScoreboardTeam_a = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam$a");
-			   this.PacketPlayOutScoreboardTeam_of = this.PacketPlayOutScoreboardTeam.getMethod("a", new Class[] { this.ScoreboardTeam });
-			   this.PacketPlayOutScoreboardTeam_ofBoolean = this.PacketPlayOutScoreboardTeam.getMethod("a", new Class[] { this.ScoreboardTeam, boolean.class });
-			   this.PacketPlayOutScoreboardTeam_ofString = this.PacketPlayOutScoreboardTeam.getMethod("a", new Class[] { this.ScoreboardTeam, String.class, this.PacketPlayOutScoreboardTeam_a });
+			   this.PacketPlayOutScoreboardTeam_of = this.PacketPlayOutScoreboardTeam.getMethod("a", this.ScoreboardTeam);
+			   this.PacketPlayOutScoreboardTeam_ofBoolean = this.PacketPlayOutScoreboardTeam.getMethod("a", this.ScoreboardTeam, boolean.class);
+			   this.PacketPlayOutScoreboardTeam_ofString = this.PacketPlayOutScoreboardTeam.getMethod("a", this.ScoreboardTeam, String.class, this.PacketPlayOutScoreboardTeam_a);
 		   } else {
-			   this.newPacketPlayOutScoreboardTeam = this.PacketPlayOutScoreboardTeam.getConstructor(new Class[] { this.ScoreboardTeam, int.class });
+			   this.newPacketPlayOutScoreboardTeam = this.PacketPlayOutScoreboardTeam.getConstructor(this.ScoreboardTeam, int.class);
 		   }
 		} catch (Exception e) {
 			ChatUtil.reportError(e);
@@ -167,6 +167,7 @@ public class NMSStorage {
 			try {
 				return getNMSClass(name);
 			} catch (ClassNotFoundException classNotFoundException) {
+				//
 			}
 		}
 		throw new ClassNotFoundException("No class found with possible names " + Arrays.toString(names));
@@ -189,13 +190,14 @@ public class NMSStorage {
 			try {
 				return clazz.getMethod(name, parameterTypes);
 			} catch (Exception exception) {
+				//
 			}
 		}
 		throw new NoSuchMethodException("No method found with possible names " + Arrays.toString(names) + " in class " + clazz.getName());
 	}
 
 	private List<Field> getFields(Class<?> clazz, Class<?> type){
-		List<Field> list = new ArrayList<Field>();
+		List<Field> list = new ArrayList<>();
 		if (clazz == null) return list;
 		for (Field field : clazz.getDeclaredFields()) {
 			field.setAccessible(true);

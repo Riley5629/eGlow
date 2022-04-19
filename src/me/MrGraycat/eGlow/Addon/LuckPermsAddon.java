@@ -37,8 +37,8 @@ public class LuckPermsAddon implements Listener {
 			try {
 				if (EGlow.getInstance() == null)
 					return;
-				
-				if (event.getUser() == null || event.getUser().getUsername() == null)
+
+				if (event.getUser().getUsername() == null)
 					return;
 				
 				new BukkitRunnable() {
@@ -51,14 +51,14 @@ public class LuckPermsAddon implements Listener {
 						if (TAB_Addon != null && TAB_Addon.getTABSupported() && TAB_Addon.blockEGlowPackets()) {
 							TAB_Addon.updateTABPlayer(ePlayer, ePlayer.getActiveColor());
 						} else {
-							if (Vault_Addon != null) {
-								Vault_Addon.updatePlayerTabname(ePlayer);
-								PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(), Vault_Addon.getPlayerTagPrefix(ePlayer) + ePlayer.getActiveColor(), Vault_Addon.getPlayerTagSuffix(ePlayer), true, true, EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
-							}
+							ePlayer.updatePlayerTabname();
+							PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(), Vault_Addon.getPlayerTagPrefix(ePlayer) + ePlayer.getActiveColor(), Vault_Addon.getPlayerTagSuffix(ePlayer), true, true, EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
 						}
 					}
 				}.runTaskLaterAsynchronously(EGlow.getInstance(), 10);
-			} catch (IllegalPluginAccessException e) {}	
+			} catch (IllegalPluginAccessException e) {
+				//Prevent error spam when eGlow is unloading
+			}
 		});
 		
 		luckPermsSub2 = LP_EventBus.subscribe(GroupDataRecalculateEvent.class, event -> {
@@ -79,7 +79,9 @@ public class LuckPermsAddon implements Listener {
 						}
 					}
 				}.runTaskLaterAsynchronously(EGlow.getInstance(), 10);
-			} catch (IllegalPluginAccessException e) {}
+			} catch (IllegalPluginAccessException e) {
+				//Prevent error spam when eGlow is unloading
+			}
 		});
 	}
 	

@@ -39,7 +39,7 @@ public class EGlowCitizensTrait extends Trait {
 	
 	public void save(DataKey key) {
 		if (eGlowNPC != null) {
-			setActiveOnDespawn((eGlowNPC.getFakeGlowStatus() || eGlowNPC.getGlowStatus()) ? true : false);
+			setActiveOnDespawn((eGlowNPC.getFakeGlowStatus() || eGlowNPC.getGlowStatus()));
 			setLastEffect(eGlowNPC.getEffect().getName());
 			
 			key.setBoolean("ActiveOnDespawn", activeOnDespawn);
