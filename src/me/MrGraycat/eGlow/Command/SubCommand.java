@@ -28,7 +28,7 @@ public abstract class SubCommand {
 	 * Send correct command syntax
 	 * @param sender console/player that will receive this message
 	 * @param text correct command syntax
-	 * @param true: prefix + text, false: text
+	 * @param prefix true: prefix + text, false: text
 	 */
 	public void sendSyntax(CommandSender sender, String text, boolean prefix) {
 		if (prefix) {

@@ -23,7 +23,7 @@ public class CitizensAddon {
 	 * @param npc Citizens NPC
 	 * @return true if required traits exist and are applied, false if not
 	 * @exception NoClassDefFoundError thrown when using an old version of Citizens where the scoreboardTrait doesn't exist
-	 * @exception NoClassFooundExceptiont thrown when using an old version of Citizens where the scoreboardTrait doesn't exist
+	 * @exception NoClassFoundException thrown when using an old version of Citizens where the scoreboardTrait doesn't exist
 	 */
 	public boolean traitCheck(NPC npc) {
 		try {
