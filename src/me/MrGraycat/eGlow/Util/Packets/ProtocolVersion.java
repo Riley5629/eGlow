@@ -1,4 +1,4 @@
-package me.MrGraycat.eGlow.Util.Packets.MultiVersion;
+package me.MrGraycat.eGlow.Util.Packets;
 
 import org.bukkit.entity.Player;
 

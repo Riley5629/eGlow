@@ -11,7 +11,7 @@ import me.MrGraycat.eGlow.Addon.TAB.TABAddon;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
-import me.MrGraycat.eGlow.Util.Packets.MultiVersion.EnumChatFormat;
+import me.MrGraycat.eGlow.Util.Packets.Chat.EnumChatFormat;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.event.EventBus;
 import net.luckperms.api.event.EventSubscription;

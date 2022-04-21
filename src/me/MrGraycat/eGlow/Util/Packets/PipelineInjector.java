@@ -10,8 +10,8 @@ import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.DebugUtil;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowTargetMode;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
-import me.MrGraycat.eGlow.Util.Packets.MultiVersion.PacketPlayOut;
-import me.MrGraycat.eGlow.Util.Packets.MultiVersion.PacketPlayOutEntityMetadata;
+import me.MrGraycat.eGlow.Util.Packets.OutGoing.PacketPlayOut;
+import me.MrGraycat.eGlow.Util.Packets.OutGoing.PacketPlayOutEntityMetadata;
 
 public class PipelineInjector{
 	private static final String DECODER_NAME = "eGlowReader";

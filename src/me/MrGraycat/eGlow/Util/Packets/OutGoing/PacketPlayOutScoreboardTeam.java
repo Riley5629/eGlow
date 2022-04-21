@@ -1,10 +1,13 @@
-package me.MrGraycat.eGlow.Util.Packets.MultiVersion;
+package me.MrGraycat.eGlow.Util.Packets.OutGoing;
 
 import java.util.Collection;
 import java.util.Collections;
 
+import me.MrGraycat.eGlow.Util.Packets.Chat.EnumChatFormat;
+import me.MrGraycat.eGlow.Util.Packets.Chat.IChatBaseComponent;
 import me.MrGraycat.eGlow.Util.Packets.NMSHook;
 import me.MrGraycat.eGlow.Util.Packets.NMSStorage;
+import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
 
 public class PacketPlayOutScoreboardTeam extends PacketPlayOut {
 	public String name;
@@ -81,7 +84,7 @@ public class PacketPlayOutScoreboardTeam extends PacketPlayOut {
 	    ((Collection) nms.ScoreboardTeam_getPlayerNameSet.invoke(team, new Object[0])).addAll(players);
 	    
 		if (nms.minorVersion >= 13) {
-			if (prefix != null && prefix.length() > 0) nms.ScoreboardTeam_setPrefix.invoke(team, new Object[] { NMSHook.stringToComponent(IChatBaseComponent.optimizedComponent(prefix).toString(clientVersion)) }); 
+			if (prefix != null && prefix.length() > 0) nms.ScoreboardTeam_setPrefix.invoke(team, new Object[] { NMSHook.stringToComponent(IChatBaseComponent.optimizedComponent(prefix).toString(clientVersion)) });
 			if (suffix != null && suffix.length() > 0) nms.ScoreboardTeam_setSuffix.invoke(team, new Object[] { NMSHook.stringToComponent(IChatBaseComponent.optimizedComponent(suffix).toString(clientVersion)) }); 
 			EnumChatFormat format = color != null ? color : EnumChatFormat.lastColorsOf(prefix);
 			nms.ScoreboardTeam_setColor.invoke(team, new Object[] { ((Object[])nms.EnumChatFormat.getMethod("values", new Class[0]).invoke(null, new Object[0]))[format.ordinal()] });

@@ -8,7 +8,7 @@ import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.DebugUtil;
-import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
+import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.milkbowl.vault.chat.Chat;

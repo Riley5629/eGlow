@@ -1,4 +1,4 @@
-package me.MrGraycat.eGlow.Util.Packets.MultiVersion.Datawatcher;
+package me.MrGraycat.eGlow.Util.Packets.Datawatcher;
 
 import me.MrGraycat.eGlow.Util.Packets.NMSHook;
 import me.MrGraycat.eGlow.Util.Packets.NMSStorage;

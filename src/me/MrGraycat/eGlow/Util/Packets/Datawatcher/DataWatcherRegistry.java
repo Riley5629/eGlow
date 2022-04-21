@@ -1,4 +1,4 @@
-package me.MrGraycat.eGlow.Util.Packets.MultiVersion.Datawatcher;
+package me.MrGraycat.eGlow.Util.Packets.Datawatcher;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.MrGraycat.eGlow.Util.Packets.NMSStorage;
-import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
+import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
 
 public class DataWatcherRegistry {
 	//used registry types

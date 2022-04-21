@@ -1,4 +1,7 @@
-package me.MrGraycat.eGlow.Util.Packets.MultiVersion;
+package me.MrGraycat.eGlow.Util.Packets.OutGoing;
+
+import me.MrGraycat.eGlow.Util.Packets.Chat.EnumChatFormat;
+import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
 
 import java.lang.reflect.Field;
 
@@ -8,7 +11,7 @@ public abstract class PacketPlayOut {
 	
 	public String cutTo(String string, int length) {
 		if (string == null || string.length() <= length) return string;
-		if (string.charAt(length-1) == EnumChatFormat.colorChar) {
+		if (string.charAt(length-1) == EnumChatFormat.COLOR_CHAR) {
 			return string.substring(0, length-1); //cutting one extra character to prevent prefix ending with "&"
 		} else {
 			return string.substring(0, length);

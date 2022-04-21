@@ -1,5 +1,10 @@
 package me.MrGraycat.eGlow.Util.Packets;
 
+import me.MrGraycat.eGlow.Util.Packets.Chat.EnumChatFormat;
+import me.MrGraycat.eGlow.Util.Packets.Chat.IChatBaseComponent;
+import me.MrGraycat.eGlow.Util.Packets.OutGoing.PacketPlayOutChat;
+import me.MrGraycat.eGlow.Util.Packets.OutGoing.PacketPlayOutEntityMetadata;
+import me.MrGraycat.eGlow.Util.Packets.OutGoing.PacketPlayOutScoreboardTeam;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import com.google.common.collect.Sets;
@@ -10,10 +15,6 @@ import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowTargetMode;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
-import me.MrGraycat.eGlow.Util.Packets.MultiVersion.EnumChatFormat;
-import me.MrGraycat.eGlow.Util.Packets.MultiVersion.PacketPlayOutEntityMetadata;
-import me.MrGraycat.eGlow.Util.Packets.MultiVersion.PacketPlayOutScoreboardTeam;
-import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
 
 public class PacketUtil {
 	private static boolean sendPackets = true;
@@ -27,7 +28,8 @@ public class PacketUtil {
 			
 			if (sendPackets && EGlowMainConfig.OptionFeatureTeamPackets()) {
 				if (EGlow.getInstance().getTABAddon() == null || !EGlow.getInstance().getTABAddon().blockEGlowPackets()) {
-					try {NMSHook.sendPacket(ePlayer, new PacketPlayOutScoreboardTeam(ep.getTeamName(), (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagPrefix(ep) : "", (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagSuffix(ep) : "", (EGlowMainConfig.OptionShowNametag() ? "always" : "never"), (EGlowMainConfig.OptionDoTeamCollision() ? "always" : "never"), Sets.newHashSet(ep.getDisplayName()), 21).setColor(EnumChatFormat.valueOf(ep.getActiveColor().name())).toNMS(pVersion));} catch (Exception e) {e.printStackTrace();}
+					try {
+						NMSHook.sendPacket(ePlayer, new PacketPlayOutScoreboardTeam(ep.getTeamName(), (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagPrefix(ep) : "", (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagSuffix(ep) : "", (EGlowMainConfig.OptionShowNametag() ? "always" : "never"), (EGlowMainConfig.OptionDoTeamCollision() ? "always" : "never"), Sets.newHashSet(ep.getDisplayName()), 21).setColor(EnumChatFormat.valueOf(ep.getActiveColor().name())).toNMS(pVersion));} catch (Exception e) {e.printStackTrace();}
 				}	
 			}
 			
@@ -246,7 +248,22 @@ public class PacketUtil {
 			break;
 		}		
 	}
-	
+
+	public static void sendActionbar(IEGlowPlayer ePlayer, String text) {
+		if (text.isEmpty())
+			return;
+
+		IChatBaseComponent test = IChatBaseComponent.optimizedComponent(text);
+
+		PacketPlayOutChat packetPlayOutChat = new PacketPlayOutChat(test, PacketPlayOutChat.ChatMessageType.GAME_INFO);
+
+		try {
+			NMSHook.sendPacket(ePlayer.getPlayer(), packetPlayOutChat.toNMS(ePlayer.getVersion()));
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
 	public static void setSendTeamPackets(boolean status) {
 		sendPackets = status;
 	}

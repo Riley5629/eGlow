@@ -25,7 +25,7 @@ import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
 import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
 import me.MrGraycat.eGlow.Util.Packets.PipelineInjector;
-import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
+import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class EGlowEventListener implements Listener {

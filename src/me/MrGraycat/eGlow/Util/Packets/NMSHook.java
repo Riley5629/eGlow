@@ -3,9 +3,9 @@ package me.MrGraycat.eGlow.Util.Packets;
 import org.bukkit.entity.Player;
 
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.Packets.MultiVersion.Datawatcher.DataWatcher;
-import me.MrGraycat.eGlow.Util.Packets.MultiVersion.Datawatcher.DataWatcherObject;
-import me.MrGraycat.eGlow.Util.Packets.MultiVersion.Datawatcher.DataWatcherRegistry;
+import me.MrGraycat.eGlow.Util.Packets.Datawatcher.DataWatcher;
+import me.MrGraycat.eGlow.Util.Packets.Datawatcher.DataWatcherObject;
+import me.MrGraycat.eGlow.Util.Packets.Datawatcher.DataWatcherRegistry;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class NMSHook {
@@ -32,6 +32,8 @@ public class NMSHook {
 	}
 	
 	public static void sendPacket(Player p, Object nmsPacket) throws Exception {
+		if (nmsPacket == null)
+			return;
 		nms.sendPacket.invoke(nms.PLAYER_CONNECTION.get(nms.getHandle.invoke(p)), nmsPacket);
 	}
 	

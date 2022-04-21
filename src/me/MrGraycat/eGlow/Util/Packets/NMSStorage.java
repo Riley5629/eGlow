@@ -3,10 +3,7 @@ package me.MrGraycat.eGlow.Util.Packets;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import io.netty.channel.Channel;
@@ -34,7 +31,12 @@ public class NMSStorage {
 	public Class<?> IChatBaseComponent;
 	public Class<?> ChatSerializer;
 	public Method ChatSerializer_DESERIALIZE;
-	
+
+	//PacketPlayOutChat
+	public Class<?> ChatMessageType;
+	public Constructor<?> newPacketPlayOutChat;
+	public Enum[] ChatMessageType_values;
+
 	//PacketPlayOutEntityMetadata
 	public Class<?> PacketPlayOutEntityMetadata;//
 	public Constructor<?> newPacketPlayOutEntityMetadata;//
@@ -157,6 +159,19 @@ public class NMSStorage {
 		   } else {
 			   this.newPacketPlayOutScoreboardTeam = this.PacketPlayOutScoreboardTeam.getConstructor(this.ScoreboardTeam, int.class);
 		   }
+
+			Class<?> PacketPlayOutChat = getNMSClass("net.minecraft.network.protocol.game.PacketPlayOutChat", "PacketPlayOutChat", "Packet3Chat");
+			if (minorVersion >= 12) {
+				ChatMessageType = getNMSClass("net.minecraft.network.chat.ChatMessageType", "ChatMessageType");
+				ChatMessageType_values = getEnumValues(ChatMessageType);
+			}
+			if (minorVersion >= 16) {
+				newPacketPlayOutChat = PacketPlayOutChat.getConstructor(IChatBaseComponent, ChatMessageType, UUID.class);
+			} else if (minorVersion >= 12) {
+				newPacketPlayOutChat = PacketPlayOutChat.getConstructor(IChatBaseComponent, ChatMessageType);
+			} else if (minorVersion >= 8) {
+				newPacketPlayOutChat = PacketPlayOutChat.getConstructor(IChatBaseComponent, byte.class);
+			}
 		} catch (Exception e) {
 			ChatUtil.reportError(e);
 		}
@@ -204,5 +219,17 @@ public class NMSStorage {
 			if (field.getType() == type) list.add(field);
 		}
 		return list;
+	}
+
+	private Enum[] getEnumValues(Class<?> enumClass) {
+		if (enumClass == null) throw new IllegalArgumentException("Class cannot be null");
+		if (!enumClass.isEnum()) throw new IllegalArgumentException(enumClass.getName() + " is not an enum class");
+		try {
+			return (Enum[]) enumClass.getMethod("values").invoke(null);
+		} catch (ReflectiveOperationException e) {
+			//this should never happen
+			e.printStackTrace();
+			return new Enum[0];
+		}
 	}
 }

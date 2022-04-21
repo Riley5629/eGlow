@@ -1,4 +1,4 @@
-package me.MrGraycat.eGlow.Util.Packets.MultiVersion.Datawatcher;
+package me.MrGraycat.eGlow.Util.Packets.Datawatcher;
 
 public class DataWatcherObject {
 	//position in datawatcher

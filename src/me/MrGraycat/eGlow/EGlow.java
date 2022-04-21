@@ -28,7 +28,7 @@ import me.MrGraycat.eGlow.Event.EGlowEventListener;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Util.DebugUtil;
 import me.MrGraycat.eGlow.Util.Packets.NMSHook;
-import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
+import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class EGlow extends JavaPlugin {

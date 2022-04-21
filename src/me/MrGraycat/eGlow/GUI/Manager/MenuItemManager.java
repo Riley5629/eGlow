@@ -19,7 +19,7 @@ import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
+import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 @SuppressWarnings("deprecation")
