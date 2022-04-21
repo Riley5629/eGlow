@@ -12,7 +12,8 @@ public enum ProtocolVersion {
 	v1_18		(757, "1.18(.1)"),
 	v1_17_1		(756, "1.17.1"),
 	v1_17		(755, "1.17"),
-	v1_16_4_5   (754, "1.16.4-5"),
+	v1_16_5		(754, "1.16.5"),
+	v1_16_4   	(754, "1.16.4"),
 	v1_16_3     (753, "1.16.3"),
 	v1_16_2		(751, "1.16.2"),
 	v1_16_1     (736, "1.16.1"),
@@ -119,6 +120,7 @@ public enum ProtocolVersion {
 		if (DebugUtil.isViaVersionInstalled()) {
 			return ProtocolVersion.fromNumber(getProtocolVersionVia(p.getPlayer()));
 		}
+
 		return ProtocolVersion.SERVER_VERSION;
 	}
 	
