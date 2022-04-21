@@ -26,11 +26,11 @@ public class EGlowMessageConfig {
 			}
 			
 			if (!configFile.exists()) {
-				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4Messages.yml not found&f! &eCreating&f...");
+				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4Messages.yml not found&f! &eCreating&f...", false);
 				configFile.getParentFile().mkdirs();
 				EGlow.getInstance().saveResource("Messages.yml", false);
 			} else {
-				ChatUtil.sendToConsole("&f[&eeGlow&f]: &aLoading messages config&f.");
+				ChatUtil.sendToConsole("&f[&eeGlow&f]: &aLoading messages config&f.", false);
 			}
 			
 			config = new YamlConfiguration();
@@ -42,7 +42,7 @@ public class EGlowMessageConfig {
 				if (oldFile.exists())
 					oldFile.delete();
 				
-				ChatUtil.sendToConsole("&f[&eeGlow&f]: &cDetected old messages config&f! &eRenamed it to OLDMessages&f! &eReconfiguring might be required&f!");
+				ChatUtil.sendToConsole("&f[&eeGlow&f]: &cDetected old messages config&f! &eRenamed it to OLDMessages&f! &eReconfiguring might be required&f!", false);
 				configFile.renameTo(oldFile);
 				initialize();
 			}
@@ -53,7 +53,7 @@ public class EGlowMessageConfig {
 			if (e.getCause() instanceof YAMLException) {
 				List<String> suggestions = YamlAssist.getSuggestions(configFile);
 				for(String suggestion : suggestions) {
-					ChatUtil.sendToConsole("&c" + suggestion);
+					ChatUtil.sendToConsole("&c" + suggestion, false);
 				}
 			}
 		}
@@ -79,7 +79,7 @@ public class EGlowMessageConfig {
 			if (e.getCause() instanceof YAMLException) {
 				List<String> suggestions = YamlAssist.getSuggestions(configFile);
 				for(String suggestion : suggestions) {
-					ChatUtil.sendToConsole("&c" + suggestion);
+					ChatUtil.sendToConsole("&c" + suggestion, false);
 				}
 			}
 			return false;

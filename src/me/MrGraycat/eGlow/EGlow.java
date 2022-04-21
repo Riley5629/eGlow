@@ -62,7 +62,7 @@ public class EGlow extends JavaPlugin {
 			runAddonHooks();
 			runPlayerCheckOnEnable();
 		} else {
-			ChatUtil.sendToConsole("Disabling eGlow! Your server version is not compactible! (" + DebugUtil.getServerVersion() + ")");
+			ChatUtil.sendToConsole("Disabling eGlow! Your server version is not compactible! (" + DebugUtil.getServerVersion() + ")", false);
 			getServer().getPluginManager().disablePlugin(this);
 		}
 	}
@@ -112,7 +112,7 @@ public class EGlow extends JavaPlugin {
 						if (TAB_Plugin != null && TAB_Plugin.getClass().getName().startsWith("me.neznamy.tab"))
 							setTABAddon(new TABAddon(TAB_Plugin));
 					} catch (NoClassDefFoundError e) {			
-						ChatUtil.sendToConsoleWithPrefix("&cWarning&f! &cThis version of eGlow requires TAB 3.1.0 or higher!");
+						ChatUtil.sendToConsole("&cWarning&f! &cThis version of eGlow requires TAB 3.1.0 or higher!", true);
 					}
 				} 
 				

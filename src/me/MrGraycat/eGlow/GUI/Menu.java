@@ -57,32 +57,32 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 					return;
 				
 				if (!(player.hasPermission(color.getPermission()) || DataManager.isCustomEffect(color.getName()) && player.getPlayer().hasPermission("eglow.effect.*"))) {
-					ChatUtil.sendMsgWithPrefix(player, Message.NO_PERMISSION.get());
+					ChatUtil.sendMsgFromGUI(player, Message.NO_PERMISSION.get());
 					return;
 				}
 					
 				if (eGlowPlayer.isSameGlow(color)) {
-					ChatUtil.sendMsgWithPrefix(player, Message.SAME_GLOW.get());
+					ChatUtil.sendMsgFromGUI(player, Message.SAME_GLOW.get());
 					return;
 				}
 					
 				eGlowPlayer.activateGlow(color);
-				ChatUtil.sendMsgWithPrefix(player, Message.NEW_GLOW.get(color.getDisplayName()));
+				ChatUtil.sendMsgFromGUI(player, Message.NEW_GLOW.get(color.getDisplayName()));
 			} else if (DataManager.getEGlowEffect(effectName + "slow") != null) { //for rainbow effect 
 				IEGlowEffect effect = DataManager.getEGlowEffect(effectName + "slow");
 				
 				if (!player.hasPermission(effect.getPermission())) {
-					ChatUtil.sendMsgWithPrefix(player, Message.NO_PERMISSION.get());
+					ChatUtil.sendMsgFromGUI(player, Message.NO_PERMISSION.get());
 					return;
 				}
 				
 				if (eGlowPlayer.isSameGlow(effect)) {
-					ChatUtil.sendMsgWithPrefix(player, Message.SAME_GLOW.get());
+					ChatUtil.sendMsgFromGUI(player, Message.SAME_GLOW.get());
 					return;
 				}
 				
 				eGlowPlayer.activateGlow(effect);
-				ChatUtil.sendMsgWithPrefix(player, Message.NEW_GLOW.get(effect.getDisplayName()));
+				ChatUtil.sendMsgFromGUI(player, Message.NEW_GLOW.get(effect.getDisplayName()));
 			}
 				
 		} else if (clickType.equals(ClickType.RIGHT)){
@@ -92,17 +92,17 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 				return;
 			
 			if (!player.hasPermission(effect.getPermission())) {
-				ChatUtil.sendMsgWithPrefix(player, Message.NO_PERMISSION.get());
+				ChatUtil.sendMsgFromGUI(player, Message.NO_PERMISSION.get());
 				return;
 			}
 			
 			if (eGlowPlayer.isSameGlow(effect)) {
-				ChatUtil.sendMsgWithPrefix(player, Message.SAME_GLOW.get());
+				ChatUtil.sendMsgFromGUI(player, Message.SAME_GLOW.get());
 				return;
 			}
 			
 			eGlowPlayer.activateGlow(effect);
-			ChatUtil.sendMsgWithPrefix(player, Message.NEW_GLOW.get(effect.getDisplayName()));
+			ChatUtil.sendMsgFromGUI(player, Message.NEW_GLOW.get(effect.getDisplayName()));
 		}
 	}
 	
@@ -122,7 +122,7 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 				eGlowEffect = DataManager.getEGlowEffect(effect.replace("fast", "slow"));
 			
 			player.activateGlow(eGlowEffect);
-			ChatUtil.sendMsgWithPrefix(menuMetadata.getOwner(), Message.NEW_GLOW.get(eGlowEffect.getDisplayName()));
+			ChatUtil.sendMsgFromGUI(menuMetadata.getOwner(), Message.NEW_GLOW.get(eGlowEffect.getDisplayName()));
 		}
 	}
 	

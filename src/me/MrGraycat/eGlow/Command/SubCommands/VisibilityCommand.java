@@ -39,7 +39,7 @@ public class VisibilityCommand extends SubCommand {
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
 		if (args.length >= 2) {
 			if (ePlayer.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT)) {
-				ChatUtil.sendMsgWithPrefix(sender, Message.UNSUPPORTED_GLOW.get());
+				ChatUtil.sendMsg(sender, Message.UNSUPPORTED_GLOW.get(), true);
 				return;
 			}
 			
@@ -59,7 +59,7 @@ public class VisibilityCommand extends SubCommand {
 			if (oldVisibility != newVisibility) 
 				PacketUtil.forceUpdateGlow(ePlayer);
 			
-			ChatUtil.sendMsgWithPrefix(sender, Message.VISIBILITY_CHANGE.get(newVisibility.getVisibility()));
+			ChatUtil.sendMsg(sender, Message.VISIBILITY_CHANGE.get(newVisibility.getVisibility()), true);
 		} else {
 			sendSyntax(sender, getSyntax()[0], true);
 		}

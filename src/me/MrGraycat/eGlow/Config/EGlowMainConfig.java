@@ -29,11 +29,11 @@ public class EGlowMainConfig {
 			}
 			
 			if (!configFile.exists()) {
-				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4Config.yml not found&f! &eCreating&f...");
+				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4Config.yml not found&f! &eCreating&f...", false);
 				configFile.getParentFile().mkdirs();
 				EGlow.getInstance().saveResource("Config.yml", false);
 			} else {
-				ChatUtil.sendToConsole("&f[&eeGlow&f]: &aLoading main config&f.");
+				ChatUtil.sendToConsole("&f[&eeGlow&f]: &aLoading main config&f.", false);
 			}
 			
 			config = new YamlConfiguration();
@@ -47,7 +47,7 @@ public class EGlowMainConfig {
 				if (oldFile.exists())
 					oldFile.delete();
 				
-				ChatUtil.sendToConsole("&f[&eeGlow&f]: &cDetected old main config&f! &eRenamed it to OLDConfig&f! &eReconfiguring might be required&f!");
+				ChatUtil.sendToConsole("&f[&eeGlow&f]: &cDetected old main config&f! &eRenamed it to OLDConfig&f! &eReconfiguring might be required&f!", false);
 				configFile.renameTo(oldFile);
 				initialize();
 			}
@@ -58,7 +58,7 @@ public class EGlowMainConfig {
 			if (e.getCause() instanceof YAMLException) {
 				List<String> suggestions = YamlAssist.getSuggestions(configFile);
 				for(String suggestion : suggestions) {
-					ChatUtil.sendToConsole("&c" + suggestion);
+					ChatUtil.sendToConsole("&c" + suggestion, false);
 				}
 			}
 		}
@@ -87,7 +87,7 @@ public class EGlowMainConfig {
 			if (e.getCause() instanceof YAMLException) {
 				List<String> suggestions = YamlAssist.getSuggestions(configFile);
 				for(String suggestion : suggestions) {
-					ChatUtil.sendToConsole("&c" + suggestion);
+					ChatUtil.sendToConsole("&c" + suggestion, false);
 				}
 			}
 			return false;
@@ -108,7 +108,8 @@ public class EGlowMainConfig {
 		addIfMissing("Options.Advanced-TAB-integration", false);
 		addIfMissing("Options.Disable-glow-when-invisible", true);
 		addIfMissing("Options.Mention-glow-state-on-join", false);
-		addIfMissing("Options.Send-actionbar-messages", true);
+		addIfMissing("Actionbars.Enable", true);
+		addIfMissing("Actionbars.Use-in-GUI", false);
 	}
 	
 	private static void addIfMissing(String path, Object value) {
@@ -183,8 +184,12 @@ public class EGlowMainConfig {
 		return config.getString("Command-alias.Alias");
 	}
 
-	public static boolean OptionSendActionbarMessages() {
-		return config.getBoolean("Options.Send-actionbar-messages");
+	public static boolean EnableActionbarMessages() {
+		return config.getBoolean("Actionbars.Enable");
+	}
+
+	public static boolean UseActionbarInGUI() {
+		return config.getBoolean("Actionbars.Use-in-GUI");
 	}
 
 	public static boolean OptionDisableGlowWhenInvisible() {

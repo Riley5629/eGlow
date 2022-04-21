@@ -95,28 +95,28 @@ public class EGlowMainMenu extends Menu {
 			if (eGlowPlayer.getPlayer().hasPermission("eglow.command.toggle")) {
 				if (eGlowPlayer.getFakeGlowStatus() || eGlowPlayer.getGlowStatus()) {
 					eGlowPlayer.toggleGlow();
-					ChatUtil.sendMsgWithPrefix(player, Message.DISABLE_GLOW.get());
+					ChatUtil.sendMsgFromGUI(player, Message.DISABLE_GLOW.get());
 				} else {
 					if (eGlowPlayer.getEffect() == null || eGlowPlayer.getEffect().getName().equals("none")) {
-						ChatUtil.sendMsgWithPrefix(player, Message.NO_LAST_GLOW.get());
+						ChatUtil.sendMsgFromGUI(player, Message.NO_LAST_GLOW.get());
 						return;
 					} else {
 						if (eGlowPlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-							ChatUtil.sendMsgWithPrefix(player, Message.DISGUISE_BLOCKED.get());
+							ChatUtil.sendMsgFromGUI(player, Message.DISGUISE_BLOCKED.get());
 							return;
 						}
 						
 						if (eGlowPlayer.getPlayer().hasPermission(eGlowPlayer.getEffect().getPermission()) || eGlowPlayer.isForcedGlow(eGlowPlayer.getEffect())) {
 							eGlowPlayer.toggleGlow();
 						} else {
-							ChatUtil.sendMsgWithPrefix(player, Message.NO_PERMISSION.get());
+							ChatUtil.sendMsgFromGUI(player, Message.NO_PERMISSION.get());
 							return;
 						}
-						ChatUtil.sendMsgWithPrefix(player, Message.NEW_GLOW.get(eGlowPlayer.getLastGlowName()));
+						ChatUtil.sendMsgFromGUI(player, Message.NEW_GLOW.get(eGlowPlayer.getLastGlowName()));
 					}
 				}
 			} else {
-				ChatUtil.sendMsgWithPrefix(player, Message.NO_PERMISSION.get());
+				ChatUtil.sendMsgFromGUI(player, Message.NO_PERMISSION.get());
 			}
 		break;
 		case(31):

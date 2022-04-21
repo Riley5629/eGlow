@@ -46,11 +46,11 @@ public class ConvertCommand extends SubCommand {
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
 		if (args.length >= 2) {
 			if (args[1].equalsIgnoreCase("stop")) {
-				ChatUtil.sendMsgWithPrefix(sender, "&fConverting has been &cstopped&f. " + ((!keepActive) ? "(&cno conversion started&f)" : ""));
+				ChatUtil.sendPlainMsg(sender, "&fConverting has been &cstopped&f. " + ((!keepActive) ? "(&cno conversion started&f)" : ""), true);
 				keepActive = false;
 			} else {
 				if (keepActive) {
-					ChatUtil.sendMsgWithPrefix(sender, "&fConversion already in progress!");
+					ChatUtil.sendMsg(sender, "&fConversion already in progress!", true);
 					return;
 				}
 				
@@ -64,12 +64,12 @@ public class ConvertCommand extends SubCommand {
 					if (playerFolder.exists()) {
 						files = playerFolder.listFiles();
 					} else {
-						ChatUtil.sendMsgWithPrefix(sender, "There's nothing left to convert!");
+						ChatUtil.sendMsg(sender, "There's nothing left to convert!", true);
 						return;
 					}
 					
 					if (delay > 0 && delay <= 10) {
-						ChatUtil.sendMsgWithPrefix(sender, "&fStarting to convert &e" + files.length + "&fentries at a rate of &e" + delay + "s&f/entry");
+						ChatUtil.sendPlainMsg(sender, "&fStarting to convert &e" + files.length + "&fentries at a rate of &e" + delay + "s&f/entry", true);
 						keepActive = true;
 						
 						new BukkitRunnable() {
@@ -78,7 +78,7 @@ public class ConvertCommand extends SubCommand {
 								try {
 									if (!keepActive) cancel();
 									if (counter >= files.length - 1) {
-										ChatUtil.sendMsgWithPrefix(sender, "&fFinished conversion of &e" + files.length + "&fentries.");
+										ChatUtil.sendPlainMsg(sender, "&fFinished conversion of &e" + files.length + "&fentries.", true);
 										playerFolder.delete();
 										keepActive = false;
 										cancel();
@@ -98,10 +98,10 @@ public class ConvertCommand extends SubCommand {
 							}
 						}.runTaskTimerAsynchronously(getInstance(), 0L, delay * 20);
 					} else {
-						ChatUtil.sendMsgWithPrefix(sender, " &fUse a number from &e1 &fto &e10&f.");
+						ChatUtil.sendMsg(sender, " &fUse a number from &e1 &fto &e10&f.", true);
 					}
 				} catch (NumberFormatException e) {
-					ChatUtil.sendMsgWithPrefix(sender, "&e" + args[0] + " &fisn't a valid delay&f!");
+					ChatUtil.sendMsg(sender, "&e" + args[0] + " &fisn't a valid delay&f!", true);
 				}	
 			}
 		} else {

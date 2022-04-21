@@ -32,9 +32,9 @@ public abstract class SubCommand {
 	 */
 	public void sendSyntax(CommandSender sender, String text, boolean prefix) {
 		if (prefix) {
-			ChatUtil.sendMsgWithPrefix(sender, Message.INCORRECT_USAGE.get(text));
+			ChatUtil.sendPlainMsg(sender, Message.INCORRECT_USAGE.get(text), true);
 		} else {
-			ChatUtil.sendMsg(sender, Message.INCORRECT_USAGE.get(text));
+			ChatUtil.sendPlainMsg(sender, Message.INCORRECT_USAGE.get(text), false);
 		}	
 	}
 	
@@ -50,7 +50,7 @@ public abstract class SubCommand {
 			
 			if (args[1].toLowerCase().contains("npc:")) {
 				if (getInstance().getCitizensAddon() == null) {
-					ChatUtil.sendMsgWithPrefix(sender, Message.CITIZENS_NOT_INSTALLED.get());
+					ChatUtil.sendMsg(sender, Message.CITIZENS_NOT_INSTALLED.get(), true);
 					return null;
 				}
 					
@@ -63,22 +63,22 @@ public abstract class SubCommand {
 					try {
 						npc = CitizensAPI.getNPCRegistry().getById(Integer.parseInt(argument));
 					} catch (NumberFormatException e) {
-						ChatUtil.sendMsgWithPrefix(sender, "&f'&e" + argument + "&f' &cis an invalid NPC ID");
+						ChatUtil.sendMsg(sender, "&f'&e" + argument + "&f' &cis an invalid NPC ID", true);
 					}
 				}
 				
 				if (npc == null) {
-					ChatUtil.sendMsgWithPrefix(sender, Message.CITIZENS_NPC_NOT_FOUND.get());
+					ChatUtil.sendMsg(sender, Message.CITIZENS_NPC_NOT_FOUND.get(), true);
 					return null;
 				}
 				
 				if (!npc.isSpawned()) {
-					ChatUtil.sendMsgWithPrefix(sender, Message.CITIZENS_NPC_NOT_SPAWNED.get());
+					ChatUtil.sendMsg(sender, Message.CITIZENS_NPC_NOT_SPAWNED.get(), true);
 					return null;
 				}
 				
 				if (!getInstance().getCitizensAddon().traitCheck(npc)) {
-					ChatUtil.sendMsg(sender, Message.PREFIX.get() + "&cYour Citizens plugin is outdated&f!");
+					ChatUtil.sendMsg(sender, Message.PREFIX.get() + "&cYour Citizens plugin is outdated&f!", true);
 					return null;
 				}
 				try {
@@ -86,7 +86,7 @@ public abstract class SubCommand {
 					
 					return results;
 				} catch(NoSuchMethodError e) {
-					ChatUtil.sendToConsoleWithPrefix("&cYour Citizens version is outdated please use 2.0.27 or later");
+					ChatUtil.sendToConsole("&cYour Citizens version is outdated please use 2.0.27 or later", true);
 				}
 				
 			} else {
@@ -98,19 +98,19 @@ public abstract class SubCommand {
 				Player player = Bukkit.getPlayer(args[1].toLowerCase());
 				
 				if (player == null) {
-					ChatUtil.sendMsgWithPrefix(sender, Message.PLAYER_NOT_FOUND.get());
+					ChatUtil.sendMsg(sender, Message.PLAYER_NOT_FOUND.get(), true);
 					return null;
 				}
 				
 				IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(player);
 				
 				if (ePlayer == null) {
-					ChatUtil.sendMsgWithPrefix(sender, Message.PLAYER_NOT_FOUND.get());
+					ChatUtil.sendMsg(sender, Message.PLAYER_NOT_FOUND.get(), true);
 					return null;
 				}
 				
 				if (ePlayer.isInBlockedWorld() && args.length >= 3 && !args[2].equalsIgnoreCase("glowonjoin")) {
-					ChatUtil.sendMsgWithPrefix(sender, Message.OTHER_PLAYER_IN_DISABLED_WORLD.get(ePlayer));
+					ChatUtil.sendMsg(sender, Message.OTHER_PLAYER_IN_DISABLED_WORLD.get(ePlayer), true);
 					return null;
 				}
 				

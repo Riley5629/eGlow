@@ -28,7 +28,7 @@ public class TABAddon {
 		int TAB_Version = (TAB_Plugin != null) ? Integer.parseInt(TAB_Plugin.getDescription().getVersion().replaceAll("[^\\d]", "")) : 0;
 		
 		if (TAB_Version < 302) {
-			ChatUtil.sendToConsoleWithPrefix("&cWarning&f! &cThis version of eGlow requires TAB 3.1.0 or higher!");
+			ChatUtil.sendToConsole("&cWarning&f! &cThis version of eGlow requires TAB 3.1.0 or higher!", true);
 			return;
 		}
 
@@ -67,19 +67,19 @@ public class TABAddon {
 		if (EGlowMainConfig.OptionAdvancedTABIntegration()) {
 			if (!TAB_Config.getBoolean("scoreboard-teams.unlimited-nametag-mode.enabled", false)) {
 				TAB_Config.set("scoreboard-teams.unlimited-nametag-mode.enabled", true);
-				ChatUtil.sendToConsoleWithPrefix("&6Enabling unlimited-nametag-mode in TAB since the advancedTABIntegration setting is enabled&f!");
+				ChatUtil.sendToConsole("&6Enabling unlimited-nametag-mode in TAB since the advancedTABIntegration setting is enabled&f!", true);
 				
 				if (TabAPI.getInstance().getFeatureManager().isFeatureEnabled(TabConstants.Feature.NAME_TAGS)) {
-					ChatUtil.sendToConsoleWithPrefix("&cDisabling normal TAB nametags&f...");
+					ChatUtil.sendToConsole("&cDisabling normal TAB nametags&f...", true);
 					TabAPI.getInstance().getFeatureManager().unregisterFeature(TabConstants.Feature.NAME_TAGS);
 				}
 				
 				if (!TabAPI.getInstance().getFeatureManager().isFeatureEnabled(TabConstants.Feature.UNLIMITED_NAME_TAGS)) {
-					ChatUtil.sendToConsoleWithPrefix("&aEnabling custom TAB nametags&f...");
+					ChatUtil.sendToConsole("&aEnabling custom TAB nametags&f...", true);
 					TabAPI.getInstance().getFeatureManager().registerFeature(TabConstants.Feature.UNLIMITED_NAME_TAGS, new BukkitNameTagX(EGlow.getInstance()));
 				}
 				
-				ChatUtil.sendToConsoleWithPrefix("&aAdvanced-TAB-Integration has been setup&f!");
+				ChatUtil.sendToConsole("&aAdvanced-TAB-Integration has been setup&f!", true);
 			}
 		}
 	}

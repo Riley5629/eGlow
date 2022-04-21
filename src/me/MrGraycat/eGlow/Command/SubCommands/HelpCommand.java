@@ -38,25 +38,25 @@ public class HelpCommand extends SubCommand {
 		//TODO loop through subcommands and list it this way
 		String cmd = "&f- &eeGlow &f";
 		
-		ChatUtil.sendMsg(sender, "&f&m                 &r &fCommands for &eeGlow &r&f&m                 ");
-		ChatUtil.sendMsg(sender, "&fUser commands:");
-		ChatUtil.sendMsg(sender, cmd + "(&eOpens GUI&f)");
-		ChatUtil.sendMsg(sender, cmd + "help");
-		ChatUtil.sendMsg(sender, cmd + "toggle");
-		ChatUtil.sendMsg(sender, cmd + "visibility <&eall&f/&eown&f/&enone&f>");
-		ChatUtil.sendMsg(sender, cmd + "list");
-		ChatUtil.sendMsg(sender, cmd + "<&eColor&f>");
-		ChatUtil.sendMsg(sender, cmd + "<&eBlink&f> <&eColor&f> <&eSpeed&f>");
-		ChatUtil.sendMsg(sender, cmd + "<&eEffect&f> <&eSpeed&f>");
-		ChatUtil.sendMsg(sender, "&fAdmin commands:");
-		ChatUtil.sendMsg(sender, cmd + "set <&ePlayer&f/&eNPC*&f> <&eColor&f>");
-		ChatUtil.sendMsg(sender, cmd + "set <&ePlayer&f/&eNPC*&f> <&eBlink&f> <&eColor&f> <&eSpeed&f>");
-		ChatUtil.sendMsg(sender, cmd + "set <&ePlayer&f/&eNPC*&f> <&eEffect&f> <&eSpeed>");
-		ChatUtil.sendMsg(sender, cmd + "set <&ePlayer&f> glowonjoin <&eTrue&f/&eFalse&f>");
-		ChatUtil.sendMsg(sender, cmd + "unset <&ePlayer&f/&eNPC*&f>");
-		ChatUtil.sendMsg(sender, cmd + "debug");
-		ChatUtil.sendMsg(sender, cmd + "reload");
-		ChatUtil.sendMsg(sender, "&f*&enpc:s&f, &enpc:sel&f, &enpc:selected&f, &enpc:<ID>");                                                       
-		ChatUtil.sendMsg(sender, "&f&m                                                             ");
+		ChatUtil.sendPlainMsg(sender, "&f&m                 &r &fCommands for &eeGlow &r&f&m                 ", false);
+		ChatUtil.sendPlainMsg(sender, "&fUser commands:", false);
+		ChatUtil.sendPlainMsg(sender, cmd + "(&eOpens GUI&f)", false);
+		ChatUtil.sendPlainMsg(sender, cmd + "help", false);
+		ChatUtil.sendPlainMsg(sender, cmd + "toggle", false);
+		ChatUtil.sendPlainMsg(sender, cmd + "visibility <&eall&f/&eown&f/&enone&f>", false);
+		ChatUtil.sendPlainMsg(sender, cmd + "list", false);
+		ChatUtil.sendPlainMsg(sender, cmd + "<&eColor&f>", false);
+		ChatUtil.sendPlainMsg(sender, cmd + "<&eBlink&f> <&eColor&f> <&eSpeed&f>", false);
+		ChatUtil.sendPlainMsg(sender, cmd + "<&eEffect&f> <&eSpeed&f>", false);
+		ChatUtil.sendPlainMsg(sender, "&fAdmin commands:", false);
+		ChatUtil.sendPlainMsg(sender, cmd + "set <&ePlayer&f/&eNPC*&f> <&eColor&f>", false);
+		ChatUtil.sendPlainMsg(sender, cmd + "set <&ePlayer&f/&eNPC*&f> <&eBlink&f> <&eColor&f> <&eSpeed&f>", false);
+		ChatUtil.sendPlainMsg(sender, cmd + "set <&ePlayer&f/&eNPC*&f> <&eEffect&f> <&eSpeed>", false);
+		ChatUtil.sendPlainMsg(sender, cmd + "set <&ePlayer&f> glowonjoin <&eTrue&f/&eFalse&f>", false);
+		ChatUtil.sendPlainMsg(sender, cmd + "unset <&ePlayer&f/&eNPC*&f>", false);
+		ChatUtil.sendPlainMsg(sender, cmd + "debug", false);
+		ChatUtil.sendPlainMsg(sender, cmd + "reload", false);
+		ChatUtil.sendPlainMsg(sender, "&f*&enpc:s&f, &enpc:sel&f, &enpc:selected&f, &enpc:<ID>", false);
+		ChatUtil.sendPlainMsg(sender, "&f&m                                                             ", false);
 	}
 }

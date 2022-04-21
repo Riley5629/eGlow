@@ -52,28 +52,28 @@ public class EGlowEffectMenu extends PaginatedMenu {
 			if (eGlowPlayer.getPlayer().hasPermission("eglow.command.toggle")) {
 				if (eGlowPlayer.getFakeGlowStatus() || eGlowPlayer.getGlowStatus()) {
 					eGlowPlayer.toggleGlow();
-					ChatUtil.sendMsgWithPrefix(player, Message.DISABLE_GLOW.get());
+					ChatUtil.sendMsgFromGUI(player, Message.DISABLE_GLOW.get());
 				} else {
 					if (eGlowPlayer.getEffect() == null || eGlowPlayer.getEffect().getName().equals("none")) {
-						ChatUtil.sendMsgWithPrefix(player, Message.NO_LAST_GLOW.get());
+						ChatUtil.sendMsgFromGUI(player, Message.NO_LAST_GLOW.get());
 						return;
 					} else {
 						if (eGlowPlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-							ChatUtil.sendMsgWithPrefix(player, Message.DISGUISE_BLOCKED.get());
+							ChatUtil.sendMsgFromGUI(player, Message.DISGUISE_BLOCKED.get());
 							return;
 						}
 						
 						if (eGlowPlayer.getPlayer().hasPermission(eGlowPlayer.getEffect().getPermission())) {
 							eGlowPlayer.toggleGlow();
 						} else {
-							ChatUtil.sendMsgWithPrefix(player, Message.NO_PERMISSION.get());
+							ChatUtil.sendMsgFromGUI(player, Message.NO_PERMISSION.get());
 							return;
 						}
-						ChatUtil.sendMsgWithPrefix(player, Message.NEW_GLOW.get(eGlowPlayer.getLastGlowName()));
+						ChatUtil.sendMsgFromGUI(player, Message.NEW_GLOW.get(eGlowPlayer.getLastGlowName()));
 					}
 				}
 			} else {
-				ChatUtil.sendMsgWithPrefix(player, Message.NO_PERMISSION.get());
+				ChatUtil.sendMsgFromGUI(player, Message.NO_PERMISSION.get());
 			}
 		break;
 		case(33):
@@ -153,7 +153,7 @@ public class EGlowEffectMenu extends PaginatedMenu {
 	private int getSlot(String effect) {
 		int slot = Effect.GET_SLOT.getInt(effect) - 1;
 		if (slot == -1 || slot > 26) {
-			ChatUtil.sendToConsoleWithPrefix("Slot: " + (slot + 1) + " for effect " + effect + "is not valid.");
+			ChatUtil.sendToConsole("Slot: " + (slot + 1) + " for effect " + effect + "is not valid.", true);
 			return 100;
 		}
 		return slot;
@@ -166,7 +166,7 @@ public class EGlowEffectMenu extends PaginatedMenu {
 			if (mat.equals("PUMPKIN") && ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 13) mat = "CARVED_PUMPKIN";
 			return Material.valueOf(mat);
 		} catch (IllegalArgumentException | NullPointerException e) {
-			ChatUtil.sendToConsoleWithPrefix("Material: " + mat + " for effect " + effect + "is not valid.");
+			ChatUtil.sendToConsole("Material: " + mat + " for effect " + effect + "is not valid.", true);
 			return Material.valueOf("DIRT");
 		}
 	}

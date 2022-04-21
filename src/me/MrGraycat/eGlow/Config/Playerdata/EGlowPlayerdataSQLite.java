@@ -28,10 +28,10 @@ public class EGlowPlayerdataSQLite {
 	 */
 	public EGlowPlayerdataSQLite() {
 		if (setupSQLiteConnection()) {
-			ChatUtil.sendToConsoleWithPrefix("&aSuccessfully loaded Playerdata database.");
+			ChatUtil.sendToConsole("&aSuccessfully loaded Playerdata database.", true);
 			startSavingQueueHandler(); //TODO NEW STUFF HERE
 		} else {
-			ChatUtil.sendToConsoleWithPrefix("&cFailed to load Playerdata database!.");
+			ChatUtil.sendToConsole("&cFailed to load Playerdata database!.", true);
 		}
 	}
 	

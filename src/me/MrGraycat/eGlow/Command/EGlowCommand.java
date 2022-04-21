@@ -84,9 +84,9 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 				}
 			}
 			
-			if (cmd == null) {ChatUtil.sendMsgWithPrefix(sender, Message.COMMAND_LIST.get()); return true;}
-			if (sender instanceof ConsoleCommandSender && cmd.isPlayerCmd()) {ChatUtil.sendMsgWithPrefix(sender, Message.PLAYER_ONLY.get()); return true;}
-			if (!cmd.getPermission().isEmpty() && !sender.hasPermission(cmd.getPermission())) {ChatUtil.sendMsgWithPrefix(sender, Message.NO_PERMISSION.get()); return true;}
+			if (cmd == null) {ChatUtil.sendMsg(sender, Message.COMMAND_LIST.get(), true); return true;}
+			if (sender instanceof ConsoleCommandSender && cmd.isPlayerCmd()) {ChatUtil.sendMsg(sender, Message.PLAYER_ONLY.get(), true); return true;}
+			if (!cmd.getPermission().isEmpty() && !sender.hasPermission(cmd.getPermission())) {ChatUtil.sendMsg(sender, Message.NO_PERMISSION.get(), true); return true;}
 			if (sender instanceof Player) {
 				ePlayer = DataManager.getEGlowPlayer((Player) sender);
 				

@@ -47,7 +47,7 @@ public class IDisguiseAddon implements Listener {
 		if (player != null && player.getGlowStatus() || player != null && player.getFakeGlowStatus()) {
 			player.setGlowDisableReason(GlowDisableReason.DISGUISE);
 			player.toggleGlow();
-			ChatUtil.sendMsgWithPrefix(player.getPlayer(), Message.DISGUISE_BLOCKED.get());
+			ChatUtil.sendMsg(player.getPlayer(), Message.DISGUISE_BLOCKED.get(), true);
 		}
 	}
 	
@@ -58,7 +58,7 @@ public class IDisguiseAddon implements Listener {
 		if (player != null && player.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
 			player.toggleGlow();
 			player.setGlowDisableReason(GlowDisableReason.NONE);
-			ChatUtil.sendMsgWithPrefix(player.getPlayer(), Message.DISGUISE_ALLOWED.get());
+			ChatUtil.sendMsg(player.getPlayer(), Message.DISGUISE_ALLOWED.get(), true);
 		}
 	}
 	

@@ -86,7 +86,7 @@ public class IEGlowPlayer {
 				if (!fake) 
 					citizensNPC.getOrAddTrait(EGlowCitizensTrait.class).setActiveOnDespawn(status);
 			} catch(NoSuchMethodError e) {
-				ChatUtil.sendToConsoleWithPrefix("&cYour Citizens version is outdated please use 2.0.27 or later");
+				ChatUtil.sendToConsole("&cYour Citizens version is outdated please use 2.0.27 or later", true);
 			}
 			break;
 		}

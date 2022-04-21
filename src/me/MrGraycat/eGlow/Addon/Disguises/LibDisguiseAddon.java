@@ -50,7 +50,7 @@ public class LibDisguiseAddon implements Listener {
 				if (eglowPlayer != null && eglowPlayer.getGlowStatus() || eglowPlayer != null && eglowPlayer.getFakeGlowStatus()) {
 					eglowPlayer.setGlowDisableReason(GlowDisableReason.DISGUISE);
 					eglowPlayer.toggleGlow();
-					ChatUtil.sendMsgWithPrefix(player, Message.DISGUISE_BLOCKED.get());
+					ChatUtil.sendMsg(player, Message.DISGUISE_BLOCKED.get(), true);
 				}	
 			}
 		} catch (NoSuchMethodError ex) {ex.printStackTrace();}
@@ -68,11 +68,11 @@ public class LibDisguiseAddon implements Listener {
 				if (eglowPlayer != null && eglowPlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
 					eglowPlayer.toggleGlow();
 					eglowPlayer.setGlowDisableReason(GlowDisableReason.NONE);
-					ChatUtil.sendMsgWithPrefix(player, Message.DISGUISE_ALLOWED.get());
+					ChatUtil.sendMsg(player, Message.DISGUISE_ALLOWED.get(), true);
 				}
 			}
 		} catch (NoSuchMethodError ex) {
-			ChatUtil.sendToConsoleWithPrefix("&cLibsDisguise isn't up to date &f!");
+			ChatUtil.sendToConsole("&cLibsDisguise isn't up to date &f!", true);
 			ex.printStackTrace();
 		}
 	}

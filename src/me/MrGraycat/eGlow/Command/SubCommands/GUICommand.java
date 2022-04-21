@@ -38,10 +38,10 @@ public class GUICommand extends SubCommand {
 	@Override
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {	
 		if (ePlayer.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
-			 ChatUtil.sendMsgWithPrefix(sender, Message.UNSUPPORTED_GLOW.get());
+			 ChatUtil.sendPlainMsg(sender, Message.UNSUPPORTED_GLOW.get(), true);
 		
 		if (ePlayer.isInBlockedWorld()) {
-			ChatUtil.sendMsgWithPrefix(sender, Message.WORLD_BLOCKED.get());
+			ChatUtil.sendMsg(sender, Message.WORLD_BLOCKED.get(), true);
 			return;
 		}
 		

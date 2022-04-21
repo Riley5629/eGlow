@@ -41,17 +41,17 @@ public class EffectCommand extends SubCommand {
 	@Override
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
 		if (ePlayer.isInBlockedWorld()) {
-			ChatUtil.sendMsgWithPrefix(sender, Message.WORLD_BLOCKED.get());
+			ChatUtil.sendMsg(sender, Message.WORLD_BLOCKED.get(), true);
 			return;
 		}
 		
 		if (ePlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-			ChatUtil.sendMsgWithPrefix(sender, Message.DISGUISE_BLOCKED.get());
+			ChatUtil.sendMsg(sender, Message.DISGUISE_BLOCKED.get(), true);
 			return;
 		}
 		
 		if (EGlowMainConfig.OptionDisableGlowWhenInvisible() && ePlayer.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
-			ChatUtil.sendMsgWithPrefix(ePlayer.getPlayer(), Message.INVISIBILITY_BLOCKED.get());
+			ChatUtil.sendMsg(sender, Message.INVISIBILITY_BLOCKED.get(), true);
 			return;
 		}
 		
@@ -82,23 +82,23 @@ public class EffectCommand extends SubCommand {
 				if (ePlayer.getGlowStatus() || ePlayer.getFakeGlowStatus()) {
 					ePlayer.disableGlow(false);
 				}
-				ChatUtil.sendMsgWithPrefix(sender, Message.DISABLE_GLOW.get());
+				ChatUtil.sendMsg(sender, Message.DISABLE_GLOW.get(), true);
 				return;
 			}
 			
 			if (!ePlayer.isSameGlow(effect)) {
 				ePlayer.disableGlow(true);
 				ePlayer.activateGlow(effect);
-				ChatUtil.sendMsgWithPrefix(sender, Message.NEW_GLOW.get(effect.getDisplayName()));
+				ChatUtil.sendMsg(sender, Message.NEW_GLOW.get(effect.getDisplayName()), true);
 
 				if (ePlayer.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
-					ChatUtil.sendMsgWithPrefix(sender, Message.UNSUPPORTED_GLOW.get());
+					ChatUtil.sendMsg(sender, Message.UNSUPPORTED_GLOW.get(), true);
 				return;
 			}
 			
-			ChatUtil.sendMsgWithPrefix(sender, Message.SAME_GLOW.get());
+			ChatUtil.sendMsg(sender, Message.SAME_GLOW.get(), true);
 			return;
 		}
-		ChatUtil.sendMsgWithPrefix(sender, Message.NO_PERMISSION.get());
+		ChatUtil.sendMsg(sender, Message.NO_PERMISSION.get(), true);
 	}
 }

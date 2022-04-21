@@ -44,7 +44,7 @@ public class EGlowAPI {
 		IEGlowEffect effect = DataManager.getEGlowEffect(name);
 		
 		if (effect == null)
-			ChatUtil.sendToConsoleWithPrefix("(API) Unable to find effect for name: " + name);
+			ChatUtil.sendToConsole("(API) Unable to find effect for name: " + name, true);
 		return effect;
 	}
 	

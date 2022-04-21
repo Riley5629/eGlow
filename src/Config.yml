@@ -11,6 +11,11 @@ World:
    - "worldname1"
    - "worldname2"
 
+#Configure if you want to use actionbars
+Actionbars:
+  Enable: true
+  Use-in-GUI: false
+
 #Configure effects to force on players/groups (requires permission)
 Force-glow:
   Enable: false
@@ -52,7 +57,6 @@ Tagname:
 
 #Some optional options
 Options:
-  Send-actionbar-messages: true #Replaces all chat messages to an actionbar
   Disable-glow-when-invisible: true #Disable the glow effect while being invisible. (1.13 and above)
   Send-invisibility-notification: true #Toggle invisibility notifications
   Render-player-skulls: true #Toggle skins rendering on playerskulls.

@@ -65,7 +65,7 @@ public class EGlowCitizensTrait extends Trait {
 			if (!npc.getOrAddTrait(EGlowCitizensTrait.class).getLastEffect().equals("none") && npc.getOrAddTrait(EGlowCitizensTrait.class).getActiveOnDespawn())
 				eGlowNPC.activateGlow();		
 		} catch(NoSuchMethodError e) {
-			ChatUtil.sendToConsoleWithPrefix("&cYour Citizens version is outdated please use 2.0.27 or later");
+			ChatUtil.sendToConsole("&cYour Citizens version is outdated please use 2.0.27 or later", true);
 		}
 	}
 	

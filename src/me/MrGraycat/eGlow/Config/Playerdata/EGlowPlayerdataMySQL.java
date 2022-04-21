@@ -25,9 +25,9 @@ public class EGlowPlayerdataMySQL {
 		setupMySQLConnection();
 		
 		if (testMySQLConnection()) {
-			ChatUtil.sendToConsoleWithPrefix("&aSuccessfully loaded MySQL.");
+			ChatUtil.sendToConsole("&aSuccessfully loaded MySQL.", true);
 		} else {
-			ChatUtil.sendToConsoleWithPrefix("&cFailed to load MySQL.");
+			ChatUtil.sendToConsole("&cFailed to load MySQL.", true);
 		}
 	}
 	

@@ -75,13 +75,13 @@ public class IEGlowEffect {
 				if (EGlow.getInstance().getCitizensAddon() != null && entity instanceof NPC)
 					eglowEntity = ((NPC) entity).getOrAddTrait(EGlowCitizensTrait.class).getEGlowNPC();
 			} catch(NoSuchMethodError e) {
-				ChatUtil.sendToConsoleWithPrefix("&cYour Citizens version is outdated please use 2.0.27 or later");
+				ChatUtil.sendToConsole("&cYour Citizens version is outdated please use 2.0.27 or later", true);
 			}
 			
 			if (eglowEntity != null) {
 				eglowEntity.disableGlow(true);
 				if (entity instanceof Player)
-					ChatUtil.sendMsgWithPrefix(eglowEntity.getPlayer(), Message.GLOW_REMOVED.get());
+					ChatUtil.sendMsg(eglowEntity.getPlayer(), Message.GLOW_REMOVED.get(), true);
 			}
 			getActiveEntities().remove(entity);
 		}
@@ -109,7 +109,7 @@ public class IEGlowEffect {
 						if (EGlow.getInstance().getCitizensAddon() != null && entity instanceof NPC)
 							eglowEntity = ((NPC) entity).getOrAddTrait(EGlowCitizensTrait.class).getEGlowNPC();
 					} catch (NoSuchMethodError e) {
-						ChatUtil.sendToConsoleWithPrefix("&cYour Citizens version is outdated please use 2.0.27 or later");
+						ChatUtil.sendToConsole("&cYour Citizens version is outdated please use 2.0.27 or later", true);
 					}
 
 					if (eglowEntity == null) {
@@ -200,7 +200,7 @@ public class IEGlowEffect {
 				color = color.toLowerCase().replace("dark", "dark_").replace("light", "_light").replace("purple", "dark_purple").replace("pink", "light_purple").replace("none", "reset");
 				chatcolors.add(ChatColor.valueOf(color.toUpperCase()));
 			} catch (IllegalArgumentException | NullPointerException e) {
-				ChatUtil.sendToConsoleWithPrefix("&cInvalid color &f'&e" + color + "&f' &cfor effect &f'&e" + getName() + "&f'");
+				ChatUtil.sendToConsole("&cInvalid color &f'&e" + color + "&f' &cfor effect &f'&e" + getName() + "&f'", true);
 				return;
 			}
 		}

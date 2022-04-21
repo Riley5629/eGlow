@@ -56,68 +56,58 @@ public class ChatUtil {
 		return text.replace("&", "§");
 	}
 
-	public static void sendMsg(Player player, String message) {
+	public static void sendPlainMsg(Object sender, String message, boolean withPrefix) {
 		if (!message.isEmpty()) {
-			message = translateColors(message);
+			message = translateColors(((withPrefix) ? Message.PREFIX.get() : "") + message);
 
-			if (EGlowMainConfig.OptionSendActionbarMessages()) {
-				IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(player);
-				PacketUtil.sendActionbar(ePlayer, message);
+			if (sender instanceof Player) {
+				((Player) sender).sendMessage(message);
 			} else {
-				player.sendMessage(message);
+				((CommandSender) sender).sendMessage(message);
 			}
 		}
 	}
-	
-	public static void sendMsg(CommandSender sender, String message){
-		if (!message.isEmpty()) {
-			message = translateColors(message);
 
-			if (EGlowMainConfig.OptionSendActionbarMessages() && sender instanceof Player) {
-				IEGlowPlayer ePlayer = DataManager.getEGlowPlayer((Player) sender);
-				PacketUtil.sendActionbar(ePlayer, message);
+	public static void sendMsgFromGUI(Player player, String message) {
+		if (EGlowMainConfig.EnableActionbarMessages() && EGlowMainConfig.UseActionbarInGUI()) {
+			sendMsg(player, message, true);
+		} else {
+			sendPlainMsg(player, message, true);
+		}
+	}
+
+	public static void sendMsg(Object sender, String message, boolean withPrefix) {
+		if (!message.isEmpty()) {
+			message = translateColors(((withPrefix) ? Message.PREFIX.get() : "") + message);
+
+			if (sender instanceof Player) {
+				if (EGlowMainConfig.EnableActionbarMessages()) {
+					sendActionbar((Player) sender, message);
+				} else {
+					((Player) sender).sendMessage(message);
+				}
 			} else {
-				sender.sendMessage(message);
+				((CommandSender) sender).sendMessage(message);
 			}
 		}
 	}
-	
-	public static void sendMsgWithPrefix(Player player, String message){
-		if (!message.isEmpty()) {
-			message = translateColors(Message.PREFIX.get() + message);
 
-			if (EGlowMainConfig.OptionSendActionbarMessages()) {
-				IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(player);
-				PacketUtil.sendActionbar(ePlayer, message);
-			} else {
-				player.sendMessage(message);
-			}
-		}
+	public static void sendToConsole(String message, boolean withPrefix) {
+		Bukkit.getConsoleSender().sendMessage(translateColors(((withPrefix) ? Message.PREFIX.get() : "") + message));
 	}
-	
-	public static void sendMsgWithPrefix(CommandSender sender, String message) {
-		if (!message.isEmpty()) {
-			message = translateColors(Message.PREFIX.get() + message);
 
-			if (EGlowMainConfig.OptionSendActionbarMessages() && sender instanceof Player) {
-				IEGlowPlayer ePlayer = DataManager.getEGlowPlayer((Player) sender);
-				PacketUtil.sendActionbar(ePlayer, message);
-			} else {
-				sender.sendMessage(message);
-			}
+	private static void sendActionbar(Player player, String message) {
+		IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(player);
+
+		if (ePlayer.getVersion().getMinorVersion() < 9) {
+			sendPlainMsg(player, message, false);
+		} else {
+			PacketUtil.sendActionbar(ePlayer, message);
 		}
-	}
-	
-	public static void sendToConsole(String message) {
-		Bukkit.getConsoleSender().sendMessage(translateColors(message));
-	}
-	
-	public static void sendToConsoleWithPrefix(String message) {
-		Bukkit.getConsoleSender().sendMessage(translateColors(Message.PREFIX.get() + message));
 	}
 	
 	public static void reportError(Exception e) {
-		sendToConsole("&f[&eeGlow&f]: &4Please report this error to MrGraycat&f!:");
+		sendToConsole("&f[&eeGlow&f]: &4Please report this error to MrGraycat&f!:", false);
 		e.printStackTrace();
 	}
 	

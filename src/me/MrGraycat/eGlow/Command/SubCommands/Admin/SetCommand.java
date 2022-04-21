@@ -70,7 +70,7 @@ public class SetCommand extends SubCommand {
 			case(4):
 				if (args[2].equalsIgnoreCase("glowonjoin")) {
 					eTarget.setGlowOnJoin(Boolean.parseBoolean(args[3].toLowerCase()));
-					ChatUtil.sendMsgWithPrefix(sender, Message.OTHER_GLOW_ON_JOIN_CONFIRM.get(eTarget, args[3].toLowerCase()));
+					ChatUtil.sendMsg(sender, Message.OTHER_GLOW_ON_JOIN_CONFIRM.get(eTarget, args[3].toLowerCase()), true);
 					continue;
 
 				}
@@ -92,12 +92,12 @@ public class SetCommand extends SubCommand {
 			
 			if (eTarget.getEntityType().equals("PLAYER")) {
 				if (eTarget.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-					ChatUtil.sendMsgWithPrefix(ePlayer.getPlayer(), Message.OTHER_PLAYER_DISGUISE.get());
+					ChatUtil.sendMsg(sender, Message.OTHER_PLAYER_DISGUISE.get(), true);
 					continue;
 				}
 				
 				if (EGlowMainConfig.OptionDisableGlowWhenInvisible() && eTarget.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
-					ChatUtil.sendMsgWithPrefix(ePlayer.getPlayer(), Message.OTHER_PLAYER_INVISIBLE.get());
+					ChatUtil.sendMsg(sender, Message.OTHER_PLAYER_INVISIBLE.get(), true);
 					continue;
 				}
 			}
@@ -107,8 +107,8 @@ public class SetCommand extends SubCommand {
 					eTarget.toggleGlow();
 				
 				if (eTarget.getEntityType().equals("PLAYER") && EGlowMainConfig.OptionSendTargetNotification() && !eTarget.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
-					ChatUtil.sendMsgWithPrefix(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.DISABLE_GLOW.get());
-				ChatUtil.sendMsgWithPrefix(sender, Message.OTHER_CONFIRM_OFF.get(eTarget));
+					ChatUtil.sendMsg(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.DISABLE_GLOW.get(), true);
+				ChatUtil.sendMsg(sender, Message.OTHER_CONFIRM_OFF.get(eTarget), true);
 				continue;
 			}
 			
@@ -117,10 +117,10 @@ public class SetCommand extends SubCommand {
 				eTarget.activateGlow(effect);
 				
 				if (eTarget.getEntityType().equals("PLAYER") && EGlowMainConfig.OptionSendTargetNotification() && !eTarget.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
-					ChatUtil.sendMsgWithPrefix(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.NEW_GLOW.get(effect.getDisplayName()));
+					ChatUtil.sendMsg(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.NEW_GLOW.get(effect.getDisplayName()), true);
 			}
 			
-			ChatUtil.sendMsgWithPrefix(sender, Message.OTHER_CONFIRM.get(eTarget, effect.getDisplayName()));
+			ChatUtil.sendMsg(sender, Message.OTHER_CONFIRM.get(eTarget, effect.getDisplayName()), true);
 		}
 	}
 }

@@ -63,7 +63,7 @@ public class ReloadCommand extends SubCommand {
 				if (effect != null) {
 					if (getInstance().getLibDisguiseAddon() != null && getInstance().getLibDisguiseAddon().isDisguised(ePlayer.getPlayer()) || getInstance().getIDisguiseAddon() != null && getInstance().getIDisguiseAddon().isDisguised(ePlayer.getPlayer())) {
 						ePlayer.setGlowDisableReason(GlowDisableReason.DISGUISE);
-						ChatUtil.sendMsgWithPrefix(ePlayer.getPlayer(), Message.DISGUISE_BLOCKED.get());
+						ChatUtil.sendMsg(ePlayer.getPlayer(), Message.DISGUISE_BLOCKED.get(), true);
 					} else {
 						ePlayer.activateGlow(effect);
 					}
@@ -75,20 +75,20 @@ public class ReloadCommand extends SubCommand {
 						if (ePlayer.getGlowStatus() || ePlayer.getFakeGlowStatus()) {
 							ePlayer.toggleGlow();
 							ePlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
-							ChatUtil.sendMsgWithPrefix(ePlayer.getPlayer(), Message.WORLD_BLOCKED_RELOAD.get());
+							ChatUtil.sendMsg(ePlayer.getPlayer(), Message.WORLD_BLOCKED_RELOAD.get(), true);
 						}
 					} else {
 						if (ePlayer.getGlowDisableReason() != null && ePlayer.getGlowDisableReason().equals(GlowDisableReason.BLOCKEDWORLD)) {
 							ePlayer.toggleGlow();
 							ePlayer.setGlowDisableReason(GlowDisableReason.NONE);
-							ChatUtil.sendMsgWithPrefix(ePlayer.getPlayer(), Message.WORLD_ALLOWED.get());
+							ChatUtil.sendMsg(ePlayer.getPlayer(), Message.WORLD_ALLOWED.get(), true);
 						}
 					}
 				} else {
 					if (ePlayer.getGlowDisableReason().equals(GlowDisableReason.BLOCKEDWORLD)) {
 						ePlayer.toggleGlow();
 						ePlayer.setGlowDisableReason(GlowDisableReason.NONE);
-						ChatUtil.sendMsgWithPrefix(sender, Message.WORLD_ALLOWED.get());
+						ChatUtil.sendMsg(ePlayer.getPlayer(), Message.WORLD_ALLOWED.get(), true);
 					}
 				}
 			}
@@ -109,9 +109,9 @@ public class ReloadCommand extends SubCommand {
 			//if (getInstance().getTABAddon() != null && getInstance().getTABAddon().getTABOnBukkit() && EGlowMainConfig.OptionAdvancedTABIntegration())
 				//getInstance().getTABAddon().loadConfigSettings();
 			
-			ChatUtil.sendMsgWithPrefix(sender, Message.RELOAD_SUCCESS.get());
+			ChatUtil.sendMsg(sender, Message.RELOAD_SUCCESS.get(), true);
 		} else {
-			ChatUtil.sendMsgWithPrefix(sender, Message.RELOAD_SUCCESS.get());
+			ChatUtil.sendMsg(sender, Message.RELOAD_SUCCESS.get(), true);
 		}
 	}
 }

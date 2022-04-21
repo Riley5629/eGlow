@@ -40,7 +40,7 @@ public class DebugCommand extends SubCommand {
 	@Override
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
 		//ChatUtil.sendMsg(sender, "DEBUG: " + getInstance().getTABAddon().tabPlugin + " " + getInstance().getTABAddon().tabPlugin.getDescription().getVersion() + " | " + getInstance().getTABAddon().version + " " + getInstance().getDebugUtil().pluginCheck("TAB") + getInstance().getDebugUtil().getPlugin("TAB").getClass().getName().startsWith("me.neznamy.tab"));
-		ChatUtil.sendMsg(sender, "&f&m                        &r &fDebug info for &eeGlow: &f&m                          ");
+		ChatUtil.sendPlainMsg(sender, "&f&m                        &r &fDebug info for &eeGlow: &f&m                          ", false);
 		IEGlowPlayer target = ePlayer;
 		if (args.length >= 2) {
 			Player player = Bukkit.getPlayer(args[1]);
@@ -51,6 +51,6 @@ public class DebugCommand extends SubCommand {
 		}
 		
 		DebugUtil.sendDebug(sender, target);
-		ChatUtil.sendMsg(sender, "&f&m                                                                               ");
+		ChatUtil.sendPlainMsg(sender, "&f&m                                                                               ", false);
 	}
 }

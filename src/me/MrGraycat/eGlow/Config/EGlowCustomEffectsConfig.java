@@ -25,11 +25,11 @@ public class EGlowCustomEffectsConfig {
 			}
 			
 			if (!configFile.exists()) {
-				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4CustomEffects.yml not found&f! &eCreating&f...");
+				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4CustomEffects.yml not found&f! &eCreating&f...", false);
 				configFile.getParentFile().mkdirs();
 				EGlow.getInstance().saveResource("CustomEffects.yml", false);
 			} else {
-				ChatUtil.sendToConsole("&f[&eeGlow&f]: &aLoading CustomEffects config&f.");
+				ChatUtil.sendToConsole("&f[&eeGlow&f]: &aLoading CustomEffects config&f.", false);
 			}
 			
 			config = new YamlConfiguration();
@@ -39,7 +39,7 @@ public class EGlowCustomEffectsConfig {
 			if (e.getCause() instanceof YAMLException) {
 				List<String> suggestions = YamlAssist.getSuggestions(configFile);
 				for(String suggestion : suggestions) {
-					ChatUtil.sendToConsole("&c" + suggestion);
+					ChatUtil.sendToConsole("&c" + suggestion, false);
 				}
 			}
 		}
@@ -65,7 +65,7 @@ public class EGlowCustomEffectsConfig {
 			if (e.getCause() instanceof YAMLException) {
 				List<String> suggestions = YamlAssist.getSuggestions(configFile);
 				for(String suggestion : suggestions) {
-					ChatUtil.sendToConsole("&c" + suggestion);
+					ChatUtil.sendToConsole("&c" + suggestion, false);
 				}
 			}
 			return false;

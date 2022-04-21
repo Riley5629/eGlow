@@ -37,18 +37,18 @@ public class ListCommand extends SubCommand {
 	@Override
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
 		//TODO create other way to get this list		
-		ChatUtil.sendMsg(sender,"&m        &r &fColors & effects for &eeGlow&f: &m          ");
-		ChatUtil.sendMsg(sender,"&fColors:");
-		ChatUtil.sendMsg(sender, ChatUtil.getEffectName("red") + ", " + ChatUtil.getEffectName("darkred") + ", " + ChatUtil.getEffectName("gold") + ",");
-		ChatUtil.sendMsg(sender, ChatUtil.getEffectName("yellow") + ", " + ChatUtil.getEffectName("green") + ", " + ChatUtil.getEffectName("darkgreen") + ",");
-		ChatUtil.sendMsg(sender, ChatUtil.getEffectName("aqua") + ", " + ChatUtil.getEffectName("darkaqua") + ", " + ChatUtil.getEffectName("blue") + ",");
-		ChatUtil.sendMsg(sender, ChatUtil.getEffectName("darkblue") + ", " + ChatUtil.getEffectName("purple") + ", " + ChatUtil.getEffectName("pink") + ",");
-		ChatUtil.sendMsg(sender, ChatUtil.getEffectName("white") + ", " + ChatUtil.getEffectName("gray") + ", " + ChatUtil.getEffectName("darkgray") + ",");
-		ChatUtil.sendMsg(sender, ChatUtil.getEffectName("black") + ".");
-		ChatUtil.sendMsg(sender, "&eoff, disable, " + ChatUtil.getEffectName("none") + " &ewill stop the glow.");
-		ChatUtil.sendMsg(sender,"&fEffects:");
-		ChatUtil.sendMsg(sender, ChatUtil.getEffectName("rainbowslow") + ", " + ChatUtil.getEffectName("rainbowfast"));
-		ChatUtil.sendMsg(sender,"&fCustom effects:");
+		ChatUtil.sendPlainMsg(sender,"&m        &r &fColors & effects for &eeGlow&f: &m          ", false);
+		ChatUtil.sendPlainMsg(sender,"&fColors:", false);
+		ChatUtil.sendPlainMsg(sender, ChatUtil.getEffectName("red") + ", " + ChatUtil.getEffectName("darkred") + ", " + ChatUtil.getEffectName("gold") + ",", false);
+		ChatUtil.sendPlainMsg(sender, ChatUtil.getEffectName("yellow") + ", " + ChatUtil.getEffectName("green") + ", " + ChatUtil.getEffectName("darkgreen") + ",", false);
+		ChatUtil.sendPlainMsg(sender, ChatUtil.getEffectName("aqua") + ", " + ChatUtil.getEffectName("darkaqua") + ", " + ChatUtil.getEffectName("blue") + ",", false);
+		ChatUtil.sendPlainMsg(sender, ChatUtil.getEffectName("darkblue") + ", " + ChatUtil.getEffectName("purple") + ", " + ChatUtil.getEffectName("pink") + ",", false);
+		ChatUtil.sendPlainMsg(sender, ChatUtil.getEffectName("white") + ", " + ChatUtil.getEffectName("gray") + ", " + ChatUtil.getEffectName("darkgray") + ",", false);
+		ChatUtil.sendPlainMsg(sender, ChatUtil.getEffectName("black") + ".", false);
+		ChatUtil.sendPlainMsg(sender, "&eoff, disable, " + ChatUtil.getEffectName("none") + " &ewill stop the glow.", false);
+		ChatUtil.sendPlainMsg(sender,"&fEffects:", false);
+		ChatUtil.sendPlainMsg(sender, ChatUtil.getEffectName("rainbowslow") + ", " + ChatUtil.getEffectName("rainbowfast"), false);
+		ChatUtil.sendPlainMsg(sender,"&fCustom effects:", false);
 		
 		StringBuilder text = new StringBuilder();
 		int i = 1;
@@ -57,7 +57,7 @@ public class ListCommand extends SubCommand {
 			text.append(ChatUtil.getEffectName(effect)).append(", ");
 			
 			if (i == 3) {
-				ChatUtil.sendMsg(sender, text.toString());
+				ChatUtil.sendPlainMsg(sender, text.toString(), false);
 				text = new StringBuilder();
 				i = 0;
 			}
@@ -66,9 +66,9 @@ public class ListCommand extends SubCommand {
 		}
 		
 		if (text.length() > 0) {
-			ChatUtil.sendMsg(sender, text.toString());
+			ChatUtil.sendPlainMsg(sender, text.toString(), false);
 		}
 		
-		ChatUtil.sendMsg(sender,"&f&m                                                       ");
+		ChatUtil.sendPlainMsg(sender,"&f&m                                                       ", false);
 	}
 }

@@ -141,7 +141,7 @@ public class DataManager implements PluginMessageListener {
 		
 		for (String effectName : Effect.GET_ALL_EFFECTS.get()) {
 			if (dataEffects.containsKey(effectName.toLowerCase())) {
-				ChatUtil.sendToConsoleWithPrefix("&cWARNING! Not registering custom effect: &f" + effectName + " &cdue to it using a default effect name!");
+				ChatUtil.sendToConsole("&cWARNING! Not registering custom effect: &f" + effectName + " &cdue to it using a default effect name!", true);
 				continue;
 			}
 			
@@ -199,7 +199,7 @@ public class DataManager implements PluginMessageListener {
 				color = color.toLowerCase().replace("dark", "dark_").replace("light", "_light").replace("purple", "dark_purple").replace("pink", "light_purple").replace("none", "reset");
 				ChatColor.valueOf(color.toUpperCase());
 			} catch (IllegalArgumentException | NullPointerException e) {
-				ChatUtil.sendToConsoleWithPrefix("&cInvalid color &f'&e" + color + "&f' &cfor effect &f'&e" + name + "&f'");
+				ChatUtil.sendToConsole("&cInvalid color &f'&e" + color + "&f' &cfor effect &f'&e" + name + "&f'", true);
 				return;
 			}
 		}

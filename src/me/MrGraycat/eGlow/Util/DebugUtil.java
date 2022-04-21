@@ -22,20 +22,20 @@ public class DebugUtil {
 		StringBuilder plugins = new StringBuilder(" ");
 
 		if (ePlayer != null) {
-			ChatUtil.sendMsg(sender, "&fPlayer info (&e" + ePlayer.getDisplayName() + "&f)");
-			ChatUtil.sendMsg(sender, "  &fTeamname: &e" + ePlayer.getTeamName());
-			ChatUtil.sendMsg(sender, "  &fClient version: &e" + ePlayer.getVersion().getFriendlyName());
-			ChatUtil.sendMsg(sender, "  &f");
-			ChatUtil.sendMsg(sender, "  &fLast gloweffect: " + ePlayer.getLastGlowName());
-			ChatUtil.sendMsg(sender, "  &fGlow visibility: &e" + ePlayer.getGlowVisibility().name());
-			ChatUtil.sendMsg(sender, "  &fGlow on join: " + ((ePlayer.getGlowOnJoin()) ? "&aTrue" : "&cFalse"));
-			ChatUtil.sendMsg(sender, "  &fForced glow: " + ((ePlayer.getForceGlow() == null) ? "&eNone" : ePlayer.getForceGlow().getName()));
-			ChatUtil.sendMsg(sender, "  &fGlow blocked reason: &e" + ePlayer.getGlowDisableReason());
+			ChatUtil.sendPlainMsg(sender, "&fPlayer info (&e" + ePlayer.getDisplayName() + "&f)", false);
+			ChatUtil.sendPlainMsg(sender, "  &fTeamname: &e" + ePlayer.getTeamName(), false);
+			ChatUtil.sendPlainMsg(sender, "  &fClient version: &e" + ePlayer.getVersion().getFriendlyName(), false);
+			ChatUtil.sendPlainMsg(sender, "  &f", false);
+			ChatUtil.sendPlainMsg(sender, "  &fLast gloweffect: " + ePlayer.getLastGlowName(), false);
+			ChatUtil.sendPlainMsg(sender, "  &fGlow visibility: &e" + ePlayer.getGlowVisibility().name(), false);
+			ChatUtil.sendPlainMsg(sender, "  &fGlow on join: " + ((ePlayer.getGlowOnJoin()) ? "&aTrue" : "&cFalse"), false);
+			ChatUtil.sendPlainMsg(sender, "  &fForced glow: " + ((ePlayer.getForceGlow() == null) ? "&eNone" : ePlayer.getForceGlow().getName()), false);
+			ChatUtil.sendPlainMsg(sender, "  &fGlow blocked reason: &e" + ePlayer.getGlowDisableReason(), false);
 		}
 		
-		ChatUtil.sendMsg(sender, "&f&m                                                                               ");
-		ChatUtil.sendMsg(sender, "&fServer version: &e" + version);
-		ChatUtil.sendMsg(sender, "Plugins:");
+		ChatUtil.sendPlainMsg(sender, "&f&m                                                                               ", false);
+		ChatUtil.sendPlainMsg(sender, "&fServer version: &e" + version, false);
+		ChatUtil.sendPlainMsg(sender, "Plugins:", false);
 		for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
 			String pluginName = plugin.getDescription().getName();
 			
@@ -49,10 +49,10 @@ public class DebugUtil {
 		}
 		
 		
-		sender.sendMessage(ChatUtil.translateColors(plugins.substring(0, plugins.length() - 2)));
+		ChatUtil.sendPlainMsg(sender, ChatUtil.translateColors(plugins.substring(0, plugins.length() - 2)), false);
 
 		if (EGlow.getInstance().getTABAddon() != null && !EGlow.getInstance().getTABAddon().getTABSupported())
-			sender.sendMessage(ChatUtil.translateColors("&cThis eGlow version requires a minimum TAB version of 3.1.0&f!"));
+			ChatUtil.sendPlainMsg(sender, ChatUtil.translateColors("&cThis eGlow version requires a minimum TAB version of 3.1.0&f!"), false);
 	}
 	
 	public static String getServerVersion() {
