@@ -6,7 +6,7 @@ import me.MrGraycat.eGlow.Util.EnumUtil.ConfigType;
 
 public class EGlowPlayerdataManager {
 	private static EGlowPlayerdataSQLite sqlite;
-	private static EGlowHikariCP hikari;
+	private static Object mysql;
 	
 	/**
 	 * Initialise the playerdata storage config/mysql
@@ -17,7 +17,12 @@ public class EGlowPlayerdataManager {
 			sqlite = new EGlowPlayerdataSQLite();
 			break;
 		case MYSQL:
-			hikari = new EGlowHikariCP();
+			try {
+				Class.forName("com.mysql.cj.jdbc.MysqlDataSource");
+				mysql = new EGlowPlayerdataMySQL8();
+			} catch(ClassNotFoundException e) {
+				mysql = new EGlowPlayerdataMySQL();
+			}
 			break;
 		}
 	}
@@ -35,10 +40,14 @@ public class EGlowPlayerdataManager {
 			sqlite.loadPlayerdata(ePlayer);
 			break;
 		case MYSQL:
-			if (hikari == null)
+			if (mysql == null)
 				return; //TODO
 
-			hikari.loadPlayerdata(ePlayer);
+			if (mysql instanceof EGlowPlayerdataMySQL8) {
+				((EGlowPlayerdataMySQL8) mysql).loadPlayerdata(ePlayer);
+			} else {
+				((EGlowPlayerdataMySQL) mysql).loadPlayerdata(ePlayer);
+			}
 			break;
 		}
 	}
@@ -59,10 +68,14 @@ public class EGlowPlayerdataManager {
 			sqlite.savePlayerdata(ePlayer);
 			break;
 		case MYSQL:
-			if (hikari == null)
+			if (mysql == null)
 				return; //TODO
-			
-			hikari.savePlayerdata(ePlayer);
+
+			if (mysql instanceof EGlowPlayerdataMySQL8) {
+				((EGlowPlayerdataMySQL8) mysql).savePlayerdata(ePlayer);
+			} else {
+				((EGlowPlayerdataMySQL) mysql).savePlayerdata(ePlayer);
+			}
 			break;
 		}
 	}
@@ -79,10 +92,14 @@ public class EGlowPlayerdataManager {
 			
 			return sqlite.savePlayerdata(uuid, lastGlowData, glowOnJoin, activeOnQuit, glowVisibility, glowDisableReason);
 		case MYSQL:
-			if (hikari == null)
+			if (mysql == null)
 				return false;
 
-			return hikari.savePlayerdata(uuid, lastGlowData, glowOnJoin, activeOnQuit, glowVisibility, glowDisableReason);
+			if (mysql instanceof EGlowPlayerdataMySQL8) {
+				return ((EGlowPlayerdataMySQL8) mysql).savePlayerdata(uuid, lastGlowData, glowOnJoin, activeOnQuit, glowVisibility, glowDisableReason);
+			} else {
+				return ((EGlowPlayerdataMySQL) mysql).savePlayerdata(uuid, lastGlowData, glowOnJoin, activeOnQuit, glowVisibility, glowDisableReason);
+			}
 		}
 		return false;
 	}
