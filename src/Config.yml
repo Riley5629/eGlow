@@ -34,9 +34,6 @@ Delays:
   Player:
     Slow: 2.0
     Fast: 1.0
-  NPC:
-    Slow: 2.0
-    Fast: 1.0
 
 #Customise the formatting of the tablist/tagname.
 #Just some basic formatting for now may be expanded in the future.
@@ -55,6 +52,7 @@ Tagname:
 
 #Some optional options
 Options:
+  Send-actionbar-messages: true #Replaces all chat messages to an actionbar
   Disable-glow-when-invisible: true #Disable the glow effect while being invisible. (1.13 and above)
   Send-invisibility-notification: true #Toggle invisibility notifications
   Render-player-skulls: true #Toggle skins rendering on playerskulls.

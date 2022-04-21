@@ -108,6 +108,7 @@ public class EGlowMainConfig {
 		addIfMissing("Options.Advanced-TAB-integration", false);
 		addIfMissing("Options.Disable-glow-when-invisible", true);
 		addIfMissing("Options.Mention-glow-state-on-join", false);
+		addIfMissing("Options.Send-actionbar-messages", true);
 	}
 	
 	private static void addIfMissing(String path, Object value) {
@@ -166,14 +167,14 @@ public class EGlowMainConfig {
 		return (int) (config.getDouble("Delays.Player.Fast") * 20);
 	}
 	
-	public static int getNPCSlowDelay() {
+	/*public static int getNPCSlowDelay() {
 		return (int) (config.getDouble("Delays.NPC.Slow") * 20);
 	}
-	
+
 	public static int getNPCFastDelay() {
 		return (int) (config.getDouble("Delays.NPC.Fast") * 20);
-	}
-	
+	}*/
+
 	public static boolean OptionEnableCommandAlias() {
 		return config.getBoolean("Command-alias.Enable");
 	}
@@ -181,7 +182,11 @@ public class EGlowMainConfig {
 	public static String OptionCommandAlias() {
 		return config.getString("Command-alias.Alias");
 	}
-	
+
+	public static boolean OptionSendActionbarMessages() {
+		return config.getBoolean("Options.Send-actionbar-messages");
+	}
+
 	public static boolean OptionDisableGlowWhenInvisible() {
 		return config.getBoolean("Options.Disable-glow-when-invisible");
 	}

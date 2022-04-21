@@ -3,6 +3,8 @@ package me.MrGraycat.eGlow.Util.Text;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -11,7 +13,7 @@ import org.bukkit.entity.Player;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.Packets.MultiVersion.ProtocolVersion;
+import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
 
 public class ChatUtil {
 	private final static Pattern rgb = Pattern.compile("#[0-9a-fA-F]{6}");
@@ -55,23 +57,55 @@ public class ChatUtil {
 	}
 
 	public static void sendMsg(Player player, String message) {
-		if (!message.isEmpty())
-			player.sendMessage(translateColors(message));
+		if (!message.isEmpty()) {
+			message = translateColors(message);
+
+			if (EGlowMainConfig.OptionSendActionbarMessages()) {
+				IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(player);
+				PacketUtil.sendActionbar(ePlayer, message);
+			} else {
+				player.sendMessage(message);
+			}
+		}
 	}
 	
 	public static void sendMsg(CommandSender sender, String message){
-		if (!message.isEmpty())
-			sender.sendMessage(translateColors(message));
+		if (!message.isEmpty()) {
+			message = translateColors(message);
+
+			if (EGlowMainConfig.OptionSendActionbarMessages() && sender instanceof Player) {
+				IEGlowPlayer ePlayer = DataManager.getEGlowPlayer((Player) sender);
+				PacketUtil.sendActionbar(ePlayer, message);
+			} else {
+				sender.sendMessage(message);
+			}
+		}
 	}
 	
 	public static void sendMsgWithPrefix(Player player, String message){
-		if (!message.isEmpty())
-			player.sendMessage(translateColors(Message.PREFIX.get() + message));
+		if (!message.isEmpty()) {
+			message = translateColors(Message.PREFIX.get() + message);
+
+			if (EGlowMainConfig.OptionSendActionbarMessages()) {
+				IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(player);
+				PacketUtil.sendActionbar(ePlayer, message);
+			} else {
+				player.sendMessage(message);
+			}
+		}
 	}
 	
 	public static void sendMsgWithPrefix(CommandSender sender, String message) {
-		if (!message.isEmpty())
-			sender.sendMessage(translateColors(Message.PREFIX.get() + message));
+		if (!message.isEmpty()) {
+			message = translateColors(Message.PREFIX.get() + message);
+
+			if (EGlowMainConfig.OptionSendActionbarMessages() && sender instanceof Player) {
+				IEGlowPlayer ePlayer = DataManager.getEGlowPlayer((Player) sender);
+				PacketUtil.sendActionbar(ePlayer, message);
+			} else {
+				sender.sendMessage(message);
+			}
+		}
 	}
 	
 	public static void sendToConsole(String message) {
