@@ -13,16 +13,10 @@
     </properties>
 
     <build>
-        <sourceDirectory>src</sourceDirectory>
         <resources>
             <resource>
-                <directory>src</directory>
-                <includes>
-                    <include>Config.yml</include>
-                    <include>CustomEffects.yml</include>
-                    <include>Messages.yml</include>
-                    <include>plugin.yml</include>
-                </includes>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
             </resource>
         </resources>
         <plugins>
@@ -40,9 +34,17 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.4</version>
                 <configuration>
-                    <finalName>eGlow ${version} 1.9.4-1.18.2</finalName>
+                    <finalName>eGlow ${project.version} 1.9.4-1.18.2</finalName>
                     <outputDirectory>C:\Users\Moors\Desktop</outputDirectory>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <filters>
+                        <filter>
+                            <artifact>com.github.NEZNAMY:YamlAssist</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.MF</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
                     <relocations>
                         <relocation>
                             <pattern>me.neznamy.yamlassist</pattern>
@@ -68,9 +70,8 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
-        <!-- TAB -->
-        <!-- Vault -->
-        <!-- YamlAssist -->
+
+        <!-- TAB YamlAssist Vault-->
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
@@ -233,9 +234,7 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven</groupId>
-                    <artifactId>
-                        maven-repository-metadata
-                    </artifactId>
+                    <artifactId>maven-repository-metadata</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven.resolver</groupId>
@@ -243,9 +242,7 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven.resolver</groupId>
-                    <artifactId>
-                        maven-resolver-connector-basic
-                    </artifactId>
+                    <artifactId>maven-resolver-connector-basic</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven.resolver</groupId>
@@ -261,9 +258,7 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven.resolver</groupId>
-                    <artifactId>
-                        maven-resolver-transport-http
-                    </artifactId>
+                    <artifactId>maven-resolver-transport-http</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>com.github.oshi</groupId>
@@ -316,14 +311,6 @@
                     <artifactId>listenablefuture</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <!-- MySQL (Old version) -->
-        <dependency>
-            <groupId>mysql.</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.49</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- YamlAssist -->
@@ -589,6 +576,14 @@
                     <artifactId>bukkit</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- MySQL (Old version) -->
+        <dependency>
+            <groupId>mysql.</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.49</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- MySQL -->
