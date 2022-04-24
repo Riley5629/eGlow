@@ -1,9 +1,7 @@
 package me.MrGraycat.eGlow.Util.Text;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Util.Packets.Chat.rgb.RGBUtils;
 import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,10 +14,6 @@ import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
 
 public class ChatUtil {
-	private final static Pattern rgb = Pattern.compile("#[0-9a-fA-F]{6}");
-	//private final static Pattern gradient = Pattern.compile("<#[0-9a-fA-F]{6}>[^<]*</#[0-9a-fA-F]{6}>");
-	public final static char COLOR_CHAR = ChatColor.COLOR_CHAR;
-
 	public static String setToBasicName(String effect) {
 		effect = ChatColor.stripColor(effect).toLowerCase();
 		
@@ -40,19 +34,15 @@ public class ChatUtil {
 			return text;
 		
 		try {
-			if (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 15)
+			if (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 15) {
+				text = RGBUtils.getInstance().convertRGBtoLegacy(text);
 				return text.replace("&", "§");
+			}
 		} catch (NullPointerException e) {
 			return text.replace("&", "§");
 		}
-		
-		
-		Matcher match = rgb.matcher(text);
-		while(match.find()) {
-			String color = text.substring(match.start(), match.end());
-			text = text.replace(color, me.MrGraycat.eGlow.Util.Text.ChatColor.of(color) + "");
-			match = rgb.matcher(text);
-		}
+
+		text = RGBUtils.getInstance().applyFormats(text);
 		return text.replace("&", "§");
 	}
 

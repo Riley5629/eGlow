@@ -82,7 +82,6 @@ public class EGlowPlayerdataSQLite {
 						ePlayer.setGlowVisibility(GlowVisibility.ALL);
 				} else {
 					ePlayer.setGlowVisibility((res.getString("glowVisibility").equals(GlowVisibility.UNSUPPORTEDCLIENT.name()) ? ePlayer.getGlowVisibility() : GlowVisibility.valueOf(res.getString("glowVisibility"))));
-					//ePlayer.setGlowVisibility((GlowVisibility.valueOf(res.getString("glowVisibility")).equals(GlowVisibility.UNSUPPORTEDCLIENT) ? ePlayer.getGlowVisibility() : GlowVisibility.valueOf(res.getString("glowVisibility"))));
 				}
 			
 				if (res.getString("glowDisableReason") == null || res.getString("glowDisableReason").isEmpty()) {
@@ -113,42 +112,6 @@ public class EGlowPlayerdataSQLite {
 		} else {
 			SavingQueue.put(ePlayer.getUUID().toString(), values);
 		}
-		
-		/*Connection con = null;
-		PreparedStatement ps = null;
-		String statement = "";
-		
-		boolean glowOnJoin;
-		boolean activeOnQuit;
-		String glowDisableReason;
-		String glowVisibility;
-		String lastGlowData;
-		
-		statement = "INSERT OR REPLACE INTO eglow (UUID, glowOnJoin, activeOnQuit, lastGlowData, glowVisibility, glowDisableReason)" + " VALUES(?,?,?,?,?,?)";
-		
-		lastGlowData = ePlayer.getLastGlow();
-		glowOnJoin = ePlayer.getGlowOnJoin();
-		activeOnQuit = ePlayer.getActiveOnQuit();
-		glowVisibility = ePlayer.getGlowVisibility().name();
-		glowDisableReason = ePlayer.getGlowDisableReason().name(); 
-		
-		try {
-			con = sqlite.getConnection();
-			ps = con.prepareStatement(statement);
-			
-			ps.setString(1, ePlayer.getUUID().toString());
-			ps.setBoolean(2, glowOnJoin);
-			ps.setBoolean(3, activeOnQuit);
-			ps.setString(4, lastGlowData);
-			ps.setString(5, glowVisibility);
-			ps.setString(6, glowDisableReason);
-			
-			ps.executeUpdate();
-		} catch (SQLException e) {
-			ChatUtil.reportError(e);
-		} finally {
-			closeMySQLConnection(con, ps, null);
-		}*/
 	}
 	private boolean isActive = false;
 	
@@ -246,12 +209,8 @@ public class EGlowPlayerdataSQLite {
 			dbFile.renameTo(new File(EGlow.getInstance().getDataFolder(), "Playerdata.db"));
 		
 		sqlite = new SQLiteDataSource();
-
 		sqlite.setUrl("jdbc:sqlite:" + EGlow.getInstance().getDataFolder() + File.separator + "Playerdata.db");
-		
-		//sqlite.setDatabaseName("eglow");
-		//sqlite.setJournalMode("WAL");
-		
+
 		return testSQLiteConnection();
 	}
 	
@@ -275,9 +234,7 @@ public class EGlowPlayerdataSQLite {
 				return true;
 			
 			ps = con.prepareStatement(statement);
-			try {ps.executeUpdate();} catch(Exception e) {
-				//Forgot why I ignore this
-			}
+			try {ps.executeUpdate();} catch(Exception e) {}
 			return true;
 		} catch(SQLException e) {
 			ChatUtil.reportError(e);
@@ -295,8 +252,6 @@ public class EGlowPlayerdataSQLite {
 				ps.close();
 			if (res != null)
 				res.close();
-		} catch (SQLException e) {
-			//
-		}
+		} catch (SQLException e) {}
 	}
 }

@@ -117,7 +117,7 @@ public class IEGlowEffect {
 						return;
 					}
 
-					ChatColor color = effectLoop.get(progress);
+					ChatColor color = getColors().get(progress);
 
 					if (color.equals(ChatColor.RESET)) {
 						eglowEntity.setColor(color, false, true);
@@ -125,12 +125,12 @@ public class IEGlowEffect {
 						eglowEntity.setColor(color, true, false);
 					}
 
-					if (effectLoop.size() == 1) {
+					if (getColors().size() == 1) {
 						eglowEntity.setColor(color, true, false);
 						return;
 					}
 
-					if (progress == effectLoop.size() - 1) {
+					if (progress == getColors().size() - 1) {
 						getActiveEntities().replace(entity, 0);
 						return;
 					}
@@ -138,7 +138,7 @@ public class IEGlowEffect {
 					getActiveEntities().replace(entity, progress + 1);
 					});
 				}
-			}.runTaskTimerAsynchronously(EGlow.getInstance(), 1, effectDelay));		
+			}.runTaskTimerAsynchronously(EGlow.getInstance(), 1, getDelay()));
 		}
 	}
 	
@@ -205,11 +205,11 @@ public class IEGlowEffect {
 			}
 		}
 		
-		if (!chatcolors.equals(effectLoop)) {
+		if (!chatcolors.equals(getColors())) {
 			for (Object entity : activeEntities.keySet()) {
 				activeEntities.replace(entity, 0);
 			}
-			effectLoop = chatcolors;
+			this.effectLoop = chatcolors;
 		}	
 	}
 }

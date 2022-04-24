@@ -87,29 +87,26 @@ public class TABAddon {
 	public void updateTABPlayer(IEGlowPlayer ePlayer, ChatColor glowColor) {
 		TabPlayer tabPlayer = getTABPlayer(ePlayer.getUUID());
 		
-		if (tabPlayer == null)
+		if (tabPlayer == null || TabAPI.getInstance().getTeamManager() == null)
 			return;
 		
 		String tagPrefix;
 		String color = (glowColor.equals(ChatColor.RESET)) ? "" : glowColor + "";
-		
-		if (TabAPI.getInstance().getTeamManager() == null)
-			return;
-		
+
 		try {
-			tagPrefix = TabAPI.getInstance().getTeamManager().getOriginalPrefix(tabPlayer);
+			tagPrefix = TabAPI.getInstance().getTeamManager().getOriginalPrefix(tabPlayer) + color;
 		}  catch(Exception ex) {
-			tagPrefix = "";
+			tagPrefix = color;
 		}
 		
 		try {
 			if (!EGlowMainConfig.OptionAdvancedTABIntegration()) {
-				TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, (!tagPrefix.isEmpty()) ? tagPrefix + color : color);
+				TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, tagPrefix);
 			} else {
 				Property propertyCustomTagName = tabPlayer.getProperty(TabConstants.Property.CUSTOMTAGNAME);
 				
 				if (propertyCustomTagName == null) {
-					TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, (!tagPrefix.isEmpty()) ? tagPrefix + color : color);
+					TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, tagPrefix);
 				} else {
 					String originalTagName = propertyCustomTagName.getOriginalRawValue();
 					
@@ -121,7 +118,6 @@ public class TABAddon {
 			}
 		} catch (IllegalStateException | NullPointerException e) {
 			//Wierd NPE on first join ignoring it
-			//Ignored :I
 		}
 	}
 	

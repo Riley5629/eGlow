@@ -11,6 +11,7 @@ public class EGlowPlayerdataManager {
 	/**
 	 * Initialise the playerdata storage config/mysql
 	 */
+	//TODO switch to sqlite when mysql would fail
 	public static void initialize() {
 		switch((EGlowMainConfig.useMySQL()) ? ConfigType.MYSQL : ConfigType.SQLITE) {
 		case SQLITE:
@@ -35,13 +36,13 @@ public class EGlowPlayerdataManager {
 		switch((EGlowMainConfig.useMySQL()) ? ConfigType.MYSQL : ConfigType.SQLITE) {
 		case SQLITE:
 			if (sqlite == null)
-				return; //TODO
+				return;
 			
 			sqlite.loadPlayerdata(ePlayer);
 			break;
 		case MYSQL:
 			if (mysql == null)
-				return; //TODO
+				return;
 
 			if (mysql instanceof EGlowPlayerdataMySQL8) {
 				((EGlowPlayerdataMySQL8) mysql).loadPlayerdata(ePlayer);
@@ -63,13 +64,13 @@ public class EGlowPlayerdataManager {
 		switch((EGlowMainConfig.useMySQL()) ? ConfigType.MYSQL : ConfigType.SQLITE) {
 		case SQLITE:
 			if (sqlite == null)
-				return; //TODO
+				return;
 			
 			sqlite.savePlayerdata(ePlayer);
 			break;
 		case MYSQL:
 			if (mysql == null)
-				return; //TODO
+				return;
 
 			if (mysql instanceof EGlowPlayerdataMySQL8) {
 				((EGlowPlayerdataMySQL8) mysql).savePlayerdata(ePlayer);

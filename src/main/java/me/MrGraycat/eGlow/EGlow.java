@@ -121,8 +121,6 @@ public class EGlow extends JavaPlugin {
 				if (DebugUtil.pluginCheck("LuckPerms")) {
 					setLPAddon(new LuckPermsAddon());
 				}
-				
-				DebugUtil.addonCheck();
 			}
 		}.runTask(this);
 	}

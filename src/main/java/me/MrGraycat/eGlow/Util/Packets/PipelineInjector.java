@@ -74,7 +74,7 @@ public class PipelineInjector{
 								return;
 							}
 
-							packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(entityID, NMSHook.setGlowFlag(glowingTarget.getEntity(), true)/*eglowEntity*/);
+							packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(entityID, NMSHook.setGlowFlag(glowingTarget.getEntity(), true));
 							super.write(context, packetPlayOutEntityMetadata.toNMS(eglowPlayer.getVersion()), channelPromise);
 							return;
 						}
@@ -137,7 +137,7 @@ public class PipelineInjector{
 		return blockPackets;
 	}
 
-	public static void setBlockPackets(boolean blockPacketss) {
-		blockPackets = blockPacketss;
+	public static void setBlockPackets(boolean blockPackets) {
+		blockPackets = blockPackets;
 	}
 }

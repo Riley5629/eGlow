@@ -32,7 +32,7 @@ public class IDisguiseAddon implements Listener {
 	}
 	
 	/**
-	 * Check to see if player is diguised
+	 * Check to see if player is disguised
 	 * @param player Player to check
 	 * @return true is disguised, false if not
 	 */

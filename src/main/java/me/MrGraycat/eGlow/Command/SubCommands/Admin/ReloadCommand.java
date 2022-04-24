@@ -54,7 +54,7 @@ public class ReloadCommand extends SubCommand {
 				ePlayer = DataManager.getEGlowPlayer(onlinePlayer);
 				
 				if (ePlayer == null)
-					break;
+					continue;
 				
 				ePlayer.updatePlayerTabname();
 				
@@ -70,22 +70,14 @@ public class ReloadCommand extends SubCommand {
 					continue;
 				}
 				
-				if (EGlowMainConfig.getWorldCheckEnabled()) {
-					if (ePlayer.isInBlockedWorld()) {
-						if (ePlayer.getGlowStatus() || ePlayer.getFakeGlowStatus()) {
-							ePlayer.toggleGlow();
-							ePlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
-							ChatUtil.sendMsg(ePlayer.getPlayer(), Message.WORLD_BLOCKED_RELOAD.get(), true);
-						}
-					} else {
-						if (ePlayer.getGlowDisableReason() != null && ePlayer.getGlowDisableReason().equals(GlowDisableReason.BLOCKEDWORLD)) {
-							ePlayer.toggleGlow();
-							ePlayer.setGlowDisableReason(GlowDisableReason.NONE);
-							ChatUtil.sendMsg(ePlayer.getPlayer(), Message.WORLD_ALLOWED.get(), true);
-						}
+				if (EGlowMainConfig.getWorldCheckEnabled() && ePlayer.isInBlockedWorld()) {
+					if (ePlayer.getGlowStatus() || ePlayer.getFakeGlowStatus()) {
+						ePlayer.toggleGlow();
+						ePlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
+						ChatUtil.sendMsg(ePlayer.getPlayer(), Message.WORLD_BLOCKED_RELOAD.get(), true);
 					}
 				} else {
-					if (ePlayer.getGlowDisableReason().equals(GlowDisableReason.BLOCKEDWORLD)) {
+					if (ePlayer.getGlowDisableReason() != null && ePlayer.getGlowDisableReason().equals(GlowDisableReason.BLOCKEDWORLD)) {
 						ePlayer.toggleGlow();
 						ePlayer.setGlowDisableReason(GlowDisableReason.NONE);
 						ChatUtil.sendMsg(ePlayer.getPlayer(), Message.WORLD_ALLOWED.get(), true);
@@ -105,9 +97,6 @@ public class ReloadCommand extends SubCommand {
 			} catch (NoSuchFieldException  | IllegalArgumentException | IllegalAccessException e){
 			    ChatUtil.reportError(e);
 			}
-			
-			//if (getInstance().getTABAddon() != null && getInstance().getTABAddon().getTABOnBukkit() && EGlowMainConfig.OptionAdvancedTABIntegration())
-				//getInstance().getTABAddon().loadConfigSettings();
 			
 			ChatUtil.sendMsg(sender, Message.RELOAD_SUCCESS.get(), true);
 		} else {

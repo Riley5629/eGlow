@@ -182,7 +182,7 @@ public class NMSStorage {
 			try {
 				return getNMSClass(name);
 			} catch (ClassNotFoundException classNotFoundException) {
-				//
+				continue;
 			}
 		}
 		throw new ClassNotFoundException("No class found with possible names " + Arrays.toString(names));
@@ -193,9 +193,7 @@ public class NMSStorage {
 	      return Class.forName(name); 
 	    try {
 	      return Class.forName("net.minecraft.server." + this.serverPackage + "." + name);
-	    } /*catch (ClassNotFoundException e) {
-	      return Main.class.getClassLoader().loadClass("net.minecraft.server." + this.serverPackage + "." + name);
-	    }*/ catch (NullPointerException e) {
+	    }  catch (NullPointerException e) {
 	      throw new ClassNotFoundException(name);
 	    } 
 	  }
@@ -205,7 +203,7 @@ public class NMSStorage {
 			try {
 				return clazz.getMethod(name, parameterTypes);
 			} catch (Exception exception) {
-				//
+				continue;
 			}
 		}
 		throw new NoSuchMethodException("No method found with possible names " + Arrays.toString(names) + " in class " + clazz.getName());

@@ -63,7 +63,6 @@ public class NMSHook {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		return null;
 	}
 }

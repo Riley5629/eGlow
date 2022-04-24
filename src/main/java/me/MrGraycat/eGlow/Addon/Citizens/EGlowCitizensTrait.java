@@ -41,11 +41,10 @@ public class EGlowCitizensTrait extends Trait {
 		if (eGlowNPC != null) {
 			setActiveOnDespawn((eGlowNPC.getFakeGlowStatus() || eGlowNPC.getGlowStatus()));
 			setLastEffect(eGlowNPC.getEffect().getName());
-			
+
 			key.setBoolean("ActiveOnDespawn", activeOnDespawn);
 			key.setString("LastEffect", lastEffect);
 		}
-		
 	}
 
 	public void OnAttach() {
@@ -56,8 +55,7 @@ public class EGlowCitizensTrait extends Trait {
 		if (getEGlowNPC() == null) {
 			setEGlowNPC(new IEGlowPlayer(npc));
 		}
-			
-		
+
 		eGlowNPC.disableGlow(true);
 		eGlowNPC.setDataFromLastGlow(getLastEffect());
 		
@@ -69,20 +67,16 @@ public class EGlowCitizensTrait extends Trait {
 		}
 	}
 	
-	public void onDespawn() {
-		//EGlow.getDataManager().removeEGlowEntity(npc);
-	}
-	
-	public void onRemove() {
-		//EGlow.getDataManager().removeEGlowEntity(npc);
-	}
+	public void onDespawn() {}
+
+	public void onRemove() {}
 	
 	private void setEGlowNPC(IEGlowPlayer entity) {
 		this.eGlowNPC = entity;
 	}
 	
 	public IEGlowPlayer getEGlowNPC() {
-		return eGlowNPC;
+		return this.eGlowNPC;
 	}
 	
 	private void setLastEffect(String lastEffect) {
@@ -90,7 +84,7 @@ public class EGlowCitizensTrait extends Trait {
 	}
 	
 	private String getLastEffect() {
-		return lastEffect;
+		return this.lastEffect;
 	}
 	
 	public void setActiveOnDespawn(boolean activeOnDespawn) {
@@ -98,6 +92,6 @@ public class EGlowCitizensTrait extends Trait {
 	}
 	
 	private Boolean getActiveOnDespawn() {
-		return activeOnDespawn;
+		return this.activeOnDespawn;
 	}
 }

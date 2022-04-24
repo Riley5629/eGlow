@@ -28,7 +28,7 @@ public class MenuItemManager extends MenuManager {
 	private final String GUNPOWDER = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) ? "SULPHUR" : "GUNPOWDER";
 	private final String PLAYER_HEAD = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) ? "SKULL_ITEM" : "PLAYER_HEAD";
 	public String CLOCK = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) ? "WATCH" : "CLOCK";
-	//When custom GUI is a thing this one will not be needed anymore
+
 	/**
 	 * Create an itemstack
 	 * @param mat item material
@@ -98,7 +98,8 @@ public class MenuItemManager extends MenuManager {
 		ArrayList<String> lore = new ArrayList<>();
 		
 		meta.setDisplayName(ChatUtil.translateColors(name));
-		//meta.setCustomModelData(model); //TODO check for readding this
+		//TODO readd compatibility for models
+		//meta.setCustomModelData(model);
 		
 		for (String text : lores) {
 			if (!text.isEmpty())
@@ -127,7 +128,9 @@ public class MenuItemManager extends MenuManager {
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
 			
 			if (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) {
-				meta.setOwner(player.getDisplayName()); //TODO this method will be removed at one point
+				//TODO this method will be removed at one point find a replacement for it
+				//That or trick maven again with the dependencies
+				meta.setOwner(player.getDisplayName());
 			} else {
 				meta.setOwningPlayer(player.getPlayer());
 			}

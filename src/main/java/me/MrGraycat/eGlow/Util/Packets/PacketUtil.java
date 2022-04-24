@@ -253,9 +253,8 @@ public class PacketUtil {
 		if (text.isEmpty())
 			return;
 
-		IChatBaseComponent test = IChatBaseComponent.optimizedComponent(text);
-
-		PacketPlayOutChat packetPlayOutChat = new PacketPlayOutChat(test, PacketPlayOutChat.ChatMessageType.GAME_INFO);
+		IChatBaseComponent formattedText = IChatBaseComponent.optimizedComponent(text);
+		PacketPlayOutChat packetPlayOutChat = new PacketPlayOutChat(formattedText, PacketPlayOutChat.ChatMessageType.GAME_INFO);
 
 		try {
 			NMSHook.sendPacket(ePlayer.getPlayer(), packetPlayOutChat.toNMS(ePlayer.getVersion()));

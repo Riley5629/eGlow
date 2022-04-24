@@ -145,6 +145,7 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 		inventory.setItem(28, createPlayerSkull(p));
 		inventory.setItem(30, createGlowingStatus(p));
 		inventory.setItem(31, createItem(Material.NETHER_STAR, Message.GUI_COLOR.get("effect-rainbow"), 0, Message.GUI_LEFT_CLICK.get() + Message.COLOR.get("effect-rainbow"), Message.GUI_EFFECT_PERMISSION.get() + ((p.getPlayer().hasPermission(DataManager.getEGlowEffect("rainbowslow").getPermission()) ? Message.GUI_YES.get() : Message.GUI_NO.get()))));
+
 		if (hasEffect(p))
 			inventory.setItem(32, createItem(Material.valueOf(CLOCK), Message.GUI_SPEED_ITEM_NAME.get(), 0, createSpeedLore(p)));
 		

@@ -4,12 +4,11 @@ import java.util.UUID;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -36,7 +35,7 @@ public class EGlowEventListener implements Listener {
 			new EGlowEventListener113AndAbove();
 		}
 	}
-	
+
 	@EventHandler
 	public void PlayerConnectEvent(PlayerJoinEvent e) {
 		PlayerConnect(e.getPlayer(), e.getPlayer().getUniqueId());
@@ -97,6 +96,7 @@ public class EGlowEventListener implements Listener {
 	 * @param p player to initialise
 	 */
 	public static void PlayerConnect(Player p, UUID uuid) {
+		//Fixes permanent player glows from old eGlow versions/other glow plugins that use Player#setGlowing(true)
 		if (p.isGlowing())
 			p.setGlowing(false);
 		
@@ -196,7 +196,6 @@ public class EGlowEventListener implements Listener {
 		if (eglowPlayer != null) {
 			eglowPlayer.setActiveOnQuit(eglowPlayer.getFakeGlowStatus() || eglowPlayer.getGlowStatus());
 			EGlowPlayerdataManager.savePlayerdata(eglowPlayer);
-			//eglowPlayer.disableGlow(true);
 			
 			PipelineInjector.uninject(eglowPlayer);
 			DataManager.removeEGlowPlayer(eglowPlayer.getPlayer());

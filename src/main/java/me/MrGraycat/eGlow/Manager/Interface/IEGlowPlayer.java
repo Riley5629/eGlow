@@ -113,7 +113,6 @@ public class IEGlowPlayer {
 			switch(getEntityType()) {
 			case("PLAYER"):
 				PacketUtil.updateScoreboardTeam(DataManager.getEGlowPlayer(getPlayer()), getTeamName(), ((EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagPrefix(this) : "") + color, (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagSuffix(this) : "", true, true, EnumChatFormat.valueOf(color.name()));
-				//prefix = "" + color
 			break;
 			case("NPC"):
 				if (!fake && citizensNPC.isSpawned())
@@ -260,13 +259,7 @@ public class IEGlowPlayer {
 	public IEGlowEffect getForceGlow() {
 		if (forcedEffects.isEmpty() || !EGlowMainConfig.getForceGlowEnabled() || getPlayer() == null || isInBlockedWorld() && EGlowMainConfig.getForceGlowBypassBlockedWorlds())
 			return null;
-		
 		return forcedEffects.get(0);
-		/*for (String permission : EGlowMainConfig.getForceGlowList()) {
-			if (getPlayer().hasPermission("eglow.force." + permission.toLowerCase()))
-				return getInstance().getDataManager().getEGlowEffect(EGlowMainConfig.getForceGlowEffect(permission));
-		}
-		return null;*/
 	}
 	
 	public boolean isInBlockedWorld() {

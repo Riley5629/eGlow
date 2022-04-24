@@ -36,7 +36,6 @@ public class ListCommand extends SubCommand {
 
 	@Override
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
-		//TODO create other way to get this list		
 		ChatUtil.sendPlainMsg(sender,"&m        &r &fColors & effects for &eeGlow&f: &m          ", false);
 		ChatUtil.sendPlainMsg(sender,"&fColors:", false);
 		ChatUtil.sendPlainMsg(sender, ChatUtil.getEffectName("red") + ", " + ChatUtil.getEffectName("darkred") + ", " + ChatUtil.getEffectName("gold") + ",", false);
@@ -61,14 +60,11 @@ public class ListCommand extends SubCommand {
 				text = new StringBuilder();
 				i = 0;
 			}
-			
 			i++;
 		}
 		
-		if (text.length() > 0) {
+		if (text.length() > 0)
 			ChatUtil.sendPlainMsg(sender, text.toString(), false);
-		}
-		
 		ChatUtil.sendPlainMsg(sender,"&f&m                                                       ", false);
 	}
 }

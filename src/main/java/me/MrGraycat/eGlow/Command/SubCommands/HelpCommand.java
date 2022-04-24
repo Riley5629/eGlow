@@ -35,7 +35,6 @@ public class HelpCommand extends SubCommand {
 
 	@Override
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
-		//TODO loop through subcommands and list it this way
 		String cmd = "&f- &eeGlow &f";
 		
 		ChatUtil.sendPlainMsg(sender, "&f&m                 &r &fCommands for &eeGlow &r&f&m                 ", false);

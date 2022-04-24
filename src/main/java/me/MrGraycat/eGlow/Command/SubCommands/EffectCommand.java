@@ -1,5 +1,6 @@
 package me.MrGraycat.eGlow.Command.SubCommands;
 
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
 import me.MrGraycat.eGlow.Command.SubCommand;
@@ -54,9 +55,9 @@ public class EffectCommand extends SubCommand {
 			ChatUtil.sendMsg(sender, Message.INVISIBILITY_BLOCKED.get(), true);
 			return;
 		}
-		
+
 		IEGlowEffect effect = null;
-		
+
 		switch(args.length) {
 		case(1):
 			effect = DataManager.getEGlowEffect(args[0].replace("off", "none").replace("disable", "none"));
@@ -78,7 +79,7 @@ public class EffectCommand extends SubCommand {
 		}
 		
 		if (ePlayer.getPlayer().hasPermission(effect.getPermission()) || DataManager.isCustomEffect(effect.getName()) && ePlayer.getPlayer().hasPermission("eglow.effect.*")) {
-			if (effect.getName().equals("none") && ePlayer.getGlowStatus()) {
+			if (effect.getName().equals("none")) {
 				if (ePlayer.getGlowStatus() || ePlayer.getFakeGlowStatus()) {
 					ePlayer.disableGlow(false);
 				}

@@ -17,6 +17,8 @@ import me.neznamy.yamlassist.YamlAssist;
 
 public class EGlowMainConfig {
 
+	//TODO convert static getters to Enum
+
 	private static YamlConfiguration config;
 	private static File configFile;
 	

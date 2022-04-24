@@ -53,7 +53,10 @@ public class LibDisguiseAddon implements Listener {
 					ChatUtil.sendMsg(player, Message.DISGUISE_BLOCKED.get(), true);
 				}	
 			}
-		} catch (NoSuchMethodError ex) {ex.printStackTrace();}
+		} catch (NoSuchMethodError ex) {
+			ChatUtil.sendToConsole("&cLibsDisguise isn't up to date &f!", true);
+			ex.printStackTrace();
+		}
 	}
 	
 	@EventHandler

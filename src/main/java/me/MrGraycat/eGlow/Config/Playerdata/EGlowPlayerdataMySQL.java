@@ -163,7 +163,6 @@ public class EGlowPlayerdataMySQL {
 		}
 	}
 
-	//https://www.programcreek.com/java-api-examples/index.php?api=com.mysql.cj.jdbc.MysqlDataSource
 	private boolean setupMySQLConnection() {
 		mysql = new MysqlDataSource();
 		

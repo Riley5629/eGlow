@@ -39,7 +39,6 @@ public class DebugCommand extends SubCommand {
 
 	@Override
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
-		//ChatUtil.sendMsg(sender, "DEBUG: " + getInstance().getTABAddon().tabPlugin + " " + getInstance().getTABAddon().tabPlugin.getDescription().getVersion() + " | " + getInstance().getTABAddon().version + " " + getInstance().getDebugUtil().pluginCheck("TAB") + getInstance().getDebugUtil().getPlugin("TAB").getClass().getName().startsWith("me.neznamy.tab"));
 		ChatUtil.sendPlainMsg(sender, "&f&m                        &r &fDebug info for &eeGlow: &f&m                          ", false);
 		IEGlowPlayer target = ePlayer;
 		if (args.length >= 2) {

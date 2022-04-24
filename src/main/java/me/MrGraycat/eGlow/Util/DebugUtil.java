@@ -14,10 +14,6 @@ public class DebugUtil {
 	private static final int minorVersion =  Integer.parseInt(version.split("_")[1]);
 	private static final PluginManager pm = Bukkit.getPluginManager();
 	
-	private static boolean placeholderapi;
-	private static boolean protocolSupport;
-	private static boolean viaVersion;
-	
 	public static void sendDebug(CommandSender sender, IEGlowPlayer ePlayer) {
 		StringBuilder plugins = new StringBuilder(" ");
 
@@ -64,21 +60,15 @@ public class DebugUtil {
 	}
 	
 	public static boolean isProtocolSupportInstalled() {
-		return protocolSupport;
+		return pluginCheck("ProtocolSupport");
 	}
 	
 	public static boolean isViaVersionInstalled() {
-		return viaVersion;
+		return pluginCheck("ViaVersion");
 	}
-	
-	public static void addonCheck() {
-		placeholderapi = pluginCheck("PlaceholderAPI");
-		protocolSupport = pluginCheck("ProtocolSupport");
-		viaVersion = pluginCheck("ViaVersion");
-	}
-	
+
 	public static boolean onBungee() {
-		//TODO SpigotConfig.bungee
+		//TODO SpigotConfig.bungee import seems to no longer exist
 		return !Bukkit.getServer().getOnlineMode();
 	}
 	
@@ -95,6 +85,6 @@ public class DebugUtil {
 	}
 	
 	public static boolean isPAPIInstalled() {
-		return placeholderapi;
+		return pluginCheck("PlaceholderAPI");
 	}
 }
