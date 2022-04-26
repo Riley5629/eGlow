@@ -55,7 +55,7 @@ public class LuckPermsAddon implements Listener {
 							PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(), Vault_Addon.getPlayerTagPrefix(ePlayer) + ePlayer.getActiveColor(), Vault_Addon.getPlayerTagSuffix(ePlayer), true, true, EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
 						}
 					}
-				}.runTaskLaterAsynchronously(EGlow.getInstance(), 10);
+				}.runTaskLaterAsynchronously(EGlow.getInstance(), 20);
 			} catch (IllegalPluginAccessException e) {
 				//Prevent error spam when eGlow is unloading
 			}
@@ -78,7 +78,7 @@ public class LuckPermsAddon implements Listener {
 							}
 						}
 					}
-				}.runTaskLaterAsynchronously(EGlow.getInstance(), 10);
+				}.runTaskLaterAsynchronously(EGlow.getInstance(), 20);
 			} catch (IllegalPluginAccessException e) {
 				//Prevent error spam when eGlow is unloading
 			}
