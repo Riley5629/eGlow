@@ -8,6 +8,7 @@ import org.bukkit.plugin.PluginManager;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import org.spigotmc.SpigotConfig;
 
 public class DebugUtil {
 	private static final String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
@@ -68,8 +69,7 @@ public class DebugUtil {
 	}
 
 	public static boolean onBungee() {
-		//TODO SpigotConfig.bungee import seems to no longer exist
-		return !Bukkit.getServer().getOnlineMode();
+		return !Bukkit.getServer().getOnlineMode() && SpigotConfig.bungee;
 	}
 	
 	public static boolean pluginCheck(String plugin) {
