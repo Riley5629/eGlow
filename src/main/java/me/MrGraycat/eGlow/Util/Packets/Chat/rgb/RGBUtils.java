@@ -21,12 +21,6 @@ public class RGBUtils {
     /** Registered gradient patterns */
     private final GradientPattern[] gradients;
 
-    /** TAB's RGB pattern, used to convert text to bukkit format for boss bar */
-    private final Pattern tabPattern = Pattern.compile("#[0-9a-fA-F]{6}");
-
-    /** RGB pattern for legacy codes */
-    private final Pattern tabPatternLegacy = Pattern.compile("#[0-9a-fA-F]{6}\\|.");
-
     /**
      * Constructs new instance and loads all RGB patterns and gradients
      */
@@ -84,28 +78,7 @@ public class RGBUtils {
     }
 
     /**
-     * Applies all gradient formats to text and returns it. This only affects
-     * usage where no placeholder is used inside.
-     *
-     * @param   text
-     *          original text
-     * @return  text where all gradients with static text are converted to #RRGGBB
-     */
-    public String applyCleanGradients(String text) {
-        if (text == null)
-            return "";
-
-        String replaced = text;
-        for (GradientPattern pattern : gradients) {
-            replaced = pattern.applyPattern(replaced, true);
-        }
-        return replaced;
-    }
-
-    /**
-     * Converts TAB's RGB format (#RRGGBB) into bukkit one
-     * (&amp;x&amp;r&amp;r&amp;g&amp;g&amp;b&amp;b) for modern
-     * clients (1.16+), for legacy clients it will use the closest color.
+     * Converts to RGB for modern clients (1.16+), for legacy clients it will use the closest color.
      *
      * @param   text
      *          text to convert
@@ -113,21 +86,10 @@ public class RGBUtils {
      *          whether client accepts RGB or not
      * @return  converted text
      */
-    public String convertToBukkitFormat(String text, boolean rgbClient) {
+    public String ApplyFormats(String text, boolean rgbClient) {
         if (text == null) return null;
-        if (!text.contains("#")) return text; //no rgb codes
         if (rgbClient) {
-            //converting random formats to TAB one
-            String replaced = applyFormats(text);
-            for (Pattern p : new Pattern[]{tabPatternLegacy, tabPattern}) {
-                Matcher m = p.matcher(replaced);
-                while (m.find()) {
-                    String hexCode = m.group();
-                    String fixed = "&x&" + hexCode.charAt(1) + "&" + hexCode.charAt(2) + "&" + hexCode.charAt(3) + "&" + hexCode.charAt(4) + "&" + hexCode.charAt(5) + "&" + hexCode.charAt(6);
-                    replaced = replaced.replace(hexCode, EnumChatFormat.color(fixed));
-                }
-            }
-            return replaced;
+            return applyFormats(text);
         } else {
             return convertRGBtoLegacy(text);
         }
