@@ -26,6 +26,7 @@ public class RGBUtils {
      */
     public RGBUtils() {
         formats = new RGBFormatter[] {
+                new NormalFormat(),
                 new BukkitFormat(),
                 new CMIFormat(),
                 new UnnamedFormat1(),
@@ -74,6 +75,7 @@ public class RGBUtils {
         for (RGBFormatter formatter : formats) {
             replaced = formatter.reformat(replaced);
         }
+
         return replaced;
     }
 
@@ -88,6 +90,7 @@ public class RGBUtils {
      */
     public String ApplyFormats(String text, boolean rgbClient) {
         if (text == null) return null;
+        if (!text.contains("#")) return text;
         if (rgbClient) {
             return applyFormats(text);
         } else {

@@ -28,7 +28,8 @@ public class ChatUtil {
 		
 		return effect.replace(" ", "");
 	}
-	
+
+	//TODO if complaints of RGB issues for unsupported clients get reported then check receiver version (for players)
 	public static String translateColors(String text) {
 		if (text == null || text.isEmpty())
 			return text;
