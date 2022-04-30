@@ -1,5 +1,7 @@
 package me.MrGraycat.eGlow.Config.Playerdata;
 
+import com.mysql.cj.exceptions.CJCommunicationsException;
+import com.mysql.jdbc.CommunicationsException;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.ConfigType;
@@ -85,24 +87,24 @@ public class EGlowPlayerdataManager {
 	 * Save the data for the given player
 	 *
 	 */
-	public static boolean savePlayerdata(String uuid, String lastGlowData, boolean glowOnJoin, boolean activeOnQuit, String glowVisibility, String glowDisableReason) {
+	public static void savePlayerdata(String uuid, String lastGlowData, boolean glowOnJoin, boolean activeOnQuit, String glowVisibility, String glowDisableReason) {
 		switch((EGlowMainConfig.useMySQL()) ? ConfigType.MYSQL : ConfigType.SQLITE) {
 		case SQLITE:
 			if (sqlite == null)
-				return false;
+				return;
 			
-			return sqlite.savePlayerdata(uuid, lastGlowData, glowOnJoin, activeOnQuit, glowVisibility, glowDisableReason);
+			sqlite.savePlayerdata(uuid, lastGlowData, glowOnJoin, activeOnQuit, glowVisibility, glowDisableReason);
 		case MYSQL:
 			if (mysql == null)
-				return false;
+				return;
 
 			if (mysql instanceof EGlowPlayerdataMySQL8) {
-				return ((EGlowPlayerdataMySQL8) mysql).savePlayerdata(uuid, lastGlowData, glowOnJoin, activeOnQuit, glowVisibility, glowDisableReason);
+				((EGlowPlayerdataMySQL8) mysql).savePlayerdata(uuid, lastGlowData, glowOnJoin, activeOnQuit, glowVisibility, glowDisableReason);
 			} else {
-				return ((EGlowPlayerdataMySQL) mysql).savePlayerdata(uuid, lastGlowData, glowOnJoin, activeOnQuit, glowVisibility, glowDisableReason);
+				((EGlowPlayerdataMySQL) mysql).savePlayerdata(uuid, lastGlowData, glowOnJoin, activeOnQuit, glowVisibility, glowDisableReason);
 			}
 		}
-		return false;
+		return;
 	}
 	
 	/**

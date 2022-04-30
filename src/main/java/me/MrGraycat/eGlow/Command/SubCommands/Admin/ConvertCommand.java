@@ -85,11 +85,10 @@ public class ConvertCommand extends SubCommand {
 									}
 
 									playerConfig.load(new File(getInstance().getDataFolder() + File.separator + "/PlayerData/" + File.separator + files[counter].getName()));
-									
-									if (EGlowPlayerdataManager.savePlayerdata(files[counter].getName().replace(".yml", ""), playerConfig.getString("lastGlowData"), playerConfig.getBoolean("glowOnJoin"), playerConfig.getBoolean("activeOnQuit"), playerConfig.getString("glowVisibility"), playerConfig.getString("glowDisableReason"))) {
-										File file = files[counter];
-										file.delete();
-									}
+
+									EGlowPlayerdataManager.savePlayerdata(files[counter].getName().replace(".yml", ""), playerConfig.getString("lastGlowData"), playerConfig.getBoolean("glowOnJoin"), playerConfig.getBoolean("activeOnQuit"), playerConfig.getString("glowVisibility"), playerConfig.getString("glowDisableReason"));
+									File file = files[counter];
+									file.delete();
 									
 									counter++;
 								} catch (IOException | InvalidConfigurationException e) {

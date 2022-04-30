@@ -29,7 +29,7 @@ public class EGlowPlayerdataSQLite {
 	public EGlowPlayerdataSQLite() {
 		if (setupSQLiteConnection()) {
 			ChatUtil.sendToConsole("&aSuccessfully loaded Playerdata database.", true);
-			startSavingQueueHandler(); //TODO NEW STUFF HERE
+			startSavingQueueHandler();
 		} else {
 			ChatUtil.sendToConsole("&cFailed to load Playerdata database!.", true);
 		}
@@ -104,7 +104,6 @@ public class EGlowPlayerdataSQLite {
 	 * @param ePlayer player to save the data for
 	 */
 	public void savePlayerdata(IEGlowPlayer ePlayer) {
-		//TODO NEW STUFF HERE
 		String values = ePlayer.getLastGlow() + "," + ePlayer.getGlowOnJoin() + "," + ePlayer.getActiveOnQuit() + "," + ePlayer.getGlowVisibility().name() + "," + ePlayer.getGlowDisableReason().name();
 		
 		if (SavingQueue.containsKey(ePlayer.getUUID().toString())) {
@@ -113,6 +112,13 @@ public class EGlowPlayerdataSQLite {
 			SavingQueue.put(ePlayer.getUUID().toString(), values);
 		}
 	}
+
+	public void savePlayerdata(String uuid, String lastGlowData, boolean glowOnJoin, boolean activeOnQuit, String glowVisibility, String glowDisableReason) {
+		String values = lastGlowData + "," + glowOnJoin + "," + activeOnQuit + "," + glowVisibility + "," + glowDisableReason;
+
+		SavingQueue.put(uuid, values);
+	}
+
 	private boolean isActive = false;
 	
 	private void startSavingQueueHandler() {
@@ -166,39 +172,6 @@ public class EGlowPlayerdataSQLite {
 		}
 		
 		isActive = false;
-	}
-	
-	public boolean savePlayerdata(String uuid, String lastGlowData, boolean glowOnJoin, boolean activeOnQuit, String glowVisibility, String glowDisableReason) {
-		//TODO new method convertion 
-		/*String values = lastGlowData + "," + glowOnJoin + "," + activeOnQuit + "," + glowVisibility + "," + glowDisableReason;
-		
-		SavingQueue.put(uuid, values);*/
-		
-		Connection con = null;
-		PreparedStatement ps = null;
-		String statement;
-		
-		statement = "INSERT OR REPLACE INTO eglow (UUID, glowOnJoin, activeOnQuit, lastGlowData, glowVisibility, glowDisableReason)" + " VALUES(?,?,?,?,?,?)";
-		
-		try {
-			con = sqlite.getConnection();
-			ps = con.prepareStatement(statement);
-			
-			ps.setString(1, uuid);
-			ps.setBoolean(2, glowOnJoin);
-			ps.setBoolean(3, activeOnQuit);
-			ps.setString(4, lastGlowData);
-			ps.setString(5, glowVisibility);
-			ps.setString(6, glowDisableReason);
-			
-			ps.executeUpdate();
-			return true;
-		} catch (SQLException e) {
-			ChatUtil.reportError(e);
-			return false;
-		} finally {
-			closeMySQLConnection(con, ps, null);
-		}
 	}
 	
 	private boolean setupSQLiteConnection() {
