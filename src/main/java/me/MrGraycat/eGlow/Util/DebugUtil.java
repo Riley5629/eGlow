@@ -1,5 +1,6 @@
 package me.MrGraycat.eGlow.Util;
 
+import me.MrGraycat.eGlow.Util.Packets.NMSHook;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
@@ -8,7 +9,6 @@ import org.bukkit.plugin.PluginManager;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
-import org.spigotmc.SpigotConfig;
 
 public class DebugUtil {
 	private static final String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
@@ -32,6 +32,7 @@ public class DebugUtil {
 		
 		ChatUtil.sendPlainMsg(sender, "&f&m                                                                               ", false);
 		ChatUtil.sendPlainMsg(sender, "&fServer version: &e" + version, false);
+		ChatUtil.sendPlainMsg(sender, "&fDebug: &e" + NMSHook.isBungee(), false);
 		ChatUtil.sendPlainMsg(sender, "Plugins:", false);
 		for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
 			String pluginName = plugin.getDescription().getName();
@@ -69,7 +70,7 @@ public class DebugUtil {
 	}
 
 	public static boolean onBungee() {
-		return !Bukkit.getServer().getOnlineMode() && SpigotConfig.bungee;
+		return !Bukkit.getServer().getOnlineMode() && NMSHook.isBungee();
 	}
 	
 	public static boolean pluginCheck(String plugin) {

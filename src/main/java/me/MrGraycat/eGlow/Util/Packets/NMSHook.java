@@ -21,6 +21,15 @@ public class NMSHook {
 		}
 	}
 
+	public static boolean isBungee() {
+		try {
+			return (Boolean) (nms.bungee.get(nms.SpigotConfig));
+		} catch (IllegalAccessException e) {
+			ChatUtil.reportError(e);
+			return false;
+		}
+	}
+
 	public static Object getChannel(Player p) {
 		if (nms.CHANNEL == null) return null;
 		try {
@@ -38,6 +47,8 @@ public class NMSHook {
 	}
 	
 	public static void sendPacket(IEGlowPlayer ep, Object nmsPacket) throws Exception {
+		if (nmsPacket == null)
+			return;
 		nms.sendPacket.invoke(nms.PLAYER_CONNECTION.get(nms.getHandle.invoke(ep.getPlayer())), nmsPacket);
 	}
 	

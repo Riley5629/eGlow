@@ -32,6 +32,10 @@ public class NMSStorage {
 	public Class<?> ChatSerializer;
 	public Method ChatSerializer_DESERIALIZE;
 
+	//Spigot
+	public Class<?> SpigotConfig;
+	public Field bungee;
+
 	//PacketPlayOutChat
 	public Class<?> ChatMessageType;
 	public Constructor<?> newPacketPlayOutChat;
@@ -108,7 +112,10 @@ public class NMSStorage {
 			this.IChatBaseComponent = getNMSClass("net.minecraft.network.chat.IChatBaseComponent", "IChatBaseComponent");
 			this.ChatSerializer = getNMSClass("net.minecraft.network.chat.IChatBaseComponent$ChatSerializer", "IChatBaseComponent$ChatSerializer", "ChatSerializer");
 			this.ChatSerializer_DESERIALIZE = getMethod(this.ChatSerializer, new String[] { "a", "func_150699_a" }, String.class);
-			
+
+			this.SpigotConfig = getNormalClass("org.spigotmc.SpigotConfig");
+			this.bungee = getField(this.SpigotConfig, "bungee");
+
 			this.DataWatcher = getNMSClass("net.minecraft.network.syncher.DataWatcher", "DataWatcher");
 		    this.DataWatcherItem = getNMSClass("net.minecraft.network.syncher.DataWatcher$Item", "DataWatcher$Item", "DataWatcher$WatchableObject", "WatchableObject");
 		    this.DataWatcherObject = getNMSClass("net.minecraft.network.syncher.DataWatcherObject", "DataWatcherObject" );
@@ -149,7 +156,7 @@ public class NMSStorage {
 		    
 		    this.PacketPlayOutScoreboardTeam = getNMSClass("net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam", "PacketPlayOutScoreboardTeam", "Packet209SetScoreboardTeam");
 			this.PacketPlayOutScoreboardTeam_NAME = getFields(this.PacketPlayOutScoreboardTeam, String.class).get(0);
-			this.PacketPlayOutScoreboardTeam_PLAYERS = getFields(this.PacketPlayOutScoreboardTeam, Collection.class).get(0); 
+			this.PacketPlayOutScoreboardTeam_PLAYERS = getFields(this.PacketPlayOutScoreboardTeam, Collection.class).get(0);
 		    
 		   if (this.minorVersion >= 17) {
 			   this.PacketPlayOutScoreboardTeam_a = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam$a");
@@ -187,7 +194,15 @@ public class NMSStorage {
 		}
 		throw new ClassNotFoundException("No class found with possible names " + Arrays.toString(names));
 	}
-	
+
+	private Class<?> getNormalClass(String name) throws  ClassNotFoundException {
+		try {
+			return Class.forName(name);
+		} catch (NullPointerException e) {
+			throw new ClassNotFoundException(name);
+		}
+	}
+
 	private Class<?> getNMSClass(String name) throws ClassNotFoundException {
 	    if (this.minorVersion >= 17)
 	      return Class.forName(name); 
@@ -207,6 +222,16 @@ public class NMSStorage {
 			}
 		}
 		throw new NoSuchMethodException("No method found with possible names " + Arrays.toString(names) + " in class " + clazz.getName());
+	}
+
+	private Field getField(Class<?> clazz, String name) {
+		if (clazz == null) return null;
+		for (Field field : clazz.getDeclaredFields()) {
+			field.setAccessible(true);
+			if (field.getName().equalsIgnoreCase(name))
+				return field;
+		}
+		return null;
 	}
 
 	private List<Field> getFields(Class<?> clazz, Class<?> type){
