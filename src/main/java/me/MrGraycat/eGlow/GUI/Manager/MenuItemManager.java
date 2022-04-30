@@ -98,8 +98,9 @@ public class MenuItemManager extends MenuManager {
 		ArrayList<String> lore = new ArrayList<>();
 		
 		meta.setDisplayName(ChatUtil.translateColors(name));
-		//TODO readd compatibility for models
-		//meta.setCustomModelData(model);
+
+		if (model != 0)
+			meta.setCustomModelData(model);
 		
 		for (String text : lores) {
 			if (!text.isEmpty())
