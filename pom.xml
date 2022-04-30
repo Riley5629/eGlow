@@ -5,7 +5,7 @@
 
     <groupId>me.MrGraycat</groupId>
     <artifactId>eGlow</artifactId>
-    <version>3.1.4</version>
+    <version>3.1.5</version>
 
     <properties>
         <java.version>1.8</java.version>
@@ -333,50 +333,50 @@
          <version>3.1.0</version>
          <scope>provided</scope>
          <exclusions>
-          <exclusion>
-           <groupId>io.netty</groupId>
-           <artifactId>netty-all</artifactId>
-          </exclusion>
-          <exclusion>
-           <groupId>com.googlecode.json-simple</groupId>
-           <artifactId>json-simple</artifactId>
-          </exclusion>
-          <exclusion>
-           <groupId>com.github.NEZNAMY.TAB</groupId>
-           <artifactId>velocity-1.1.0</artifactId>
-          </exclusion>
-          <exclusion>
-           <groupId>com.github.NEZNAMY.TAB</groupId>
-           <artifactId>bungeecord</artifactId>
-          </exclusion>
-          <exclusion>
-             <groupId>com.github.NEZNAMY.TAB</groupId>
-             <artifactId>tab-velocity</artifactId>
-          </exclusion>
-          <exclusion>
-           <groupId>org.bstats</groupId>
-           <artifactId>bstats-bungeecord</artifactId>
-          </exclusion>
-          <exclusion>
-           <groupId>org.bstats</groupId>
-           <artifactId>bstats-base</artifactId>
-          </exclusion>
-          <exclusion>
-              <groupId>net.luckperms</groupId>
-              <artifactId>api</artifactId>
-          </exclusion>
-          <exclusion>
-              <groupId>com.github.NEZNAMY.TAB</groupId>
-              <artifactId>tab-bungeecord</artifactId>
-          </exclusion>
-          <exclusion>
-             <groupId>me.neznamy</groupId>
-             <artifactId>yamlassist</artifactId>
-          </exclusion>
-          <exclusion>
-             <groupId>org.geysermc.floodgate</groupId>
-             <artifactId>api</artifactId>
-          </exclusion>
+             <exclusion>
+                 <groupId>io.netty</groupId>
+                 <artifactId>netty-all</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>com.googlecode.json-simple</groupId>
+                 <artifactId>json-simple</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>com.github.NEZNAMY.TAB</groupId>
+                 <artifactId>velocity-1.1.0</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>com.github.NEZNAMY.TAB</groupId>
+                 <artifactId>bungeecord</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>com.github.NEZNAMY.TAB</groupId>
+                 <artifactId>tab-velocity</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>org.bstats</groupId>
+                 <artifactId>bstats-bungeecord</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>org.bstats</groupId>
+                 <artifactId>bstats-base</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>net.luckperms</groupId>
+                 <artifactId>api</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>com.github.NEZNAMY.TAB</groupId>
+                 <artifactId>tab-bungeecord</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>me.neznamy</groupId>
+                 <artifactId>yamlassist</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>org.geysermc.floodgate</groupId>
+                 <artifactId>api</artifactId>
+             </exclusion>
          </exclusions>
         </dependency>
 
