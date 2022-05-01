@@ -26,7 +26,6 @@ public class RGBUtils {
      */
     public RGBUtils() {
         formats = new RGBFormatter[] {
-                new NormalFormat(),
                 new BukkitFormat(),
                 new CMIFormat(),
                 new UnnamedFormat1(),
