@@ -7,6 +7,9 @@ import me.MrGraycat.eGlow.Util.Packets.Datawatcher.DataWatcher;
 import me.MrGraycat.eGlow.Util.Packets.Datawatcher.DataWatcherObject;
 import me.MrGraycat.eGlow.Util.Packets.Datawatcher.DataWatcherRegistry;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import org.bukkit.inventory.meta.SkullMeta;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class NMSHook {
 	public static DataWatcherRegistry registry;
@@ -27,6 +30,14 @@ public class NMSHook {
 		} catch (IllegalAccessException e) {
 			ChatUtil.reportError(e);
 			return false;
+		}
+	}
+
+	public static void setOwningPlayer(SkullMeta skullMeta, String owner) {
+		try {
+			nms.setOwningPlayer.invoke(skullMeta, owner);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

@@ -34,7 +34,10 @@ public class NMSStorage {
 
 	//Spigot
 	public Class<?> SpigotConfig;
+	public Class<?> skullMeta;
+	public Method setOwningPlayer;
 	public Field bungee;
+
 
 	//PacketPlayOutChat
 	public Class<?> ChatMessageType;
@@ -114,6 +117,12 @@ public class NMSStorage {
 			this.ChatSerializer_DESERIALIZE = getMethod(this.ChatSerializer, new String[] { "a", "func_150699_a" }, String.class);
 
 			this.SpigotConfig = getNormalClass("org.spigotmc.SpigotConfig");
+
+			if (this.minorVersion <= 12) {
+				this.skullMeta = getNormalClass("org.bukkit.inventory.meta.SkullMeta");
+				this.setOwningPlayer = getMethod(this.skullMeta, new String[] {"setOwner"}, String.class);
+			}
+
 			this.bungee = getField(this.SpigotConfig, "bungee");
 
 			this.DataWatcher = getNMSClass("net.minecraft.network.syncher.DataWatcher", "DataWatcher");

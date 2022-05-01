@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
+import me.MrGraycat.eGlow.Util.Packets.NMSHook;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -129,9 +130,7 @@ public class MenuItemManager extends MenuManager {
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
 			
 			if (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) {
-				//TODO this method will be removed at one point find a replacement for it
-				//That or trick maven again with the dependencies
-				meta.setOwner(player.getDisplayName());
+				NMSHook.setOwningPlayer(meta, player.getDisplayName());
 			} else {
 				meta.setOwningPlayer(player.getPlayer());
 			}
