@@ -19,7 +19,7 @@ public class EGlowPlayerdataMySQL {
 	MysqlDataSource mysql;
 
 	/**
-	 * Initialise externam playerdata using MySQL
+	 * Initialise external playerdata using MySQL
 	 */
 	public EGlowPlayerdataMySQL() {
 		setupMySQLConnection();
@@ -39,7 +39,7 @@ public class EGlowPlayerdataMySQL {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet res = null;
-		String statement = "";
+		String statement;
 		
 		statement = "SELECT * FROM eglow WHERE UUID='" + ePlayer.getUUID().toString() + "'";
 		
@@ -88,7 +88,7 @@ public class EGlowPlayerdataMySQL {
 	public void savePlayerdata(IEGlowPlayer ePlayer) {
 		Connection con = null;
 		PreparedStatement ps = null;
-		String statement = "";
+		String statement;
 		
 		boolean glowOnJoin;
 		boolean activeOnQuit;
@@ -129,10 +129,10 @@ public class EGlowPlayerdataMySQL {
 		}
 	}
 	
-	public boolean savePlayerdata(String uuid, String lastGlowData, boolean glowOnJoin, boolean activeOnQuit, String glowVisibility, String glowDisableReason) {
+	public void savePlayerdata(String uuid, String lastGlowData, boolean glowOnJoin, boolean activeOnQuit, String glowVisibility, String glowDisableReason) {
 		Connection con = null;
 		PreparedStatement ps = null;
-		String statement = "";
+		String statement;
 		
 		statement = "INSERT INTO eglow (UUID, glowOnJoin, activeOnQuit, lastGlowData, glowVisibility, glowDisableReason)" + " VALUES(?,?,?,?,?,?) ON DUPLICATE KEY UPDATE UUID=?, glowonJoin=?, activeOnQuit=?, lastGlowData=?, glowVisibility= ?, glowDisableReason=?";
 		
@@ -154,16 +154,14 @@ public class EGlowPlayerdataMySQL {
 			ps.setString(12, glowDisableReason);
 			
 			ps.executeUpdate();
-			return true;
 		} catch (SQLException e) {
 			ChatUtil.reportError(e);
-			return false;
 		} finally {
 			closeMySQLConnection(con, ps, null);
 		}
 	}
 
-	private boolean setupMySQLConnection() {
+	private void setupMySQLConnection() {
 		mysql = new MysqlDataSource();
 		
 		mysql.setServerName(EGlowMainConfig.getMySQLHost());
@@ -172,7 +170,7 @@ public class EGlowPlayerdataMySQL {
 		mysql.setUser(EGlowMainConfig.getMySQLUsername());
 		mysql.setPassword(EGlowMainConfig.getMySQLPassword());
 		
-		return testMySQLConnection();
+		testMySQLConnection();
 	}
 	
 	private boolean testMySQLConnection() {
@@ -189,7 +187,7 @@ public class EGlowPlayerdataMySQL {
 		} catch(SQLException e) {
 			ChatUtil.reportError(e);
 		} finally {
-			closeMySQLConnection(con, ps, res);
+			closeMySQLConnection(con, ps, null);
 		}
 		
 		mysql.setDatabaseName(((!EGlowMainConfig.getMySQLDBName().isEmpty()) ? EGlowMainConfig.getMySQLDBName() : "eglow") + ((!EGlowMainConfig.getMySQLUseSSL()) ? "?useSSL=false" : ""));
@@ -205,7 +203,7 @@ public class EGlowPlayerdataMySQL {
 				statement = "ALTER TABLE eglow DROP lastType, ADD lastGlowData VARCHAR(255), ADD glowVisibility VARCHAR(255), ADD glowDisableReason VARCHAR(255)";
 			}
 			ps = con.prepareStatement(statement);
-			try {ps.executeUpdate();} catch(Exception e) {}
+			try {ps.executeUpdate();} catch(Exception e) {/*Ignored*/}
 			return true;
 		} catch(SQLException e) {
 			ChatUtil.reportError(e);
@@ -223,6 +221,6 @@ public class EGlowPlayerdataMySQL {
 				ps.close();
 			if (res != null)
 				res.close();
-		} catch (SQLException e) {}
+		} catch (SQLException e) {/*Ignored*/}
 	}
 }

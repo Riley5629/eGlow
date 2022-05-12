@@ -8,7 +8,6 @@ import me.MrGraycat.eGlow.Util.Packets.Chat.rgb.gradient.CommonGradient;
 import me.MrGraycat.eGlow.Util.Packets.Chat.rgb.gradient.GradientPattern;
 import me.MrGraycat.eGlow.Util.Packets.Chat.rgb.gradient.KyoriGradient;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RGBUtils {
@@ -76,25 +75,6 @@ public class RGBUtils {
         }
 
         return replaced;
-    }
-
-    /**
-     * Converts to RGB for modern clients (1.16+), for legacy clients it will use the closest color.
-     *
-     * @param   text
-     *          text to convert
-     * @param   rgbClient
-     *          whether client accepts RGB or not
-     * @return  converted text
-     */
-    public String ApplyFormats(String text, boolean rgbClient) {
-        if (text == null) return null;
-        if (!text.contains("#")) return text;
-        if (rgbClient) {
-            return applyFormats(text);
-        } else {
-            return convertRGBtoLegacy(text);
-        }
     }
 
     /**

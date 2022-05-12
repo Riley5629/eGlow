@@ -1,6 +1,5 @@
 package me.MrGraycat.eGlow.Command.SubCommands;
 
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
 import me.MrGraycat.eGlow.Command.SubCommand;

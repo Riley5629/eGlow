@@ -9,10 +9,10 @@ import java.util.UUID;
 
 public class PacketPlayOutChat extends PacketPlayOut {
     /** Message to be sent */
-    private IChatBaseComponent message = null;
+    private final IChatBaseComponent message;
 
     /** Message position */
-    private ChatMessageType type = null;
+    private final ChatMessageType type;
 
     /**
      * Constructs new instance with given parameters
@@ -45,6 +45,7 @@ public class PacketPlayOutChat extends PacketPlayOut {
         return type;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Object toNMS(ProtocolVersion clientVersion) throws Exception {
         NMSStorage nms = NMSHook.nms;

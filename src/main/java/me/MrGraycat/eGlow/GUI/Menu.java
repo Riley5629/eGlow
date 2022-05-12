@@ -128,7 +128,7 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 	
 	/**
 	 * Code to update the navigationbar for the main menu
-	 * @param p to update the navgationbar for
+	 * @param p to update the navigationbar for
 	 */
 	public void UpdateMainNavigationBar(IEGlowPlayer p) {
 		if (EGlowMainConfig.OptionAddGlassToInv()) {

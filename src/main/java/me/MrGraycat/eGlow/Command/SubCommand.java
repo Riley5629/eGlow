@@ -31,17 +31,13 @@ public abstract class SubCommand {
 	 * @param prefix true: prefix + text, false: text
 	 */
 	public void sendSyntax(CommandSender sender, String text, boolean prefix) {
-		if (prefix) {
-			ChatUtil.sendPlainMsg(sender, Message.INCORRECT_USAGE.get(text), true);
-		} else {
-			ChatUtil.sendPlainMsg(sender, Message.INCORRECT_USAGE.get(text), false);
-		}	
+		ChatUtil.sendPlainMsg(sender, Message.INCORRECT_USAGE.get(text), prefix);
 	}
 	
 	/**
-	 * Get the IEGlowEntity instance of the player/npc being targetted
+	 * Get the IEGlowEntity instance of the player/npc being targeted
 	 * @param sender console/player to send message to if something should be incorrect
-	 * @param args command args to retreive the required info
+	 * @param args command args to retrieve the required info
 	 * @return IEGlowEntity instance of the targeted player/npc
 	 */
 	public List<IEGlowPlayer> getTarget(CommandSender sender, String[] args) {

@@ -16,7 +16,7 @@ import me.libraryaddict.disguise.events.DisguiseEvent;
 import me.libraryaddict.disguise.events.UndisguiseEvent;
 
 /*
- * Making sure to disable the player glow when disguised the prevent errors.
+ * Making sure to disable the player glow when disguised to prevent errors.
  * Plugin: LibsDisguise
  * Versions: 1.12-1.16
  */
@@ -30,7 +30,7 @@ public class LibDisguiseAddon implements Listener {
 
 	
 	/**
-	 * Check to see if player is diguised
+	 * Check to see if player is disguised
 	 * @param player Player to check
 	 * @return true is disguised, false if not
 	 */

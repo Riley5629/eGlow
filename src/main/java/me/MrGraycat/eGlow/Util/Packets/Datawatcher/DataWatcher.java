@@ -11,7 +11,7 @@ import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
 public class DataWatcher {
 
 	//datawatcher data
-	private final Map<Integer, DataWatcherItem> dataValues = new HashMap<Integer, DataWatcherItem>();
+	private final Map<Integer, DataWatcherItem> dataValues = new HashMap<>();
 
 	/**
 	 * Sets value into data values
@@ -56,21 +56,13 @@ public class DataWatcher {
 		for (DataWatcherItem item : this.dataValues.values()) {
 			Object position;
 			if (nms.minorVersion >= 9) {
-				position = nms.newDataWatcherObject.newInstance(new Object[] { Integer.valueOf(item.type.position), item.type.classType });
+				position = nms.newDataWatcherObject.newInstance(new Object[] {item.type.position, item.type.classType });
 			} else {
-				position = Integer.valueOf(item.type.position);
+				position = item.type.position;
 			}
 			nms.DataWatcher_REGISTER.invoke(nmsWatcher, new Object[] { position, item.value });
 		}
 		return nmsWatcher;
-		/*for (DataWatcherItem item : dataValues.values()) {
-			if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 9) {
-				nms.DataWatcher_REGISTER.invoke(nmsWatcher, nms.newDataWatcherObject.newInstance(item.type.position, item.type.classType), item.value);
-			} else {
-				nms.DataWatcher_REGISTER.invoke(nmsWatcher, item.type.position, item.value);
-			}
-		}
-		return nmsWatcher;*/
 	}
 	
 	/**

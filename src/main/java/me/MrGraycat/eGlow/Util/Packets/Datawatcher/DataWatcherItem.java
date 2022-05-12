@@ -30,17 +30,9 @@ public class DataWatcherItem {
 		NMSStorage nms = NMSHook.nms;
 		if (nms.minorVersion >= 9) {
 			Object nmsObject = nms.DataWatcherItem_TYPE.get(nmsItem);
-			//DataWatcherObject object = new DataWatcherObject((int) DataWatcherItem.getValue(nmsObject, "a"), DataWatcherItem.getValue(nmsObject, "b"));
 			return new DataWatcherItem(new DataWatcherObject(nms.DataWatcherObject_SLOT.getInt(nmsObject), nms.DataWatcherObject_SERIALIZER.get(nmsObject)), nms.DataWatcherItem_VALUE.get(nmsItem));
 		} else {
 			return new DataWatcherItem(new DataWatcherObject(nms.DataWatcherItem_TYPE.getInt(nmsItem), null), nms.DataWatcherItem_VALUE.get(nmsItem));
-			//return new DataWatcherItem(new DataWatcherObject((int) getValue(nmsItem, "b"), getValue(nmsItem, "a")), getValue(nmsItem, "c"));
 		}
 	}
-
-	/*public static Object getValue(Object obj, String field) throws Exception {
-		Field f = obj.getClass().getDeclaredField(field);
-		f.setAccessible(true);
-		return f.get(obj);
-	}*/
 }

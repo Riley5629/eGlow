@@ -1,6 +1,7 @@
 package me.MrGraycat.eGlow.Util.Packets.Chat;
 
 import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -90,6 +91,7 @@ public class DeserializedChatComponent extends IChatBaseComponent {
     /**
      * Performs a full deserialization process on this component.
      */
+    @SuppressWarnings("unchecked")
     void deserialize() {
         deserialized = true;
         if (json.startsWith("\"") && json.endsWith("\"") && json.length() > 1) {
@@ -101,12 +103,10 @@ public class DeserializedChatComponent extends IChatBaseComponent {
         try {
             jsonObject = (JSONObject) new JSONParser().parse(json);
         } catch (ParseException e) {
-            //TabAPI.getInstance().logError("Failed to deserialize json component " + json, e);
+            ChatUtil.reportError(e);
             return;
         }
- /*       if (jsonObject.containsKey("type")) {
-            return new ChatComponentEntity((String) jsonObject.get("type"), UUID.fromString((String) jsonObject.get("id")), IChatBaseComponent.deserialize(jsonObject.get("name").toString()).toFlatText());
-        }*/
+
         setText((String) jsonObject.get("text"));
         getModifier().setBold(getBoolean(jsonObject, "bold"));
         getModifier().setItalic(getBoolean(jsonObject, "italic"));
@@ -134,6 +134,7 @@ public class DeserializedChatComponent extends IChatBaseComponent {
      *          name of key
      * @return  value from json object or null if not present
      */
+    @SuppressWarnings("unchecked")
     private static Boolean getBoolean(JSONObject jsonObject, String key) {
         Preconditions.checkNotNull(jsonObject, "json object");
         Preconditions.checkNotNull(key, "key");

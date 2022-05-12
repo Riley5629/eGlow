@@ -15,7 +15,7 @@ import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 /*
- * Making sure to disable the player glow when disguised the prevent errors.
+ * Making sure to disable the player glow when disguised to prevent errors.
  * Plugin: iDisguise
  * Versions: 1.9-1.13 (Currently discontinued)
  */

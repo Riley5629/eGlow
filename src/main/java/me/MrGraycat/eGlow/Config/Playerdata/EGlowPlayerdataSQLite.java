@@ -157,14 +157,11 @@ public class EGlowPlayerdataSQLite {
 					ps.executeUpdate();
 					SavingQueue.remove(playerUUID);
 				} catch (Exception e) {
-					if (e.getMessage().startsWith("[SQLITE_BUSY]")) {
-						isActive = false;
-						return;
-					} else {
+					if (!e.getMessage().startsWith("[SQLITE_BUSY]")) {
 						e.printStackTrace();
-						isActive = false;
-						return;
 					}
+					isActive = false;
+					return;
 				} finally {
 					closeMySQLConnection(con, ps, null);
 				}
@@ -207,7 +204,7 @@ public class EGlowPlayerdataSQLite {
 				return true;
 			
 			ps = con.prepareStatement(statement);
-			try {ps.executeUpdate();} catch(Exception e) {}
+			try {ps.executeUpdate();} catch(Exception e) {/*Ignored*/}
 			return true;
 		} catch(SQLException e) {
 			ChatUtil.reportError(e);
@@ -225,6 +222,6 @@ public class EGlowPlayerdataSQLite {
 				ps.close();
 			if (res != null)
 				res.close();
-		} catch (SQLException e) {}
+		} catch (SQLException e) {/*Ignored*/}
 	}
 }

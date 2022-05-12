@@ -15,7 +15,7 @@ import me.MrGraycat.eGlow.Util.Packets.OutGoing.PacketPlayOutEntityMetadata;
 
 public class PipelineInjector{
 	private static final String DECODER_NAME = "eGlowReader";
-	public static HashMap<Integer, IEGlowPlayer> glowingEntities = new HashMap<Integer, IEGlowPlayer>();
+	public static HashMap<Integer, IEGlowPlayer> glowingEntities = new HashMap<>();
 	
 	public static void inject(IEGlowPlayer eglowPlayer) {		
 		Channel channel = (Channel) NMSHook.getChannel(eglowPlayer.getPlayer());
@@ -30,7 +30,6 @@ public class PipelineInjector{
 			channel.pipeline().addBefore("packet_handler", DECODER_NAME, new ChannelDuplexHandler() {
 				public void channelRead(ChannelHandlerContext context, Object packet) throws Exception {
 					super.channelRead(context, packet);
-					return;
 				}
 				
 				public void write(ChannelHandlerContext context, Object packet, ChannelPromise channelPromise) throws Exception {		
@@ -81,7 +80,6 @@ public class PipelineInjector{
 					}
 
 					super.write(context, packet, channelPromise);
-					return;
 				}
 			});
 		} catch (NoSuchElementException e) {
@@ -106,7 +104,7 @@ public class PipelineInjector{
 	
 	@SuppressWarnings("unchecked")
 	private static void modifyPlayers(Object packetPlayOutScoreboardTeam) throws Exception {
-		if (!blockPackets || !EGlowMainConfig.OptionFeaturePacketBlocker())
+		if (!blockPackets() || !EGlowMainConfig.OptionFeaturePacketBlocker())
 			return;
 		
 		String teamName = NMSHook.nms.PacketPlayOutScoreboardTeam_NAME.get(packetPlayOutScoreboardTeam).toString();
@@ -137,7 +135,7 @@ public class PipelineInjector{
 		return blockPackets;
 	}
 
-	public static void setBlockPackets(boolean blockPackets) {
-		blockPackets = blockPackets;
+	public static void setBlockPackets(boolean blockPacketsStatus) {
+		blockPackets = blockPacketsStatus;
 	}
 }

@@ -1,7 +1,5 @@
 package me.MrGraycat.eGlow.Config.Playerdata;
 
-import com.mysql.cj.exceptions.CJCommunicationsException;
-import com.mysql.jdbc.CommunicationsException;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.ConfigType;
@@ -104,7 +102,6 @@ public class EGlowPlayerdataManager {
 				((EGlowPlayerdataMySQL) mysql).savePlayerdata(uuid, lastGlowData, glowOnJoin, activeOnQuit, glowVisibility, glowDisableReason);
 			}
 		}
-		return;
 	}
 	
 	/**

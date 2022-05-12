@@ -67,7 +67,10 @@ public class ConvertCommand extends SubCommand {
 						ChatUtil.sendMsg(sender, "There's nothing left to convert!", true);
 						return;
 					}
-					
+
+					if (files == null)
+						return;
+
 					if (delay > 0 && delay <= 10) {
 						ChatUtil.sendPlainMsg(sender, "&fStarting to convert &e" + files.length + "&fentries at a rate of &e" + delay + "s&f/entry", true);
 						keepActive = true;

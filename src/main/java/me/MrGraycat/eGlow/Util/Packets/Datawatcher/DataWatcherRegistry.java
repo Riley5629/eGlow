@@ -19,9 +19,8 @@ public class DataWatcherRegistry {
 
 		/**
 		 * Initializes required NMS classes and fields
-		 * @throws Exception - if something fails
 		 */
-		public DataWatcherRegistry(NMSStorage nms) throws Exception {
+		public DataWatcherRegistry(NMSStorage nms) {
 			if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 9) {
 				Map<String, Object> fields = getStaticFields(nms.DataWatcherRegistry);
 				Byte = fields.get("a");

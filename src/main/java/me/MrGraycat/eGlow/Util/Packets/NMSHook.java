@@ -9,8 +9,6 @@ import me.MrGraycat.eGlow.Util.Packets.Datawatcher.DataWatcherRegistry;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class NMSHook {
 	public static DataWatcherRegistry registry;
 	public static NMSStorage nms;

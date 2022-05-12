@@ -29,7 +29,7 @@ public class EnumUtil {
 	/*
 	 * Glow disable reasons:
 	 * BLOCKEDWORLD: Glow is blocked in the players world
-	 * DISGUISER: Glow is blocked while in disguise
+	 * DISGUISED: Glow is blocked while in disguise
 	 * INVISIBLE: Glow is blocked (if configured) while being invisible
 	 */
 	public enum GlowDisableReason {

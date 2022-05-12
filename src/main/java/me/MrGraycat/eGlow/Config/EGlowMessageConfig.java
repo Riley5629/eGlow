@@ -181,15 +181,14 @@ public class EGlowMessageConfig {
 			case GUI_COLOR:
 				if (config.contains(msg.getConfigPath() + value))
 					return getColorValue(msg.getConfigPath() + value);
-				return get(Message.COLOR, value);
-			case NEW_GLOW:
-				return getColorValue(msg.getConfigPath(), "%glowname%", value);
-			case GLOWING_STATE_ON_JOIN:
-				return getColorValue(msg.getConfigPath(), "%glowname%", value);
+				return getColorValue(Message.COLOR.getConfigPath() + value);
 			case VISIBILITY_CHANGE:
 				return (value.toUpperCase().equals(EnumUtil.GlowVisibility.UNSUPPORTEDCLIENT.toString())) ? getColorValue(msg.getConfigPath(), "%value%", Message.VISIBILITY_UNSUPPORTED.get()) : getColorValue(msg.getConfigPath(), "%value%", Message.valueOf("VISIBILITY_" + value).get());
 			case INCORRECT_USAGE:
 				return getColorValue(msg.getConfigPath(), "%command%", value);
+			case NEW_GLOW:
+			case GLOWING_STATE_ON_JOIN:
+				return getColorValue(msg.getConfigPath(), "%glowname%", value);
 			default:
 				break;
 			}
@@ -211,11 +210,7 @@ public class EGlowMessageConfig {
 		public String get(IEGlowPlayer target) {
 			return getColorValue(msg.getConfigPath(), "%target%", target.getDisplayName());
 		}
-		
-		private String get(Message message, String value) {
-			return getColorValue(message.getConfigPath() + value);
-		}
-		
+
 		private String getColorValue(String path) {
 			String text = config.getString(path);
 			
@@ -230,6 +225,8 @@ public class EGlowMessageConfig {
 			
 			if (text == null)
 				return "&cFailed to get text for&f: '&e" + path + "'";
+			if (replacement == null)
+				return "&cInvalid effectname&f.";
 			return ChatUtil.translateColors(text.replace(textToReplace, replacement));
 		}
 		
