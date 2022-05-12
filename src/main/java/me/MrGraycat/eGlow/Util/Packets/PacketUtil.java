@@ -83,7 +83,7 @@ public class PacketUtil {
 		}
 	}
 
-	public static void updateScoreboardTeam(IEGlowPlayer entity, String teamName, String prefix, String suffix, boolean enumNameTagVisibility, boolean enumTeamPush, EnumChatFormat color) {
+	public static void updateScoreboardTeam(IEGlowPlayer entity, String teamName, String prefix, String suffix, EnumChatFormat color) {
 		PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam(teamName, prefix, suffix, (EGlowMainConfig.OptionShowNametag() ? "always" : "never"), (EGlowMainConfig.OptionDoTeamCollision() ? "always" : "never"), 21).setColor(color);
 		
 		if (sendPackets && EGlowMainConfig.OptionFeatureTeamPackets()) {
@@ -158,7 +158,7 @@ public class PacketUtil {
 				for (Player player : entity.getGlowTargets()) {
 					IEGlowPlayer ep = DataManager.getEGlowPlayer(player);
 					
-					if (player != null && ep != null) {
+					if (ep != null) {
 						switch(ep.getGlowVisibility()) {
 						case ALL:
 							try {NMSHook.sendPacket(player, packetPlayOutEntityMetadata.toNMS(ep.getVersion()));} catch (Exception e) {e.printStackTrace();}

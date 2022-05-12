@@ -112,7 +112,7 @@ public class IEGlowPlayer {
 			
 			switch(getEntityType()) {
 			case("PLAYER"):
-				PacketUtil.updateScoreboardTeam(DataManager.getEGlowPlayer(getPlayer()), getTeamName(), ((EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagPrefix(this) : "") + color, (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagSuffix(this) : "", true, true, EnumChatFormat.valueOf(color.name()));
+				PacketUtil.updateScoreboardTeam(DataManager.getEGlowPlayer(getPlayer()), getTeamName(), ((EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagPrefix(this) : "") + color, (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagSuffix(this) : "", EnumChatFormat.valueOf(color.name()));
 			break;
 			case("NPC"):
 				if (!fake && citizensNPC.isSpawned())
@@ -171,7 +171,7 @@ public class IEGlowPlayer {
 				setEffect(DataManager.getEGlowEffect("none"));
 			
 			if (getPlayer() != null)
-				PacketUtil.updateScoreboardTeam(DataManager.getEGlowPlayer(getPlayer()), getTeamName(), (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagPrefix(this) : "", (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagSuffix(this) : "", true, true, EnumChatFormat.RESET);
+				PacketUtil.updateScoreboardTeam(DataManager.getEGlowPlayer(getPlayer()), getTeamName(), (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagPrefix(this) : "", (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagSuffix(this) : "", EnumChatFormat.RESET);
 			
 			if (this.citizensNPC != null)
 				citizensNPC.getOrAddTrait(ScoreboardTrait.class).setColor(ChatColor.RESET);
@@ -204,7 +204,7 @@ public class IEGlowPlayer {
 		if (DebugUtil.isPAPIInstalled())
 			format = PlaceholderAPI.setPlaceholders(getPlayer(), format);
 		
-		getPlayer().setPlayerListName(ChatUtil.translateColors(format));	
+		getPlayer().setPlayerListName(ChatUtil.translateColors(format));
 	}
 	
 	public String getTeamName() {

@@ -52,7 +52,7 @@ public class LuckPermsAddon implements Listener {
 							TAB_Addon.updateTABPlayer(ePlayer, ePlayer.getActiveColor());
 						} else {
 							ePlayer.updatePlayerTabname();
-							PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(), Vault_Addon.getPlayerTagPrefix(ePlayer) + ePlayer.getActiveColor(), Vault_Addon.getPlayerTagSuffix(ePlayer), true, true, EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
+							PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(), Vault_Addon.getPlayerTagPrefix(ePlayer) + ePlayer.getActiveColor(), Vault_Addon.getPlayerTagSuffix(ePlayer), EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
 						}
 					}
 				}.runTaskLaterAsynchronously(EGlow.getInstance(), 20);
@@ -73,7 +73,7 @@ public class LuckPermsAddon implements Listener {
 								TAB_Addon.updateTABPlayer(ePlayer, ePlayer.getActiveColor());
 							} else {
 								if (Vault_Addon != null) {
-									PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(), Vault_Addon.getPlayerTagPrefix(ePlayer) + ePlayer.getActiveColor(), Vault_Addon.getPlayerTagSuffix(ePlayer), true, true, EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
+									PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(), Vault_Addon.getPlayerTagPrefix(ePlayer) + ePlayer.getActiveColor(), Vault_Addon.getPlayerTagSuffix(ePlayer), EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
 								}
 							}
 						}
@@ -86,7 +86,11 @@ public class LuckPermsAddon implements Listener {
 	}
 	
 	public void unload() {
-		luckPermsSub.close();
-		luckPermsSub2.close();
+		try {
+			luckPermsSub.close();
+			luckPermsSub2.close();
+		} catch (NoClassDefFoundError e) {
+			//Rare error when disabling eGlow no clue how this could happen
+		}
 	}
 }
