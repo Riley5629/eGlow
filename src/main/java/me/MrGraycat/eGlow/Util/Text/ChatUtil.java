@@ -31,7 +31,7 @@ public class ChatUtil {
 
 	public static String translateColors(String text) {
 		if (text == null || text.isEmpty())
-			return text;
+			return "";
 		
 		try {
 			if (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 15) {
