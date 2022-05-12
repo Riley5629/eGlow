@@ -32,7 +32,9 @@ public class EGlowAPI {
 	 */
 	public IEGlowPlayer getEGlowPlayer(UUID uuid) {
 		Player p = Bukkit.getPlayer(uuid);
-		return DataManager.getEGlowPlayer(p);
+		if (p != null)
+			return DataManager.getEGlowPlayer(p);
+		return null;
 	}
 	
 	/**
