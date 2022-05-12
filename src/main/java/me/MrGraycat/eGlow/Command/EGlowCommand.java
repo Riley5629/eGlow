@@ -117,16 +117,18 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 				for (IEGlowEffect effect : DataManager.getEGlowEffects()) {
 					String name = effect.getName().replace("slow", "").replace("fast", "");
 					
-					if (!name.contains("blink"))
+					if (!name.contains("blink") && sender.hasPermission(effect.getPermission()))
 						suggestions.add(name);
+						if (name.equals("none")) {
+							suggestions.add("off");
+							suggestions.add("disable");
+						}
 				}
 				
 				for (IEGlowEffect effect : DataManager.getCustomEffects()) {
-					suggestions.add(effect.getName());
+					if (sender.hasPermission(effect.getPermission()))
+						suggestions.add(effect.getName());
 				}
-				
-				suggestions.add("off");
-				suggestions.add("disable");
 				
 				if (sender.hasPermission("eglow.command.set"))
 					suggestions.add("set");
@@ -148,7 +150,7 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 				break;
 				case("blink"):
 					for (String color : colors) {
-						if (!color.equals("none"))
+						if (!color.equals("none") && sender.hasPermission("eglow.blink." + color))
 							suggestions.add(color);
 					}
 				break;
