@@ -82,9 +82,11 @@ public class DataManager implements PluginMessageListener {
 				
 				if (!dataEffects.containsKey(name)) {
 					addEGlowEffect(name, (EGlowMainConfig.OptionUseGUIColorAsChatColor()) ? Message.GUI_COLOR.get(configName) : Message.COLOR.get(configName), "eglow.color." + name, color);
-					
-					addEGlowEffect("blink" + name + "slow", (EGlowMainConfig.OptionUseGUIColorAsChatColor()) ? Message.GUI_COLOR.get(configName) : Message.COLOR.get(configName) + " §f(" + Message.COLOR.get("effect-blink") + " " + Message.COLOR.get("slow") + "§f)", "eglow.blink." + name, EGlowMainConfig.getPlayerSlowDelay(), ChatColor.RESET, color);
-					addEGlowEffect("blink" + name + "fast", (EGlowMainConfig.OptionUseGUIColorAsChatColor()) ? Message.GUI_COLOR.get(configName) : Message.COLOR.get(configName) + " §f(" + Message.COLOR.get("effect-blink") + " " + Message.COLOR.get("fast") + "§f)", "eglow.blink." + name, EGlowMainConfig.getPlayerFastDelay(), ChatColor.RESET, color);
+
+					if (!name.equals("none")) {
+						addEGlowEffect("blink" + name + "slow", (EGlowMainConfig.OptionUseGUIColorAsChatColor()) ? Message.GUI_COLOR.get(configName) : Message.COLOR.get(configName) + " §f(" + Message.COLOR.get("effect-blink") + " " + Message.COLOR.get("slow") + "§f)", "eglow.blink." + name, EGlowMainConfig.getPlayerSlowDelay(), ChatColor.RESET, color);
+						addEGlowEffect("blink" + name + "fast", (EGlowMainConfig.OptionUseGUIColorAsChatColor()) ? Message.GUI_COLOR.get(configName) : Message.COLOR.get(configName) + " §f(" + Message.COLOR.get("effect-blink") + " " + Message.COLOR.get("fast") + "§f)", "eglow.blink." + name, EGlowMainConfig.getPlayerFastDelay(), ChatColor.RESET, color);
+					}
 				} else {
 					effect = getEGlowEffect(name);
 					
@@ -144,8 +146,8 @@ public class DataManager implements PluginMessageListener {
 				ChatUtil.sendToConsole("&cWARNING! Not registering custom effect: &f" + effectName + " &cdue to it using a default effect name!", true);
 				continue;
 			}
-			
-			String displayName = ChatUtil.translateColors(Effect.GET_NAME.getString(effectName));
+
+			String displayName = ChatUtil.translateColors(Effect.GET_DISPLAYNAME.getString(effectName));
 			int delay = (int) (Effect.GET_DELAY.getDouble(effectName) * 20);
 			List<String> colors = Effect.GET_COLORS.getList(effectName);
 			String permission = "eglow.effect." + effectName.toLowerCase();
@@ -225,13 +227,13 @@ public class DataManager implements PluginMessageListener {
 	public static boolean isValidEffect(String name, boolean containsSpeed) {
 		return (containsSpeed) ? (dataEffects.containsKey(name.toLowerCase()) || dataCustomEffects.containsKey(name.toLowerCase())) : (dataEffects.containsKey(name.toLowerCase() + "slow") && dataEffects.containsKey(name.toLowerCase() + "fast"));
 	}
-	
-	public static boolean isValidSpeed(String speed) {
-		speed = speed.toLowerCase();
-		
-		return speed.equals("slow") || speed.equals("fast");
+
+	public static boolean isNormalEffect(IEGlowEffect effect) {
+		if (effect == null)
+			return false;
+		return dataEffects.containsKey(effect.getName());
 	}
-	
+
 	public static boolean isCustomEffect(String name) {
 		return dataCustomEffects.containsKey(name);
 	}
