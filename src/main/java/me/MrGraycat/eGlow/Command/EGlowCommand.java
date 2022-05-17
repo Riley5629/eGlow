@@ -106,14 +106,23 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 			return null;
 		
 		if (sender instanceof Player && cmd.getName().equalsIgnoreCase("eGlow") || EGlowMainConfig.OptionEnableCommandAlias() && cmd.getName().equalsIgnoreCase(EGlowMainConfig.OptionCommandAlias())) {
-			ArrayList<String> args1 = new ArrayList<>(Arrays.asList("help", "list", "off", "disable", "toggle", "visibility",  "blink"));
+			ArrayList<String> args1 = new ArrayList<>();
 			ArrayList<String> suggestions = new ArrayList<>();
 			ArrayList<String> finalSuggestions = new ArrayList<>();
 			
 			switch(args.length) {
 			case(1):
-				suggestions = args1;
-				
+				if (sender.hasPermission("eglow.command.help"))
+					suggestions.add("help");
+				if (sender.hasPermission("eglow.command.list"))
+					suggestions.add("list");
+				if (sender.hasPermission("eglow.command.toggle"))
+					suggestions.add("toggle");
+				if (sender.hasPermission("eglow.command.visibility"))
+					suggestions.add("visibility");
+
+				suggestions.add("blink");
+
 				for (IEGlowEffect effect : DataManager.getEGlowEffects()) {
 					String name = effect.getName().replace("slow", "").replace("fast", "");
 					
