@@ -12,6 +12,7 @@ import me.MrGraycat.eGlow.Util.EnumUtil.GlowTargetMode;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
 import me.MrGraycat.eGlow.Util.Packets.OutGoing.PacketPlayOut;
 import me.MrGraycat.eGlow.Util.Packets.OutGoing.PacketPlayOutEntityMetadata;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class PipelineInjector{
 	private static final String DECODER_NAME = "eGlowReader";
@@ -106,26 +107,32 @@ public class PipelineInjector{
 	private static void modifyPlayers(Object packetPlayOutScoreboardTeam) throws Exception {
 		if (!blockPackets() || !EGlowMainConfig.OptionFeaturePacketBlocker())
 			return;
-		
+
+		int action = NMSHook.nms.PacketPlayOutScoreboardTeam_ACTION.getInt(packetPlayOutScoreboardTeam);
+		if (action == 1 || action == 2 || action == 4) return;
 		String teamName = NMSHook.nms.PacketPlayOutScoreboardTeam_NAME.get(packetPlayOutScoreboardTeam).toString();
 		Collection<String> players = (Collection<String>) NMSHook.nms.PacketPlayOutScoreboardTeam_PLAYERS.get(packetPlayOutScoreboardTeam);
 		if (players == null) return;
 		Collection<String> newList = new ArrayList<>();
-		
-		for (String entry : players) {
-			IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(entry);
-			
-			if (ePlayer == null) {
-				newList.add(entry);
-				continue;
-			}
-			
-			if (!ePlayer.getTeamName().equals(teamName))
-				continue;
 
-			newList.add(entry);
-		}	
-		
+		try {
+			for (String entry : players) {
+				IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(entry);
+
+				if (ePlayer == null) {
+					newList.add(entry);
+					continue;
+				}
+
+				if (!ePlayer.getTeamName().equals(teamName))
+					continue;
+
+				newList.add(entry);
+			}
+		} catch (ConcurrentModificationException e) {
+			ChatUtil.reportError(e);
+		}
+
 		NMSHook.nms.PacketPlayOutScoreboardTeam_PLAYERS.set(packetPlayOutScoreboardTeam, newList);
 	}
 

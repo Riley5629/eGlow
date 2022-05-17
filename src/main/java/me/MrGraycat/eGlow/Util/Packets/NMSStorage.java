@@ -1,8 +1,6 @@
 package me.MrGraycat.eGlow.Util.Packets;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.*;
 
 import org.bukkit.Bukkit;
@@ -47,6 +45,7 @@ public class NMSStorage {
 	//PacketPlayOutEntityMetadata
 	public Class<?> PacketPlayOutEntityMetadata;//
 	public Constructor<?> newPacketPlayOutEntityMetadata;//
+	public Field PacketPlayOutScoreboardTeam_ACTION;
 	public Field PacketPlayOutEntityMetadata_LIST;
 
 	public Constructor<?> newScoreboard;
@@ -143,7 +142,7 @@ public class NMSStorage {
 			Class<?> scoreboardTeam = getNMSClass("net.minecraft.world.scores.ScoreboardTeam", "ScoreboardTeam");
 			this.newScoreboard = scoreboard.getConstructor();
 			this.newScoreboardTeam = scoreboardTeam.getConstructor(scoreboard, String.class);
-			
+
 		    if (this.minorVersion >= 13) {
 		      this.ScoreboardTeam_setPrefix = getMethod(scoreboardTeam, new String[] {"setPrefix", "b"}, this.IChatBaseComponent);
 		      this.ScoreboardTeam_setSuffix = getMethod(scoreboardTeam, new String[] {"setSuffix", "c"}, this.IChatBaseComponent);
@@ -162,6 +161,7 @@ public class NMSStorage {
 		    this.PacketPlayOutScoreboardTeam = getNMSClass("net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam", "PacketPlayOutScoreboardTeam", "Packet209SetScoreboardTeam");
 			this.PacketPlayOutScoreboardTeam_NAME = getFields(this.PacketPlayOutScoreboardTeam, String.class).get(0);
 			this.PacketPlayOutScoreboardTeam_PLAYERS = getFields(this.PacketPlayOutScoreboardTeam, Collection.class).get(0);
+			this.PacketPlayOutScoreboardTeam_ACTION = getInstanceFields(PacketPlayOutScoreboardTeam, int.class).get(0);
 		    
 		   if (this.minorVersion >= 17) {
 			   this.PacketPlayOutScoreboardTeam_a = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam$a");
@@ -250,6 +250,17 @@ public class NMSStorage {
 		return list;
 	}
 
+	private List<Field> getInstanceFields(Class<?> clazz, Class<?> type){
+		if (clazz == null) throw new IllegalArgumentException("Source class cannot be null");
+		List<Field> list = new ArrayList<>();
+		for (Field field : clazz.getDeclaredFields()) {
+			if (field.getType() == type && !Modifier.isStatic(field.getModifiers())) {
+				list.add(setAccessible(field));
+			}
+		}
+		return list;
+	}
+
 	private Enum[] getEnumValues(Class<?> enumClass) {
 		if (enumClass == null) throw new IllegalArgumentException("Class cannot be null");
 		if (!enumClass.isEnum()) throw new IllegalArgumentException(enumClass.getName() + " is not an enum class");
@@ -260,5 +271,10 @@ public class NMSStorage {
 			e.printStackTrace();
 			return new Enum[0];
 		}
+	}
+
+	public <T extends AccessibleObject> T setAccessible(T o) {
+		o.setAccessible(true);
+		return o;
 	}
 }
