@@ -107,7 +107,7 @@ public class IEGlowEffect {
 
 					try {
 						if (EGlow.getInstance().getCitizensAddon() != null && entity instanceof NPC)
-							eglowEntity = ((NPC) entity).getOrAddTrait(EGlowCitizensTrait.class).getEGlowNPC();
+							eglowEntity = ((NPC) entity).getTraitNullable(EGlowCitizensTrait.class).getEGlowNPC();
 					} catch (NoSuchMethodError e) {
 						ChatUtil.sendToConsole("&cYour Citizens version is outdated please use 2.0.27 or later", true);
 					}
