@@ -116,7 +116,24 @@ public class PipelineInjector{
 		Collection<String> newList = new ArrayList<>();
 
 		try {
-			for (String entry : players) {
+			List<String> list = new ArrayList<>(players);
+
+			for (String entity : list) {
+				IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(entity);
+
+				if (ePlayer == null) {
+					newList.add(entity);
+					continue;
+				}
+
+				if (!ePlayer.getTeamName().equals(teamName)) {
+					continue;
+				}
+
+				newList.add(entity);
+			}
+
+			/*for (String entry : players) {
 				IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(entry);
 
 				if (ePlayer == null) {
@@ -128,7 +145,7 @@ public class PipelineInjector{
 					continue;
 
 				newList.add(entry);
-			}
+			}*/
 		} catch (ConcurrentModificationException e) {
 			ChatUtil.reportError(e);
 		}
