@@ -1,6 +1,8 @@
 package me.MrGraycat.eGlow.Config;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -98,7 +100,12 @@ public class EGlowCustomEffectsConfig {
 		}
 		
 		public Set<String> get() {
-			return config.getConfigurationSection(effect.getConfigPath()).getKeys(false);
+			try {
+				Set<String> effects = config.getConfigurationSection(effect.getConfigPath()).getKeys(false);
+				return effects;
+			} catch (NullPointerException e) {
+				return Collections.emptySet();
+			}
 		}
 		
 		public int getInt(String value) {
