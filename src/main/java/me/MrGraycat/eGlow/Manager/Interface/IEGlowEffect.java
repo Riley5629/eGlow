@@ -110,6 +110,14 @@ public class IEGlowEffect {
 							eglowEntity = ((NPC) entity).getTraitNullable(EGlowCitizensTrait.class).getEGlowNPC();
 					} catch (NoSuchMethodError e) {
 						ChatUtil.sendToConsole("&cYour Citizens version is outdated please use 2.0.27 or later", true);
+					} catch (NullPointerException ex) {
+						new BukkitRunnable() {
+							@Override
+							public void run() {
+								((NPC) entity).getOrAddTrait(EGlowCitizensTrait.class);
+							}
+						}.runTask(EGlow.getInstance());
+						return;
 					}
 
 					if (eglowEntity == null) {
