@@ -172,12 +172,14 @@ public class NMSStorage {
 			   this.newPacketPlayOutScoreboardTeam = this.PacketPlayOutScoreboardTeam.getConstructor(scoreboardTeam, int.class);
 		   }
 
-			Class<?> PacketPlayOutChat = getNMSClass("net.minecraft.network.protocol.game.PacketPlayOutChat", "PacketPlayOutChat", "Packet3Chat");
-			if (minorVersion >= 12) {
+			Class<?> PacketPlayOutChat = getNMSClass("net.minecraft.network.protocol.game.ClientboundSystemChatPacket", "net.minecraft.network.protocol.game.PacketPlayOutChat", "PacketPlayOutChat", "Packet3Chat");
+			if (minorVersion >= 12 && minorVersion <= 18) {
 				ChatMessageType = getNMSClass("net.minecraft.network.chat.ChatMessageType", "ChatMessageType");
 				ChatMessageType_values = getEnumValues(ChatMessageType);
 			}
-			if (minorVersion >= 16) {
+			if (minorVersion >= 19) {
+				newPacketPlayOutChat = PacketPlayOutChat.getConstructor(String.class, int.class );
+			} else if (minorVersion >= 16) {
 				newPacketPlayOutChat = PacketPlayOutChat.getConstructor(IChatBaseComponent, ChatMessageType, UUID.class);
 			} else if (minorVersion >= 12) {
 				newPacketPlayOutChat = PacketPlayOutChat.getConstructor(IChatBaseComponent, ChatMessageType);

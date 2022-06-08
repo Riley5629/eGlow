@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 
+import me.MrGraycat.eGlow.Addon.BStats.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -43,6 +44,7 @@ public class EGlow extends JavaPlugin {
 	private TABAddon tabAddon;
 	private LuckPermsAddon lpAddon;
 	private VaultAddon vaultAddon;
+	private Metrics metrics;
 	
 	@Override
 	public void onEnable() {
@@ -76,7 +78,7 @@ public class EGlow extends JavaPlugin {
 	}
 	
 	private boolean versionIsCompactible() {
-		return !DebugUtil.getServerVersion().equals("v_1_9_R1") && DebugUtil.getMinorVersion() >= 9 && DebugUtil.getMinorVersion() <= 18;
+		return !DebugUtil.getServerVersion().equals("v_1_9_R1") && DebugUtil.getMinorVersion() >= 9 && DebugUtil.getMinorVersion() <= 19;
 	}
 	
 	private void loadConfigs() {
@@ -95,6 +97,13 @@ public class EGlow extends JavaPlugin {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
+				setMetricsAddon(new Metrics(getInstance(), 9468));
+
+				getMetricsAddon().addCustomChart(new Metrics.SimplePie("using_tab", () -> (EGlow.getInstance().getTABAddon() != null) ? "yes" : "no"));
+				getMetricsAddon().addCustomChart(new Metrics.SimplePie("using_advanced_tab_integration", () -> (EGlowMainConfig.OptionAdvancedTABIntegration()) ? "yes" : "no"));
+				getMetricsAddon().addCustomChart(new Metrics.SimplePie("database_type", () -> (EGlowMainConfig.useMySQL()) ? "MySQL" : "SQLite"));
+				getMetricsAddon().addCustomChart(new Metrics.SimplePie("command_aliases", () -> (EGlowMainConfig.OptionEnableCommandAlias()) ? EGlowMainConfig.OptionCommandAlias() : "none"));
+
 				if (DebugUtil.pluginCheck("PlaceholderAPI"))
 					new PlaceholderAPIAddon();
 				if (DebugUtil.pluginCheck("Vault"))
@@ -175,6 +184,10 @@ public class EGlow extends JavaPlugin {
 		this.UP_TO_DATE = up_to_date;
 	}
 
+	private void setMetricsAddon(Metrics metrics) {
+		this.metrics = metrics;
+	}
+
 	private void setCitizensAddon(CitizensAddon citizensAddon) {
 		this.citizensAddon = citizensAddon;
 	}
@@ -210,6 +223,10 @@ public class EGlow extends JavaPlugin {
 	
 	public boolean isUpToDate() {
 		return UP_TO_DATE;
+	}
+
+	public Metrics getMetricsAddon() {
+		return this.metrics;
 	}
 
 	public CitizensAddon getCitizensAddon() {
