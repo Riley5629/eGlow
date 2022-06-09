@@ -75,6 +75,7 @@ public class IEGlowPlayer {
 			return;
 		
 		setGlowStatus(status);
+		setFakeGlowStatus(fake);
 		
 		switch (entityType) {
 		case ("PLAYER"):
