@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
@@ -164,11 +164,11 @@ public class EGlowPlayerdataMySQL {
 	private void setupMySQLConnection() {
 		mysql = new MysqlDataSource();
 		
-		mysql.setServerName(EGlowMainConfig.getMySQLHost());
-		mysql.setPort(EGlowMainConfig.getMySQLPort());
-		mysql.setDatabaseName(((!EGlowMainConfig.getMySQLUseSSL()) ? "?useSSL=false" : "")); //no database name for now
-		mysql.setUser(EGlowMainConfig.getMySQLUsername());
-		mysql.setPassword(EGlowMainConfig.getMySQLPassword());
+		mysql.setServerName(MainConfig.MYSQL_HOST.getString());
+		mysql.setPort(MainConfig.MYSQL_PORT.getInt());
+		mysql.setDatabaseName(((!MainConfig.ADVANCED_MYSQL_USESSL.getBoolean()) ? "?useSSL=false" : "")); //no database name for now
+		mysql.setUser(MainConfig.MYSQL_USERNAME.getString());
+		mysql.setPassword(MainConfig.MYSQL_PASSWORD.getString());
 		
 		testMySQLConnection();
 	}
@@ -178,7 +178,7 @@ public class EGlowPlayerdataMySQL {
 		PreparedStatement ps = null;
 		ResultSet res = null;
 		
-		String statement = "CREATE DATABASE IF NOT EXISTS " + ((!EGlowMainConfig.getMySQLDBName().isEmpty()) ? EGlowMainConfig.getMySQLDBName() : "eglow");
+		String statement = "CREATE DATABASE IF NOT EXISTS " + ((!MainConfig.MYSQL_DBNAME.getString().isEmpty()) ? MainConfig.MYSQL_DBNAME.getString() : "eglow");
 		
 		try {
 			con = mysql.getConnection();
@@ -190,7 +190,7 @@ public class EGlowPlayerdataMySQL {
 			closeMySQLConnection(con, ps, null);
 		}
 		
-		mysql.setDatabaseName(((!EGlowMainConfig.getMySQLDBName().isEmpty()) ? EGlowMainConfig.getMySQLDBName() : "eglow") + ((!EGlowMainConfig.getMySQLUseSSL()) ? "?useSSL=false" : ""));
+		mysql.setDatabaseName(((!MainConfig.MYSQL_DBNAME.getString().isEmpty()) ? MainConfig.MYSQL_DBNAME.getString() : "eglow") + ((!MainConfig.ADVANCED_MYSQL_USESSL.getBoolean()) ? "?useSSL=false" : ""));
 		
 		try {
 			con = mysql.getConnection();

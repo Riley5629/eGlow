@@ -5,7 +5,7 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 
 import me.MrGraycat.eGlow.Command.SubCommand;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
@@ -96,7 +96,7 @@ public class SetCommand extends SubCommand {
 					continue;
 				}
 				
-				if (EGlowMainConfig.OptionDisableGlowWhenInvisible() && eTarget.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
+				if (MainConfig.SETTINGS_DISABLE_GLOW_WHEN_INVISIBLE.getBoolean() && eTarget.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
 					ChatUtil.sendMsg(sender, Message.OTHER_PLAYER_INVISIBLE.get(), true);
 					continue;
 				}
@@ -106,7 +106,7 @@ public class SetCommand extends SubCommand {
 				if (eTarget.getGlowStatus() || eTarget.getFakeGlowStatus())
 					eTarget.toggleGlow();
 				
-				if (eTarget.getEntityType().equals("PLAYER") && EGlowMainConfig.OptionSendTargetNotification() && !eTarget.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
+				if (eTarget.getEntityType().equals("PLAYER") && MainConfig.SETTINGS_NOTIFICATIONS_TARGET_COMMAND.getBoolean() && !eTarget.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
 					ChatUtil.sendMsg(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.DISABLE_GLOW.get(), true);
 				ChatUtil.sendMsg(sender, Message.OTHER_CONFIRM_OFF.get(eTarget), true);
 				continue;
@@ -116,7 +116,7 @@ public class SetCommand extends SubCommand {
 				eTarget.disableGlow(true);
 				eTarget.activateGlow(effect);
 				
-				if (eTarget.getEntityType().equals("PLAYER") && EGlowMainConfig.OptionSendTargetNotification() && !eTarget.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
+				if (eTarget.getEntityType().equals("PLAYER") && MainConfig.SETTINGS_NOTIFICATIONS_TARGET_COMMAND.getBoolean() && !eTarget.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
 					ChatUtil.sendMsg(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.NEW_GLOW.get(effect.getDisplayName()), true);
 			}
 			

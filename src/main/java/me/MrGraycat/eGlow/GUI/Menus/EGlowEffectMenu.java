@@ -7,7 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import me.MrGraycat.eGlow.Config.*;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig.Effect;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.GUI.*;
@@ -26,7 +26,7 @@ public class EGlowEffectMenu extends PaginatedMenu {
 
 	@Override
 	public String getMenuName() {
-		return ChatUtil.translateColors(((EGlowMainConfig.OptionDisablePrefixInGUI()) ? Message.GUI_TITLE.get() : Message.PREFIX.get() + Message.GUI_TITLE.get()));
+		return ChatUtil.translateColors(((MainConfig.SETTINGS_GUI_ADD_PREFIX.getBoolean()) ? Message.GUI_TITLE.get() : Message.PREFIX.get() + Message.GUI_TITLE.get()));
 	}
 
 	@Override

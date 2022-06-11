@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.DebugUtil;
 import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
@@ -32,11 +32,11 @@ public class VaultAddon {
 	 * @return Formatted prefix as String
 	 */
 	public String getPlayerTagPrefix(IEGlowPlayer player) {
-		if (!EGlowMainConfig.setTagnameFormat())
+		if (!MainConfig.FORMATTING_TAGNAME_ENABLE.getBoolean())
 			return "";
 		
 		Player p = player.getPlayer();
-		String prefix = EGlowMainConfig.getTagPrefix();
+		String prefix = MainConfig.FORMATTING_TAGNAME_PREFIX.getString();
 		
 		if (prefix.contains("%prefix%"))
 			prefix = prefix.replace("%prefix%", getPlayerPrefix(player));
@@ -56,11 +56,11 @@ public class VaultAddon {
 	 * @return Formatted suffix as String
 	 */
 	public String getPlayerTagSuffix(IEGlowPlayer player) {
-		if (!EGlowMainConfig.setTagnameFormat())
+		if (!MainConfig.FORMATTING_TAGNAME_ENABLE.getBoolean())
 			return "";
 		
 		Player p = player.getPlayer();
-		String suffix = EGlowMainConfig.getTagSuffix();
+		String suffix = MainConfig.FORMATTING_TAGNAME_SUFFIX.getString();
 		
 		if (suffix.contains("%suffix%"))
 			suffix = suffix.replace("%suffix%", getPlayerSuffix(player));

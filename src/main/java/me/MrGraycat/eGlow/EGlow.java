@@ -23,6 +23,7 @@ import me.MrGraycat.eGlow.Addon.TAB.Listeners.EGlowTABListenerUniv;
 import me.MrGraycat.eGlow.Command.EGlowCommand;
 import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig;
 import me.MrGraycat.eGlow.Config.Playerdata.EGlowPlayerdataManager;
 import me.MrGraycat.eGlow.Event.EGlowEventListener;
@@ -100,9 +101,9 @@ public class EGlow extends JavaPlugin {
 				setMetricsAddon(new Metrics(getInstance(), 9468));
 
 				getMetricsAddon().addCustomChart(new Metrics.SimplePie("using_tab", () -> (EGlow.getInstance().getTABAddon() != null) ? "yes" : "no"));
-				getMetricsAddon().addCustomChart(new Metrics.SimplePie("using_advanced_tab_integration", () -> (EGlowMainConfig.OptionAdvancedTABIntegration()) ? "yes" : "no"));
-				getMetricsAddon().addCustomChart(new Metrics.SimplePie("database_type", () -> (EGlowMainConfig.useMySQL()) ? "MySQL" : "SQLite"));
-				getMetricsAddon().addCustomChart(new Metrics.SimplePie("command_aliases", () -> (EGlowMainConfig.OptionEnableCommandAlias()) ? EGlowMainConfig.OptionCommandAlias() : "none"));
+				getMetricsAddon().addCustomChart(new Metrics.SimplePie("using_advanced_tab_integration", () -> (MainConfig.SETTINGS_SMART_TAB_NAMETAG_HANDLER.getBoolean()) ? "yes" : "no"));
+				getMetricsAddon().addCustomChart(new Metrics.SimplePie("database_type", () -> (MainConfig.MYSQL_ENABLE.getBoolean()) ? "MySQL" : "SQLite"));
+				getMetricsAddon().addCustomChart(new Metrics.SimplePie("command_aliases", () -> (MainConfig.COMMAND_ALIAS_ENABLE.getBoolean()) ? MainConfig.COMMAND_ALIAS.getString() : "none"));
 
 				if (DebugUtil.pluginCheck("PlaceholderAPI"))
 					new PlaceholderAPIAddon();

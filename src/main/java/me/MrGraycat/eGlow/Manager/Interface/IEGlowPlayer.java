@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Addon.Citizens.EGlowCitizensTrait;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Util.DebugUtil;
@@ -101,7 +101,6 @@ public class IEGlowPlayer {
 		
 		if (color.equals(ChatColor.RESET)) {
 			setGlowing(false, fake);
-			
 		} else {
 			setGlowing(status, fake);
 			
@@ -186,13 +185,13 @@ public class IEGlowPlayer {
 	 * Update the tabname of the player
 	 */
 	public void updatePlayerTabname() {
-		if (!EGlowMainConfig.setTabnameFormat())
+		if (!MainConfig.FORMATTING_TABLIST_ENABLE.getBoolean())
 			return;
 		
 		if (getPlayer() == null)
 			return;
-		
-		String format = EGlowMainConfig.getTabPrefix() + ((!EGlowMainConfig.getTabName().isEmpty()) ? EGlowMainConfig.getTabName() : player.getDisplayName()) + EGlowMainConfig.getTabSuffix();
+
+		String format = MainConfig.FORMATTING_TABLIST_FORMAT.getString();
 		String prefix = (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerPrefix(this) : "";
 		String suffix = (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerSuffix(this) : "";
 		
@@ -240,12 +239,13 @@ public class IEGlowPlayer {
 	}
 	
 	public void setupForceGlows() {
-		if (!EGlowMainConfig.getForceGlowEnabled() || getPlayer() == null || isInBlockedWorld() && EGlowMainConfig.getForceGlowBypassBlockedWorlds())
+		if (!MainConfig.SETTINGS_JOIN_FORCE_GLOWS_ENABLE.getBoolean() || getPlayer() == null || isInBlockedWorld() && MainConfig.SETTINGS_JOIN_FORCE_GLOWS_BYPASS_BLOCKED_WORLDS.getBoolean())
 			return;
 		
-		for (String permission : EGlowMainConfig.getForceGlowList()) {
+		for (String permission : MainConfig.SETTINGS_JOIN_FORCE_GLOWS_LIST.getConfigSection()) {
+			ChatUtil.sendToConsole(permission, false);
 			if (getPlayer().hasPermission("eglow.force." + permission.toLowerCase())) {
-				IEGlowEffect effect = DataManager.getEGlowEffect(EGlowMainConfig.getForceGlowEffect(permission));
+				IEGlowEffect effect = DataManager.getEGlowEffect(MainConfig.SETTINGS_JOIN_FORCE_GLOWS_LIST.getString(permission)); //TODO test!
 				
 				if (!forcedEffects.contains(effect))
 					forcedEffects.add(effect);
@@ -258,22 +258,30 @@ public class IEGlowPlayer {
 	}
 	
 	public IEGlowEffect getForceGlow() {
-		if (forcedEffects.isEmpty() || !EGlowMainConfig.getForceGlowEnabled() || getPlayer() == null || isInBlockedWorld() && EGlowMainConfig.getForceGlowBypassBlockedWorlds())
+		if (forcedEffects.isEmpty() || !MainConfig.SETTINGS_JOIN_FORCE_GLOWS_ENABLE.getBoolean()|| getPlayer() == null || isInBlockedWorld() && MainConfig.SETTINGS_JOIN_FORCE_GLOWS_BYPASS_BLOCKED_WORLDS.getBoolean())
 			return null;
 		return forcedEffects.get(0);
 	}
 	
 	public boolean isInBlockedWorld() {
-		if (!EGlowMainConfig.getWorldCheckEnabled())
+		if (!MainConfig.WORLD_ENABLE.getBoolean())
 			return false;
-			
-		switch (EGlowMainConfig.getWorldAction()) {
+
+		GlowWorldAction action;
+
+		try {
+			action = GlowWorldAction.valueOf(MainConfig.WORLD_ACTION.getString().toUpperCase() + "ED");
+		} catch (IllegalArgumentException e) {
+			action = GlowWorldAction.UNKNOWN;
+		}
+
+		switch (action) {
 		case BLOCKED:
-			if (EGlowMainConfig.getWorlds().contains(getPlayer().getWorld().getName().toLowerCase()))
+			if (MainConfig.WORLD_LIST.getStringList().contains(getPlayer().getWorld().getName().toLowerCase()))
 				return true;
 			break;
 		case ALLOWED:
-			if (!EGlowMainConfig.getWorlds().contains(getPlayer().getWorld().getName().toLowerCase()))
+			if (!MainConfig.WORLD_LIST.getStringList().contains(getPlayer().getWorld().getName().toLowerCase()))
 				return true;
 			break;
 		case UNKNOWN:

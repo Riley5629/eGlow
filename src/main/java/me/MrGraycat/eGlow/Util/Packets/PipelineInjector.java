@@ -4,7 +4,7 @@ import java.util.*;
 
 import io.netty.channel.*;
 import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.DebugUtil;
@@ -105,7 +105,7 @@ public class PipelineInjector{
 	
 	@SuppressWarnings("unchecked")
 	private static void modifyPlayers(Object packetPlayOutScoreboardTeam) throws Exception {
-		if (!blockPackets() || !EGlowMainConfig.OptionFeaturePacketBlocker())
+		if (!blockPackets() || !MainConfig.ADVANCED_PACKETS_SMART_BLOCKER.getBoolean())
 			return;
 
 		int action = NMSHook.nms.PacketPlayOutScoreboardTeam_ACTION.getInt(packetPlayOutScoreboardTeam);

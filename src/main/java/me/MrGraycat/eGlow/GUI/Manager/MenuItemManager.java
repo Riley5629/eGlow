@@ -3,6 +3,7 @@ package me.MrGraycat.eGlow.GUI.Manager;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.Locale;
 
 import me.MrGraycat.eGlow.Util.Packets.NMSHook;
 import org.bukkit.Color;
@@ -15,13 +16,15 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+
+//TODO more special item support (custom effects)
 
 @SuppressWarnings("deprecation")
 public class MenuItemManager extends MenuManager {
@@ -123,7 +126,7 @@ public class MenuItemManager extends MenuManager {
 	public ItemStack createPlayerSkull(IEGlowPlayer player) {
 		ItemStack item = createItem(Material.valueOf(PLAYER_HEAD), Message.GUI_SETTINGS_NAME.get(), 3, createInfoLore(player));
 		
-		if (!EGlowMainConfig.OptionRenderPlayerSkulls())
+		if (!MainConfig.SETTINGS_GUI_RENDER_SKULLS.getBoolean())
 			return item;
 		
 		try {
@@ -158,7 +161,13 @@ public class MenuItemManager extends MenuManager {
 		
 		meta.setColor(Color.fromRGB(red, green, blue));
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-		
+
+		//TODO not finished
+		/*if (DataManager.isNormalEffect(player.getEffect()) && player.getEffect().getName().equalsIgnoreCase(color.replace("-", "")) && (player.getFakeGlowStatus() || player.getGlowStatus())) {
+			meta.addEnchant(Enchantment.DURABILITY, 1, false);
+			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+		}*/
+
 		if (ProtocolVersion.SERVER_VERSION.getNetworkId() > 751)
 			meta.addItemFlags(ItemFlag.valueOf("HIDE_DYE"));
 		

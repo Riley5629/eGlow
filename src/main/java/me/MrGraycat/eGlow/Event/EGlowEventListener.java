@@ -12,7 +12,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Config.Playerdata.EGlowPlayerdataManager;
 import me.MrGraycat.eGlow.GUI.Menu;
@@ -72,7 +72,7 @@ public class EGlowEventListener implements Listener {
 		Player p = e.getPlayer();
 		IEGlowPlayer eglowPlayer = DataManager.getEGlowPlayer(p);
 		
-		if (eglowPlayer != null && EGlowMainConfig.getWorldCheckEnabled()) {	
+		if (eglowPlayer != null && MainConfig.WORLD_ENABLE.getBoolean()) {
 			if (eglowPlayer.isInBlockedWorld()) {
 				if (eglowPlayer.getGlowStatus() || eglowPlayer.getFakeGlowStatus()) {
 					eglowPlayer.toggleGlow();
@@ -107,7 +107,7 @@ public class EGlowEventListener implements Listener {
 			public void run() {
 				EGlowPlayerdataManager.loadPlayerdata(eglowPlayer);
 				
-				if (!EGlow.getInstance().isUpToDate() && EGlowMainConfig.OptionSendUpdateNotifications() && p.hasPermission("eglow.option.update"))
+				if (!EGlow.getInstance().isUpToDate() && MainConfig.SETTINGS_NOTIFICATIONS_UPDATE.getBoolean() && p.hasPermission("eglow.option.update"))
 					ChatUtil.sendPlainMsg(p, "&aA new update is available&f!", true);
 				
 				new BukkitRunnable() {
@@ -130,20 +130,20 @@ public class EGlowEventListener implements Listener {
 						ChatUtil.sendMsg(eglowPlayer.getPlayer(), Message.INVISIBILITY_DISABLED.get(), true);
 					} else {
 						eglowPlayer.activateGlow(effect);
-						if (EGlowMainConfig.OptionMentionGlowState() && eglowPlayer.getPlayer().hasPermission("eglow.option.glowstate"))
+						if (MainConfig.SETTINGS_JOIN_MENTION_GLOW_STATE.getBoolean() && eglowPlayer.getPlayer().hasPermission("eglow.option.glowstate"))
 							ChatUtil.sendMsg(eglowPlayer.getPlayer(), Message.GLOWING_STATE_ON_JOIN.get(effect.getDisplayName()), true);
 						return;
 					}
-					if (EGlowMainConfig.OptionMentionGlowState() && eglowPlayer.getPlayer().hasPermission("eglow.option.glowstate"))
+					if (MainConfig.SETTINGS_JOIN_MENTION_GLOW_STATE.getBoolean() && eglowPlayer.getPlayer().hasPermission("eglow.option.glowstate"))
 						ChatUtil.sendMsg(eglowPlayer.getPlayer(), Message.NON_GLOWING_STATE_ON_JOIN.get(), true);
 					return;
 				}
 				
 				if (eglowPlayer.getActiveOnQuit()) {
-					if (eglowPlayer.getEffect() == null || !eglowPlayer.getGlowOnJoin() || !p.hasPermission("eglow.option.glowonjoin") || EGlowMainConfig.OptionPermissionCheckonJoin() && !p.hasPermission(eglowPlayer.getEffect().getPermission()))
+					if (eglowPlayer.getEffect() == null || !eglowPlayer.getGlowOnJoin() || !p.hasPermission("eglow.option.glowonjoin") || MainConfig.SETTINGS_JOIN_CHECK_PERMISSION.getBoolean() && !p.hasPermission(eglowPlayer.getEffect().getPermission()))
 						return;
 					
-					if (EGlowMainConfig.getWorldCheckEnabled() && eglowPlayer.isInBlockedWorld()) {	
+					if (MainConfig.WORLD_ENABLE.getBoolean() && eglowPlayer.isInBlockedWorld()) {
 						if (eglowPlayer.getGlowStatus() || eglowPlayer.getFakeGlowStatus()) {
 							eglowPlayer.toggleGlow();
 							eglowPlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
@@ -159,12 +159,12 @@ public class EGlowEventListener implements Listener {
 					}
 					
 					eglowPlayer.activateGlow();
-					if (EGlowMainConfig.OptionMentionGlowState() && eglowPlayer.getPlayer().hasPermission("eglow.option.glowstate") && eglowPlayer.getEffect() != null)
+					if (MainConfig.SETTINGS_JOIN_MENTION_GLOW_STATE.getBoolean() && eglowPlayer.getPlayer().hasPermission("eglow.option.glowstate") && eglowPlayer.getEffect() != null)
 						ChatUtil.sendMsg(eglowPlayer.getPlayer(), Message.GLOWING_STATE_ON_JOIN.get(eglowPlayer.getEffect().getDisplayName()), true);
 					return;
 				}
 				
-				if (EGlowMainConfig.OptionMentionGlowState() && eglowPlayer.getPlayer().hasPermission("eglow.option.glowstate"))
+				if (MainConfig.SETTINGS_JOIN_MENTION_GLOW_STATE.getBoolean() && eglowPlayer.getPlayer().hasPermission("eglow.option.glowstate"))
 					ChatUtil.sendMsg(eglowPlayer.getPlayer(), Message.NON_GLOWING_STATE_ON_JOIN.get(), true);
 			}
 		}.runTaskLaterAsynchronously(EGlow.getInstance(), 2L);

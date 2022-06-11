@@ -3,7 +3,7 @@ package me.MrGraycat.eGlow.Command.SubCommands;
 import org.bukkit.command.CommandSender;
 
 import me.MrGraycat.eGlow.Command.SubCommand;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
@@ -55,7 +55,7 @@ public class ToggleCommand extends SubCommand {
 					return;
 				}
 				
-				if (EGlowMainConfig.OptionDisableGlowWhenInvisible() && ePlayer.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
+				if (MainConfig.SETTINGS_DISABLE_GLOW_WHEN_INVISIBLE.getBoolean() && ePlayer.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
 					ChatUtil.sendMsg(sender, Message.INVISIBILITY_BLOCKED.get(), true);
 					return;
 				}

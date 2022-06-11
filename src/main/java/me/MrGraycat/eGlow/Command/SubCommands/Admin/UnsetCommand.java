@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 import me.MrGraycat.eGlow.Command.SubCommand;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
@@ -51,7 +51,7 @@ public class UnsetCommand extends SubCommand {
 			if (eTarget.getFakeGlowStatus() || eTarget.getGlowStatus()) {
 				eTarget.toggleGlow();
 				
-				if (eTarget.getEntityType().equals("PLAYER") && EGlowMainConfig.OptionSendTargetNotification())
+				if (eTarget.getEntityType().equals("PLAYER") && MainConfig.SETTINGS_NOTIFICATIONS_TARGET_COMMAND.getBoolean())
 					ChatUtil.sendMsg(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.DISABLE_GLOW.get(), true);
 			}
 

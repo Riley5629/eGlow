@@ -1,6 +1,6 @@
 package me.MrGraycat.eGlow.Util.Text;
 
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Util.Packets.Chat.rgb.RGBUtils;
 import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
 import org.bukkit.Bukkit;
@@ -59,7 +59,7 @@ public class ChatUtil {
 	}
 
 	public static void sendMsgFromGUI(Player player, String message) {
-		if (EGlowMainConfig.EnableActionbarMessages() && EGlowMainConfig.UseActionbarInGUI()) {
+		if (MainConfig.ACTIONBARS_ENABLE.getBoolean() && MainConfig.ACTIONBARS_IN_GUI.getBoolean()) {
 			sendMsg(player, message, true);
 		} else {
 			sendPlainMsg(player, message, true);
@@ -71,7 +71,7 @@ public class ChatUtil {
 			message = translateColors(((withPrefix) ? Message.PREFIX.get() : "") + message);
 
 			if (sender instanceof Player) {
-				if (EGlowMainConfig.EnableActionbarMessages()) {
+				if (MainConfig.ACTIONBARS_ENABLE.getBoolean()) {
 					sendActionbar((Player) sender, message);
 				} else {
 					((Player) sender).sendMessage(message);

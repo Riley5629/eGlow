@@ -2,6 +2,8 @@ package me.MrGraycat.eGlow.Command.SubCommands.Admin;
 
 import java.lang.reflect.Field;
 
+import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMessageConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
@@ -9,8 +11,7 @@ import org.bukkit.entity.Player;
 
 import me.MrGraycat.eGlow.Command.SubCommand;
 import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
-import me.MrGraycat.eGlow.Config.EGlowMessageConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
@@ -70,7 +71,7 @@ public class ReloadCommand extends SubCommand {
 					continue;
 				}
 				
-				if (EGlowMainConfig.getWorldCheckEnabled() && ePlayer.isInBlockedWorld()) {
+				if (MainConfig.WORLD_ENABLE.getBoolean() && ePlayer.isInBlockedWorld()) {
 					if (ePlayer.getGlowStatus() || ePlayer.getFakeGlowStatus()) {
 						ePlayer.toggleGlow();
 						ePlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
@@ -86,9 +87,9 @@ public class ReloadCommand extends SubCommand {
 			}
 			
 			try{
-			    String alias = EGlowMainConfig.OptionCommandAlias();
+			    String alias = MainConfig.COMMAND_ALIAS.getString();
 			    
-			    if (EGlowMainConfig.OptionEnableCommandAlias() && alias != null && Bukkit.getServer().getPluginCommand(alias) == null) {
+			    if (MainConfig.COMMAND_ALIAS_ENABLE.getBoolean() && alias != null && Bukkit.getServer().getPluginCommand(alias) == null) {
 			    	 final Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 			    	 commandMapField.setAccessible(true);
 					 CommandMap commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());

@@ -8,7 +8,7 @@ import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.potion.PotionEffectType;
 
 import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
@@ -31,13 +31,13 @@ public class EGlowEventListener113AndAbove implements Listener {
 			if (ep == null)
 				return;
 			
-			if (EGlowMainConfig.OptionDisableGlowWhenInvisible()) {
+			if (MainConfig.SETTINGS_DISABLE_GLOW_WHEN_INVISIBLE.getBoolean()) {
 				if (e.getNewEffect() != null && e.getNewEffect().getType().equals(PotionEffectType.INVISIBILITY)) {
 					if (ep.getGlowStatus() || ep.getFakeGlowStatus()) {
 						ep.disableGlow(false);
 						ep.setGlowDisableReason(GlowDisableReason.INVISIBLE);
 						
-						if (EGlowMainConfig.OptionSendInvisibilityNotification())
+						if (MainConfig.SETTINGS_NOTIFICATIONS_INVISIBILITY.getBoolean())
 							ChatUtil.sendMsg(ep.getPlayer(), Message.INVISIBILITY_DISABLED.get(), true);
 						return;
 					}
@@ -48,7 +48,7 @@ public class EGlowEventListener113AndAbove implements Listener {
 						ep.activateGlow();
 						ep.setGlowDisableReason(GlowDisableReason.NONE);
 						
-						if (EGlowMainConfig.OptionSendInvisibilityNotification())
+						if (MainConfig.SETTINGS_NOTIFICATIONS_INVISIBILITY.getBoolean())
 							ChatUtil.sendMsg(ep.getPlayer(), Message.INVISIBILITY_ENABLED.get(), true);
 					}
 				}

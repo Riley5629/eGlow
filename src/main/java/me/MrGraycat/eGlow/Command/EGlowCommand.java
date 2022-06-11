@@ -19,7 +19,7 @@ import org.bukkit.util.StringUtil;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Command.SubCommands.*;
 import me.MrGraycat.eGlow.Command.SubCommands.Admin.*;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Event.EGlowEventListener;
 import me.MrGraycat.eGlow.Manager.DataManager;
@@ -38,9 +38,9 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 
 		try{
 		    final Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-		    String alias = EGlowMainConfig.OptionCommandAlias();
+		    String alias = MainConfig.COMMAND_ALIAS.getString();
 		    
-		    if (EGlowMainConfig.OptionEnableCommandAlias() && alias != null) {
+		    if (MainConfig.COMMAND_ALIAS_ENABLE.getBoolean() && alias != null) {
 		    	 commandMapField.setAccessible(true);
 				 CommandMap commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
 				 commandMap.register(alias, alias, EGlow.getInstance().getCommand("eglow"));
@@ -65,7 +65,7 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (command.getName().equalsIgnoreCase("eglow") || EGlowMainConfig.OptionEnableCommandAlias() && command.getName().equalsIgnoreCase(EGlowMainConfig.OptionCommandAlias())) {
+		if (command.getName().equalsIgnoreCase("eglow") || MainConfig.COMMAND_ALIAS_ENABLE.getBoolean() && command.getName().equalsIgnoreCase(MainConfig.COMMAND_ALIAS.getString())) {
 			SubCommand cmd = null;
 			IEGlowPlayer ePlayer = null;
 			String[] argsCopy = args.clone();
@@ -105,7 +105,7 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 		if (sender == null)
 			return null;
 		
-		if (sender instanceof Player && cmd.getName().equalsIgnoreCase("eGlow") || EGlowMainConfig.OptionEnableCommandAlias() && cmd.getName().equalsIgnoreCase(EGlowMainConfig.OptionCommandAlias())) {
+		if (sender instanceof Player && cmd.getName().equalsIgnoreCase("eGlow") || MainConfig.COMMAND_ALIAS_ENABLE.getBoolean() && cmd.getName().equalsIgnoreCase(MainConfig.COMMAND_ALIAS.getString())) {
 			ArrayList<String> args1 = new ArrayList<>();
 			ArrayList<String> suggestions = new ArrayList<>();
 			ArrayList<String> finalSuggestions = new ArrayList<>();

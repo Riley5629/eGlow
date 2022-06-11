@@ -5,7 +5,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.GUI.Menu;
 import me.MrGraycat.eGlow.Manager.DataManager;
@@ -21,7 +21,7 @@ public class EGlowMainMenu extends Menu {
 
 	@Override
 	public String getMenuName() {
-		return ChatUtil.translateColors(((EGlowMainConfig.OptionDisablePrefixInGUI()) ? Message.GUI_TITLE.get() : Message.PREFIX.get() + Message.GUI_TITLE.get()));
+		return ChatUtil.translateColors(((MainConfig.SETTINGS_GUI_ADD_PREFIX.getBoolean()) ? Message.GUI_TITLE.get() : Message.PREFIX.get() + Message.GUI_TITLE.get()));
 	}
 
 	@Override
@@ -132,7 +132,8 @@ public class EGlowMainMenu extends Menu {
 		default:
 			return;
 		}
-		
+
+		//setMenuItems();
 		UpdateMainNavigationBar(eGlowPlayer);
 	}
 

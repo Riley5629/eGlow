@@ -1,6 +1,6 @@
 package me.MrGraycat.eGlow.Config.Playerdata;
 
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.ConfigType;
 
@@ -13,7 +13,7 @@ public class EGlowPlayerdataManager {
 	 */
 	//TODO switch to sqlite when mysql would fail
 	public static void initialize() {
-		switch((EGlowMainConfig.useMySQL()) ? ConfigType.MYSQL : ConfigType.SQLITE) {
+		switch((MainConfig.MYSQL_ENABLE.getBoolean()) ? ConfigType.MYSQL : ConfigType.SQLITE) {
 		case SQLITE:
 			sqlite = new EGlowPlayerdataSQLite();
 			break;
@@ -33,7 +33,7 @@ public class EGlowPlayerdataManager {
 	 * @param ePlayer player to load data from
 	 */
 	public static void loadPlayerdata(IEGlowPlayer ePlayer) {
-		switch((EGlowMainConfig.useMySQL()) ? ConfigType.MYSQL : ConfigType.SQLITE) {
+		switch((MainConfig.MYSQL_ENABLE.getBoolean()) ? ConfigType.MYSQL : ConfigType.SQLITE) {
 		case SQLITE:
 			if (sqlite == null)
 				return;
@@ -61,7 +61,7 @@ public class EGlowPlayerdataManager {
 		if (!ePlayer.getSaveData())
 			return;
 		
-		switch((EGlowMainConfig.useMySQL()) ? ConfigType.MYSQL : ConfigType.SQLITE) {
+		switch((MainConfig.MYSQL_ENABLE.getBoolean()) ? ConfigType.MYSQL : ConfigType.SQLITE) {
 		case SQLITE:
 			if (sqlite == null)
 				return;
@@ -86,7 +86,7 @@ public class EGlowPlayerdataManager {
 	 *
 	 */
 	public static void savePlayerdata(String uuid, String lastGlowData, boolean glowOnJoin, boolean activeOnQuit, String glowVisibility, String glowDisableReason) {
-		switch((EGlowMainConfig.useMySQL()) ? ConfigType.MYSQL : ConfigType.SQLITE) {
+		switch((MainConfig.MYSQL_ENABLE.getBoolean()) ? ConfigType.MYSQL : ConfigType.SQLITE) {
 		case SQLITE:
 			if (sqlite == null)
 				return;
@@ -111,6 +111,6 @@ public class EGlowPlayerdataManager {
 	public static void setDefaultValues(IEGlowPlayer ePlayer) {
 		ePlayer.setActiveOnQuit(false);
 		ePlayer.setDataFromLastGlow("none");
-		ePlayer.setGlowOnJoin(EGlowMainConfig.OptionDefaultGlowOnJoinValue());
+		ePlayer.setGlowOnJoin(MainConfig.SETTINGS_JOIN_DEFAULT_GLOW_ON_JOIN_VALUE.getBoolean());
 	}
 }

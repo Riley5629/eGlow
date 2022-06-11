@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.GUI.Manager.MenuItemManager;
 import me.MrGraycat.eGlow.Manager.DataManager;
@@ -131,7 +131,7 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 	 * @param p to update the navigationbar for
 	 */
 	public void UpdateMainNavigationBar(IEGlowPlayer p) {
-		if (EGlowMainConfig.OptionAddGlassToInv()) {
+		if (MainConfig.SETTINGS_GUI_ADD_GLASS_PANES.getBoolean()) {
 			inventory.setItem(27, createItem(Material.valueOf(GLASS_PANE), "&f", 5, ""));
 			inventory.setItem(29, createItem(Material.valueOf(GLASS_PANE), "&f", 5, ""));
 			inventory.setItem(32, createItem(Material.valueOf(GLASS_PANE), "&f", 5, ""));

@@ -3,7 +3,7 @@ package me.MrGraycat.eGlow.GUI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
@@ -26,7 +26,7 @@ public abstract class PaginatedMenu extends Menu {
 	 * @param p player to update the navigation bar for
 	 */
 	public void UpdateMainEffectsNavigationBar(IEGlowPlayer p) {
-		if (EGlowMainConfig.OptionAddGlassToInv()) {
+		if (MainConfig.SETTINGS_GUI_ADD_GLASS_PANES.getBoolean()) {
 			inventory.setItem(27, createItem(Material.valueOf(GLASS_PANE), "&f", 5, ""));
 			inventory.setItem(30, createItem(Material.valueOf(GLASS_PANE), "&f", 5, ""));
 			inventory.setItem(31, createItem(Material.valueOf(GLASS_PANE), "&f", 5, ""));

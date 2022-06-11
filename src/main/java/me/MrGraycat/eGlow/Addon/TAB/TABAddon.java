@@ -8,7 +8,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
@@ -64,7 +64,7 @@ public class TABAddon {
 		setTABNametagPrefixSuffixEnabled(TAB_Config.getBoolean("scoreboard-teams.enabled", false));
 		setTABTeamPacketBlockingEnabled(TAB_Config.getBoolean("scoreboard-teams.anti-override", false));
 		
-		if (EGlowMainConfig.OptionAdvancedTABIntegration()) {
+		if (MainConfig.SETTINGS_SMART_TAB_NAMETAG_HANDLER.getBoolean()) {
 			if (!TAB_Config.getBoolean("scoreboard-teams.unlimited-nametag-mode.enabled", false)) {
 				TAB_Config.set("scoreboard-teams.unlimited-nametag-mode.enabled", true);
 				ChatUtil.sendToConsole("&6Enabling unlimited-nametag-mode in TAB since the advancedTABIntegration setting is enabled&f!", true);
@@ -100,7 +100,7 @@ public class TABAddon {
 		}
 		
 		try {
-			if (!EGlowMainConfig.OptionAdvancedTABIntegration()) {
+			if (!MainConfig.SETTINGS_SMART_TAB_NAMETAG_HANDLER.getBoolean()) {
 				TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, tagPrefix);
 			} else {
 				Property propertyCustomTagName = tabPlayer.getProperty(TabConstants.Property.CUSTOMTAGNAME);
