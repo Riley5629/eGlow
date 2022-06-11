@@ -1,68 +1,91 @@
- #Command alias to use instead of /eglow
-Command-alias: 
-  Enable: false
-  Alias: "glow"
-
-#Block/Allow glowing in certain worlds.
-World:
-  Enable: false
-  Action: BLOCK #Values: BLOCK/ALLOW
-  Worlds: #List of worlds the Action will be applied on.
-   - "worldname1"
-   - "worldname2"
-
-#Configure if you want to use actionbars
+#Use actionbars instead of chat messages
+#Disabled in GUI's by default because it may not be visable for larger GUI scales
 Actionbars:
-  Enable: true
-  Use-in-GUI: false
+  enable: true
+  use-in-GUI: false
 
-#Configure effects to force on players/groups (requires permission)
-Force-glow:
-  Enable: false
-  Bypass-blocked-worlds: false
-  Glows:
-    Owner: "red" #(eglow.force.owner)
-    Example: "rainbowfast" #(eglow.force.example)
-
-#MySQL Database details
-MySQL:
-  Enable: false
-  Host: "localhost"
-  Port: 3306
-  DBName: ""
-  Username: "root"
-  Password: "123"
-
-#Effect delays in seconds.
-#Editing these may require changes in intervals from other plugins!
+#Command alias to use instead of /eglow
+Command-alias:
+  enable: false
+  alias: "glow"
+  
+#Delay speed for effects
 Delays:
-  Player:
-    Slow: 2.0
-    Fast: 1.0
+  slow: 2.0
+  fast: 1.0
+  
+#Make eGlow handle the formatting of the tab/tag
+#Nametag will always have the glow, to help change this check out this:
+#https://feedback.minecraft.net/hc/en-us/community/posts/360075673311
+Formatting:
+  tablist:
+    enable: false
+    format: "%prefix% &r%name% %suffix%"
+  tagname:
+    enable: false
+    prefix: "%prefix%"
+    suffix: "%suffix"
 
-#Customise the formatting of the tablist/tagname.
-#Just some basic formatting for now may be expanded in the future.
-Tabname:
-  Enable: false
-  tabPrefix: "%prefix%"
-  tabName: "&r%name%"
-  tabSuffix: "%suffix%"
- 
-#Limited to format: prefix name suffix
-#name will always be in the color of the glow!
-Tagname:
-  Enable: false
-  tagPrefix: "%prefix%"
-  tagSuffix: "%suffix%"
+#Store player data in a MySQL database
+MySQL:
+  enable: false
+  host: "localhost"
+  port: 3306
+  DBName: ""
+  username: "root"
+  password: "123"
 
-#Some optional options
-Options:
-  Disable-glow-when-invisible: true #Disable the glow effect while being invisible. (1.13 and above)
-  Send-invisibility-notification: true #Toggle invisibility notifications
-  Render-player-skulls: true #Toggle skins rendering on playerskulls.
-  Default-glow-on-join-value: true #Default value to use for the glowonjoin setting.
-  Mention-glow-state-on-join: false #When a player joins eGlow will send a message like: You are (not) glowing (color)
-  Send-target-notification: true #Toggle notification for targeted player (when using /eglow set <player>).
-  PermissionCheck-on-join: false #Check if player still has the required permissions for that glow (on join).
-  Send-update-notifications: true #Toggle update notifications.
-  Advanced-TAB-integration: false #Bypass glow colored nametag using the TAB plugin
+#Block/allow glowing in certain worlds
+World:
+  enable: false
+  action: block
+  worlds:
+    - "world1"
+    - "world2"
+   
+Settings:
+  disable-glow-when-invisible: true
+  smart-TAB-nametag-handler: false
+  gui:
+    render-skulls: true
+    add-glass-panes: true
+    add-prefix-to-title: true
+    #Enabling this setting requires you to manually add the colors to the GUI section
+    #of the messages.yml
+    use-gui-color-for-messages: false
+    max-personal-effect-size: 10
+  join:
+    check-glow-permission: false
+    default-glow-on-join-value: true
+    mention-glow-state: false
+    #Configure effects to force on players/groups (using permission)
+    force-glows:
+      enable: false
+      bypass-blocked-worlds: false
+      glows:
+        #permission: eglow.force.founder
+        founder: "rainbowfast" 
+        #permission: eglow.force.vip
+        vip: "gold" 
+  notifications:
+    plugin-update: true
+    invisibility-change: true
+    target-set-unset-command: true
+
+#Advanced settings - Only edit these when you know what you're doing!
+#Disabling some of these settings may cause eGlow to not work properly
+Advanced:
+  MySQL:
+    useSSL: true
+  teams:
+    entity-collision: true
+    nametag-visibility: true
+    #Mainly aimed towards proxy networks to prevent 'Team already exists' kick
+    remove-teams-on-join: true
+    #Allows eGlow to set the proper glow color
+    #automatically disabled when using TAB
+    send-eGlow-team-packets: true
+  packets:
+    #Allows eGlow to modify team packets that would break the glow color
+    #automatically disabled when using TAB
+    smart-packet-blocker: true
