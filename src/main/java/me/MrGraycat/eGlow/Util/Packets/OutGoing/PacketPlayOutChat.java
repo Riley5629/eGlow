@@ -52,7 +52,7 @@ public class PacketPlayOutChat extends PacketPlayOut {
         Object component = NMSHook.stringToComponent(getMessage().toString(clientVersion));
 
         if (nms.minorVersion >= 19)
-            return nms.newPacketPlayOutChat.newInstance(new Object[] { this.getMessage().toString(clientVersion), Integer.valueOf(this.getType().ordinal()) });
+            return nms.newPacketPlayOutChat.newInstance(component, this.getType().ordinal());
 
         if (nms.minorVersion >= 16) {
             return nms.newPacketPlayOutChat.newInstance(component, nms.ChatMessageType_values[this.getType().ordinal()], UUID.randomUUID());
