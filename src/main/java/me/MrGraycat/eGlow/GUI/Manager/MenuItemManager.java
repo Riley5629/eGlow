@@ -1,9 +1,6 @@
 package me.MrGraycat.eGlow.GUI.Manager;
 
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import me.MrGraycat.eGlow.Util.Packets.NMSHook;
 import org.bukkit.Color;
@@ -26,7 +23,6 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 //TODO more special item support (custom effects)
 
-@SuppressWarnings("deprecation")
 public class MenuItemManager extends MenuManager {
 	public String GLASS_PANE = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) ? "STAINED_GLASS_PANE" : "CYAN_STAINED_GLASS_PANE";
 	private final String GUNPOWDER = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) ? "SULPHUR" : "GUNPOWDER";
