@@ -109,7 +109,10 @@ public class EGlowEventListener implements Listener {
 				
 				if (!EGlow.getInstance().isUpToDate() && MainConfig.SETTINGS_NOTIFICATIONS_UPDATE.getBoolean() && p.hasPermission("eglow.option.update"))
 					ChatUtil.sendPlainMsg(p, "&aA new update is available&f!", true);
-				
+
+				if (EGlowPlayerdataManager.getMySQL_Failed() && p.hasPermission("eglow.option.update"))
+					ChatUtil.sendPlainMsg(p, "&cMySQL failed to enable properly, have a look at this asap&f.", true);
+
 				new BukkitRunnable() {
 					@Override
 					public void run() {

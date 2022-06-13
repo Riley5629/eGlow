@@ -3,15 +3,17 @@ package me.MrGraycat.eGlow.Config.Playerdata;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.ConfigType;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class EGlowPlayerdataManager {
 	private static EGlowPlayerdataSQLite sqlite;
 	private static Object mysql;
+
+	private static boolean mysql_Failed = false;
 	
 	/**
 	 * Initialise the playerdata storage config/mysql
 	 */
-	//TODO switch to sqlite when mysql would fail
 	public static void initialize() {
 		switch((MainConfig.MYSQL_ENABLE.getBoolean()) ? ConfigType.MYSQL : ConfigType.SQLITE) {
 		case SQLITE:
@@ -103,7 +105,23 @@ public class EGlowPlayerdataManager {
 			}
 		}
 	}
-	
+
+	public static boolean getMySQL_Failed() {
+		return mysql_Failed;
+	}
+
+	public static void setMysql_Failed(boolean state) {
+		if (mysql_Failed == state)
+			return;
+
+		mysql_Failed = state;
+
+		if (!state) {
+			ChatUtil.sendToConsole("&6trying to reestablishing MySQL connection&f.", true);
+			initialize();
+		}
+	}
+
 	/**
 	 * Set non initialised player values
 	 * @param ePlayer to set the uninitialised values for

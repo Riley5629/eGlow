@@ -27,6 +27,7 @@ public class EGlowPlayerdataMySQL8 {
 		if (testMySQLConnection()) {
 			ChatUtil.sendToConsole("&aSuccessfully loaded MySQL.", true);
 		} else {
+			EGlowPlayerdataManager.setMysql_Failed(true);
 			ChatUtil.sendToConsole("&cFailed to load MySQL.", true);
 		}
 	}
@@ -75,7 +76,7 @@ public class EGlowPlayerdataMySQL8 {
 				EGlowPlayerdataManager.setDefaultValues(ePlayer);
 			}
 		} catch(SQLException e) {
-			ChatUtil.reportError(e);
+			e.printStackTrace();
 		} finally {
 			closeMySQLConnection(con, ps, res);
 		}
@@ -123,7 +124,7 @@ public class EGlowPlayerdataMySQL8 {
 			
 			ps.executeUpdate();
 		} catch (SQLException e) {
-			ChatUtil.reportError(e);
+			e.printStackTrace();
 		} finally {
 			closeMySQLConnection(con, ps, null);
 		}
@@ -154,7 +155,7 @@ public class EGlowPlayerdataMySQL8 {
 			
 			ps.executeUpdate();
 		} catch (SQLException e) {
-			ChatUtil.reportError(e);
+			e.printStackTrace();
 		} finally {
 			closeMySQLConnection(con, ps, null);
 		}
@@ -184,7 +185,7 @@ public class EGlowPlayerdataMySQL8 {
 			ps = con.prepareStatement(statement);
 			ps.executeUpdate();
 		} catch(SQLException e) {
-			ChatUtil.reportError(e);
+			e.printStackTrace();
 		} finally {
 			closeMySQLConnection(con, ps, null);
 		}
@@ -205,7 +206,7 @@ public class EGlowPlayerdataMySQL8 {
 			try {ps.executeUpdate();} catch(Exception e) {/*Ignored*/}
 			return true;
 		} catch(SQLException e) {
-			ChatUtil.reportError(e);
+			e.printStackTrace();
 			return false;
 		} finally {
 			closeMySQLConnection(con, ps, res);
