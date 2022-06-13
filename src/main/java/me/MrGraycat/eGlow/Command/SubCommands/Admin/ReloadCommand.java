@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig;
+import me.MrGraycat.eGlow.Config.Playerdata.EGlowPlayerdataManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
@@ -49,6 +50,7 @@ public class ReloadCommand extends SubCommand {
 	@Override
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
 		if (EGlowMainConfig.reloadConfig() && EGlowMessageConfig.reloadConfig() && EGlowCustomEffectsConfig.reloadConfig()) {
+			EGlowPlayerdataManager.setMysql_Failed(false);
 			DataManager.addEGlowEffects();
 			DataManager.addCustomEffects();
 			for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
