@@ -60,9 +60,31 @@ public class EffectCommand extends SubCommand {
 		switch(args.length) {
 		case(1):
 			effect = DataManager.getEGlowEffect(args[0].replace("off", "none").replace("disable", "none"));
+
+			if (effect == null && ePlayer.getEffect() != null && ePlayer.getEffect().getName().contains(args[0].toLowerCase())) {
+				IEGlowEffect effectNew = switchEffectSpeed(ePlayer.getEffect().getName());
+
+				if (effectNew != null) {
+					ePlayer.disableGlow(true);
+					ePlayer.activateGlow(effectNew);
+					ChatUtil.sendMsg(sender, Message.NEW_GLOW.get(effectNew.getDisplayName()), true);
+					return;
+				}
+			}
 			break;
 		case(2):
 			effect = DataManager.getEGlowEffect(args[0] + args[1]);
+
+			if (effect == null && ePlayer.getEffect() != null && ePlayer.getEffect().getName().contains(args[0].toLowerCase() + args[1].toLowerCase())) {
+				IEGlowEffect effectNew = switchEffectSpeed(ePlayer.getEffect().getName());
+
+				if (effectNew != null) {
+					ePlayer.disableGlow(true);
+					ePlayer.activateGlow(effectNew);
+					ChatUtil.sendMsg(sender, Message.NEW_GLOW.get(effectNew.getDisplayName()), true);
+					return;
+				}
+			}
 			break;
 		case(3):
 			effect = DataManager.getEGlowEffect(args[0] + args[1] + args[2]);
@@ -100,5 +122,15 @@ public class EffectCommand extends SubCommand {
 			return;
 		}
 		ChatUtil.sendMsg(sender, Message.NO_PERMISSION.get(), true);
+	}
+
+	private IEGlowEffect switchEffectSpeed(String effectName) {
+		if (effectName.contains("slow")) {
+			return DataManager.getEGlowEffect(effectName.replace("slow",  "fast"));
+		} else if (effectName.contains("fast")) {
+			return DataManager.getEGlowEffect(effectName.replace("fast",  "slow"));
+		} else {
+			return null;
+		}
 	}
 }
