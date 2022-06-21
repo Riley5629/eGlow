@@ -32,7 +32,6 @@ public class DebugUtil {
 		
 		ChatUtil.sendPlainMsg(sender, "&f&m                                                                               ", false);
 		ChatUtil.sendPlainMsg(sender, "&fServer version: &e" + version, false);
-		ChatUtil.sendPlainMsg(sender, "&fDebug: &e" + NMSHook.isBungee(), false);
 		ChatUtil.sendPlainMsg(sender, "Plugins:", false);
 		for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
 			String pluginName = plugin.getDescription().getName();
