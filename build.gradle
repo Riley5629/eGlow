@@ -13,7 +13,6 @@ compileJava.options.encoding = 'UTF-8'
 
 repositories {
     mavenCentral()
-    mavenLocal()
     //Spigot
     maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
     //TAB, YamlAssist, Vault
@@ -27,36 +26,34 @@ repositories {
         allowInsecureProtocol = true
     }
     //LibsDisguises
-    maven { url = 'https://repo.md-5.net/content/groups/public' }
+    maven { url = 'https://repo.md-5.net/content/groups/public/' }
     //ViaVersion
     maven { url = 'https://repo.viaversion.com/' }
     //Default unknown
     maven { url = 'https://oss.sonatype.org/content/groups/public/' }
+    mavenLocal()
 }
 
 dependencies {
     compileOnly ('org.spigotmc:spigot:1.19-R0.1-SNAPSHOT')
     compileOnly ('org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT')
     compileOnly ('com.github.NEZNAMY:TAB:3.1.0')
-    compileOnly 'net.luckperms:api:5.4'
+    compileOnly ('net.luckperms:api:5.4')
     compileOnly ('net.citizensnpcs:citizens-main:2.0.27-SNAPSHOT')
     compileOnly ('me.clip:placeholderapi:2.10.9')
     compileOnly ('de.robingrether.idisguise:idisguise-core:5.8.2')
-    compileOnly ('LibsDisguises:LibsDisguises:10.0.24-SNAPSHOT')
+    compileOnly ('LibsDisguises:LibsDisguises:10.0.28')
     compileOnly ('us.myles:viaversion:3.2.1')
     compileOnly ('com.github.MilkBowl:VaultAPI:1.7')
     compileOnly ('org.xerial:sqlite-jdbc:3.36.0.3')
-    compileOnly ('mysql:mysql-connector-java:5.1.49') {
-        transitive = true
-    }
-    compileOnly 'mysql:mysql-connector-java:8.0.29'
     implementation ('com.github.NEZNAMY:YamlAssist:1.0.5') {
-        exclude(group: 'org.yaml', module: 'snakeyaml')
+        exclude (group: 'org.yaml', module: 'snakeyaml')
     }
 }
 
 //Clean up unneeded external libraries
 configurations.compileOnly {
+    exclude(group: 'com.comphenix.protocol', module: 'ProtocolLib')
     exclude(group: 'com.destroystokyo.paper', module: 'paper-api')
     exclude(group: 'com.github.dmulloy2', module: 'ProtoccolLib')
     exclude(group: 'com.github.NEZNAMY.TAB', module: 'bstats-base')
