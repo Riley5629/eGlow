@@ -1,5 +1,6 @@
 package me.MrGraycat.eGlow.GUI.Manager;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 import me.MrGraycat.eGlow.Util.Packets.NMSHook;
@@ -38,7 +39,7 @@ public class MenuItemManager extends MenuManager {
 	 * @return Item as Itemstack
 	 */
 	public ItemStack createItem(Material mat, String name, int numb, String... lores) {
-		ItemStack item = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12 && numb != 0) ? new ItemStack(mat, 1, (short) numb) : new ItemStack(mat);
+		ItemStack item = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12 && numb != 0) ? createLegacyItemStack(mat, 1, (short) numb) : new ItemStack(mat);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
 		
@@ -65,7 +66,7 @@ public class MenuItemManager extends MenuManager {
 	 * @return Item as Itemstack
 	 */
 	public ItemStack createItem(Material mat, String name, int numb, List<String> lores) {
-		ItemStack item = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12 && numb != 0) ? new ItemStack(mat, 1, (short) numb) : new ItemStack(mat);
+		ItemStack item = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12 && numb != 0) ? createLegacyItemStack(mat, 1, (short) numb) : new ItemStack(mat);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
 		
@@ -93,7 +94,7 @@ public class MenuItemManager extends MenuManager {
 	 * @return Item as Itemstack
 	 */
 	public ItemStack createItem(Material mat, String name, int numb, List<String> lores, int model) {
-		ItemStack item = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12 && numb != 0) ? new ItemStack(mat, 1, (short) numb) : new ItemStack(mat);
+		ItemStack item = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12 && numb != 0) ? createLegacyItemStack(mat, 1, (short) numb) : new ItemStack(mat);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
 		
@@ -281,5 +282,14 @@ public class MenuItemManager extends MenuManager {
 
 	public EGlow getInstance() {
 		return EGlow.getInstance();
+	}
+
+	private ItemStack createLegacyItemStack(Material mat, int i, short j) {
+		try {
+			return (ItemStack) NMSHook.nms.getItemStack.newInstance(mat, i, j);
+		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return new ItemStack(Material.AIR);
 	}
 }

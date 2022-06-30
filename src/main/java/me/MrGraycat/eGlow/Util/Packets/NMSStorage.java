@@ -6,6 +6,7 @@ import java.util.*;
 import org.bukkit.Bukkit;
 import io.netty.channel.Channel;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import org.bukkit.Material;
 
 @SuppressWarnings({"rawtypes"})
 public class NMSStorage {
@@ -32,7 +33,9 @@ public class NMSStorage {
 
 	//Spigot
 	public Class<?> SpigotConfig;
+	public Class<?> itemStack;
 	public Class<?> skullMeta;
+	public Constructor<?> getItemStack;
 	public Method setOwningPlayer;
 	public Field bungee;
 
@@ -122,6 +125,8 @@ public class NMSStorage {
 			this.SpigotConfig = getNormalClass("org.spigotmc.SpigotConfig");
 
 			if (this.minorVersion <= 12) {
+				this.itemStack = getNormalClass("org.bukkit.inventory.ItemStack");
+				this.getItemStack = this.itemStack.getConstructor(Material.class, int.class, short.class);
 				this.skullMeta = getNormalClass("org.bukkit.inventory.meta.SkullMeta");
 				this.setOwningPlayer = getMethod(this.skullMeta, new String[] {"setOwner"}, String.class);
 			}
