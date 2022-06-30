@@ -7,7 +7,7 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 public class EGlowPlayerdataManager {
 	private static EGlowPlayerdataSQLite sqlite;
-	private static Object mysql;
+	private static EGlowPlayerdataMySQL mysql;
 
 	private static boolean mysql_Failed = false;
 	
@@ -20,12 +20,7 @@ public class EGlowPlayerdataManager {
 			sqlite = new EGlowPlayerdataSQLite();
 			break;
 		case MYSQL:
-			try {
-				Class.forName("com.mysql.cj.jdbc.MysqlDataSource");
-				mysql = new EGlowPlayerdataMySQL8();
-			} catch(ClassNotFoundException e) {
-				mysql = new EGlowPlayerdataMySQL();
-			}
+			mysql = new EGlowPlayerdataMySQL();
 			break;
 		}
 	}
@@ -46,11 +41,7 @@ public class EGlowPlayerdataManager {
 			if (mysql == null)
 				return;
 
-			if (mysql instanceof EGlowPlayerdataMySQL8) {
-				((EGlowPlayerdataMySQL8) mysql).loadPlayerdata(ePlayer);
-			} else {
-				((EGlowPlayerdataMySQL) mysql).loadPlayerdata(ePlayer);
-			}
+			mysql.loadPlayerdata(ePlayer);
 			break;
 		}
 	}
@@ -74,11 +65,7 @@ public class EGlowPlayerdataManager {
 			if (mysql == null)
 				return;
 
-			if (mysql instanceof EGlowPlayerdataMySQL8) {
-				((EGlowPlayerdataMySQL8) mysql).savePlayerdata(ePlayer);
-			} else {
-				((EGlowPlayerdataMySQL) mysql).savePlayerdata(ePlayer);
-			}
+			mysql.savePlayerdata(ePlayer);
 			break;
 		}
 	}
@@ -98,11 +85,7 @@ public class EGlowPlayerdataManager {
 			if (mysql == null)
 				return;
 
-			if (mysql instanceof EGlowPlayerdataMySQL8) {
-				((EGlowPlayerdataMySQL8) mysql).savePlayerdata(uuid, lastGlowData, glowOnJoin, activeOnQuit, glowVisibility, glowDisableReason);
-			} else {
-				((EGlowPlayerdataMySQL) mysql).savePlayerdata(uuid, lastGlowData, glowOnJoin, activeOnQuit, glowVisibility, glowDisableReason);
-			}
+			mysql.savePlayerdata(uuid, lastGlowData, glowOnJoin, activeOnQuit, glowVisibility, glowDisableReason);
 		}
 	}
 

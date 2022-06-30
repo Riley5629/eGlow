@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.Locale;
 
 import me.MrGraycat.eGlow.Addon.BStats.Metrics;
+import me.MrGraycat.eGlow.Addon.Internal.AdvancedGlowVisibilityAddon;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -56,10 +57,11 @@ public class EGlow extends JavaPlugin {
 		if (versionIsCompactible()) {
 			ProtocolVersion.SERVER_VERSION = ProtocolVersion.fromServerString(Bukkit.getBukkitVersion().split("-")[0]);
 
+			NMSHook.initialize();
+
 			loadConfigs();
 			
 			DataManager.initialize();
-			NMSHook.initialize();
 			
 			registerEventsAndCommands();
 			checkForUpdates();
@@ -105,6 +107,9 @@ public class EGlow extends JavaPlugin {
 				getMetricsAddon().addCustomChart(new Metrics.SimplePie("using_advanced_tab_integration", () -> (MainConfig.SETTINGS_SMART_TAB_NAMETAG_HANDLER.getBoolean()) ? "yes" : "no"));
 				getMetricsAddon().addCustomChart(new Metrics.SimplePie("database_type", () -> (MainConfig.MYSQL_ENABLE.getBoolean()) ? "MySQL" : "SQLite"));
 				getMetricsAddon().addCustomChart(new Metrics.SimplePie("command_aliases", () -> (MainConfig.COMMAND_ALIAS_ENABLE.getBoolean() && !MainConfig.COMMAND_ALIAS.getString().equalsIgnoreCase("eglow")) ? MainConfig.COMMAND_ALIAS.getString().toLowerCase() : "none"));
+
+				//TODO in testing
+				//new AdvancedGlowVisibilityAddon();
 
 				if (DebugUtil.pluginCheck("PlaceholderAPI"))
 					new PlaceholderAPIAddon();

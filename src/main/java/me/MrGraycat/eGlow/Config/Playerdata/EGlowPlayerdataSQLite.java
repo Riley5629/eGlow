@@ -1,22 +1,17 @@
 package me.MrGraycat.eGlow.Config.Playerdata;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.bukkit.scheduler.BukkitRunnable;
-import org.sqlite.SQLiteDataSource;
-
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.sqlite.SQLiteDataSource;
+
+import java.io.File;
+import java.sql.*;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class EGlowPlayerdataSQLite {
 	private final ConcurrentHashMap<String, String> SavingQueue = new ConcurrentHashMap<>();

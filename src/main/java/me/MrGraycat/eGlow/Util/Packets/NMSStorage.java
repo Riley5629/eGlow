@@ -36,6 +36,15 @@ public class NMSStorage {
 	public Method setOwningPlayer;
 	public Field bungee;
 
+	//MySQL
+	public Class<?> MySQLDataSource;
+	public Constructor<?> newMySQLDataSource;
+	public Method MySQL_getConnection;
+	public Method MySQL_setServerName;
+	public Method MySQL_setPort;
+	public Method MySQL_setDatabaseName;
+	public Method MySQL_setUser;
+	public Method MySQL_setPassword;
 
 	//PacketPlayOutChat
 	public Class<?> ChatMessageType;
@@ -118,6 +127,15 @@ public class NMSStorage {
 			}
 
 			this.bungee = getField(this.SpigotConfig);
+
+			this.MySQLDataSource = getNormalClass("com.mysql.jdbc.jdbc2.optional.MysqlDataSource", "com.mysql.cj.jdbc.MysqlDataSource");
+			this.newMySQLDataSource = this.MySQLDataSource.getConstructors()[0];
+			this.MySQL_getConnection = getMethod(this.MySQLDataSource, new String[] {"getConnection"});
+			this.MySQL_setServerName = getMethod(this.MySQLDataSource, new String[] {"setServerName"}, String.class);
+			this.MySQL_setPort = getMethod(this.MySQLDataSource, new String[] {"setPort"}, int.class);
+			this.MySQL_setDatabaseName = getMethod(this.MySQLDataSource, new String[] {"setDatabaseName"}, String.class);
+			this.MySQL_setUser = getMethod(this.MySQLDataSource, new String[] {"setUser"}, String.class);
+			this.MySQL_setPassword = getMethod(this.MySQLDataSource, new String[] {"setPassword"}, String.class);
 
 			this.DataWatcher = getNMSClass("net.minecraft.network.syncher.DataWatcher", "DataWatcher");
 			Class<?> dataWatcherItem = getNMSClass("net.minecraft.network.syncher.DataWatcher$Item", "DataWatcher$Item", "DataWatcher$WatchableObject", "WatchableObject");
@@ -202,12 +220,15 @@ public class NMSStorage {
 		throw new ClassNotFoundException("No class found with possible names " + Arrays.toString(names));
 	}
 
-	private Class<?> getNormalClass(String name) throws  ClassNotFoundException {
-		try {
-			return Class.forName(name);
-		} catch (NullPointerException e) {
-			throw new ClassNotFoundException(name);
+	private Class<?> getNormalClass(String... names) throws  ClassNotFoundException {
+		for (String name : names) {
+			try {
+				return Class.forName(name);
+			} catch (ClassNotFoundException e) {
+				continue;
+			}
 		}
+		throw new ClassNotFoundException("No class found with possible names " + Arrays.toString(names));
 	}
 
 	private Class<?> getNMSClass(String name) throws ClassNotFoundException {
