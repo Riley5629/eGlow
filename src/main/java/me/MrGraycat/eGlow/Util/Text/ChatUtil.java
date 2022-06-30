@@ -4,7 +4,6 @@ import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Util.Packets.Chat.rgb.RGBUtils;
 import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -12,8 +11,14 @@ import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
+import me.MrGraycat.eGlow.Util.Packets.Chat.ChatColor;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ChatUtil {
+	private final static Pattern rgb = Pattern.compile("#[0-9a-fA-F]{6}");
+
 	public static String setToBasicName(String effect) {
 		effect = ChatColor.stripColor(effect).toLowerCase();
 		
@@ -43,6 +48,14 @@ public class ChatUtil {
 		}
 
 		text = RGBUtils.getInstance().applyFormats(text);
+
+		Matcher match = rgb.matcher(text);
+		while(match.find()) {
+			String color = text.substring(match.start(), match.end());
+			text = text.replace(color, ChatColor.of(color) + "");
+			match = rgb.matcher(text);
+		}
+
 		return text.replace("&", "§");
 	}
 

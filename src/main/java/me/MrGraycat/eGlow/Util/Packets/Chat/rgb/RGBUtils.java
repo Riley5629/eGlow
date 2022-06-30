@@ -70,6 +70,7 @@ public class RGBUtils {
         for (GradientPattern pattern : gradients) {
             replaced = pattern.applyPattern(replaced, false);
         }
+
         for (RGBFormatter formatter : formats) {
             replaced = formatter.reformat(replaced);
         }

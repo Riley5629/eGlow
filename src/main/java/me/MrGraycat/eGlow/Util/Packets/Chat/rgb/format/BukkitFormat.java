@@ -20,7 +20,7 @@ public class BukkitFormat implements RGBFormatter {
         while (m.find()) {
             String hexCode = m.group();
             String fixed = new String(new char[] {'#', hexCode.charAt(3), hexCode.charAt(5), hexCode.charAt(7), hexCode.charAt(9), hexCode.charAt(11), hexCode.charAt(13)});
-            replaced = replaced.replace(hexCode, fixed);
+            replaced = replaced.replace(hexCode, EnumChatFormat.color(fixed));
         }
         return replaced;
     }
