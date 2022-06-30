@@ -1,9 +1,4 @@
-.classpath
-.project
-.settings
-bin
-target
-dependency-reduced-pom.xml
-src/plugin.yml.bak
+/.gradle/
 /.idea/
-eGlow.iml
+/build/
+/gradle/
