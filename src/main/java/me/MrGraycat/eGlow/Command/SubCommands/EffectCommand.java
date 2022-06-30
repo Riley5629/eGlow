@@ -61,9 +61,15 @@ public class EffectCommand extends SubCommand {
 		case(1):
 			effect = DataManager.getEGlowEffect(args[0].replace("off", "none").replace("disable", "none"));
 
-			if (effect == null && ePlayer.getEffect() != null && ePlayer.getEffect().getName().contains(args[0].toLowerCase())) {
-				IEGlowEffect effectNew = switchEffectSpeed(ePlayer.getEffect().getName());
+			if (effect == null && ePlayer.getEffect() != null) {
+				IEGlowEffect effectNew = null;
 
+				if (ePlayer.getEffect().getName().contains(args[0].toLowerCase())) {
+					effectNew = switchEffectSpeed(ePlayer.getEffect().getName());
+				} else if (DataManager.getEGlowEffect(args[0].toLowerCase() + ePlayer.getEffect().getName() + "slow") != null) {
+					effectNew = DataManager.getEGlowEffect(args[0].toLowerCase() + ePlayer.getEffect().getName() + "slow");
+				}
+				
 				if (effectNew != null) {
 					ePlayer.disableGlow(true);
 					ePlayer.activateGlow(effectNew);
