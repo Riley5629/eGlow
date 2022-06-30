@@ -198,12 +198,12 @@ public class EGlowMainConfig {
 
 		ADVANCED_MYSQL_USESSL("Advanced.MySQL.useSSL"),
 
-		ADVANCED_TEAMS_ENTITY_COLLISION("Advanced.Teams.entity-collision"),
-		ADVANCED_TEAMS_NAMETAG_VISIBILITY("Advanced.Teams.nametag-visibility"),
-		ADVANCED_TEAMS_REMOVE_ON_JOIN("Advanced.Teams.remove-teams-on-join"),
-		ADVANCED_TEAMS_SEND_PACKETS("Advanced.Teams.send-eGlow-team-packets"),
+		ADVANCED_TEAMS_ENTITY_COLLISION("Advanced.teams.entity-collision"),
+		ADVANCED_TEAMS_NAMETAG_VISIBILITY("Advanced.teams.nametag-visibility"),
+		ADVANCED_TEAMS_REMOVE_ON_JOIN("Advanced.teams.remove-teams-on-join"),
+		ADVANCED_TEAMS_SEND_PACKETS("Advanced.teams.send-eGlow-team-packets"),
 
-		ADVANCED_PACKETS_SMART_BLOCKER("Advanced.Packets.smart-packet-blocker");
+		ADVANCED_PACKETS_SMART_BLOCKER("Advanced.packets.smart-packet-blocker");
 
 		private final MainConfig main;
 		private final String configPath;
