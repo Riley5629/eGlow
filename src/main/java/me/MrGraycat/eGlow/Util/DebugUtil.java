@@ -3,6 +3,7 @@ package me.MrGraycat.eGlow.Util;
 import me.MrGraycat.eGlow.Util.Packets.NMSHook;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
