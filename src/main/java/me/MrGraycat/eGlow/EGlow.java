@@ -3,10 +3,9 @@ package me.MrGraycat.eGlow;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.Locale;
 
-import me.MrGraycat.eGlow.Addon.BStats.Metrics;
-import me.MrGraycat.eGlow.Addon.Internal.AdvancedGlowVisibilityAddon;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -103,10 +102,10 @@ public class EGlow extends JavaPlugin {
 			public void run() {
 				setMetricsAddon(new Metrics(getInstance(), 9468));
 
-				getMetricsAddon().addCustomChart(new Metrics.SimplePie("using_tab", () -> (EGlow.getInstance().getTABAddon() != null) ? "yes" : "no"));
-				getMetricsAddon().addCustomChart(new Metrics.SimplePie("using_advanced_tab_integration", () -> (MainConfig.SETTINGS_SMART_TAB_NAMETAG_HANDLER.getBoolean()) ? "yes" : "no"));
-				getMetricsAddon().addCustomChart(new Metrics.SimplePie("database_type", () -> (MainConfig.MYSQL_ENABLE.getBoolean()) ? "MySQL" : "SQLite"));
-				getMetricsAddon().addCustomChart(new Metrics.SimplePie("command_aliases", () -> (MainConfig.COMMAND_ALIAS_ENABLE.getBoolean() && !MainConfig.COMMAND_ALIAS.getString().equalsIgnoreCase("eglow")) ? MainConfig.COMMAND_ALIAS.getString().toLowerCase() : "none"));
+				getMetricsAddon().addCustomChart(new SimplePie("using_tab", () -> (EGlow.getInstance().getTABAddon() != null) ? "yes" : "no"));
+				getMetricsAddon().addCustomChart(new SimplePie("using_advanced_tab_integration", () -> (MainConfig.SETTINGS_SMART_TAB_NAMETAG_HANDLER.getBoolean()) ? "yes" : "no"));
+				getMetricsAddon().addCustomChart(new SimplePie("database_type", () -> (MainConfig.MYSQL_ENABLE.getBoolean()) ? "MySQL" : "SQLite"));
+				getMetricsAddon().addCustomChart(new SimplePie("command_aliases", () -> (MainConfig.COMMAND_ALIAS_ENABLE.getBoolean() && !MainConfig.COMMAND_ALIAS.getString().equalsIgnoreCase("eglow")) ? MainConfig.COMMAND_ALIAS.getString().toLowerCase() : "none"));
 
 				//TODO in testing
 				//new AdvancedGlowVisibilityAddon();
