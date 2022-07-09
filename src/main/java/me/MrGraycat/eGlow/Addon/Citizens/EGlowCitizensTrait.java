@@ -5,7 +5,6 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
-import net.citizensnpcs.api.util.MemoryDataKey;
 
 public class EGlowCitizensTrait extends Trait {
 	IEGlowPlayer eGlowNPC = null;
@@ -45,10 +44,6 @@ public class EGlowCitizensTrait extends Trait {
 			key.setBoolean("ActiveOnDespawn", activeOnDespawn);
 			key.setString("LastEffect", lastEffect);
 		}
-	}
-
-	public void OnAttach() {
-		load(new MemoryDataKey());
 	}
 	
 	public void onSpawn() {
