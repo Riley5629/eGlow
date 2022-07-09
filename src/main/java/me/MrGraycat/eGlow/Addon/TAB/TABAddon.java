@@ -1,14 +1,7 @@
 package me.MrGraycat.eGlow.Addon.TAB;
 
-import java.util.UUID;
-
-import me.neznamy.tab.platforms.bukkit.features.unlimitedtags.BukkitNameTagX;
-import org.bukkit.ChatColor;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
+import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
@@ -17,7 +10,13 @@ import me.neznamy.tab.api.TabAPI;
 import me.neznamy.tab.api.TabPlayer;
 import me.neznamy.tab.api.config.ConfigurationFile;
 import me.neznamy.tab.api.event.plugin.TabLoadEvent;
+import me.neznamy.tab.platforms.bukkit.features.unlimitedtags.BukkitNameTagX;
 import me.neznamy.tab.shared.TabConstants;
+import org.bukkit.ChatColor;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.UUID;
 
 public class TABAddon {
 	private boolean TAB_Supported = false;
@@ -94,7 +93,7 @@ public class TABAddon {
 		String color = (glowColor.equals(ChatColor.RESET)) ? "" : glowColor + "";
 
 		try {
-			tagPrefix = TabAPI.getInstance().getTeamManager().getOriginalPrefix(tabPlayer) + color;
+			tagPrefix = TabAPI.getInstance().getTeamManager().getOriginalPrefix(tabPlayer);
 		}  catch(Exception ex) {
 			tagPrefix = color;
 		}
