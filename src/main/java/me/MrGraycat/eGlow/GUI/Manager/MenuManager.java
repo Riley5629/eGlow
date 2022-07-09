@@ -1,8 +1,8 @@
 package me.MrGraycat.eGlow.GUI.Manager;
 
-import java.util.HashMap;
-
 import org.bukkit.entity.Player;
+
+import java.util.HashMap;
 
 public class MenuManager {
 	private final HashMap<Player, MenuMetadata> playerMenuMetadata = new HashMap<>();

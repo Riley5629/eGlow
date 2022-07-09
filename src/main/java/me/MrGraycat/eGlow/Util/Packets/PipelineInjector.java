@@ -1,10 +1,11 @@
 package me.MrGraycat.eGlow.Util.Packets;
 
-import java.util.*;
-
-import io.netty.channel.*;
-import me.MrGraycat.eGlow.EGlow;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
+import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.DebugUtil;
@@ -13,6 +14,8 @@ import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
 import me.MrGraycat.eGlow.Util.Packets.OutGoing.PacketPlayOut;
 import me.MrGraycat.eGlow.Util.Packets.OutGoing.PacketPlayOutEntityMetadata;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+
+import java.util.*;
 
 public class PipelineInjector{
 	private static final String DECODER_NAME = "eGlowReader";

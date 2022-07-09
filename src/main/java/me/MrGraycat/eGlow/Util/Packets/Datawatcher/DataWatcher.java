@@ -1,12 +1,12 @@
 package me.MrGraycat.eGlow.Util.Packets.Datawatcher;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import me.MrGraycat.eGlow.Util.Packets.NMSHook;
 import me.MrGraycat.eGlow.Util.Packets.NMSStorage;
 import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DataWatcher {
 

@@ -1,20 +1,17 @@
 
 package me.MrGraycat.eGlow.Config;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-
+import me.MrGraycat.eGlow.EGlow;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import me.neznamy.yamlassist.YamlAssist;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.permissions.Permission;
 import org.yaml.snakeyaml.error.YAMLException;
 
-import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Util.EnumUtil.GlowWorldAction;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
-import me.neznamy.yamlassist.YamlAssist;
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 public class EGlowMainConfig {
 	private static YamlConfiguration config;

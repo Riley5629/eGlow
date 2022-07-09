@@ -1,9 +1,5 @@
 package me.MrGraycat.eGlow.Command.SubCommands.Admin;
 
-import java.util.List;
-
-import org.bukkit.command.CommandSender;
-
 import me.MrGraycat.eGlow.Command.SubCommand;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
@@ -13,6 +9,9 @@ import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import org.bukkit.command.CommandSender;
+
+import java.util.List;
 
 public class SetCommand extends SubCommand {
 

@@ -1,21 +1,22 @@
 package me.MrGraycat.eGlow.GUI.Menus;
 
-import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
-
+import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig.Effect;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
+import me.MrGraycat.eGlow.GUI.PaginatedMenu;
+import me.MrGraycat.eGlow.Manager.DataManager;
+import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
+import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
+import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
-import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig.Effect;
-import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
-import me.MrGraycat.eGlow.GUI.*;
-import me.MrGraycat.eGlow.Manager.DataManager;
-import me.MrGraycat.eGlow.Manager.Interface.*;
-import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
-import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class EGlowEffectMenu extends PaginatedMenu {
 	private ConcurrentHashMap<Integer, String> effects = new ConcurrentHashMap<>();	

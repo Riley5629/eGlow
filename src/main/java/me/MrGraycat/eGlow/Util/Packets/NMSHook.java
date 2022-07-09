@@ -1,12 +1,11 @@
 package me.MrGraycat.eGlow.Util.Packets;
 
-import org.bukkit.entity.Player;
-
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Packets.Datawatcher.DataWatcher;
 import me.MrGraycat.eGlow.Util.Packets.Datawatcher.DataWatcherObject;
 import me.MrGraycat.eGlow.Util.Packets.Datawatcher.DataWatcherRegistry;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.SkullMeta;
 
 public class NMSHook {

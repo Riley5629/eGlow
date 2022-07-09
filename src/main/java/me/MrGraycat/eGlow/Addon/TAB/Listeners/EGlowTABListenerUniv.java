@@ -1,19 +1,18 @@
 package me.MrGraycat.eGlow.Addon.TAB.Listeners;
 
-import java.util.ConcurrentModificationException;
-
+import me.MrGraycat.eGlow.API.Event.GlowColorChangeEvent;
+import me.MrGraycat.eGlow.Addon.TAB.TABAddon;
+import me.MrGraycat.eGlow.EGlow;
+import me.MrGraycat.eGlow.Manager.DataManager;
+import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.DebugUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.API.Event.GlowColorChangeEvent;
-import me.MrGraycat.eGlow.Addon.TAB.TABAddon;
-import me.MrGraycat.eGlow.Manager.DataManager;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.DebugUtil;
+import java.util.ConcurrentModificationException;
 
 public class EGlowTABListenerUniv implements Listener { 	
 

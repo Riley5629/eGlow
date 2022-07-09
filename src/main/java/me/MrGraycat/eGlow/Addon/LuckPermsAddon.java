@@ -1,22 +1,21 @@
 package me.MrGraycat.eGlow.Addon;
 
-import org.bukkit.Bukkit;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.IllegalPluginAccessException;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Addon.TAB.TABAddon;
+import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
 import me.MrGraycat.eGlow.Util.Packets.Chat.EnumChatFormat;
+import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.event.EventBus;
 import net.luckperms.api.event.EventSubscription;
 import net.luckperms.api.event.group.GroupDataRecalculateEvent;
 import net.luckperms.api.event.user.UserDataRecalculateEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.IllegalPluginAccessException;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class LuckPermsAddon implements Listener {
 	

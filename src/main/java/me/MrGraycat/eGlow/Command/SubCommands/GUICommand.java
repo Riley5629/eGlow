@@ -1,12 +1,12 @@
  package me.MrGraycat.eGlow.Command.SubCommands;
 
-import org.bukkit.command.CommandSender;
-import me.MrGraycat.eGlow.Command.SubCommand;
-import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
-import me.MrGraycat.eGlow.GUI.Menus.EGlowMainMenu;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+ import me.MrGraycat.eGlow.Command.SubCommand;
+ import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
+ import me.MrGraycat.eGlow.GUI.Menus.EGlowMainMenu;
+ import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+ import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
+ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+ import org.bukkit.command.CommandSender;
 
 public class GUICommand extends SubCommand {
 

@@ -1,9 +1,8 @@
 package me.MrGraycat.eGlow.Util.Packets;
 
-import org.bukkit.entity.Player;
-
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.DebugUtil;
+import org.bukkit.entity.Player;
 import us.myles.ViaVersion.api.Via;
 
 public enum ProtocolVersion {

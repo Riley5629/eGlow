@@ -1,9 +1,14 @@
 package me.MrGraycat.eGlow.GUI.Manager;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
+import me.MrGraycat.eGlow.EGlow;
+import me.MrGraycat.eGlow.Manager.DataManager;
+import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
+import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Packets.NMSHook;
+import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -13,14 +18,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
-import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
-import me.MrGraycat.eGlow.Manager.DataManager;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.List;
 
 //TODO more special item support (custom effects)
 

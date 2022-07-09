@@ -1,10 +1,10 @@
 package me.MrGraycat.eGlow.Util.Packets.Chat;
 
-import java.util.*;
-
 import me.MrGraycat.eGlow.Util.Packets.Chat.rgb.RGBUtils;
 import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
 import org.json.simple.JSONObject;
+
+import java.util.*;
 
 /**
  * A class representing the n.m.s.IChatBaseComponent class to make work with it much easier

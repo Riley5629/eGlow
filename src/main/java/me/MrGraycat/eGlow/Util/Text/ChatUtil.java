@@ -1,17 +1,16 @@
 package me.MrGraycat.eGlow.Util.Text;
 
 import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
-import me.MrGraycat.eGlow.Util.Packets.Chat.rgb.RGBUtils;
-import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
 import me.MrGraycat.eGlow.Util.Packets.Chat.ChatColor;
+import me.MrGraycat.eGlow.Util.Packets.Chat.rgb.RGBUtils;
+import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
+import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

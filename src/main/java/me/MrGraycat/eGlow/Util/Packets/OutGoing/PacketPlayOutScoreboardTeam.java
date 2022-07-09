@@ -1,13 +1,13 @@
 package me.MrGraycat.eGlow.Util.Packets.OutGoing;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import me.MrGraycat.eGlow.Util.Packets.Chat.EnumChatFormat;
 import me.MrGraycat.eGlow.Util.Packets.Chat.IChatBaseComponent;
 import me.MrGraycat.eGlow.Util.Packets.NMSHook;
 import me.MrGraycat.eGlow.Util.Packets.NMSStorage;
 import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
+
+import java.util.Collection;
+import java.util.Collections;
 
 public class PacketPlayOutScoreboardTeam extends PacketPlayOut {
 	public String name;

@@ -1,7 +1,7 @@
 package me.MrGraycat.eGlow.Util.Packets.OutGoing;
 
-import me.MrGraycat.eGlow.Util.Packets.NMSHook;
 import me.MrGraycat.eGlow.Util.Packets.Datawatcher.DataWatcher;
+import me.MrGraycat.eGlow.Util.Packets.NMSHook;
 import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
 
 public class PacketPlayOutEntityMetadata extends PacketPlayOut {

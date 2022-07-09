@@ -1,12 +1,12 @@
 package me.MrGraycat.eGlow.Util.Packets;
 
-import java.lang.reflect.*;
-import java.util.*;
-
-import org.bukkit.Bukkit;
 import io.netty.channel.Channel;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+
+import java.lang.reflect.*;
+import java.util.*;
 
 @SuppressWarnings({"rawtypes"})
 public class NMSStorage {

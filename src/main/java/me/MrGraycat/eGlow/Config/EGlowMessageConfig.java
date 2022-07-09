@@ -1,16 +1,15 @@
 package me.MrGraycat.eGlow.Config;
 
-import java.io.File;
-import java.util.List;
-
+import me.MrGraycat.eGlow.EGlow;
+import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import me.neznamy.yamlassist.YamlAssist;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.yaml.snakeyaml.error.YAMLException;
 
-import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
-import me.neznamy.yamlassist.YamlAssist;
+import java.io.File;
+import java.util.List;
 
 public class EGlowMessageConfig {
 

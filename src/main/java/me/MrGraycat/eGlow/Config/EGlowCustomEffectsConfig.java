@@ -1,17 +1,15 @@
 package me.MrGraycat.eGlow.Config;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.yaml.snakeyaml.error.YAMLException;
-
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import me.neznamy.yamlassist.YamlAssist;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.yaml.snakeyaml.error.YAMLException;
+
+import java.io.File;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 public class EGlowCustomEffectsConfig {
 

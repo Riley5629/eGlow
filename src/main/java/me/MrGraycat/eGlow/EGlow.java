@@ -13,14 +13,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.MrGraycat.eGlow.API.EGlowAPI;
-import me.MrGraycat.eGlow.Addon.LuckPermsAddon;
-import me.MrGraycat.eGlow.Addon.PlaceholderAPIAddon;
-import me.MrGraycat.eGlow.Addon.VaultAddon;
 import me.MrGraycat.eGlow.Addon.Citizens.CitizensAddon;
 import me.MrGraycat.eGlow.Addon.Disguises.IDisguiseAddon;
 import me.MrGraycat.eGlow.Addon.Disguises.LibDisguiseAddon;
-import me.MrGraycat.eGlow.Addon.TAB.TABAddon;
+import me.MrGraycat.eGlow.Addon.LuckPermsAddon;
+import me.MrGraycat.eGlow.Addon.PlaceholderAPIAddon;
 import me.MrGraycat.eGlow.Addon.TAB.Listeners.EGlowTABListenerUniv;
+import me.MrGraycat.eGlow.Addon.TAB.TABAddon;
+import me.MrGraycat.eGlow.Addon.VaultAddon;
 import me.MrGraycat.eGlow.Command.EGlowCommand;
 import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;

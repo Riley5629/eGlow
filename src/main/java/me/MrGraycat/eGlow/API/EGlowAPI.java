@@ -1,19 +1,21 @@
 package me.MrGraycat.eGlow.API;
 
-import java.util.List;
-import java.util.UUID;
-
+import me.MrGraycat.eGlow.API.Enum.EGlowBlink;
+import me.MrGraycat.eGlow.API.Enum.EGlowColor;
+import me.MrGraycat.eGlow.API.Enum.EGlowEffect;
+import me.MrGraycat.eGlow.EGlow;
+import me.MrGraycat.eGlow.Manager.DataManager;
+import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
+import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
+import me.MrGraycat.eGlow.Util.Packets.PipelineInjector;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.API.Enum.*;
-import me.MrGraycat.eGlow.Manager.DataManager;
-import me.MrGraycat.eGlow.Manager.Interface.*;
-import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
-import me.MrGraycat.eGlow.Util.Packets.PipelineInjector;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import java.util.List;
+import java.util.UUID;
 
 public class EGlowAPI {
 	/**

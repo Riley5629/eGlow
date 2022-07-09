@@ -1,13 +1,12 @@
 package me.MrGraycat.eGlow.GUI;
 
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-
 import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 public abstract class PaginatedMenu extends Menu {
 	protected int page = 1;

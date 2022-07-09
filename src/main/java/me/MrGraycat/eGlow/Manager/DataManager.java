@@ -1,12 +1,15 @@
 package me.MrGraycat.eGlow.Manager;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+import me.MrGraycat.eGlow.API.Event.GlowColorChangeEvent;
+import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig.Effect;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
+import me.MrGraycat.eGlow.EGlow;
+import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
+import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -15,17 +18,8 @@ import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-
-import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.API.Event.GlowColorChangeEvent;
-import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig.Effect;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
-import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DataManager implements PluginMessageListener {	
 	private final static Map<String, IEGlowPlayer> dataPlayers = new ConcurrentHashMap<>();

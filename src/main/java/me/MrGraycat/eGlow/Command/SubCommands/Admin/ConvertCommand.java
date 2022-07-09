@@ -1,17 +1,16 @@
 package me.MrGraycat.eGlow.Command.SubCommands.Admin;
 
-import java.io.File;
-import java.io.IOException;
-
+import me.MrGraycat.eGlow.Command.SubCommand;
+import me.MrGraycat.eGlow.Config.Playerdata.EGlowPlayerdataManager;
+import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.MrGraycat.eGlow.Command.SubCommand;
-import me.MrGraycat.eGlow.Config.Playerdata.EGlowPlayerdataManager;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import java.io.File;
+import java.io.IOException;
 
 public class ConvertCommand extends SubCommand {
 	private boolean keepActive = false;

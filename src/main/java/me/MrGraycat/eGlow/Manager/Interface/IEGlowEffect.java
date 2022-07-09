@@ -1,21 +1,20 @@
 package me.MrGraycat.eGlow.Manager.Interface;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-
+import me.MrGraycat.eGlow.Addon.Citizens.EGlowCitizensTrait;
+import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
+import me.MrGraycat.eGlow.EGlow;
+import me.MrGraycat.eGlow.Manager.DataManager;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Addon.Citizens.EGlowCitizensTrait;
-import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
-import me.MrGraycat.eGlow.Manager.DataManager;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
-import net.citizensnpcs.api.npc.NPC;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class IEGlowEffect {
 	private BukkitTask effectRunnable;
