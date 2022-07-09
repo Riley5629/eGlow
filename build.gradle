@@ -46,6 +46,11 @@ dependencies {
     compileOnly ('us.myles:viaversion:3.2.1')
     compileOnly ('com.github.MilkBowl:VaultAPI:1.7')
     compileOnly ('org.xerial:sqlite-jdbc:3.36.0.3')
+    compileOnly ('mysql:mysql-connector-java:5.1.49') {
+        transitive = true
+    }
+    compileOnly ('mysql:mysql-connector-java:8.0.29')
+    implementation ('org.bstats:bstats-bukkit:3.0.0')
     implementation ('com.github.NEZNAMY:YamlAssist:1.0.5') {
         exclude (group: 'org.yaml', module: 'snakeyaml')
     }
@@ -148,6 +153,7 @@ shadowJar {
     archiveClassifier.set('')
     archiveVersion.set('')
     relocate("me.neznamy.yamlassist", "me.MrGraycat.eGlow.Config.YAMLAssist")
+    relocate("org.bstats", "me.MrGraycat.eGlow.Addon.bStats")
     minimize()
 }
 tasks.build.dependsOn tasks.shadowJar
