@@ -46,107 +46,104 @@ dependencies {
     compileOnly ('us.myles:viaversion:3.2.1')
     compileOnly ('com.github.MilkBowl:VaultAPI:1.7')
     compileOnly ('org.xerial:sqlite-jdbc:3.36.0.3')
-    compileOnly ('mysql:mysql-connector-java:5.1.49') {
-        transitive = true
-    }
     compileOnly ('mysql:mysql-connector-java:8.0.29')
     implementation ('org.bstats:bstats-bukkit:3.0.0')
     implementation ('com.github.NEZNAMY:YamlAssist:1.0.5') {
-        exclude (group: 'org.yaml', module: 'snakeyaml')
+        exclude group: 'org.yaml', module: 'snakeyaml'
     }
 }
 
 //Clean up unneeded external libraries
 configurations.compileOnly {
-    exclude(group: 'com.comphenix.protocol', module: 'ProtocolLib')
-    exclude(group: 'com.destroystokyo.paper', module: 'paper-api')
-    exclude(group: 'com.github.dmulloy2', module: 'ProtoccolLib')
-    exclude(group: 'com.github.NEZNAMY.TAB', module: 'bstats-base')
-    exclude(group: 'com.github.NEZNAMY.TAB', module: 'bungeecord')
-    exclude(group: 'com.github.NEZNAMY.TAB', module: 'tab-bungeecord')
-    exclude(group: 'com.github.NEZNAMY.TAB', module: 'tab-velocity')
-    exclude(group: 'com.github.NEZNAMY.TAB', module: 'velocity-1.1.0')
-    exclude(group: 'com.github.oshi', module: 'oshi-core')
-    exclude(group: 'com.google.code.findbugs', module: 'jsr305')
-    exclude(group: 'com.google.code.gson', module: 'gson')
-    exclude(group: 'com.google.code.gson', module: 'gson')
-    exclude(group: 'com.google.errorprone', module: 'error_prone_annotations')
-    exclude(group: 'com.google.guava', module: 'failureaccess')
-    exclude(group: 'com.google.guava', module: 'listenablefuture')
-    exclude(group: 'com.google.j2objc', module: 'j2objc-annotations')
-    exclude(group: 'com.google.protobuf-java', module: 'protobuf-java')
-    exclude(group: 'com.mojang', module: 'authlib')
-    exclude(group: 'com.mojang', module: 'brigadier')
-    exclude(group: 'com.mojang', module: 'datafixerupper')
-    exclude(group: 'com.mojang', module: 'javabridge')
-    exclude(group: 'com.mojang', module: 'logging')
-    exclude(group: 'commons-codec', module: 'commons-codec')
-    exclude(group: 'commons-io', module: 'commons-io')
-    exclude(group: 'commons-lang', module: 'commons-lang')
-    exclude(group: 'de.robingrether.util', module: 'utility')
-    exclude(group: 'io.netty', module: 'netty-all')
-    exclude(group: 'io.netty', module: 'netty-buffer')
-    exclude(group: 'io.netty', module: 'netty-codec')
-    exclude(group: 'io.netty', module: 'netty-handler')
-    exclude(group: 'io.netty', module: 'netty-resolver')
-    exclude(group: 'io.netty', module: 'netty-transport-classes-epoll')
-    exclude(group: 'io.netty', module: 'netty-transport-native-epoll')
-    exclude(group: 'io.netty', module: 'netty-transport-native-unix-common')
-    exclude(group: 'it.unimi.dsi', module: 'fastutil')
-    exclude(group: 'javax.inject', module: 'javax.inject')
-    exclude(group: 'jline', module: 'jline')
-    exclude(group: 'junit', module: 'junit')
-    exclude(group: 'me.neznamy', module: 'yamlassist')
-    exclude(group: 'net.java.dev.jna', module: 'jna')
-    exclude(group: 'net.java.dev.jna', module: 'jna-platform')
-    exclude(group: 'net.kyori', module: 'adventure-api')
-    exclude(group: 'net.kyori', module: 'adventure-key')
-    exclude(group: 'net.kyori', module: 'adventure-text-minimessage')
-    exclude(group: 'net.kyori', module: 'event-api')
-    exclude(group: 'net.kyori', module: 'event-method')
-    exclude(group: 'net.kyori', module: 'examination-api')
-    exclude(group: 'net.kyori', module: 'examination-string')
-    exclude(group: 'net.md-5', module: 'bungeecord-chat')
-    exclude(group: 'net.sf.jopt-simple', module: 'jopt-simple')
-    exclude(group: 'net.sf.trove4j', module: 'trove4j')
-    exclude(group: 'org.apache', module: 'commons-lang3')
-    exclude(group: 'org.apache.commons', module: 'commons-lang3')
-    exclude(group: 'org.apache.httpcomponents', module: 'httpclient')
-    exclude(group: 'org.apache.httpcomponents', module: 'httpcore')
-    exclude(group: 'org.apache.logging.log4j', module: 'log4j-api')
-    exclude(group: 'org.apache.logging.log4j', module: 'log4j-core')
-    exclude(group: 'org.apache.logging.log4j', module: 'log4j-iostreams')
-    exclude(group: 'org.apache.logging.log4j', module: 'log4j-slf4j18-impl')
-    exclude(group: 'org.apache.maven', module: 'maven-artifact')
-    exclude(group: 'org.apache.maven', module: 'maven-builder-support')
-    exclude(group: 'org.apache.maven', module: 'maven-model')
-    exclude(group: 'org.apache.maven', module: 'maven-model-builder')
-    exclude(group: 'org.apache.maven', module: 'maven-repository-metadata')
-    exclude(group: 'org.apache.maven', module: 'maven-resolver-provider')
-    exclude(group: 'org.apache.maven.resolver', module: 'maven-resolver-api')
-    exclude(group: 'org.apache.maven.resolver', module: 'maven-resolver-connector-basic')
-    exclude(group: 'org.apache.maven.resolver', module: 'maven-resolver-impl')
-    exclude(group: 'org.apache.maven.resolver', module: 'maven-resolver-transport-http')
-    exclude(group: 'org.apache.maven.resolver', module: 'maven-resolver.spi')
-    exclude(group: 'org.bukkit', module: 'bukkit')
-    exclude(group: 'org.checkerframework', module: 'checker-qual')
-    exclude(group: 'org.checkerframework', module: 'checker-qual')
-    exclude(group: 'org.geysermc.floodgate', module: 'api')
-    exclude(group: 'org.hamcrest', module: 'hamcrest-core')
-    exclude(group: 'org.jetbrains', module: 'annotations')
-    exclude(group: 'org.jetbrains', module: 'annotations')
-    exclude(group: 'org.ow2.asm', module: 'asm')
-    exclude(group: 'org.ow2.asm', module: 'asm')
-    exclude(group: 'org.projectlombok', module: 'lombok')
-    exclude(group: 'org.slf4j', module: 'jcl-over-slf4j')
-    exclude(group: 'org.slf4j', module: 'slf4j-api')
-    exclude(group: 'us.myles', module: 'viaversion-bukkit')
-    exclude(group: 'us.myles', module: 'viaversion-bungee')
-    exclude(group: 'us.myles', module: 'viaversion-common')
-    exclude(group: 'us.myles', module: 'viaversion-fabric')
-    exclude(group: 'us.myles', module: 'viaversion-sponge')
-    exclude(group: 'us.myles', module: 'viaversion-velocity')
-    exclude(group: 'ch.ethz.globis.phtree', module: 'phtree')
+    exclude group: 'com.comphenix.protocol', module: 'ProtocolLib'
+    exclude group: 'com.destroystokyo.paper', module: 'paper-api'
+    exclude group: 'com.github.dmulloy2', module: 'ProtoccolLib'
+    exclude group: 'com.github.NEZNAMY.TAB', module: 'bstats-base'
+    exclude group: 'com.github.NEZNAMY.TAB', module: 'bungeecord'
+    exclude group: 'com.github.NEZNAMY.TAB', module: 'tab-bungeecord'
+    exclude group: 'com.github.NEZNAMY.TAB', module: 'tab-velocity'
+    exclude group: 'com.github.NEZNAMY.TAB', module: 'velocity-1.1.0'
+    exclude group: 'com.github.oshi', module: 'oshi-core'
+    exclude group: 'com.google.code.findbugs', module: 'jsr305'
+    exclude group: 'com.google.code.gson', module: 'gson'
+    exclude group: 'com.google.code.gson', module: 'gson'
+    exclude group: 'com.google.errorprone', module: 'error_prone_annotations'
+    exclude group: 'com.google.guava', module: 'failureaccess'
+    exclude group: 'com.google.guava', module: 'listenablefuture'
+    exclude group: 'com.google.j2objc', module: 'j2objc-annotations'
+    exclude group: 'com.google.protobuf-java', module: 'protobuf-java'
+    exclude group: 'com.mojang', module: 'authlib'
+    exclude group: 'com.mojang', module: 'brigadier'
+    exclude group: 'com.mojang', module: 'datafixerupper'
+    exclude group: 'com.mojang', module: 'javabridge'
+    exclude group: 'com.mojang', module: 'logging'
+    exclude group: 'commons-codec', module: 'commons-codec'
+    exclude group: 'commons-io', module: 'commons-io'
+    exclude group: 'commons-lang', module: 'commons-lang'
+    exclude group: 'de.robingrether.util', module: 'utility'
+    exclude group: 'io.netty', module: 'netty-all'
+    exclude group: 'io.netty', module: 'netty-buffer'
+    exclude group: 'io.netty', module: 'netty-codec'
+    exclude group: 'io.netty', module: 'netty-handler'
+    exclude group: 'io.netty', module: 'netty-resolver'
+    exclude group: 'io.netty', module: 'netty-transport-classes-epoll'
+    exclude group: 'io.netty', module: 'netty-transport-native-epoll'
+    exclude group: 'io.netty', module: 'netty-transport-native-unix-common'
+    exclude group: 'it.unimi.dsi', module: 'fastutil'
+    exclude group: 'javax.inject', module: 'javax.inject'
+    exclude group: 'jline', module: 'jline'
+    exclude group: 'junit', module: 'junit'
+    exclude group: 'me.neznamy', module: 'yamlassist'
+    exclude group: 'net.java.dev.jna', module: 'jna'
+    exclude group: 'net.java.dev.jna', module: 'jna-platform'
+    exclude group: 'net.kyori', module: 'adventure-api'
+    exclude group: 'net.kyori', module: 'adventure-key'
+    exclude group: 'net.kyori', module: 'adventure-text-minimessage'
+    exclude group: 'net.kyori', module: 'event-api'
+    exclude group: 'net.kyori', module: 'event-method'
+    exclude group: 'net.kyori', module: 'examination-api'
+    exclude group: 'net.kyori', module: 'examination-string'
+    exclude group: 'net.md-5', module: 'bungeecord-chat'
+    exclude group: 'net.sf.jopt-simple', module: 'jopt-simple'
+    exclude group: 'net.sf.trove4j', module: 'trove4j'
+    exclude group: 'org.apache', module: 'commons-lang3'
+    exclude group: 'org.apache.commons', module: 'commons-lang3'
+    exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    exclude group: 'org.apache.httpcomponents', module: 'httpcore'
+    exclude group: 'org.apache.logging.log4j', module: 'log4j-api'
+    exclude group: 'org.apache.logging.log4j', module: 'log4j-core'
+    exclude group: 'org.apache.logging.log4j', module: 'log4j-iostreams'
+    exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j18-impl'
+    exclude group: 'org.apache.maven', module: 'maven-artifact'
+    exclude group: 'org.apache.maven', module: 'maven-builder-support'
+    exclude group: 'org.apache.maven', module: 'maven-model'
+    exclude group: 'org.apache.maven', module: 'maven-model-builder'
+    exclude group: 'org.apache.maven', module: 'maven-repository-metadata'
+    exclude group: 'org.apache.maven', module: 'maven-resolver-provider'
+    exclude group: 'org.apache.maven.resolver', module: 'maven-resolver-api'
+    exclude group: 'org.apache.maven.resolver', module: 'maven-resolver-connector-basic'
+    exclude group: 'org.apache.maven.resolver', module: 'maven-resolver-impl'
+    exclude group: 'org.apache.maven.resolver', module: 'maven-resolver-transport-http'
+    exclude group: 'org.apache.maven.resolver', module: 'maven-resolver.spi'
+    exclude group: 'org.bukkit', module: 'bukkit'
+    exclude group: 'org.checkerframework', module: 'checker-qual'
+    exclude group: 'org.checkerframework', module: 'checker-qual'
+    exclude group: 'org.geysermc.floodgate', module: 'api'
+    exclude group: 'org.hamcrest', module: 'hamcrest-core'
+    exclude group: 'org.jetbrains', module: 'annotations'
+    exclude group: 'org.jetbrains', module: 'annotations'
+    exclude group: 'org.ow2.asm', module: 'asm'
+    exclude group: 'org.ow2.asm', module: 'asm'
+    exclude group: 'org.projectlombok', module: 'lombok'
+    exclude group: 'org.slf4j', module: 'jcl-over-slf4j'
+    exclude group: 'org.slf4j', module: 'slf4j-api'
+    exclude group: 'us.myles', module: 'viaversion-bukkit'
+    exclude group: 'us.myles', module: 'viaversion-bungee'
+    exclude group: 'us.myles', module: 'viaversion-common'
+    exclude group: 'us.myles', module: 'viaversion-fabric'
+    exclude group: 'us.myles', module: 'viaversion-sponge'
+    exclude group: 'us.myles', module: 'viaversion-velocity'
+    exclude group: 'ch.ethz.globis.phtree', module: 'phtree'
 }
 
 shadowJar {
