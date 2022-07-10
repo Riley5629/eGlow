@@ -16,10 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class EGlowCommand implements CommandExecutor, TabExecutor {
 	private final ArrayList<String> colors = new ArrayList<>(Arrays.asList("red","darkred", "gold", "yellow", "green", "darkgreen", "aqua", "darkaqua", "blue", "darkblue", "purple", "pink", "white", "gray", "darkgray", "black", "none"));
@@ -37,7 +34,7 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 		    if (MainConfig.COMMAND_ALIAS_ENABLE.getBoolean() && alias != null) {
 		    	 commandMapField.setAccessible(true);
 				 CommandMap commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
-				 commandMap.register(alias, alias, EGlow.getInstance().getCommand("eglow"));
+				 commandMap.register(alias, alias, Objects.requireNonNull(EGlow.getInstance().getCommand("eglow"), "Unable to retrieve eGlow command to register alias"));
 		    }
 		} catch (NoSuchFieldException  | IllegalArgumentException | IllegalAccessException e){
 		    ChatUtil.reportError(e);
@@ -100,7 +97,6 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 			return null;
 		
 		if (sender instanceof Player && cmd.getName().equalsIgnoreCase("eGlow") || MainConfig.COMMAND_ALIAS_ENABLE.getBoolean() && cmd.getName().equalsIgnoreCase(MainConfig.COMMAND_ALIAS.getString())) {
-			ArrayList<String> args1 = new ArrayList<>();
 			ArrayList<String> suggestions = new ArrayList<>();
 			ArrayList<String> finalSuggestions = new ArrayList<>();
 			

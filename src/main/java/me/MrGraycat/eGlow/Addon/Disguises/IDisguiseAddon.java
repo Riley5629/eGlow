@@ -13,6 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import java.util.Objects;
+
 /*
  * Making sure to disable the player glow when disguised to prevent errors.
  * Plugin: iDisguise
@@ -26,7 +28,7 @@ public class IDisguiseAddon implements Listener {
 	 * Register IDisguise disguise events & api
 	 */
 	public IDisguiseAddon() {
-		setDisguiseAPIAddon(EGlow.getInstance().getServer().getServicesManager().getRegistration(DisguiseAPI.class).getProvider());
+		setDisguiseAPIAddon(Objects.requireNonNull(EGlow.getInstance().getServer().getServicesManager().getRegistration(DisguiseAPI.class), "Unable to hook into IDisguise").getProvider());
 		EGlow.getInstance().getServer().getPluginManager().registerEvents(this, EGlow.getInstance());
 	}
 	

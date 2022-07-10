@@ -39,40 +39,20 @@ public class ChatModifier {
         this.color = color;
     }
 
-    public Boolean getBold() {
-        return bold;
-    }
-
     public void setBold(Boolean bold) {
         this.bold = bold;
-    }
-
-    public Boolean getItalic() {
-        return italic;
     }
 
     public void setItalic(Boolean italic) {
         this.italic = italic;
     }
 
-    public Boolean getUnderlined() {
-        return underlined;
-    }
-
     public void setUnderlined(Boolean underlined) {
         this.underlined = underlined;
     }
 
-    public Boolean getStrikethrough() {
-        return strikethrough;
-    }
-
     public void setStrikethrough(Boolean strikethrough) {
         this.strikethrough = strikethrough;
-    }
-
-    public Boolean getObfuscated() {
-        return obfuscated;
     }
 
     public void setObfuscated(Boolean obfuscated) {
@@ -122,14 +102,6 @@ public class ChatModifier {
      */
     public boolean isObfuscated(){
         return Boolean.TRUE.equals(obfuscated);
-    }
-
-    public String getFont() {
-        return font;
-    }
-
-    public void setFont(String font) {
-        this.font = font;
     }
 
     @SuppressWarnings("unchecked")

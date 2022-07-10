@@ -23,14 +23,6 @@ public class DataWatcher {
 	}
 
 	/**
-	 * Removes value by position
-	 * @param position - position of value to remove
-	 */
-	public void removeValue(int position) {
-		dataValues.remove(position);
-	}
-
-	/**
 	 * Returns item with given position
 	 * @param position - position of item
 	 * @return item or null if not set
@@ -51,16 +43,16 @@ public class DataWatcher {
 		if (nms.newDataWatcher.getParameterCount() == 1) {
 			nmsWatcher = nms.newDataWatcher.newInstance(new Object[] { null });
 		} else {
-			nmsWatcher = nms.newDataWatcher.newInstance(new Object[0]);
+			nmsWatcher = nms.newDataWatcher.newInstance();
 		}
 		for (DataWatcherItem item : this.dataValues.values()) {
 			Object position;
 			if (nms.minorVersion >= 9) {
-				position = nms.newDataWatcherObject.newInstance(new Object[] {item.type.position, item.type.classType });
+				position = nms.newDataWatcherObject.newInstance(item.type.position, item.type.classType);
 			} else {
 				position = item.type.position;
 			}
-			nms.DataWatcher_REGISTER.invoke(nmsWatcher, new Object[] { position, item.value });
+			nms.DataWatcher_REGISTER.invoke(nmsWatcher, position, item.value);
 		}
 		return nmsWatcher;
 	}
@@ -76,7 +68,7 @@ public class DataWatcher {
 		DataWatcher watcher = new DataWatcher();
 		List<Object> items;
 
-		items = (ProtocolVersion.SERVER_VERSION.getMinorVersion() == 17) ? (List<Object>)nmsWatcher.getClass().getMethod("getAll", new Class[0]).invoke(nmsWatcher, new Object[0]) : (List<Object>)nmsWatcher.getClass().getMethod("c").invoke(nmsWatcher);
+		items = (ProtocolVersion.SERVER_VERSION.getMinorVersion() == 17) ? (List<Object>)nmsWatcher.getClass().getMethod("getAll").invoke(nmsWatcher, new Object[0]) : (List<Object>)nmsWatcher.getClass().getMethod("c").invoke(nmsWatcher);
 
 		if (items != null) {
 			for (Object watchableObject : items) {

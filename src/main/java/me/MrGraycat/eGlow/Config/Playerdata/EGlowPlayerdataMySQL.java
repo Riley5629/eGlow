@@ -8,6 +8,7 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
+import java.util.Objects;
 
 public class EGlowPlayerdataMySQL {
     Object mysql;
@@ -40,7 +41,7 @@ public class EGlowPlayerdataMySQL {
 
         try {
             con = getConnection();
-            ps = con.prepareStatement(statement);
+            ps = Objects.requireNonNull(con, "Failed to retrieve MySQL connection").prepareStatement(statement);
             res = ps.executeQuery();
 
             if (res.next()) {
@@ -101,7 +102,7 @@ public class EGlowPlayerdataMySQL {
 
         try {
             con = getConnection();
-            ps = con.prepareStatement(statement);
+            ps = Objects.requireNonNull(con, "Failed to retrieve MySQL connection").prepareStatement(statement);
 
             ps.setString(1, ePlayer.getUUID().toString());
             ps.setBoolean(2, glowOnJoin);
@@ -133,7 +134,7 @@ public class EGlowPlayerdataMySQL {
 
         try {
             con = getConnection();
-            ps = con.prepareStatement(statement);
+            ps = Objects.requireNonNull(con, "Failed to retrieve MySQL connection").prepareStatement(statement);
 
             ps.setString(1, uuid);
             ps.setBoolean(2, glowOnJoin);
@@ -177,7 +178,7 @@ public class EGlowPlayerdataMySQL {
 
         try {
             con = getConnection();
-            ps = con.prepareStatement(statement);
+            ps = Objects.requireNonNull(con, "Failed to retrieve MySQL connection").prepareStatement(statement);
             ps.executeUpdate();
         } catch(SQLException e) {
             e.printStackTrace();

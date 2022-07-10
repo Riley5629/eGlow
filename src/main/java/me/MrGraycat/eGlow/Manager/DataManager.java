@@ -222,12 +222,6 @@ public class DataManager implements PluginMessageListener {
 		return (containsSpeed) ? (dataEffects.containsKey(name.toLowerCase()) || dataCustomEffects.containsKey(name.toLowerCase())) : (dataEffects.containsKey(name.toLowerCase() + "slow") && dataEffects.containsKey(name.toLowerCase() + "fast"));
 	}
 
-	public static boolean isNormalEffect(IEGlowEffect effect) {
-		if (effect == null)
-			return false;
-		return dataEffects.containsKey(effect.getName());
-	}
-
 	public static boolean isCustomEffect(String name) {
 		return dataCustomEffects.containsKey(name);
 	}

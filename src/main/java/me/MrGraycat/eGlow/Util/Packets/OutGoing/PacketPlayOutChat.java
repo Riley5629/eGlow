@@ -45,7 +45,7 @@ public class PacketPlayOutChat extends PacketPlayOut {
         return type;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Object toNMS(ProtocolVersion clientVersion) throws Exception {
         NMSStorage nms = NMSHook.nms;

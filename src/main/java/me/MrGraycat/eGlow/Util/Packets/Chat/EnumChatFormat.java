@@ -33,9 +33,6 @@ public enum EnumChatFormat {
 	/** The symbol minecraft uses to colorize text */
 	public static final char COLOR_CHAR = 0x00a7;
 
-	/** The color symbol in form of a string */
-	public static final String COLOR_STRING = String.valueOf(COLOR_CHAR);
-
 	/** Character representing the color or magic code */
 	private final char character;
 
@@ -213,19 +210,6 @@ public enum EnumChatFormat {
 			}
 		}
 		return new String(b);
-	}
-
-	/**
-	 * Turns back the color symbol into '&amp;' symbol in provided text.
-	 *
-	 * @param   text
-	 *          text to revert colors in
-	 * @return  reverted text
-	 */
-	public static String decolor(String text) {
-		if (text == null) return null;
-		if (!text.contains(COLOR_STRING)) return text;
-		return text.replace(COLOR_CHAR, '&');
 	}
 
 	/**

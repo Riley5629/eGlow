@@ -9,6 +9,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
+import java.util.Objects;
+
 public class DebugUtil {
 	private static final String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 	private static final int minorVersion =  Integer.parseInt(version.split("_")[1]);
@@ -72,7 +74,7 @@ public class DebugUtil {
 	}
 	
 	public static boolean pluginCheck(String plugin) {
-		return pm.getPlugin(plugin) != null && pm.getPlugin(plugin).isEnabled();
+		return pm.getPlugin(plugin) != null && Objects.requireNonNull(pm.getPlugin(plugin)).isEnabled();
 	}
 	
 	public static Plugin getPlugin(String plugin) {

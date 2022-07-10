@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -118,6 +119,6 @@ public class ChatUtil {
 	}
 	
 	public static String getEffectName(String effect) {
-		return "&e" + effect + " &f(" + DataManager.getEGlowEffect(effect).getDisplayName() + "&f)";
+		return "&e" + effect + " &f(" + Objects.requireNonNull(DataManager.getEGlowEffect(effect), "Unable to retrieve effect from given name").getDisplayName() + "&f)";
 	}
 }

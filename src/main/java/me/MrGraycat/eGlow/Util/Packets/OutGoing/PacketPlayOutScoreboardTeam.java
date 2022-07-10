@@ -87,7 +87,7 @@ public class PacketPlayOutScoreboardTeam extends PacketPlayOut {
 			if (prefix != null && prefix.length() > 0) nms.ScoreboardTeam_setPrefix.invoke(team, NMSHook.stringToComponent(IChatBaseComponent.optimizedComponent(prefix).toString(clientVersion)));
 			if (suffix != null && suffix.length() > 0) nms.ScoreboardTeam_setSuffix.invoke(team, NMSHook.stringToComponent(IChatBaseComponent.optimizedComponent(suffix).toString(clientVersion)));
 			EnumChatFormat format = color != null ? color : EnumChatFormat.lastColorsOf(prefix);
-			nms.ScoreboardTeam_setColor.invoke(team, ((Object[])nms.EnumChatFormat.getMethod("values", new Class[0]).invoke(null, new Object[0]))[format.ordinal()]);
+			nms.ScoreboardTeam_setColor.invoke(team, ((Object[])nms.EnumChatFormat.getMethod("values").invoke(null, new Object[0]))[format.ordinal()]);
 		} else {
 			if (prefix != null)
 				nms.ScoreboardTeam_setPrefix.invoke(team, prefix); 

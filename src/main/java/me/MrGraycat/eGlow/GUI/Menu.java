@@ -15,6 +15,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
+import java.util.Objects;
+
 public abstract class Menu extends MenuItemManager implements InventoryHolder {
 	protected MenuMetadata menuMetadata;
 	protected Inventory inventory;
@@ -55,7 +57,7 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 				if (color == null)
 					return;
 				
-				if (!(player.hasPermission(color.getPermission()) || DataManager.isCustomEffect(color.getName()) && player.getPlayer().hasPermission("eglow.effect.*"))) {
+				if (!(player.hasPermission(color.getPermission()) || DataManager.isCustomEffect(color.getName()) && Objects.requireNonNull(player.getPlayer(), "Unable to retrieve player").hasPermission("eglow.effect.*"))) {
 					ChatUtil.sendMsgFromGUI(player, Message.NO_PERMISSION.get());
 					return;
 				}
@@ -70,7 +72,7 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 			} else if (DataManager.getEGlowEffect(effectName + "slow") != null) { //for rainbow effect 
 				IEGlowEffect effect = DataManager.getEGlowEffect(effectName + "slow");
 				
-				if (!player.hasPermission(effect.getPermission())) {
+				if (!player.hasPermission(Objects.requireNonNull(effect, "Unable to retrieve effect from given name").getPermission())) {
 					ChatUtil.sendMsgFromGUI(player, Message.NO_PERMISSION.get());
 					return;
 				}
@@ -121,7 +123,7 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 				eGlowEffect = DataManager.getEGlowEffect(effect.replace("fast", "slow"));
 			
 			player.activateGlow(eGlowEffect);
-			ChatUtil.sendMsgFromGUI(menuMetadata.getOwner(), Message.NEW_GLOW.get(eGlowEffect.getDisplayName()));
+			ChatUtil.sendMsgFromGUI(menuMetadata.getOwner(), Message.NEW_GLOW.get(Objects.requireNonNull(eGlowEffect, "Unable to get displayname from effect").getDisplayName()));
 		}
 	}
 	
@@ -143,7 +145,7 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 		
 		inventory.setItem(28, createPlayerSkull(p));
 		inventory.setItem(30, createGlowingStatus(p));
-		inventory.setItem(31, createItem(Material.NETHER_STAR, Message.GUI_COLOR.get("effect-rainbow"), 0, Message.GUI_LEFT_CLICK.get() + Message.COLOR.get("effect-rainbow"), Message.GUI_EFFECT_PERMISSION.get() + ((p.getPlayer().hasPermission(DataManager.getEGlowEffect("rainbowslow").getPermission()) ? Message.GUI_YES.get() : Message.GUI_NO.get()))));
+		inventory.setItem(31, createItem(Material.NETHER_STAR, Message.GUI_COLOR.get("effect-rainbow"), 0, Message.GUI_LEFT_CLICK.get() + Message.COLOR.get("effect-rainbow"), Message.GUI_EFFECT_PERMISSION.get() + ((p.getPlayer().hasPermission(Objects.requireNonNull(DataManager.getEGlowEffect("rainbowslow"), "Unable to retrieve effect from given name").getPermission()) ? Message.GUI_YES.get() : Message.GUI_NO.get()))));
 
 		if (hasEffect(p))
 			inventory.setItem(32, createItem(Material.valueOf(CLOCK), Message.GUI_SPEED_ITEM_NAME.get(), 0, createSpeedLore(p)));

@@ -3,6 +3,7 @@ package me.MrGraycat.eGlow;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Objects;
 
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
@@ -92,7 +93,7 @@ public class EGlow extends JavaPlugin {
 	}
 	
 	private void registerEventsAndCommands() {
-		getCommand("eglow").setExecutor(new EGlowCommand());
+		Objects.requireNonNull(getCommand("eglow")).setExecutor(new EGlowCommand());
 		new EGlowEventListener();
 	}
 

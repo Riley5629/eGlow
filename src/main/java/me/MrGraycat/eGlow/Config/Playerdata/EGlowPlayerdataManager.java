@@ -51,7 +51,7 @@ public class EGlowPlayerdataManager {
 	 * @param ePlayer player to save the data for
 	 */
 	public static void savePlayerdata(IEGlowPlayer ePlayer) {
-		if (!ePlayer.getSaveData())
+		if (ePlayer.getSaveData())
 			return;
 		
 		switch((MainConfig.MYSQL_ENABLE.getBoolean()) ? ConfigType.MYSQL : ConfigType.SQLITE) {

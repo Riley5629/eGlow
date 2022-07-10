@@ -11,6 +11,7 @@ import org.yaml.snakeyaml.error.YAMLException;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class EGlowMainConfig {
@@ -241,7 +242,7 @@ public class EGlowMainConfig {
 		}
 
 		public Set<String> getConfigSection() {
-			return config.getConfigurationSection(main.getConfigPath()).getKeys(false);
+			return Objects.requireNonNull(config.getConfigurationSection(main.getConfigPath()), main.getConfigPath() + " isn't a valid path").getKeys(false);
 		}
 	}
 

@@ -7,6 +7,7 @@ import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Config.Playerdata.EGlowPlayerdataManager;
+import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
@@ -18,6 +19,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
+import java.util.Objects;
 
 public class ReloadCommand extends SubCommand {
 
@@ -94,7 +96,7 @@ public class ReloadCommand extends SubCommand {
 			    	 final Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 			    	 commandMapField.setAccessible(true);
 					 CommandMap commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
-					 commandMap.register(alias, alias, getInstance().getCommand("eglow"));
+					commandMap.register(alias, alias, Objects.requireNonNull(EGlow.getInstance().getCommand("eglow"), "Unable to retrieve eGlow command to register alias"));
 			    }
 			} catch (NoSuchFieldException  | IllegalArgumentException | IllegalAccessException e){
 			    ChatUtil.reportError(e);

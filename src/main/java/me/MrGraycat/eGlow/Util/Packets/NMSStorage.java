@@ -184,7 +184,7 @@ public class NMSStorage {
 		    this.PacketPlayOutScoreboardTeam = getNMSClass("net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam", "PacketPlayOutScoreboardTeam", "Packet209SetScoreboardTeam");
 			this.PacketPlayOutScoreboardTeam_NAME = getFields(this.PacketPlayOutScoreboardTeam, String.class).get(0);
 			this.PacketPlayOutScoreboardTeam_PLAYERS = getFields(this.PacketPlayOutScoreboardTeam, Collection.class).get(0);
-			this.PacketPlayOutScoreboardTeam_ACTION = getInstanceFields(PacketPlayOutScoreboardTeam, int.class).get(0);
+			this.PacketPlayOutScoreboardTeam_ACTION = getInstanceFields(PacketPlayOutScoreboardTeam).get(0);
 		    
 		   if (this.minorVersion >= 17) {
 			   this.PacketPlayOutScoreboardTeam_a = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam$a");
@@ -219,7 +219,7 @@ public class NMSStorage {
 			try {
 				return getNMSClass(name);
 			} catch (ClassNotFoundException classNotFoundException) {
-				continue;
+				//Nothing
 			}
 		}
 		throw new ClassNotFoundException("No class found with possible names " + Arrays.toString(names));
@@ -230,7 +230,7 @@ public class NMSStorage {
 			try {
 				return Class.forName(name);
 			} catch (ClassNotFoundException e) {
-				continue;
+				//Nothing
 			}
 		}
 		throw new ClassNotFoundException("No class found with possible names " + Arrays.toString(names));
@@ -251,7 +251,7 @@ public class NMSStorage {
 			try {
 				return clazz.getMethod(name, parameterTypes);
 			} catch (Exception exception) {
-				continue;
+				//Nothing
 			}
 		}
 		throw new NoSuchMethodException("No method found with possible names " + Arrays.toString(names) + " in class " + clazz.getName());
@@ -278,11 +278,11 @@ public class NMSStorage {
 		return list;
 	}
 
-	private List<Field> getInstanceFields(Class<?> clazz, Class<?> type){
+	private List<Field> getInstanceFields(Class<?> clazz){
 		if (clazz == null) throw new IllegalArgumentException("Source class cannot be null");
 		List<Field> list = new ArrayList<>();
 		for (Field field : clazz.getDeclaredFields()) {
-			if (field.getType() == type && !Modifier.isStatic(field.getModifiers())) {
+			if (!Modifier.isStatic(field.getModifiers())) {
 				list.add(setAccessible(field));
 			}
 		}

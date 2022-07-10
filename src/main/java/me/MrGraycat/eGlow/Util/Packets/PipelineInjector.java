@@ -24,7 +24,7 @@ public class PipelineInjector{
 	public static void inject(IEGlowPlayer eglowPlayer) {		
 		Channel channel = (Channel) NMSHook.getChannel(eglowPlayer.getPlayer());
 		
-		if (!channel.pipeline().names().contains("packet_handler"))
+		if (!Objects.requireNonNull(channel).pipeline().names().contains("packet_handler"))
 			return;
 		
 		if (channel.pipeline().names().contains(DECODER_NAME)) 
@@ -98,7 +98,7 @@ public class PipelineInjector{
 		
 		try {
 			Channel channel = (Channel) NMSHook.getChannel(eglowPlayer.getPlayer());
-			if (channel.pipeline().names().contains(DECODER_NAME)) channel.pipeline().remove(DECODER_NAME);
+			if (Objects.requireNonNull(channel).pipeline().names().contains(DECODER_NAME)) channel.pipeline().remove(DECODER_NAME);
 		} catch (NoSuchElementException e) {
 			//for whatever reason this rarely throws
             //java.util.NoSuchElementException: eGlowReader
@@ -135,20 +135,6 @@ public class PipelineInjector{
 
 				newList.add(entity);
 			}
-
-			/*for (String entry : players) {
-				IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(entry);
-
-				if (ePlayer == null) {
-					newList.add(entry);
-					continue;
-				}
-
-				if (!ePlayer.getTeamName().equals(teamName))
-					continue;
-
-				newList.add(entry);
-			}*/
 		} catch (ConcurrentModificationException e) {
 			ChatUtil.reportError(e);
 		}

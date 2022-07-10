@@ -9,6 +9,7 @@ import org.yaml.snakeyaml.error.YAMLException;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class EGlowCustomEffectsConfig {
@@ -99,8 +100,7 @@ public class EGlowCustomEffectsConfig {
 		
 		public Set<String> get() {
 			try {
-				Set<String> effects = config.getConfigurationSection(effect.getConfigPath()).getKeys(false);
-				return effects;
+				return Objects.requireNonNull(config.getConfigurationSection(effect.getConfigPath()), effect.getConfigPath() + " isn't a valid path").getKeys(false);
 			} catch (NullPointerException e) {
 				return Collections.emptySet();
 			}

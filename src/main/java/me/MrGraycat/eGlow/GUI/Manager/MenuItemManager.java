@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.Objects;
 
 //TODO more special item support (custom effects)
 
@@ -40,11 +41,11 @@ public class MenuItemManager extends MenuManager {
 	 * @return Item as Itemstack
 	 */
 	public ItemStack createItem(Material mat, String name, int numb, String... lores) {
-		ItemStack item = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12 && numb != 0) ? createLegacyItemStack(mat, 1, (short) numb) : new ItemStack(mat);
+		ItemStack item = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12 && numb != 0) ? createLegacyItemStack(mat, (short) numb) : new ItemStack(mat);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
 		
-		meta.setDisplayName(ChatUtil.translateColors(name));
+		Objects.requireNonNull(meta, "Unable to set item name because ItemMeta is null").setDisplayName(ChatUtil.translateColors(name));
 		
 		for (String text : lores) {
 			if (!text.isEmpty())
@@ -67,11 +68,11 @@ public class MenuItemManager extends MenuManager {
 	 * @return Item as Itemstack
 	 */
 	public ItemStack createItem(Material mat, String name, int numb, List<String> lores) {
-		ItemStack item = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12 && numb != 0) ? createLegacyItemStack(mat, 1, (short) numb) : new ItemStack(mat);
+		ItemStack item = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12 && numb != 0) ? createLegacyItemStack(mat, (short) numb) : new ItemStack(mat);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
 		
-		meta.setDisplayName(ChatUtil.translateColors(name));
+		Objects.requireNonNull(meta, "Unable to set item name because ItemMeta is null").setDisplayName(ChatUtil.translateColors(name));
 		
 		for (String text : lores) {
 			if (!text.isEmpty())
@@ -95,11 +96,11 @@ public class MenuItemManager extends MenuManager {
 	 * @return Item as Itemstack
 	 */
 	public ItemStack createItem(Material mat, String name, int numb, List<String> lores, int model) {
-		ItemStack item = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12 && numb != 0) ? createLegacyItemStack(mat, 1, (short) numb) : new ItemStack(mat);
+		ItemStack item = (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12 && numb != 0) ? createLegacyItemStack(mat, (short) numb) : new ItemStack(mat);
 		ItemMeta meta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
 		
-		meta.setDisplayName(ChatUtil.translateColors(name));
+		Objects.requireNonNull(meta, "Unable to set item name because ItemMeta is null").setDisplayName(ChatUtil.translateColors(name));
 
 		if (model != 0)
 			meta.setCustomModelData(model);
@@ -133,7 +134,7 @@ public class MenuItemManager extends MenuManager {
 			if (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12) {
 				NMSHook.setOwningPlayer(meta, player.getDisplayName());
 			} else {
-				meta.setOwningPlayer(player.getPlayer());
+				Objects.requireNonNull(meta, "Unable to set skull owner because ItemMeta is null").setOwningPlayer(player.getPlayer());
 			}
 			
 			item.setItemMeta(meta);
@@ -157,14 +158,8 @@ public class MenuItemManager extends MenuManager {
 		ItemStack item = createItem(Material.LEATHER_CHESTPLATE, Message.GUI_COLOR.get(color), 0, createColorLore(player, color));
 		LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
 		
-		meta.setColor(Color.fromRGB(red, green, blue));
+		Objects.requireNonNull(meta, "Unable to set item color because ItemMeta is null").setColor(Color.fromRGB(red, green, blue));
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-
-		//TODO not finished
-		/*if (DataManager.isNormalEffect(player.getEffect()) && player.getEffect().getName().equalsIgnoreCase(color.replace("-", "")) && (player.getFakeGlowStatus() || player.getGlowStatus())) {
-			meta.addEnchant(Enchantment.DURABILITY, 1, false);
-			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-		}*/
 
 		if (ProtocolVersion.SERVER_VERSION.getNetworkId() > 751)
 			meta.addItemFlags(ItemFlag.valueOf("HIDE_DYE"));
@@ -197,7 +192,7 @@ public class MenuItemManager extends MenuManager {
 	public ItemStack setItemGlow(ItemStack item) {
 		ItemMeta meta = item.getItemMeta();
 		
-		meta.addEnchant(Enchantment.DURABILITY, 1, false);
+		Objects.requireNonNull(meta, "Unable to set item enchantment because ItemMeta is null").addEnchant(Enchantment.DURABILITY, 1, false);
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		
 		item.setItemMeta(meta);
@@ -216,9 +211,9 @@ public class MenuItemManager extends MenuManager {
 		IEGlowEffect eglowEffect = DataManager.getEGlowEffect("blink" + color.replace("-", "") + "slow");
 		
 		prelores.add(Message.GUI_LEFT_CLICK.get() + Message.COLOR.get(color));
-		prelores.add(Message.GUI_COLOR_PERMISSION.get() + hasPermission(player, eglowColor.getPermission()));
+		prelores.add(Message.GUI_COLOR_PERMISSION.get() + hasPermission(player, Objects.requireNonNull(eglowColor, "Unable to retrieve permission from effect").getPermission()));
 		prelores.add(Message.GUI_RIGHT_CLICK.get() + Message.COLOR.get("effect-blink") + " " + Message.COLOR.get(color));
-		prelores.add(Message.GUI_BLINK_PERMISSION.get() + hasPermission(player, eglowEffect.getPermission()));
+		prelores.add(Message.GUI_BLINK_PERMISSION.get() + hasPermission(player, Objects.requireNonNull(eglowEffect, "Unable to retrieve permission from effect").getPermission()));
 		
 		String[] lores = new String[prelores.size()];
 		return prelores.toArray(lores);
@@ -285,9 +280,9 @@ public class MenuItemManager extends MenuManager {
 		return EGlow.getInstance();
 	}
 
-	private ItemStack createLegacyItemStack(Material mat, int i, short j) {
+	private ItemStack createLegacyItemStack(Material mat, short j) {
 		try {
-			return (ItemStack) NMSHook.nms.getItemStack.newInstance(mat, i, j);
+			return (ItemStack) NMSHook.nms.getItemStack.newInstance(mat, 1, j);
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
 			e.printStackTrace();
 		}

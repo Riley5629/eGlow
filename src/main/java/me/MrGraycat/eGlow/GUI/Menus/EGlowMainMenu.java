@@ -85,7 +85,7 @@ public class EGlowMainMenu extends Menu {
 			enableGlow(player, clickType, "black");
 		break;
 		case(28):
-			if (!eGlowPlayer.getSaveData())
+			if (eGlowPlayer.getSaveData())
 				eGlowPlayer.setSaveData(true);
 			
 			eGlowPlayer.setGlowOnJoin(!eGlowPlayer.getGlowOnJoin());

@@ -44,7 +44,7 @@ public class EGlowEffectMenu extends PaginatedMenu {
 		
 		switch(clickedSlot) {
 		case(28):
-			if (!eGlowPlayer.getSaveData())
+			if (eGlowPlayer.getSaveData())
 				eGlowPlayer.setSaveData(true);
 			
 			eGlowPlayer.setGlowOnJoin(!eGlowPlayer.getGlowOnJoin());

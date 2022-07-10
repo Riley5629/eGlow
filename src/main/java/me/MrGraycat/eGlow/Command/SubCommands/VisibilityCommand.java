@@ -51,7 +51,7 @@ public class VisibilityCommand extends SubCommand {
 			GlowVisibility oldVisibility = ePlayer.getGlowVisibility();
 			GlowVisibility newVisibility = GlowVisibility.valueOf(args[1].toUpperCase());
 			
-			if (!ePlayer.getGlowVisibility().equals(newVisibility) && !ePlayer.getSaveData())
+			if (!ePlayer.getGlowVisibility().equals(newVisibility) && ePlayer.getSaveData())
 					ePlayer.setSaveData(true);
 				
 			ePlayer.setGlowVisibility(newVisibility);
