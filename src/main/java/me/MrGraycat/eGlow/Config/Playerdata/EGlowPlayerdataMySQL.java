@@ -1,6 +1,6 @@
 package me.MrGraycat.eGlow.Config.Playerdata;
 
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil;
 import me.MrGraycat.eGlow.Util.Packets.NMSHook;
@@ -160,11 +160,11 @@ public class EGlowPlayerdataMySQL {
     private void setupMySQLConnection() {
         mysql = getMySQLDataSource();
 
-        setServerName(EGlowMainConfig.MainConfig.MYSQL_HOST.getString());
-        setPort(EGlowMainConfig.MainConfig.MYSQL_PORT.getInt());
-        setDatabaseName(((!EGlowMainConfig.MainConfig.ADVANCED_MYSQL_USESSL.getBoolean()) ? "?useSSL=false" : "")); //no database name for now
-        setUser(EGlowMainConfig.MainConfig.MYSQL_USERNAME.getString());
-        setPassword(EGlowMainConfig.MainConfig.MYSQL_PASSWORD.getString());
+        setServerName(MainConfig.MYSQL_HOST.getString());
+        setPort(MainConfig.MYSQL_PORT.getInt());
+        setDatabaseName(((!MainConfig.ADVANCED_MYSQL_USESSL.getBoolean()) ? "?useSSL=false" : "")); //no database name for now
+        setUser(MainConfig.MYSQL_USERNAME.getString());
+        setPassword(MainConfig.MYSQL_PASSWORD.getString());
 
         testMySQLConnection();
     }
@@ -174,7 +174,7 @@ public class EGlowPlayerdataMySQL {
         PreparedStatement ps = null;
         ResultSet res = null;
 
-        String statement = "CREATE DATABASE IF NOT EXISTS " + ((!EGlowMainConfig.MainConfig.MYSQL_DBNAME.getString().isEmpty()) ? EGlowMainConfig.MainConfig.MYSQL_DBNAME.getString() : "eglow");
+        String statement = "CREATE DATABASE IF NOT EXISTS " + ((!MainConfig.MYSQL_DBNAME.getString().isEmpty()) ? "`" + MainConfig.MYSQL_DBNAME.getString() + "`": "eglow");
 
         try {
             con = getConnection();
@@ -186,7 +186,7 @@ public class EGlowPlayerdataMySQL {
             closeMySQLConnection(con, ps, null);
         }
 
-        setDatabaseName(((!EGlowMainConfig.MainConfig.MYSQL_DBNAME.getString().isEmpty()) ? EGlowMainConfig.MainConfig.MYSQL_DBNAME.getString() : "eglow") + ((!EGlowMainConfig.MainConfig.ADVANCED_MYSQL_USESSL.getBoolean()) ? "?useSSL=false" : ""));
+        setDatabaseName(((!MainConfig.MYSQL_DBNAME.getString().isEmpty()) ? MainConfig.MYSQL_DBNAME.getString() : "eglow") + ((!MainConfig.ADVANCED_MYSQL_USESSL.getBoolean()) ? "?useSSL=false" : ""));
 
         try {
             con = getConnection();
@@ -194,9 +194,9 @@ public class EGlowPlayerdataMySQL {
             res = dbm.getTables(null, null, "eglow", null);
 
             if (!res.next()) {
-                statement = "CREATE TABLE eglow (UUID VARCHAR(255) NOT NULL, glowOnJoin BOOLEAN, activeOnQuit BOOLEAN, lastGlowData VARCHAR(255), glowVisibility VARCHAR(255), glowDisableReason VARCHAR(255), PRIMARY KEY (UUID))";
+                statement = "CREATE TABLE eglow (UUID VARCHAR(190) NOT NULL, glowOnJoin BOOLEAN, activeOnQuit BOOLEAN, lastGlowData VARCHAR(190), glowVisibility VARCHAR(190), glowDisableReason VARCHAR(190), PRIMARY KEY (UUID))";
             } else {
-                statement = "ALTER TABLE eglow DROP lastType, ADD lastGlowData VARCHAR(255), ADD glowVisibility VARCHAR(255), ADD glowDisableReason VARCHAR(255)";
+                statement = "ALTER TABLE eglow DROP lastType, ADD lastGlowData VARCHAR(190), ADD glowVisibility VARCHAR(190), ADD glowDisableReason VARCHAR(190)";
             }
             ps = con.prepareStatement(statement);
             try {ps.executeUpdate();} catch(Exception e) {/*Ignored*/}
