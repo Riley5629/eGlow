@@ -1,24 +1,26 @@
 package me.MrGraycat.eGlow.Manager.Interface;
 
-import java.util.*;
-
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-
-import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Addon.Citizens.EGlowCitizensTrait;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
+import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Util.DebugUtil;
-import me.MrGraycat.eGlow.Util.EnumUtil.*;
-import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
+import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
+import me.MrGraycat.eGlow.Util.EnumUtil.GlowTargetMode;
+import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
+import me.MrGraycat.eGlow.Util.EnumUtil.GlowWorldAction;
 import me.MrGraycat.eGlow.Util.Packets.Chat.EnumChatFormat;
+import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
 import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.trait.ScoreboardTrait;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+
+import java.util.*;
 
 public class IEGlowPlayer {	
 	private final String entityType;
@@ -44,7 +46,7 @@ public class IEGlowPlayer {
 	private GlowVisibility glowVisibility;
 	
 	private GlowTargetMode glowTarget = GlowTargetMode.ALL;
-	private List<Player> customTargetList;
+	private List<Player> customTargetList = new ArrayList<>();
 
 	public IEGlowPlayer(Player player) {
 		this.entityType = "PLAYER";
@@ -94,7 +96,7 @@ public class IEGlowPlayer {
 	}
 	
 	public void setColor(ChatColor color, boolean status, boolean fake) {
-		if (!getSaveData())
+		if (getSaveData())
 			setSaveData(true);
 		
 		setFakeGlowStatus(fake);
@@ -336,7 +338,10 @@ public class IEGlowPlayer {
 	}
 
 	public void setGlowTargetMode(GlowTargetMode glowTarget) {
-		this.glowTarget = glowTarget;
+		if (glowTarget != this.glowTarget) {
+			this.glowTarget = glowTarget;
+			PacketUtil.updateGlowTarget(this);
+		}
 	}
 	
 	public List<Player> getGlowTargets() {
@@ -344,8 +349,10 @@ public class IEGlowPlayer {
 	}
 	
 	public void addGlowTarget(Player p) {
-		if (!customTargetList.contains(p))
+		if (!customTargetList.contains(p)) {
 			customTargetList.add(p);
+			PacketUtil.glowTargetChange(this, p, true);
+		}
 		if (!customTargetList.contains(player)) 
 			customTargetList.add(player);
 		if (glowTarget.equals(GlowTargetMode.ALL))
@@ -353,7 +360,10 @@ public class IEGlowPlayer {
 	}
 	
 	public void removeGlowTarget(Player p) {
+		if (customTargetList.contains(p))
+			PacketUtil.glowTargetChange(this, p, false);
 		customTargetList.remove(p);
+
 		if (glowTarget.equals(GlowTargetMode.CUSTOM) && customTargetList.isEmpty())
 			setGlowTargetMode(GlowTargetMode.ALL);
 	}
@@ -363,14 +373,19 @@ public class IEGlowPlayer {
 			customTargetList.clear();
 			customTargetList.add(player);
 		} else {
-			if (targets.contains(player))
+			if (!targets.contains(player))
 				targets.add(player);
 			
 			customTargetList = targets;
 		}
 
-		if (glowTarget.equals(GlowTargetMode.ALL))
+		if (glowTarget.equals(GlowTargetMode.ALL)) {
 			setGlowTargetMode(GlowTargetMode.CUSTOM);
+		} else {
+			for (Player player : Objects.requireNonNull(targets, "Can't loop over 'null'")) {
+				PacketUtil.glowTargetChange(this, player, true);
+			}
+		}
 	}
 	
 	public void resetGlowTargets() {
@@ -392,7 +407,7 @@ public class IEGlowPlayer {
 
 	public void setGlowOnJoin(boolean status) {
 		if (this.glowOnJoin != status) {
-			if (!getSaveData())
+			if (getSaveData())
 				setSaveData(true);
 		}
 		
@@ -408,7 +423,7 @@ public class IEGlowPlayer {
 	}
 	
 	public boolean getSaveData() {
-		return this.saveData;
+		return !this.saveData;
 	}
 
 	public void setSaveData(boolean saveData) {

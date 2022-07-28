@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Objects;
 
+import me.MrGraycat.eGlow.Addon.Internal.AdvancedGlowVisibilityAddon;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
