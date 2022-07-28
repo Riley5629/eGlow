@@ -54,6 +54,10 @@ public class NMSStorage {
 	public Constructor<?> newPacketPlayOutChat;
 	public Enum[] ChatMessageType_values;
 
+	//PacketPlayOutActionBar
+	public Class<?> packetPlayOutActionBar;
+	public Constructor<?> newPlayOutPacketActionBar;
+
 	//PacketPlayOutEntityMetadata
 	public Class<?> PacketPlayOutEntityMetadata;//
 	public Constructor<?> newPacketPlayOutEntityMetadata;//
@@ -184,7 +188,7 @@ public class NMSStorage {
 		    this.PacketPlayOutScoreboardTeam = getNMSClass("net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam", "PacketPlayOutScoreboardTeam", "Packet209SetScoreboardTeam");
 			this.PacketPlayOutScoreboardTeam_NAME = getFields(this.PacketPlayOutScoreboardTeam, String.class).get(0);
 			this.PacketPlayOutScoreboardTeam_PLAYERS = getFields(this.PacketPlayOutScoreboardTeam, Collection.class).get(0);
-			this.PacketPlayOutScoreboardTeam_ACTION = getInstanceFields(PacketPlayOutScoreboardTeam).get(0);
+			this.PacketPlayOutScoreboardTeam_ACTION = getInstanceFields(PacketPlayOutScoreboardTeam, int.class).get(0);
 		    
 		   if (this.minorVersion >= 17) {
 			   this.PacketPlayOutScoreboardTeam_a = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam$a");
@@ -195,13 +199,20 @@ public class NMSStorage {
 			   this.newPacketPlayOutScoreboardTeam = this.PacketPlayOutScoreboardTeam.getConstructor(scoreboardTeam, int.class);
 		   }
 
+		   if (ProtocolVersion.SERVER_VERSION.getFriendlyName().equals("1.19.1")) {
+			   packetPlayOutActionBar = getNMSClass("net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket");
+			   newPlayOutPacketActionBar = packetPlayOutActionBar.getConstructor(IChatBaseComponent);
+		   }
+
 			Class<?> PacketPlayOutChat = getNMSClass("net.minecraft.network.protocol.game.ClientboundSystemChatPacket", "net.minecraft.network.protocol.game.PacketPlayOutChat", "PacketPlayOutChat", "Packet3Chat");
 			if (minorVersion >= 12 && minorVersion <= 18) {
 				ChatMessageType = getNMSClass("net.minecraft.network.chat.ChatMessageType", "ChatMessageType");
 				ChatMessageType_values = getEnumValues(ChatMessageType);
 			}
 			if (minorVersion >= 19) {
-				newPacketPlayOutChat = PacketPlayOutChat.getConstructor(IChatBaseComponent, int.class);
+				if (!ProtocolVersion.SERVER_VERSION.getFriendlyName().endsWith(".1")) {
+					newPacketPlayOutChat = PacketPlayOutChat.getConstructor(IChatBaseComponent, int.class);
+				}
 			} else if (minorVersion >= 16) {
 				newPacketPlayOutChat = PacketPlayOutChat.getConstructor(IChatBaseComponent, ChatMessageType, UUID.class);
 			} else if (minorVersion >= 12) {
@@ -278,11 +289,11 @@ public class NMSStorage {
 		return list;
 	}
 
-	private List<Field> getInstanceFields(Class<?> clazz){
+	private List<Field> getInstanceFields(Class<?> clazz, Class<?> type){
 		if (clazz == null) throw new IllegalArgumentException("Source class cannot be null");
 		List<Field> list = new ArrayList<>();
 		for (Field field : clazz.getDeclaredFields()) {
-			if (!Modifier.isStatic(field.getModifiers())) {
+			if (field.getType() == type && !Modifier.isStatic(field.getModifiers())) {
 				list.add(setAccessible(field));
 			}
 		}

@@ -9,6 +9,7 @@ import me.MrGraycat.eGlow.Util.EnumUtil.GlowTargetMode;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
 import me.MrGraycat.eGlow.Util.Packets.Chat.EnumChatFormat;
 import me.MrGraycat.eGlow.Util.Packets.Chat.IChatBaseComponent;
+import me.MrGraycat.eGlow.Util.Packets.OutGoing.PacketPlayOutActionBar;
 import me.MrGraycat.eGlow.Util.Packets.OutGoing.PacketPlayOutChat;
 import me.MrGraycat.eGlow.Util.Packets.OutGoing.PacketPlayOutEntityMetadata;
 import me.MrGraycat.eGlow.Util.Packets.OutGoing.PacketPlayOutScoreboardTeam;
@@ -191,6 +192,9 @@ public class PacketUtil {
 		int glowingEntityID = main.getPlayer().getEntityId();
 		PacketPlayOutEntityMetadata packetPlayOutEntityMetadata = null;
 
+		if (type && !(main.getGlowStatus() || main.getFakeGlowStatus()))
+			type = false;
+
 		try {packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(glowingEntityID, NMSHook.setGlowFlag(glowingEntity, type));} catch (Exception e1) {e1.printStackTrace();}
 		try {NMSHook.sendPacket(target, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(target.getVersion()));} catch (Exception e) {e.printStackTrace();}
 	}
@@ -291,12 +295,23 @@ public class PacketUtil {
 			return;
 
 		IChatBaseComponent formattedText = IChatBaseComponent.optimizedComponent(text);
-		PacketPlayOutChat packetPlayOutChat = new PacketPlayOutChat(formattedText, PacketPlayOutChat.ChatMessageType.GAME_INFO);
 
-		try {
-			NMSHook.sendPacket(ePlayer.getPlayer(), packetPlayOutChat.toNMS(ePlayer.getVersion()));
-		} catch (Exception e){
-			e.printStackTrace();
+		if (ProtocolVersion.SERVER_VERSION.getFriendlyName().endsWith(".1")) {
+			PacketPlayOutActionBar packetPlayOutActionBar = new PacketPlayOutActionBar(formattedText);
+
+			try {
+				NMSHook.sendPacket(ePlayer.getPlayer(), packetPlayOutActionBar.toNMS(ePlayer.getVersion()));
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		} else {
+			PacketPlayOutChat packetPlayOutChat = new PacketPlayOutChat(formattedText, PacketPlayOutChat.ChatMessageType.GAME_INFO);
+
+			try {
+				NMSHook.sendPacket(ePlayer.getPlayer(), packetPlayOutChat.toNMS(ePlayer.getVersion()));
+			} catch (Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 
