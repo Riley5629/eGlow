@@ -85,7 +85,7 @@ public class TABAddon {
 	
 	public void updateTABPlayer(IEGlowPlayer ePlayer, ChatColor glowColor) {
 		TabPlayer tabPlayer = getTABPlayer(ePlayer.getUUID());
-		
+
 		if (tabPlayer == null || TabAPI.getInstance().getTeamManager() == null)
 			return;
 		
@@ -100,12 +100,12 @@ public class TABAddon {
 		
 		try {
 			if (!MainConfig.SETTINGS_SMART_TAB_NAMETAG_HANDLER.getBoolean()) {
-				TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, tagPrefix);
+				TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, tagPrefix + color);
 			} else {
 				Property propertyCustomTagName = tabPlayer.getProperty(TabConstants.Property.CUSTOMTAGNAME);
 				
 				if (propertyCustomTagName == null) {
-					TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, tagPrefix);
+					TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, tagPrefix + color);
 				} else {
 					String originalTagName = propertyCustomTagName.getOriginalRawValue();
 					
