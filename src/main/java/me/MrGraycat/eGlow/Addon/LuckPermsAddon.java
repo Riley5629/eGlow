@@ -51,7 +51,7 @@ public class LuckPermsAddon implements Listener {
 							TAB_Addon.updateTABPlayer(ePlayer, ePlayer.getActiveColor());
 						} else {
 							ePlayer.updatePlayerTabname();
-							PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(), Vault_Addon.getPlayerTagPrefix(ePlayer) + ePlayer.getActiveColor(), Vault_Addon.getPlayerTagSuffix(ePlayer), EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
+							PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(),((Vault_Addon != null) ? Vault_Addon.getPlayerTagPrefix(ePlayer) : "") + ePlayer.getActiveColor(), (Vault_Addon != null) ? Vault_Addon.getPlayerTagSuffix(ePlayer) : "", EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
 						}
 					}
 				}.runTaskLaterAsynchronously(EGlow.getInstance(), 20);
@@ -72,7 +72,7 @@ public class LuckPermsAddon implements Listener {
 								TAB_Addon.updateTABPlayer(ePlayer, ePlayer.getActiveColor());
 							} else {
 								if (Vault_Addon != null) {
-									PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(), Vault_Addon.getPlayerTagPrefix(ePlayer) + ePlayer.getActiveColor(), Vault_Addon.getPlayerTagSuffix(ePlayer), EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
+									PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(), ((Vault_Addon != null) ? Vault_Addon.getPlayerTagPrefix(ePlayer) : "") + ePlayer.getActiveColor(), (Vault_Addon != null) ? Vault_Addon.getPlayerTagSuffix(ePlayer) : "", EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
 								}
 							}
 						}
