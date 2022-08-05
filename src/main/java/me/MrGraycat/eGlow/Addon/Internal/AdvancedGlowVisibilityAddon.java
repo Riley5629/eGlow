@@ -4,7 +4,6 @@ import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -31,16 +30,13 @@ public class AdvancedGlowVisibilityAddon {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (DataManager.getEGlowPlayers().isEmpty())
-                    return;
-
                 for (IEGlowPlayer ePlayer : DataManager.getEGlowPlayers()) {
                     Player player = ePlayer.getPlayer();
                     Location playerLoc = player.getLocation().getBlock().getLocation();
 
                     if (cache.containsKey(player.getUniqueId())) {
                         if (cache.get(player.getUniqueId()).equals(playerLoc))
-                            return;
+                            continue;
                         cache.replace(player.getUniqueId(), playerLoc);
                     } else {
                         cache.put(player.getUniqueId(), playerLoc);
@@ -67,16 +63,122 @@ public class AdvancedGlowVisibilityAddon {
     }
 
     public void ignoredBlockInit() {
+        ignoredBlocks.add(Material.valueOf("GLASS"));
         ignoredBlocks.add(Material.valueOf("ICE"));
         ignoredBlocks.add(Material.valueOf("COCOA"));
         ignoredBlocks.add(Material.valueOf("END_ROD"));
         ignoredBlocks.add(Material.valueOf("FLOWER_POT"));
         ignoredBlocks.add(Material.valueOf("LADDER"));
+        ignoredBlocks.add(Material.valueOf("SPRUCE_FENCE"));
+        ignoredBlocks.add(Material.valueOf("BIRCH_FENCE"));
+        ignoredBlocks.add(Material.valueOf("JUNGLE_FENCE"));
+        ignoredBlocks.add(Material.valueOf("ACACIA_FENCE"));
+        ignoredBlocks.add(Material.valueOf("DARK_OAK_FENCE"));
+        ignoredBlocks.add(Material.valueOf("SPRUCE_FENCE_GATE"));
+        ignoredBlocks.add(Material.valueOf("BIRCH_FENCE_GATE"));
+        ignoredBlocks.add(Material.valueOf("JUNGLE_FENCE_GATE"));
+        ignoredBlocks.add(Material.valueOf("ACACIA_FENCE_GATE"));
+        ignoredBlocks.add(Material.valueOf("DARK_OAK_FENCE_GATE"));
+        ignoredBlocks.add(Material.valueOf("IRON_DOOR"));
+        ignoredBlocks.add(Material.valueOf("SPRUCE_DOOR"));
+        ignoredBlocks.add(Material.valueOf("BIRCH_DOOR"));
+        ignoredBlocks.add(Material.valueOf("JUNGLE_DOOR"));
+        ignoredBlocks.add(Material.valueOf("ACACIA_DOOR"));
+        ignoredBlocks.add(Material.valueOf("DARK_OAK_DOOR"));
+        ignoredBlocks.add(Material.valueOf("IRON_TRAPDOOR"));
 
         if (ProtocolVersion.SERVER_VERSION.getMinorVersion() < 13) {
             ignoredBlocks.add(Material.valueOf("MOB_SPAWNER"));
             ignoredBlocks.add(Material.valueOf("SKULL"));
+            ignoredBlocks.add(Material.valueOf("FENCE"));
+            ignoredBlocks.add(Material.valueOf("IRON_FENCE"));
+            ignoredBlocks.add(Material.valueOf("FENCE_GATE"));
+            ignoredBlocks.add(Material.valueOf("NETHER_FENCE"));
+            ignoredBlocks.add(Material.valueOf("TRAP_DOOR"));
+            ignoredBlocks.add(Material.valueOf("LEAVES"));
+            ignoredBlocks.add(Material.valueOf("LEAVES_2"));
+            ignoredBlocks.add(Material.valueOf("CARPET"));
+            ignoredBlocks.add(Material.valueOf("STAINED_GLASS"));
+            ignoredBlocks.add(Material.valueOf("STAINED_GLASS_PANE"));
         } else {
+            ignoredBlocks.add(Material.valueOf("OAK_FENCE"));
+            ignoredBlocks.add(Material.valueOf("NETHER_BRICK_FENCE"));
+            ignoredBlocks.add(Material.valueOf("OAK_FENCE_GATE"));
+            ignoredBlocks.add(Material.valueOf("OAK_DOOR"));
+            ignoredBlocks.add(Material.valueOf("OAK_TRAPDOOR"));
+            ignoredBlocks.add(Material.valueOf("SPRUCE_TRAPDOOR"));
+            ignoredBlocks.add(Material.valueOf("BIRCH_TRAPDOOR"));
+            ignoredBlocks.add(Material.valueOf("JUNGLE_TRAPDOOR"));
+            ignoredBlocks.add(Material.valueOf("ACACIA_TRAPDOOR"));
+            ignoredBlocks.add(Material.valueOf("DARK_OAK_TRAPDOOR"));
+            ignoredBlocks.add(Material.valueOf("OAK_LEAVES"));
+            ignoredBlocks.add(Material.valueOf("SPRUCE_LEAVES"));
+            ignoredBlocks.add(Material.valueOf("BIRCH_LEAVES"));
+            ignoredBlocks.add(Material.valueOf("JUNGLE_LEAVES"));
+            ignoredBlocks.add(Material.valueOf("ACACIA_LEAVES"));
+            ignoredBlocks.add(Material.valueOf("DARK_OAK_LEAVES"));
+            ignoredBlocks.add(Material.valueOf("PLAYER_HEAD"));
+            ignoredBlocks.add(Material.valueOf("ZOMBIE_HEAD"));
+            ignoredBlocks.add(Material.valueOf("SKELETON_SKULL"));
+            ignoredBlocks.add(Material.valueOf("CREEPER_HEAD"));
+            ignoredBlocks.add(Material.valueOf("WITHER_SKELETON_SKULL"));
+            ignoredBlocks.add(Material.valueOf("DRAGON_HEAD"));
+            ignoredBlocks.add(Material.valueOf("PISTON_HEAD"));
+            ignoredBlocks.add(Material.valueOf("ZOMBIE_WALL_HEAD"));
+            ignoredBlocks.add(Material.valueOf("SKELETON_WALL_SKULL"));
+            ignoredBlocks.add(Material.valueOf("PLAYER_WALL_HEAD"));
+            ignoredBlocks.add(Material.valueOf("CREEPER_WALL_HEAD"));
+            ignoredBlocks.add(Material.valueOf("WITHER_SKELETON_WALL_SKULL"));
+            ignoredBlocks.add(Material.valueOf("DRAGON_WALL_HEAD"));
+            ignoredBlocks.add(Material.valueOf("WHITE_CARPET"));
+            ignoredBlocks.add(Material.valueOf("ORANGE_CARPET"));
+            ignoredBlocks.add(Material.valueOf("MAGENTA_CARPET"));
+            ignoredBlocks.add(Material.valueOf("LIGHT_BLUE_CARPET"));
+            ignoredBlocks.add(Material.valueOf("YELLOW_CARPET"));
+            ignoredBlocks.add(Material.valueOf("LIME_CARPET"));
+            ignoredBlocks.add(Material.valueOf("PINK_CARPET"));
+            ignoredBlocks.add(Material.valueOf("GRAY_CARPET"));
+            ignoredBlocks.add(Material.valueOf("LIGHT_GRAY_CARPET"));
+            ignoredBlocks.add(Material.valueOf("CYAN_CARPET"));
+            ignoredBlocks.add(Material.valueOf("PURPLE_CARPET"));
+            ignoredBlocks.add(Material.valueOf("BLUE_CARPET"));
+            ignoredBlocks.add(Material.valueOf("BROWN_CARPET"));
+            ignoredBlocks.add(Material.valueOf("GREEN_CARPET"));
+            ignoredBlocks.add(Material.valueOf("RED_CARPET"));
+            ignoredBlocks.add(Material.valueOf("BLACK_CARPET"));
+            ignoredBlocks.add(Material.valueOf("GLASS_PANE"));
+            ignoredBlocks.add(Material.valueOf("WHITE_STAINED_GLASS"));
+            ignoredBlocks.add(Material.valueOf("ORANGE_STAINED_GLASS"));
+            ignoredBlocks.add(Material.valueOf("MAGENTA_STAINED_GLASS"));
+            ignoredBlocks.add(Material.valueOf("LIGHT_BLUE_STAINED_GLASS"));
+            ignoredBlocks.add(Material.valueOf("YELLOW_STAINED_GLASS"));
+            ignoredBlocks.add(Material.valueOf("LIME_STAINED_GLASS"));
+            ignoredBlocks.add(Material.valueOf("PINK_STAINED_GLASS"));
+            ignoredBlocks.add(Material.valueOf("GRAY_STAINED_GLASS"));
+            ignoredBlocks.add(Material.valueOf("LIGHT_GRAY_STAINED_GLASS"));
+            ignoredBlocks.add(Material.valueOf("CYAN_STAINED_GLASS"));
+            ignoredBlocks.add(Material.valueOf("PURPLE_STAINED_GLASS"));
+            ignoredBlocks.add(Material.valueOf("BLUE_STAINED_GLASS"));
+            ignoredBlocks.add(Material.valueOf("BROWN_STAINED_GLASS"));
+            ignoredBlocks.add(Material.valueOf("GREEN_STAINED_GLASS"));
+            ignoredBlocks.add(Material.valueOf("RED_STAINED_GLASS"));
+            ignoredBlocks.add(Material.valueOf("BLACK_STAINED_GLASS"));
+            ignoredBlocks.add(Material.valueOf("WHITE_STAINED_GLASS_PANE"));
+            ignoredBlocks.add(Material.valueOf("ORANGE_STAINED_GLASS_PANE"));
+            ignoredBlocks.add(Material.valueOf("MAGENTA_STAINED_GLASS_PANE"));
+            ignoredBlocks.add(Material.valueOf("LIGHT_BLUE_STAINED_GLASS_PANE"));
+            ignoredBlocks.add(Material.valueOf("YELLOW_STAINED_GLASS_PANE"));
+            ignoredBlocks.add(Material.valueOf("LIME_STAINED_GLASS_PANE"));
+            ignoredBlocks.add(Material.valueOf("PINK_STAINED_GLASS_PANE"));
+            ignoredBlocks.add(Material.valueOf("GRAY_STAINED_GLASS_PANE"));
+            ignoredBlocks.add(Material.valueOf("LIGHT_GRAY_STAINED_GLASS_PANE"));
+            ignoredBlocks.add(Material.valueOf("CYAN_STAINED_GLASS_PANE"));
+            ignoredBlocks.add(Material.valueOf("PURPLE_STAINED_GLASS_PANE"));
+            ignoredBlocks.add(Material.valueOf("BLUE_STAINED_GLASS_PANE"));
+            ignoredBlocks.add(Material.valueOf("BROWN_STAINED_GLASS_PANE"));
+            ignoredBlocks.add(Material.valueOf("GREEN_STAINED_GLASS_PANE"));
+            ignoredBlocks.add(Material.valueOf("RED_STAINED_GLASS_PANE"));
+            ignoredBlocks.add(Material.valueOf("BLACK_STAINED_GLASS_PANE"));
             ignoredBlocks.add(Material.valueOf("SPAWNER"));
             ignoredBlocks.add(Material.valueOf("CONDUIT"));
             ignoredBlocks.add(Material.valueOf("IRON_BARS"));
@@ -91,15 +193,54 @@ public class AdvancedGlowVisibilityAddon {
 
             if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 16)
                 ignoredBlocks.add(Material.valueOf("CHAIN"));
+                ignoredBlocks.add(Material.valueOf("CRIMSON_FENCE"));
+                ignoredBlocks.add(Material.valueOf("WARPED_FENCE"));
+                ignoredBlocks.add(Material.valueOf("CRIMSON_FENCE_GATE"));
+                ignoredBlocks.add(Material.valueOf("WARPED_FENCE_GATE"));
+                ignoredBlocks.add(Material.valueOf("CRIMSON_DOOR"));
+                ignoredBlocks.add(Material.valueOf("WARPED_DOOR"));
+                ignoredBlocks.add(Material.valueOf("CRIMSON_TRAPDOOR"));
+                ignoredBlocks.add(Material.valueOf("WARPED_TRAPDOOR"));
+                ignoredBlocks.add(Material.valueOf("AZALEA_LEAVES"));
+                ignoredBlocks.add(Material.valueOf("FLOWERING_AZALEA_LEAVES"));
+                ignoredBlocks.add(Material.valueOf("CRIMSON_FENCE_GATE"));
+                ignoredBlocks.add(Material.valueOf("WARPED_FENCE_GATE"));
 
             if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 17) {
+                ignoredBlocks.add(Material.valueOf("SMALL_AMETHYST_BUD"));
+                ignoredBlocks.add(Material.valueOf("MEDIUM_AMETHYST_BUD"));
+                ignoredBlocks.add(Material.valueOf("LARGE_AMETHYST_BUD"));
                 ignoredBlocks.add(Material.valueOf("BIG_DRIPLEAF"));
                 ignoredBlocks.add(Material.valueOf("BIG_DRIPLEAF_STEM"));
                 ignoredBlocks.add(Material.valueOf("LIGHTNING_ROD"));
+                ignoredBlocks.add(Material.valueOf("TINTED_GLASS"));
+                ignoredBlocks.add(Material.valueOf("CANDLE"));
+                ignoredBlocks.add(Material.valueOf("WHITE_CANDLE"));
+                ignoredBlocks.add(Material.valueOf("ORANGE_CANDLE"));
+                ignoredBlocks.add(Material.valueOf("MAGENTA_CANDLE"));
+                ignoredBlocks.add(Material.valueOf("LIGHT_BLUE_CANDLE"));
+                ignoredBlocks.add(Material.valueOf("YELLOW_CANDLE"));
+                ignoredBlocks.add(Material.valueOf("LIME_CANDLE"));
+                ignoredBlocks.add(Material.valueOf("PINK_CANDLE"));
+                ignoredBlocks.add(Material.valueOf("GRAY_CANDLE"));
+                ignoredBlocks.add(Material.valueOf("LIGHT_GRAY_CANDLE"));
+                ignoredBlocks.add(Material.valueOf("CYAN_CANDLE"));
+                ignoredBlocks.add(Material.valueOf("PURPLE_CANDLE"));
+                ignoredBlocks.add(Material.valueOf("BLUE_CANDLE"));
+                ignoredBlocks.add(Material.valueOf("BROWN_CANDLE"));
+                ignoredBlocks.add(Material.valueOf("GREEN_CANDLE"));
+                ignoredBlocks.add(Material.valueOf("RED_CANDLE"));
+                ignoredBlocks.add(Material.valueOf("BLACK_CANDLE"));
                 ignoredBlocks.add(Material.valueOf("MOSS_CARPET"));
             }
 
-            if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >=18)
+            if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >=19)
+                ignoredBlocks.add(Material.valueOf("MANGROVE_FENCE"));
+                ignoredBlocks.add(Material.valueOf("MANGROVE_FENCE_GATE"));
+                ignoredBlocks.add(Material.valueOf("MANGROVE_LEAVES"));
+                ignoredBlocks.add(Material.valueOf("MANGROVE_TRAPDOOR"));
+                ignoredBlocks.add(Material.valueOf("MANGROVE_DOOR"));
+                ignoredBlocks.add(Material.valueOf("MANGROVE_FENCE_GATE"));
                 ignoredBlocks.add(Material.valueOf("MANGROVE_ROOTS"));
         }
     }
@@ -118,58 +259,6 @@ public class AdvancedGlowVisibilityAddon {
             this.direction = target.clone().toVector().subtract(origin.clone().toVector()).normalize();
         }
 
-        /*public void materials() {
-            Material.ICE; //Universal
-            Material.valueOf("MOB_SPAWNER");//1.13-
-            Material.SPAWNER //1.13+
-
-            //Block data instanceof AmethystCluster //1.17+
-            Material.BIG_DRIPLEAF //1.17+
-            Material.BIG_DRIPLEAF_STEM //1.17+
-            //Block data instanceof candle //1.17+
-            //contains carpet
-            Material.CHAIN //1.16+
-            Material.COCOA //Universal
-            Material.CONDUIT //1.13+
-            Material.END_ROD //Universal
-            //contains fence
-            Material.FLOWER_POT //Universal
-            Material.HONEY_BLOCK //1.15+
-            Material.IRON_BARS // 1.13+
-            // Don't know the 'old name' contained under fence 1.13-
-            Material.LADDER //Universal
-            Material.LIGHTNING_ROD //1.17
-            //contains head old skull //1.13+
-            Material.valueOf("SKULL"); //1.13-
-            Material.MOSS_CARPET //1.17+
-            Material.SCAFFOLDING //1.14+
-            Material.SEA_PICKLE //1.13+
-            Material.TURTLE_EGG //1.13+
-            //contains glass
-            //contains door
-            //contains fence_gate
-            //contains leaves
-        }*/
-
-        /*  private List<Block> getLineOfSight(Set<Material> transparent, int maxDistance, int maxLength) {
-    if (maxDistance > 120)
-      maxDistance = 120;
-    ArrayList<Block> blocks = new ArrayList<>();
-    BlockIterator<Block> blockIterator = new BlockIterator(this, maxDistance);
-    while (blockIterator.hasNext()) {
-      Block block = blockIterator.next();
-      blocks.add(block);
-      if (maxLength != 0 && blocks.size() > maxLength)
-        blocks.remove(0);
-      Material material = block.getType();
-      if ((transparent == null) ?
-        !material.equals(Material.AIR) :
-
-        !transparent.contains(material))
-        break;
-    }
-    return blocks;
-  }*/
         public boolean hasLineOfSight() {
             if (origin.equals(target))
                 return true;
@@ -178,123 +267,16 @@ public class AdvancedGlowVisibilityAddon {
 
             while(blocks.hasNext()) {
                 Block block = blocks.next();
-                String blockName = block.getType().name();
 
-                if (!block.isLiquid() && !block.isPassable() &&
-                    !AdvancedGlowVisibilityAddon.ignoredBlocks.contains(block.getType()) &&
-                    !blockName.contains("FENCE") && !blockName.contains("GLASS") && !blockName.contains("DOOR") && !blockName.contains("LEAVES") && !blockName.contains("FENCE_GATE") && !blockName.contains("HEAD") && !blockName.contains("CARPET") && !blockName.contains("CANDLE")) {
+                if (!block.isLiquid() && !block.isPassable() && !AdvancedGlowVisibilityAddon.ignoredBlocks.contains(block.getType())) {
                     return false;
                 }
-
-                if (blockName.contains("AMETHYST") && blockName.contains("BLOCK")) {
-                    return true;
-                }
             }
-
             return true;
         }
 
         private int distance() {
             return (int) Math.floor(Math.sqrt(Math.pow((origin.getX() - target.getX()), 2) + Math.pow((origin.getY() - target.getY()), 2) + Math.pow((origin.getZ() - target.getZ()), 2)));
         }
-    }
 
-
-            /*or (int i = 0; i < distance() ; i++) {
-                origin.add(direction);
-                Block block = origin.getBlock();
-
-                if (!block.getType().equals(Material.AIR))
-                    return false;
-            }
-            return true;*/
-
-            /*   public boolean traceLocation(Location g, Location l, Player p) {
-        double x = g.getX()-l.getX(), y = g.getY()-l.getY(), z = g.getZ()-l.getZ();
-        Vector direction = new Vector(x, y, z).normalize();
-        p.sendMessage(""+g.distanceSquared(l));
-        for (int i = 0; i < 15; i++) {
-            l.add(direction);
-            if (l.getBlock().getType() != Material.AIR) {
-                return false;
-            }
-        }
-        return true;
-    }*/
-
-    /*public class Raytrace {
-        //origin = start position
-        //direction = direction in which the raytrace will go
-        Vector origin, direction;
-
-        Raytrace(Vector origin, Vector direction) {
-            this.origin = origin;
-            this.direction = direction;
-        }
-
-        //get a point on the raytrace at X blocks away
-        public Vector getPosition(double blocksAway) {
-            return origin.clone().add(direction.clone().multiply(blocksAway));
-        }
-
-        //checks if a position is on contained within the position
-        public boolean isOnLine(Vector position) {
-            double t = (position.getX() - origin.getX()) / direction.getX();
-            ;
-            if (position.getBlockY() == origin.getY() + (t * direction.getY()) && position.getBlockZ() == origin.getZ() + (t * direction.getZ())) {
-                return true;
-            }
-            return false;
-        }
-
-        //get all postions on a raytrace
-        public ArrayList<Vector> traverse(double blocksAway, double accuracy) {
-            ArrayList<Vector> positions = new ArrayList<>();
-            for (double d = 0; d <= blocksAway; d += accuracy) {
-                positions.add(getPosition(d));
-            }
-            return positions;
-        }
-
-        //intersection detection for current raytrace with return
-        public Vector positionOfIntersection(Vector min, Vector max, double blocksAway, double accuracy) {
-            ArrayList<Vector> positions = traverse(blocksAway, accuracy);
-            for (Vector position : positions) {
-                if (intersects(position, min, max)) {
-                    return position;
-                }
-            }
-            return null;
-        }
-
-        //intersection detection for current raytrace
-        public boolean intersects(Vector min, Vector max, double blocksAway, double accuracy) {
-            ArrayList<Vector> positions = traverse(blocksAway, accuracy);
-            for (Vector position : positions) {
-                if (intersects(position, min, max)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        //general intersection detection
-        public boolean intersects(Vector position, Vector min, Vector max) {
-            if (position.getX() < min.getX() || position.getX() > max.getX()) {
-                return false;
-            } else if (position.getY() < min.getY() || position.getY() > max.getY()) {
-                return false;
-            } else if (position.getZ() < min.getZ() || position.getZ() > max.getZ()) {
-                return false;
-            }
-            return true;
-        }
-
-        //debug
-        public void highlight(World world, double blocksAway, double accuracy){
-            for(Vector position : traverse(blocksAway,accuracy)){
-                world.spawnParticle(Particle.DUST_COLOR_TRANSITION, position.toLocation(world), 5);
-            }
-        }
-    }*/
 }
