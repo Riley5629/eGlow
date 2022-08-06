@@ -29,7 +29,7 @@ public class AdvancedGlowVisibilityAddon {
 
     private boolean FORCE_STOP = false;
     private static final List<Material> ignoredBlocks = new ArrayList<>();
-    private final Map<UUID, Location> cache = new HashMap<>(); //todo: fix memory leak when players disconnect
+    private final Map<UUID, Location> cache = new HashMap<>();
     /**
      * Whether a glow check is currently being run.
      */
@@ -136,6 +136,12 @@ public class AdvancedGlowVisibilityAddon {
         } else {
             p1.removeGlowTarget(p2.getPlayer());
             p2.removeGlowTarget(p1.getPlayer());
+        }
+    }
+
+    public void uncachePlayer(IEGlowPlayer ePlayer) {
+        synchronized (cache) {
+            cache.remove(ePlayer.getUUID());
         }
     }
 
