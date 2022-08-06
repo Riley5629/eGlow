@@ -32,16 +32,11 @@ public class AdvancedGlowVisibilityAddon {
         // This config is internal only, and is assumed to be correct.
         InputStream resource = EGlow.getInstance().getResource("internal/AdvancedGlowIgnoreList.yml");
         YamlConfiguration config = YamlConfiguration.loadConfiguration(new InputStreamReader(resource));
-        for (String key : config.getKeys(false)) {
-            int ver = Integer.parseInt(key);
-            if (ProtocolVersion.SERVER_VERSION.getMinorVersion() < ver)
-                continue;
-            List<Material> materials = config.getStringList(key).stream()
-                    .map(Material::matchMaterial)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-            ignoredBlocks.addAll(materials);
-        }
+        List<Material> materials = config.getStringList("ignored-blocks").stream()
+                .map(Material::matchMaterial)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        ignoredBlocks.addAll(materials);
     }
 
     private boolean FORCE_STOP = false;
