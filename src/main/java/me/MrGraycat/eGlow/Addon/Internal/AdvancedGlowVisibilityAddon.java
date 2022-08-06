@@ -87,6 +87,7 @@ public class AdvancedGlowVisibilityAddon {
 
                         double angle = nearbyDir.angle(playerDir);
                         if (angle > FRUSTUM_SIZE) {
+                            toggle(ePlayer, nearby, false);
                             continue;
                         } else {
                             Raytrace trace = new Raytrace(playerLoc, nearbyLoc);
