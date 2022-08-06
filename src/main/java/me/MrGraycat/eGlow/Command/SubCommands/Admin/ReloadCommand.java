@@ -1,5 +1,6 @@
 package me.MrGraycat.eGlow.Command.SubCommands.Admin;
 
+import me.MrGraycat.eGlow.Addon.Internal.AdvancedGlowVisibilityAddon;
 import me.MrGraycat.eGlow.Command.SubCommand;
 import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
@@ -54,6 +55,7 @@ public class ReloadCommand extends SubCommand {
 			EGlowPlayerdataManager.setMysql_Failed(false);
 			DataManager.addEGlowEffects();
 			DataManager.addCustomEffects();
+
 			for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
 				ePlayer = DataManager.getEGlowPlayer(onlinePlayer);
 				
@@ -87,6 +89,14 @@ public class ReloadCommand extends SubCommand {
 						ChatUtil.sendMsg(ePlayer.getPlayer(), Message.WORLD_ALLOWED.get(), true);
 					}
 				}
+			}
+
+			if (MainConfig.ADVANCED_GLOW_VISIBILITY_ENABLE.getBoolean()) {
+				if (getInstance().getAdvancedGlowVisibility() == null)
+					getInstance().setAdvancedGlowVisibility(new AdvancedGlowVisibilityAddon());
+			} else {
+				if (getInstance().getAdvancedGlowVisibility() != null)
+					getInstance().setAdvancedGlowVisibility(null);
 			}
 			
 			try{

@@ -1,5 +1,6 @@
 package me.MrGraycat.eGlow.Addon.Internal;
 
+import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 public class AdvancedGlowVisibilityAddon {
 
+    private boolean FORCE_STOP = false;
     private static List<Material> ignoredBlocks = new ArrayList<>();
     private ConcurrentHashMap<UUID, Location> cache = new ConcurrentHashMap<>();
 
@@ -30,16 +32,21 @@ public class AdvancedGlowVisibilityAddon {
         new BukkitRunnable() {
             @Override
             public void run() {
+                if (getForceStop()) {
+                    cancel();
+                    EGlow.getInstance().setAdvancedGlowVisibility(null);
+                }
+
                 for (IEGlowPlayer ePlayer : DataManager.getEGlowPlayers()) {
                     Player player = ePlayer.getPlayer();
-                    Location playerLoc = player.getLocation().getBlock().getLocation();
+                    Location playerLoc = player.getLocation();
 
-                    if (cache.containsKey(player.getUniqueId())) {
-                        if (cache.get(player.getUniqueId()).equals(playerLoc))
+                    if (cache.containsKey(ePlayer.getUUID())) {
+                        if (cache.get(ePlayer.getUUID()).equals(playerLoc))
                             continue;
-                        cache.replace(player.getUniqueId(), playerLoc);
+                        cache.replace(ePlayer.getUUID(), playerLoc);
                     } else {
-                        cache.put(player.getUniqueId(), playerLoc);
+                        cache.put(ePlayer.getUUID(), playerLoc);
                     }
 
                     List<Player> players = Objects.requireNonNull(playerLoc.getWorld()).getPlayers();
@@ -59,7 +66,11 @@ public class AdvancedGlowVisibilityAddon {
                     }
                 }
             }
-        }.runTaskTimer(EGlow.getInstance(), 0, 10);
+        }.runTaskTimerAsynchronously(EGlow.getInstance(), 0, Math.max(EGlowMainConfig.MainConfig.ADVANCED_GLOW_VISIBILITY_DELAY.getInt(), 10));
+    }
+
+    public void shutdown() {
+        setForceStop();
     }
 
     public void ignoredBlockInit() {
@@ -249,6 +260,14 @@ public class AdvancedGlowVisibilityAddon {
         return (int) Math.floor(Math.sqrt(Math.pow((start.getX() - end.getX()), 2) + Math.pow((start.getY() - end.getY()), 2) + Math.pow((start.getZ() - end.getZ()), 2)));
     }
 
+    private void setForceStop() {
+        this.FORCE_STOP = true;
+    }
+
+    private boolean getForceStop() {
+        return this.FORCE_STOP;
+    }
+
     public static class Raytrace {
         Location origin, target;
         Vector direction;
@@ -265,7 +284,7 @@ public class AdvancedGlowVisibilityAddon {
 
             BlockIterator blocks = new BlockIterator(Objects.requireNonNull(origin.getWorld()), origin.toVector(), direction, 0.0, distance());
 
-            while(blocks.hasNext()) {
+            while (blocks.hasNext()) {
                 Block block = blocks.next();
 
                 if (!block.isLiquid() && !block.isPassable() && !AdvancedGlowVisibilityAddon.ignoredBlocks.contains(block.getType())) {
@@ -278,5 +297,5 @@ public class AdvancedGlowVisibilityAddon {
         private int distance() {
             return (int) Math.floor(Math.sqrt(Math.pow((origin.getX() - target.getX()), 2) + Math.pow((origin.getY() - target.getY()), 2) + Math.pow((origin.getZ() - target.getZ()), 2)));
         }
-
+    }
 }

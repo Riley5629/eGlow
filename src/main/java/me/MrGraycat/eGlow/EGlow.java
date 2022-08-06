@@ -42,6 +42,7 @@ public class EGlow extends JavaPlugin {
 	private boolean UP_TO_DATE = true;
 
 	//Addons
+	private AdvancedGlowVisibilityAddon glowAddon;
 	private CitizensAddon citizensAddon;
 	private IDisguiseAddon iDisguiseAddon;
 	private LibDisguiseAddon libDisguiseAddon;
@@ -54,7 +55,7 @@ public class EGlow extends JavaPlugin {
 	public void onEnable() {
 		setInstance(this);
 		setAPI(new EGlowAPI());
-		
+
 		if (versionIsCompactible()) {
 			ProtocolVersion.SERVER_VERSION = ProtocolVersion.fromServerString(Bukkit.getBukkitVersion().split("-")[0]);
 
@@ -109,14 +110,13 @@ public class EGlow extends JavaPlugin {
 				getMetricsAddon().addCustomChart(new SimplePie("database_type", () -> (MainConfig.MYSQL_ENABLE.getBoolean()) ? "MySQL" : "SQLite"));
 				getMetricsAddon().addCustomChart(new SimplePie("command_aliases", () -> (MainConfig.COMMAND_ALIAS_ENABLE.getBoolean() && !MainConfig.COMMAND_ALIAS.getString().equalsIgnoreCase("eglow")) ? MainConfig.COMMAND_ALIAS.getString().toLowerCase() : "none"));
 
-				//TODO in testing
-				//new AdvancedGlowVisibilityAddon();
-
+				if (MainConfig.ADVANCED_GLOW_VISIBILITY_ENABLE.getBoolean() && getAdvancedGlowVisibility() == null)
+					new AdvancedGlowVisibilityAddon();
 				if (DebugUtil.pluginCheck("PlaceholderAPI"))
 					new PlaceholderAPIAddon();
 				if (DebugUtil.pluginCheck("Vault"))
 					setVaultAddon(new VaultAddon());
-				if (DebugUtil.pluginCheck("Citizens") && citizensAddon == null)
+				if (DebugUtil.pluginCheck("Citizens") && getCitizensAddon() == null)
 					setCitizensAddon(new CitizensAddon());
 				if (DebugUtil.pluginCheck("iDisguise"))
 					setIDisguiseAddon(new IDisguiseAddon());
@@ -196,6 +196,10 @@ public class EGlow extends JavaPlugin {
 		this.metrics = metrics;
 	}
 
+	public void setAdvancedGlowVisibility(AdvancedGlowVisibilityAddon glowAddon) {
+		this.glowAddon = glowAddon;
+	}
+
 	private void setCitizensAddon(CitizensAddon citizensAddon) {
 		this.citizensAddon = citizensAddon;
 	}
@@ -235,6 +239,10 @@ public class EGlow extends JavaPlugin {
 
 	public Metrics getMetricsAddon() {
 		return this.metrics;
+	}
+
+	public AdvancedGlowVisibilityAddon getAdvancedGlowVisibility() {
+		return this.glowAddon;
 	}
 
 	public CitizensAddon getCitizensAddon() {

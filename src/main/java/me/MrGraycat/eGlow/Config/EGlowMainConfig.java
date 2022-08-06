@@ -138,6 +138,8 @@ public class EGlowMainConfig {
 		replaceOrAdd("Options.Send-invisibility-notification", "Settings.notifications.invisibility-change", true);
 		replaceOrAdd("Options.Send-target-notification", "Settings.notifications.target-set-unset-command", true);
 
+		replaceOrAdd("NA", "Advanced.glow-visibility.enable", false);
+		replaceOrAdd("NA", "Advanced.glow-visibility.delay", 0.5);
 		replaceOrAdd("MySQL.useSSL", "Advanced.MySQL.useSSL", true);
 		replaceOrAdd("Options.Collision", "Advanced.teams.entity-collision", true);
 		replaceOrAdd("Options.Nametag", "Advanced.teams.nametag-visibility", true);
@@ -194,6 +196,9 @@ public class EGlowMainConfig {
 		SETTINGS_NOTIFICATIONS_INVISIBILITY("Settings.notifications.invisibility-change"),
 		SETTINGS_NOTIFICATIONS_TARGET_COMMAND("Settings.notifications.target-set-unset-command"),
 
+		ADVANCED_GLOW_VISIBILITY_ENABLE("Advanced.glow-visibility.enable"),
+		ADVANCED_GLOW_VISIBILITY_DELAY("Advanced.glow-visibility.delay"),
+
 		ADVANCED_MYSQL_USESSL("Advanced.MySQL.useSSL"),
 
 		ADVANCED_TEAMS_ENTITY_COLLISION("Advanced.teams.entity-collision"),
@@ -231,6 +236,7 @@ public class EGlowMainConfig {
 			switch (main) {
 				case DELAY_SLOW:
 				case DELAY_FAST:
+				case ADVANCED_GLOW_VISIBILITY_DELAY:
 					return (int) (config.getDouble(main.getConfigPath()) * 20);
 				default:
 					return config.getInt(main.getConfigPath());

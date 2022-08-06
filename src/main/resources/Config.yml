@@ -75,6 +75,10 @@ Settings:
 #Advanced settings - Only edit these when you know what you're doing!
 #Disabling some of these settings may cause eGlow to not work properly
 Advanced:
+  #This setting will be able to hide the glow behind objects
+  glow-visibility:
+    enable: false
+    delay: 0.5 #half a second is the hardcoded minimum! This to prevent possible performance issues
   MySQL:
     useSSL: true
   teams:
