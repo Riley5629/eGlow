@@ -199,7 +199,7 @@ public class NMSStorage {
 			   this.newPacketPlayOutScoreboardTeam = this.PacketPlayOutScoreboardTeam.getConstructor(scoreboardTeam, int.class);
 		   }
 
-		   if (ProtocolVersion.SERVER_VERSION.getFriendlyName().equals("1.19.1")) {
+		   if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 19 && !ProtocolVersion.SERVER_VERSION.getFriendlyName().equals("1.19")) {
 			   packetPlayOutActionBar = getNMSClass("net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket");
 			   newPlayOutPacketActionBar = packetPlayOutActionBar.getConstructor(IChatBaseComponent);
 		   }
@@ -210,7 +210,7 @@ public class NMSStorage {
 				ChatMessageType_values = getEnumValues(ChatMessageType);
 			}
 			if (minorVersion >= 19) {
-				if (!ProtocolVersion.SERVER_VERSION.getFriendlyName().endsWith(".1")) {
+				if (ProtocolVersion.SERVER_VERSION.getFriendlyName().equals("1.19")) {
 					newPacketPlayOutChat = PacketPlayOutChat.getConstructor(IChatBaseComponent, int.class);
 				}
 			} else if (minorVersion >= 16) {
