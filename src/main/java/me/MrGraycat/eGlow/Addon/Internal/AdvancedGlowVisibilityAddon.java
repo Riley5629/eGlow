@@ -113,7 +113,7 @@ public class AdvancedGlowVisibilityAddon {
         if (cached == null) {
             cache.put(ePlayer.getUUID(), playerLoc);
         } else {
-            if (xyzEquals(cached, playerLoc)) {
+            if (cached.equals(playerLoc)) {
                 return true;
             } else {
                 cache.replace(ePlayer.getUUID(), playerLoc);
@@ -340,17 +340,6 @@ public class AdvancedGlowVisibilityAddon {
 
     private boolean getForceStop() {
         return this.FORCE_STOP;
-    }
-
-    /**
-     * Checks if the X, Y, and Z values of two Location are equal.
-     *
-     * @param loc1 The first Location.
-     * @param loc2 The second Location.
-     * @return True if the X, Y, and Z values are equal, false otherwise.
-     */
-    private static boolean xyzEquals(Location loc1, Location loc2) {
-        return loc1.getX() == loc2.getX() && loc1.getY() == loc2.getY() && loc1.getZ() == loc2.getZ();
     }
 
     public static class Raytrace {
