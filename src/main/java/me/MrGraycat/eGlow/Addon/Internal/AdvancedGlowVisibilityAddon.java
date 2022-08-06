@@ -62,7 +62,7 @@ public class AdvancedGlowVisibilityAddon {
                     Player player = ePlayer.getPlayer();
                     Location playerLoc = player.getEyeLocation();
 
-                    if (checkCache(ePlayer, playerLoc))
+                    if (checkLocationCache(ePlayer, playerLoc))
                         continue;
 
                     List<IEGlowPlayer> nearbyEPlayers = new ArrayList<>();
@@ -85,12 +85,12 @@ public class AdvancedGlowVisibilityAddon {
 
                         double angle = nearbyDir.angle(playerDir);
                         if (angle > FRUSTUM_SIZE) {
-                            toggle(ePlayer, nearby, false);
+                            toggleGlow(ePlayer, nearby, false);
                             continue;
                         } else {
                             Raytrace trace = new Raytrace(playerLoc, nearbyLoc);
                             boolean hasLineOfSight = trace.hasLineOfSight();
-                            toggle(ePlayer, nearby, hasLineOfSight);
+                            toggleGlow(ePlayer, nearby, hasLineOfSight);
                         }
                         checkedPlayers.add(pair);
                     }
@@ -107,7 +107,7 @@ public class AdvancedGlowVisibilityAddon {
      * @param playerLoc The location to check against.
      * @return True if the players location hasn't changed, false otherwise.
      */
-    private boolean checkCache(IEGlowPlayer ePlayer, Location playerLoc) {
+    private boolean checkLocationCache(IEGlowPlayer ePlayer, Location playerLoc) {
         Location cached = cache.get(ePlayer.getUUID());
 
         if (cached == null) {
@@ -129,7 +129,7 @@ public class AdvancedGlowVisibilityAddon {
      * @param p2     Player 2.
      * @param toggle Whether to enable, or disable glow.
      */
-    private void toggle(IEGlowPlayer p1, IEGlowPlayer p2, boolean toggle) {
+    private void toggleGlow(IEGlowPlayer p1, IEGlowPlayer p2, boolean toggle) {
         if (toggle) {
             p1.addGlowTarget(p2.getPlayer());
             p2.addGlowTarget(p1.getPlayer());
