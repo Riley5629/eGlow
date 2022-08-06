@@ -266,15 +266,13 @@ public class AdvancedGlowVisibilityAddon {
             ignoredBlocks.add(Material.valueOf("SEA_PICKLE"));
             ignoredBlocks.add(Material.valueOf("TURTLE_EGG"));
 
-            if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 14) {
+            if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 14)
                 ignoredBlocks.add(Material.valueOf("SCAFFOLDING"));
-            }
 
-            if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 15) {
+            if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 15)
                 ignoredBlocks.add(Material.valueOf("HONEY_BLOCK"));
-            }
 
-            if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 16) {
+            if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 16)
                 ignoredBlocks.add(Material.valueOf("CHAIN"));
                 ignoredBlocks.add(Material.valueOf("CRIMSON_FENCE"));
                 ignoredBlocks.add(Material.valueOf("WARPED_FENCE"));
@@ -288,7 +286,6 @@ public class AdvancedGlowVisibilityAddon {
                 ignoredBlocks.add(Material.valueOf("FLOWERING_AZALEA_LEAVES"));
                 ignoredBlocks.add(Material.valueOf("CRIMSON_FENCE_GATE"));
                 ignoredBlocks.add(Material.valueOf("WARPED_FENCE_GATE"));
-            }
 
             if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 17) {
                 ignoredBlocks.add(Material.valueOf("SMALL_AMETHYST_BUD"));
@@ -318,7 +315,7 @@ public class AdvancedGlowVisibilityAddon {
                 ignoredBlocks.add(Material.valueOf("MOSS_CARPET"));
             }
 
-            if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 19) {
+            if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >=19)
                 ignoredBlocks.add(Material.valueOf("MANGROVE_FENCE"));
                 ignoredBlocks.add(Material.valueOf("MANGROVE_FENCE_GATE"));
                 ignoredBlocks.add(Material.valueOf("MANGROVE_LEAVES"));
@@ -326,7 +323,6 @@ public class AdvancedGlowVisibilityAddon {
                 ignoredBlocks.add(Material.valueOf("MANGROVE_DOOR"));
                 ignoredBlocks.add(Material.valueOf("MANGROVE_FENCE_GATE"));
                 ignoredBlocks.add(Material.valueOf("MANGROVE_ROOTS"));
-            }
         }
     }
 
