@@ -111,7 +111,7 @@ public class EGlow extends JavaPlugin {
 				getMetricsAddon().addCustomChart(new SimplePie("command_aliases", () -> (MainConfig.COMMAND_ALIAS_ENABLE.getBoolean() && !MainConfig.COMMAND_ALIAS.getString().equalsIgnoreCase("eglow")) ? MainConfig.COMMAND_ALIAS.getString().toLowerCase() : "none"));
 
 				if (MainConfig.ADVANCED_GLOW_VISIBILITY_ENABLE.getBoolean() && getAdvancedGlowVisibility() == null)
-					new AdvancedGlowVisibilityAddon();
+					setAdvancedGlowVisibility(new AdvancedGlowVisibilityAddon());
 				if (DebugUtil.pluginCheck("PlaceholderAPI"))
 					new PlaceholderAPIAddon();
 				if (DebugUtil.pluginCheck("Vault"))
