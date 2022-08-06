@@ -16,13 +16,17 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public class AdvancedGlowVisibilityAddon {
+
+    private static final double FRUSTUM_SIZE = Math.toRadians(120); // How large the frustum volume is, in radians.
 
     private boolean FORCE_STOP = false;
     private static final List<Material> ignoredBlocks = new ArrayList<>();
@@ -69,17 +73,26 @@ public class AdvancedGlowVisibilityAddon {
                         }
                     }
 
+                    Vector playerDir = playerLoc.getDirection();
+
                     for (IEGlowPlayer nearby : nearbyEPlayers) {
                         BiPair<UUID, UUID> pair = new BiPair<>(ePlayer.getUUID(), nearby.getUUID());
                         if (checkedPlayers.contains(pair)) {
                             continue; // We've already checked visibility between these two players.
                         }
 
-                        Raytrace trace = new Raytrace(playerLoc, nearby.getPlayer().getEyeLocation());
-                        boolean hasLineOfSight = trace.hasLineOfSight();
+                        Location nearbyLoc = nearby.getPlayer().getEyeLocation();
+                        Vector nearbyDir = nearbyLoc.getDirection();
 
+                        double angle = nearbyDir.angle(playerDir);
+                        if (angle > FRUSTUM_SIZE) {
+                            continue;
+                        } else {
+                            Raytrace trace = new Raytrace(playerLoc, nearbyLoc);
+                            boolean hasLineOfSight = trace.hasLineOfSight();
+                            toggle(ePlayer, nearby, hasLineOfSight);
+                        }
                         checkedPlayers.add(pair);
-                        toggle(ePlayer, nearby, hasLineOfSight);
                     }
                 }
                 executing.set(false);
