@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 public class AdvancedGlowVisibilityAddon {
 
     private static final double FRUSTUM_SIZE = Math.toRadians(120); // How large the frustum volume is, in radians.
+    private static final int MAX_DISTANCE = 50;
 
     private boolean FORCE_STOP = false;
     private static final List<Material> ignoredBlocks = new ArrayList<>();
@@ -68,7 +69,7 @@ public class AdvancedGlowVisibilityAddon {
 
                     List<IEGlowPlayer> nearbyEPlayers = new ArrayList<>();
                     for (Player p : playerLoc.getWorld().getPlayers()) {
-                        if (p != player && distance(p.getEyeLocation(), playerLoc) < 50) {
+                        if (p != player && distance(p.getEyeLocation(), playerLoc) < MAX_DISTANCE) {
                             nearbyEPlayers.add(DataManager.getEGlowPlayer(p));
                         }
                     }
