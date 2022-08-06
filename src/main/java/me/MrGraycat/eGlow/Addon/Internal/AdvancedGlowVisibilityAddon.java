@@ -4,6 +4,7 @@ import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.BiPair;
 import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,17 +15,22 @@ import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AdvancedGlowVisibilityAddon {
 
     private boolean FORCE_STOP = false;
-    private static List<Material> ignoredBlocks = new ArrayList<>();
-    private ConcurrentHashMap<UUID, Location> cache = new ConcurrentHashMap<>();
+    private static final List<Material> ignoredBlocks = new ArrayList<>();
+    private final Map<UUID, Location> cache = new HashMap<>(); //todo: fix memory leak when players disconnect
+    /**
+     * Whether a glow check is currently being run.
+     */
+    private final AtomicBoolean executing = new AtomicBoolean();
 
     public AdvancedGlowVisibilityAddon() {
         ignoredBlockInit();
@@ -35,38 +41,89 @@ public class AdvancedGlowVisibilityAddon {
                 if (getForceStop()) {
                     cancel();
                     EGlow.getInstance().setAdvancedGlowVisibility(null);
+                    return;
                 }
+                if (executing.get()) {
+                    // This means either an exception was thrown, or the last executing is still running.
+                    // If it's still running, we don't have a way to stop it, so we'll let it finish to avoid any conflicts.
+                    // The odds of this actually happening are very low, as it would mean the calculation took more than half a second.
+                    return;
+                }
+                executing.set(true);
 
-                for (IEGlowPlayer ePlayer : DataManager.getEGlowPlayers()) {
+                Collection<IEGlowPlayer> ePlayers = DataManager.getEGlowPlayers();
+
+                List<BiPair<UUID, UUID>> checkedPlayers = new ArrayList<>(ePlayers.size());
+
+                for (IEGlowPlayer ePlayer : ePlayers) {
                     Player player = ePlayer.getPlayer();
-                    Location playerLoc = player.getLocation();
+                    Location playerLoc = player.getEyeLocation();
 
-                    if (cache.containsKey(ePlayer.getUUID())) {
-                        if (cache.get(ePlayer.getUUID()).equals(playerLoc))
-                            continue;
-                        cache.replace(ePlayer.getUUID(), playerLoc);
-                    } else {
-                        cache.put(ePlayer.getUUID(), playerLoc);
-                    }
+                    if (checkCache(ePlayer, playerLoc))
+                        continue;
 
-                    List<Player> players = Objects.requireNonNull(playerLoc.getWorld()).getPlayers();
-                    List<Player> nearbyPlayers = players.stream().filter(p -> distance(p.getLocation(), playerLoc) < 50).collect(Collectors.toList());
-
-                    for (Player nearby : nearbyPlayers) {
-                        Raytrace trace = new Raytrace(player.getEyeLocation(), nearby.getEyeLocation());
-                        IEGlowPlayer target = DataManager.getEGlowPlayer(nearby);
-
-                        if (trace.hasLineOfSight()) {
-                            ePlayer.addGlowTarget(nearby);
-                            target.addGlowTarget(player);
-                        } else {
-                            ePlayer.removeGlowTarget(nearby);
-                            target.removeGlowTarget(player);
+                    List<IEGlowPlayer> nearbyEPlayers = new ArrayList<>();
+                    for (Player p : playerLoc.getWorld().getPlayers()) {
+                        if (p != player && distance(p.getEyeLocation(), playerLoc) < 50) {
+                            nearbyEPlayers.add(DataManager.getEGlowPlayer(p));
                         }
                     }
+
+                    for (IEGlowPlayer nearby : nearbyEPlayers) {
+                        BiPair<UUID, UUID> pair = new BiPair<>(ePlayer.getUUID(), nearby.getUUID());
+                        if (checkedPlayers.contains(pair)) {
+                            continue; // We've already checked visibility between these two players.
+                        }
+
+                        Raytrace trace = new Raytrace(playerLoc, nearby.getPlayer().getEyeLocation());
+                        boolean hasLineOfSight = trace.hasLineOfSight();
+
+                        checkedPlayers.add(pair);
+                        toggle(ePlayer, nearby, hasLineOfSight);
+                    }
                 }
+                executing.set(false);
             }
         }.runTaskTimerAsynchronously(EGlow.getInstance(), 0, Math.max(EGlowMainConfig.MainConfig.ADVANCED_GLOW_VISIBILITY_DELAY.getInt(), 10));
+    }
+
+    /**
+     * Checks if a players location has changed from the cached value, updating the cache if necessary.
+     *
+     * @param ePlayer   The player whose cache to check against.
+     * @param playerLoc The location to check against.
+     * @return True if the players location hasn't changed, false otherwise.
+     */
+    private boolean checkCache(IEGlowPlayer ePlayer, Location playerLoc) {
+        Location cached = cache.get(ePlayer.getUUID());
+
+        if (cached == null) {
+            cache.put(ePlayer.getUUID(), playerLoc);
+        } else {
+            if (xyzEquals(cached, playerLoc)) {
+                return true;
+            } else {
+                cache.replace(ePlayer.getUUID(), playerLoc);
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Toggles glow visibility for two players.
+     *
+     * @param p1     Player 1.
+     * @param p2     Player 2.
+     * @param toggle Whether to enable, or disable glow.
+     */
+    private void toggle(IEGlowPlayer p1, IEGlowPlayer p2, boolean toggle) {
+        if (toggle) {
+            p1.addGlowTarget(p2.getPlayer());
+            p2.addGlowTarget(p1.getPlayer());
+        } else {
+            p1.removeGlowTarget(p2.getPlayer());
+            p2.removeGlowTarget(p1.getPlayer());
+        }
     }
 
     public void shutdown() {
@@ -196,13 +253,15 @@ public class AdvancedGlowVisibilityAddon {
             ignoredBlocks.add(Material.valueOf("SEA_PICKLE"));
             ignoredBlocks.add(Material.valueOf("TURTLE_EGG"));
 
-            if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 14)
+            if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 14) {
                 ignoredBlocks.add(Material.valueOf("SCAFFOLDING"));
+            }
 
-            if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 15)
+            if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 15) {
                 ignoredBlocks.add(Material.valueOf("HONEY_BLOCK"));
+            }
 
-            if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 16)
+            if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 16) {
                 ignoredBlocks.add(Material.valueOf("CHAIN"));
                 ignoredBlocks.add(Material.valueOf("CRIMSON_FENCE"));
                 ignoredBlocks.add(Material.valueOf("WARPED_FENCE"));
@@ -216,6 +275,7 @@ public class AdvancedGlowVisibilityAddon {
                 ignoredBlocks.add(Material.valueOf("FLOWERING_AZALEA_LEAVES"));
                 ignoredBlocks.add(Material.valueOf("CRIMSON_FENCE_GATE"));
                 ignoredBlocks.add(Material.valueOf("WARPED_FENCE_GATE"));
+            }
 
             if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 17) {
                 ignoredBlocks.add(Material.valueOf("SMALL_AMETHYST_BUD"));
@@ -245,7 +305,7 @@ public class AdvancedGlowVisibilityAddon {
                 ignoredBlocks.add(Material.valueOf("MOSS_CARPET"));
             }
 
-            if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >=19)
+            if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 19) {
                 ignoredBlocks.add(Material.valueOf("MANGROVE_FENCE"));
                 ignoredBlocks.add(Material.valueOf("MANGROVE_FENCE_GATE"));
                 ignoredBlocks.add(Material.valueOf("MANGROVE_LEAVES"));
@@ -253,6 +313,7 @@ public class AdvancedGlowVisibilityAddon {
                 ignoredBlocks.add(Material.valueOf("MANGROVE_DOOR"));
                 ignoredBlocks.add(Material.valueOf("MANGROVE_FENCE_GATE"));
                 ignoredBlocks.add(Material.valueOf("MANGROVE_ROOTS"));
+            }
         }
     }
 
@@ -268,21 +329,34 @@ public class AdvancedGlowVisibilityAddon {
         return this.FORCE_STOP;
     }
 
-    public static class Raytrace {
-        Location origin, target;
-        Vector direction;
+    /**
+     * Checks if the X, Y, and Z values of two Location are equal.
+     *
+     * @param loc1 The first Location.
+     * @param loc2 The second Location.
+     * @return True if the X, Y, and Z values are equal, false otherwise.
+     */
+    private static boolean xyzEquals(Location loc1, Location loc2) {
+        return loc1.getX() == loc2.getX() && loc1.getY() == loc2.getY() && loc1.getZ() == loc2.getZ();
+    }
 
-        Raytrace(Location origin, Location target) {
+    public static class Raytrace {
+
+        private final Location origin;
+        private final Location target;
+        private final Vector direction;
+
+        protected Raytrace(Location origin, Location target) {
             this.origin = origin;
             this.target = target;
             this.direction = target.clone().toVector().subtract(origin.clone().toVector()).normalize();
         }
 
-        public boolean hasLineOfSight() {
+        protected boolean hasLineOfSight() {
             if (origin.equals(target))
                 return true;
 
-            BlockIterator blocks = new BlockIterator(Objects.requireNonNull(origin.getWorld()), origin.toVector(), direction, 0.0, distance());
+            BlockIterator blocks = new BlockIterator(origin.getWorld(), origin.toVector(), direction, 0.0, distance());
 
             while (blocks.hasNext()) {
                 Block block = blocks.next();
@@ -297,5 +371,7 @@ public class AdvancedGlowVisibilityAddon {
         private int distance() {
             return (int) Math.floor(Math.sqrt(Math.pow((origin.getX() - target.getX()), 2) + Math.pow((origin.getY() - target.getY()), 2) + Math.pow((origin.getZ() - target.getZ()), 2)));
         }
+
     }
+
 }
