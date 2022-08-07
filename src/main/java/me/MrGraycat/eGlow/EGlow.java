@@ -77,6 +77,9 @@ public class EGlow extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
+		if (getAdvancedGlowVisibility() != null) {
+			getAdvancedGlowVisibility().shutdown();
+		}
 		if (getLPAddon() != null) {
 			getLPAddon().unload();
 		}
