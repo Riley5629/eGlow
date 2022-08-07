@@ -5,7 +5,6 @@ import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.BiPair;
-import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -17,19 +16,23 @@ import org.bukkit.util.Vector;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public class AdvancedGlowVisibilityAddon {
+
+    private static final double FRUSTUM_SIZE = Math.toRadians(120); // How large the frustum volume is, in radians.
+    private static final int MAX_DISTANCE = 50;
+
     private static final Set<Material> ignoredBlocks = EnumSet.noneOf(Material.class);
 
     static {
@@ -44,10 +47,7 @@ public class AdvancedGlowVisibilityAddon {
     }
 
     private boolean FORCE_STOP = false;
-    private ConcurrentHashMap<UUID, Location> cache = new ConcurrentHashMap<>();
-    
-    private static final double FRUSTUM_SIZE = Math.toRadians(120); // How large the frustum volume is, in radians.
-    private static final int MAX_DISTANCE = 50;
+    private final Map<UUID, Location> cache = new HashMap<>();
 
     /**
      * Whether a glow check is currently being run.
