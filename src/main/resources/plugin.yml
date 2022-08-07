@@ -1,6 +1,6 @@
 name: eGlow
 main: me.MrGraycat.eGlow.EGlow
-version: 3.1.8
+version: 3.1.9-PRE1
 api-version: 1.13
 softdepend: [TAB,Citizens,PlaceholderAPI,Vault,iDisguise,LibsDisguises,ViaVersion,ProtocolSupport,LuckPerms]
 author: MrGraycat

@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -25,12 +26,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class AdvancedGlowVisibilityAddon {
 
-    private static final double FRUSTUM_SIZE = Math.toRadians(120); // How large the frustum volume is, in radians.
     private static final int MAX_DISTANCE = 50;
 
     private static final Set<Material> ignoredBlocks = EnumSet.noneOf(Material.class);
@@ -47,12 +46,7 @@ public class AdvancedGlowVisibilityAddon {
     }
 
     private boolean shutdown = false;
-    private final Map<UUID, Location> cache = new HashMap<>();
-
-    /**
-     * Whether a glow check is currently being run.
-     */
-    private final AtomicBoolean executing = new AtomicBoolean();
+    private final Map<UUID, Location> cache = Collections.synchronizedMap(new HashMap<>());
 
     public AdvancedGlowVisibilityAddon() {
         new BukkitRunnable() {
@@ -62,13 +56,6 @@ public class AdvancedGlowVisibilityAddon {
                     cancel();
                     return;
                 }
-                if (executing.get()) {
-                    // This means either an exception was thrown, or the last executing is still running.
-                    // If it's still running, we don't have a way to stop it, so we'll let it finish to avoid any conflicts.
-                    // The odds of this actually happening are very low, as it would mean the calculation took more than half a second.
-                    return;
-                }
-                executing.set(true);
 
                 Collection<IEGlowPlayer> ePlayers = DataManager.getEGlowPlayers();
 
@@ -77,6 +64,7 @@ public class AdvancedGlowVisibilityAddon {
                 for (IEGlowPlayer ePlayer : ePlayers) {
                     Player player = ePlayer.getPlayer();
                     Location playerLoc = player.getEyeLocation();
+                    boolean playerIsGlowing = ePlayer.getGlowStatus();
 
                     if (checkLocationCache(ePlayer, playerLoc))
                         continue;
@@ -88,19 +76,19 @@ public class AdvancedGlowVisibilityAddon {
                         }
                     }
 
-                    Vector playerDir = playerLoc.getDirection();
-
                     for (IEGlowPlayer nearby : nearbyEPlayers) {
+                        boolean nearbyIsGlowing = nearby.getGlowStatus();
+                        if (!playerIsGlowing && !nearbyIsGlowing)
+                            continue;
+
                         BiPair<UUID, UUID> pair = new BiPair<>(ePlayer.getUUID(), nearby.getUUID());
                         if (checkedPlayers.contains(pair)) {
                             continue; // We've already checked visibility between these two players.
                         }
 
                         Location nearbyLoc = nearby.getPlayer().getEyeLocation();
-                        Vector nearbyDir = nearbyLoc.getDirection();
 
-                        double angle = nearbyDir.angle(playerDir);
-                        if (angle > FRUSTUM_SIZE) {
+                        if (isOutsideView(playerLoc, nearbyLoc) && isOutsideView(nearbyLoc, playerLoc)) {
                             toggleGlow(ePlayer, nearby, false);
                             continue;
                         } else {
@@ -111,9 +99,23 @@ public class AdvancedGlowVisibilityAddon {
                         checkedPlayers.add(pair);
                     }
                 }
-                executing.set(false);
             }
         }.runTaskTimerAsynchronously(EGlow.getInstance(), 0, Math.max(EGlowMainConfig.MainConfig.ADVANCED_GLOW_VISIBILITY_DELAY.getInt(), 10));
+    }
+
+    /**
+     * Checks if a location is outside the view of another.
+     * This expects both locations to have a yaw and pitch.
+     *
+     * @param loc1 The first location.
+     * @param loc2 The second location.
+     * @return Whether the second location can be seen from the first location.
+     */
+    private boolean isOutsideView(Location loc1, Location loc2) {
+        Vector c = loc1.toVector().subtract(loc2.toVector());
+        Vector d = loc1.getDirection();
+        double delta = c.dot(d);
+        return delta > 0;
     }
 
     /**
@@ -156,9 +158,7 @@ public class AdvancedGlowVisibilityAddon {
     }
 
     public void uncachePlayer(IEGlowPlayer ePlayer) {
-        synchronized (cache) {
-            cache.remove(ePlayer.getUUID());
-        }
+        cache.remove(ePlayer.getUUID());
     }
 
     private int distance(Location start, Location end) {
