@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class AdvancedGlowVisibilityAddon {
@@ -46,12 +46,7 @@ public class AdvancedGlowVisibilityAddon {
     }
 
     private boolean FORCE_STOP = false;
-    private final Map<UUID, Location> cache = new HashMap<>();
-
-    /**
-     * Whether a glow check is currently being run.
-     */
-    private final AtomicBoolean executing = new AtomicBoolean();
+    private final Map<UUID, Location> cache = Collections.synchronizedMap(new HashMap<>());
 
     public AdvancedGlowVisibilityAddon() {
         new BukkitRunnable() {
@@ -62,13 +57,6 @@ public class AdvancedGlowVisibilityAddon {
                     EGlow.getInstance().setAdvancedGlowVisibility(null);
                     return;
                 }
-                if (executing.get()) {
-                    // This means either an exception was thrown, or the last executing is still running.
-                    // If it's still running, we don't have a way to stop it, so we'll let it finish to avoid any conflicts.
-                    // The odds of this actually happening are very low, as it would mean the calculation took more than half a second.
-                    return;
-                }
-                executing.set(true);
 
                 Collection<IEGlowPlayer> ePlayers = DataManager.getEGlowPlayers();
 
@@ -112,7 +100,6 @@ public class AdvancedGlowVisibilityAddon {
                         checkedPlayers.add(pair);
                     }
                 }
-                executing.set(false);
             }
         }.runTaskTimerAsynchronously(EGlow.getInstance(), 0, Math.max(EGlowMainConfig.MainConfig.ADVANCED_GLOW_VISIBILITY_DELAY.getInt(), 10));
     }
@@ -172,9 +159,7 @@ public class AdvancedGlowVisibilityAddon {
     }
 
     public void uncachePlayer(IEGlowPlayer ePlayer) {
-        synchronized (cache) {
-            cache.remove(ePlayer.getUUID());
-        }
+        cache.remove(ePlayer.getUUID());
     }
 
     public void shutdown() {
