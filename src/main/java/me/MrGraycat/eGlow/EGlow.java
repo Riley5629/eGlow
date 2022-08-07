@@ -113,10 +113,8 @@ public class EGlow extends JavaPlugin {
 			public void run() {
 				setMetricsAddon(new Metrics(getInstance(), 9468));
 
-				getMetricsAddon().addCustomChart(new SimplePie("using_tab", () -> (EGlow.getInstance().getTABAddon() != null) ? "yes" : "no"));
-				getMetricsAddon().addCustomChart(new SimplePie("using_advanced_tab_integration", () -> (MainConfig.SETTINGS_SMART_TAB_NAMETAG_HANDLER.getBoolean()) ? "yes" : "no"));
+				getMetricsAddon().addCustomChart(new SimplePie("custom_glow_visibility_usage", () -> (MainConfig.ADVANCED_GLOW_VISIBILITY_ENABLE.getBoolean()) ? "Yes" : "No"));
 				getMetricsAddon().addCustomChart(new SimplePie("database_type", () -> (MainConfig.MYSQL_ENABLE.getBoolean()) ? "MySQL" : "SQLite"));
-				getMetricsAddon().addCustomChart(new SimplePie("command_aliases", () -> (MainConfig.COMMAND_ALIAS_ENABLE.getBoolean() && !MainConfig.COMMAND_ALIAS.getString().equalsIgnoreCase("eglow")) ? MainConfig.COMMAND_ALIAS.getString().toLowerCase() : "none"));
 
 				if (MainConfig.ADVANCED_GLOW_VISIBILITY_ENABLE.getBoolean() && getAdvancedGlowVisibility() == null)
 					setAdvancedGlowVisibility(new AdvancedGlowVisibilityAddon());
