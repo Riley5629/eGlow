@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 
 public class AdvancedGlowVisibilityAddon {
 
-    private static final double FRUSTUM_SIZE = Math.toRadians(120); // How large the frustum volume is, in radians.
     private static final int MAX_DISTANCE = 50;
 
     private static final Set<Material> ignoredBlocks = EnumSet.noneOf(Material.class);
@@ -89,8 +88,6 @@ public class AdvancedGlowVisibilityAddon {
                         }
                     }
 
-                    Vector playerDir = playerLoc.getDirection();
-
                     for (IEGlowPlayer nearby : nearbyEPlayers) {
                         BiPair<UUID, UUID> pair = new BiPair<>(ePlayer.getUUID(), nearby.getUUID());
                         if (checkedPlayers.contains(pair)) {
@@ -98,10 +95,8 @@ public class AdvancedGlowVisibilityAddon {
                         }
 
                         Location nearbyLoc = nearby.getPlayer().getEyeLocation();
-                        Vector nearbyDir = nearbyLoc.getDirection();
 
-                        double angle = nearbyDir.angle(playerDir);
-                        if (angle > FRUSTUM_SIZE) {
+                        if (isOutsideView(playerLoc, nearbyLoc) && isOutsideView(nearbyLoc, playerLoc)) {
                             toggleGlow(ePlayer, nearby, false);
                             continue;
                         } else {
@@ -115,6 +110,21 @@ public class AdvancedGlowVisibilityAddon {
                 executing.set(false);
             }
         }.runTaskTimerAsynchronously(EGlow.getInstance(), 0, Math.max(EGlowMainConfig.MainConfig.ADVANCED_GLOW_VISIBILITY_DELAY.getInt(), 10));
+    }
+
+    /**
+     * Checks if a location is outside the view of another.
+     * This expects both locations to have a yaw and pitch.
+     *
+     * @param loc1 The first location.
+     * @param loc2 The second location.
+     * @return Whether the second location can be seen from the first location.
+     */
+    private boolean isOutsideView(Location loc1, Location loc2) {
+        Vector c = loc1.toVector().subtract(loc2.toVector());
+        Vector d = loc1.getDirection();
+        double delta = c.dot(d);
+        return delta > 0;
     }
 
     /**
