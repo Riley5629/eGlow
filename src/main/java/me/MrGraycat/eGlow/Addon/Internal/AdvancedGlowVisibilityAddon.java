@@ -46,7 +46,7 @@ public class AdvancedGlowVisibilityAddon {
         ignoredBlocks.addAll(materials);
     }
 
-    private boolean FORCE_STOP = false;
+    private boolean shutdown = false;
     private final Map<UUID, Location> cache = new HashMap<>();
 
     /**
@@ -58,9 +58,8 @@ public class AdvancedGlowVisibilityAddon {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (getForceStop()) {
+                if (isShutdown()) {
                     cancel();
-                    EGlow.getInstance().setAdvancedGlowVisibility(null);
                     return;
                 }
                 if (executing.get()) {
@@ -162,20 +161,16 @@ public class AdvancedGlowVisibilityAddon {
         }
     }
 
-    public void shutdown() {
-        setForceStop();
-    }
-
     private int distance(Location start, Location end) {
         return (int) Math.floor(Math.sqrt(Math.pow((start.getX() - end.getX()), 2) + Math.pow((start.getY() - end.getY()), 2) + Math.pow((start.getZ() - end.getZ()), 2)));
     }
 
-    private void setForceStop() {
-        this.FORCE_STOP = true;
+    public void shutdown() {
+        this.shutdown = true;
     }
 
-    private boolean getForceStop() {
-        return this.FORCE_STOP;
+    private boolean isShutdown() {
+        return this.shutdown;
     }
 
     public static class Raytrace {
