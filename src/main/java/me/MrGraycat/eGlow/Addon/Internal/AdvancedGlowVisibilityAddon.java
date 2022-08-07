@@ -78,6 +78,7 @@ public class AdvancedGlowVisibilityAddon {
                 for (IEGlowPlayer ePlayer : ePlayers) {
                     Player player = ePlayer.getPlayer();
                     Location playerLoc = player.getEyeLocation();
+                    boolean playerIsGlowing = ePlayer.getGlowStatus();
 
                     if (checkLocationCache(ePlayer, playerLoc))
                         continue;
@@ -92,6 +93,10 @@ public class AdvancedGlowVisibilityAddon {
                     Vector playerDir = playerLoc.getDirection();
 
                     for (IEGlowPlayer nearby : nearbyEPlayers) {
+                        boolean nearbyIsGlowing = nearby.getGlowStatus();
+                        if (!playerIsGlowing && !nearbyIsGlowing)
+                            continue;
+
                         BiPair<UUID, UUID> pair = new BiPair<>(ePlayer.getUUID(), nearby.getUUID());
                         if (checkedPlayers.contains(pair)) {
                             continue; // We've already checked visibility between these two players.
