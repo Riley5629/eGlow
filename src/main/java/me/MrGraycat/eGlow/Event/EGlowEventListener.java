@@ -202,6 +202,7 @@ public class EGlowEventListener implements Listener {
 			
 			PipelineInjector.uninject(eglowPlayer);
 			DataManager.removeEGlowPlayer(eglowPlayer.getPlayer());
+			EGlow.getInstance().getAdvancedGlowVisibility().uncachePlayer(eglowPlayer);
 		}
 	}
 }
