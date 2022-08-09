@@ -296,7 +296,7 @@ public class PacketUtil {
 
 		IChatBaseComponent formattedText = IChatBaseComponent.optimizedComponent(text);
 
-		if (!ProtocolVersion.SERVER_VERSION.getFriendlyName().equals("1.19")) {
+		if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 19 && !ProtocolVersion.SERVER_VERSION.getFriendlyName().equals("1.19")) {
 			PacketPlayOutActionBar packetPlayOutActionBar = new PacketPlayOutActionBar(formattedText);
 
 			try {
