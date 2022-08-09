@@ -110,19 +110,4 @@ public class EnumUtil {
 			return configType;
 		}
 	}
-	
-	public enum EntityType {
-		PLAYER("Player"),
-		CITIZENS("CitzensNPC");
-		
-		private final String EntityType;
-		
-		EntityType(String EntityType) {
-			this.EntityType = EntityType;
-		}
-		
-		public String getEntityType() {
-			return EntityType;
-		}
-	}
 }
