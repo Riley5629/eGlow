@@ -70,7 +70,7 @@ public class EGlow extends JavaPlugin {
 			runAddonHooks();
 			runPlayerCheckOnEnable();
 		} else {
-			ChatUtil.sendToConsole("Disabling eGlow! Your server version is not compactible! (" + DebugUtil.getServerVersion() + ")", false);
+			ChatUtil.sendToConsole("Disabling eGlow! Your server version is not compatible! (" + DebugUtil.getServerVersion() + ")", false);
 			getServer().getPluginManager().disablePlugin(this);
 		}
 	}
