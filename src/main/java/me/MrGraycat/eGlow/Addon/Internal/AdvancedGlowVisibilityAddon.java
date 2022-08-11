@@ -11,6 +11,7 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
@@ -29,9 +30,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class AdvancedGlowVisibilityAddon {
-
+    private BukkitTask runnable;
     private static final int MAX_DISTANCE = 50;
-
     private static final Set<Material> ignoredBlocks = EnumSet.noneOf(Material.class);
 
     static {
@@ -49,14 +49,9 @@ public class AdvancedGlowVisibilityAddon {
     private final Map<UUID, Location> cache = Collections.synchronizedMap(new HashMap<>());
 
     public AdvancedGlowVisibilityAddon() {
-        new BukkitRunnable() {
+        runnable = new BukkitRunnable() {
             @Override
             public void run() {
-                if (isShutdown()) {
-                    cancel();
-                    return;
-                }
-
                 Collection<IEGlowPlayer> ePlayers = DataManager.getEGlowPlayers();
 
                 List<BiPair<UUID, UUID>> checkedPlayers = new ArrayList<>(ePlayers.size());
@@ -72,7 +67,9 @@ public class AdvancedGlowVisibilityAddon {
                     List<IEGlowPlayer> nearbyEPlayers = new ArrayList<>();
                     for (Player p : playerLoc.getWorld().getPlayers()) {
                         if (p != player && distance(p.getEyeLocation(), playerLoc) < MAX_DISTANCE) {
-                            nearbyEPlayers.add(DataManager.getEGlowPlayer(p));
+                            IEGlowPlayer ePlayerNearby = DataManager.getEGlowPlayer(p);
+                            if (ePlayerNearby != null)
+                                nearbyEPlayers.add(DataManager.getEGlowPlayer(p));
                         }
                     }
 
@@ -166,7 +163,8 @@ public class AdvancedGlowVisibilityAddon {
     }
 
     public void shutdown() {
-        this.shutdown = true;
+        if (this.runnable != null)
+            this.runnable.cancel();
     }
 
     private boolean isShutdown() {
