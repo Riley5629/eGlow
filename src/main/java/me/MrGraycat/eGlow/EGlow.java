@@ -85,10 +85,6 @@ public class EGlow extends JavaPlugin {
 			getLPAddon().unload();
 		}
 
-		if (getAdvancedGlowVisibility() != null) {
-			getAdvancedGlowVisibility().shutdown();
-		}
-
 		runPlayerCheckOnDisable();
 	}
 	
