@@ -80,6 +80,7 @@ public class EGlow extends JavaPlugin {
 		if (getAdvancedGlowVisibility() != null) {
 			getAdvancedGlowVisibility().shutdown();
 		}
+
 		if (getLPAddon() != null) {
 			getLPAddon().unload();
 		}
