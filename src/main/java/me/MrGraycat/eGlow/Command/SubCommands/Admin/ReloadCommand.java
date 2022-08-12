@@ -2,6 +2,7 @@ package me.MrGraycat.eGlow.Command.SubCommands.Admin;
 
 import me.MrGraycat.eGlow.Addon.Internal.AdvancedGlowVisibilityAddon;
 import me.MrGraycat.eGlow.Command.SubCommand;
+import me.MrGraycat.eGlow.Config.Custom.EGlowCustomGuiConfig;
 import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
@@ -51,7 +52,7 @@ public class ReloadCommand extends SubCommand {
 
 	@Override
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
-		if (EGlowMainConfig.reloadConfig() && EGlowMessageConfig.reloadConfig() && EGlowCustomEffectsConfig.reloadConfig()) {
+		if (EGlowMainConfig.reloadConfig() && EGlowMessageConfig.reloadConfig() && EGlowCustomEffectsConfig.reloadConfig() && EGlowCustomGuiConfig.reloadConfig()) {
 			EGlowPlayerdataManager.setMysql_Failed(false);
 			DataManager.addEGlowEffects();
 			DataManager.addCustomEffects();

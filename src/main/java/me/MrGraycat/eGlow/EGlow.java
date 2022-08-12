@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.Objects;
 
 import me.MrGraycat.eGlow.Addon.Internal.AdvancedGlowVisibilityAddon;
+import me.MrGraycat.eGlow.Config.Custom.EGlowCustomGuiConfig;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
@@ -56,7 +57,7 @@ public class EGlow extends JavaPlugin {
 		setInstance(this);
 		setAPI(new EGlowAPI());
 
-		if (versionIsCompactible()) {
+		if (versionIsCompatible()) {
 			ProtocolVersion.SERVER_VERSION = ProtocolVersion.fromServerString(Bukkit.getBukkitVersion().split("-")[0]);
 
 			NMSHook.initialize();
@@ -88,7 +89,7 @@ public class EGlow extends JavaPlugin {
 		runPlayerCheckOnDisable();
 	}
 	
-	private boolean versionIsCompactible() {
+	private boolean versionIsCompatible() {
 		return !DebugUtil.getServerVersion().equals("v_1_9_R1") && DebugUtil.getMinorVersion() >= 9 && DebugUtil.getMinorVersion() <= 19;
 	}
 	
@@ -96,6 +97,7 @@ public class EGlow extends JavaPlugin {
 		EGlowMainConfig.initialize();
 		EGlowMessageConfig.initialize();
 		EGlowCustomEffectsConfig.initialize();
+		EGlowCustomGuiConfig.initialize();
 		EGlowPlayerdataManager.initialize();
 	}
 	

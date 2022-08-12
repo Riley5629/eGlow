@@ -4,10 +4,12 @@ import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.DebugUtil;
 import me.MrGraycat.eGlow.Util.Packets.Chat.ChatColor;
 import me.MrGraycat.eGlow.Util.Packets.Chat.rgb.RGBUtils;
 import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
 import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -57,6 +59,18 @@ public class ChatUtil {
 		}
 
 		return text.replace("&", "§");
+	}
+
+	public static String convertedColoredText(Player player, String text){
+		if (text == null || text.isEmpty())
+			return "";
+		return (DebugUtil.pluginCheck("PlaceholderAPI")) ? translateColors(PlaceholderAPI.setPlaceholders(player, text)) : translateColors(text);
+	}
+
+	public static String convertedText(Player player, String text){
+		if (text == null || text.isEmpty())
+			return "";
+		return (DebugUtil.pluginCheck("PlaceholderAPI")) ? PlaceholderAPI.setPlaceholders(player, text) : text;
 	}
 
 	public static void sendPlainMsg(Object sender, String message, boolean withPrefix) {
