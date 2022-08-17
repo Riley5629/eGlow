@@ -1,7 +1,9 @@
  package me.MrGraycat.eGlow.Command.SubCommands;
 
  import me.MrGraycat.eGlow.Command.SubCommand;
+ import me.MrGraycat.eGlow.Config.EGlowMainConfig;
  import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
+ import me.MrGraycat.eGlow.GUI.Menus.Custom.EGlowCustomMenu;
  import me.MrGraycat.eGlow.GUI.Menus.EGlowMainMenu;
  import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
  import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
@@ -44,7 +46,7 @@ public class GUICommand extends SubCommand {
 			ChatUtil.sendMsg(sender, Message.WORLD_BLOCKED.get(), true);
 			return;
 		}
-		
-		new EGlowMainMenu(ePlayer.getPlayer()).openInventory();
+		if (EGlowMainConfig.MainConfig.SETTINGS_USE_CUSTOM_GUI.getBoolean()) new EGlowCustomMenu(ePlayer.getPlayer()).openInventory();
+		else new EGlowMainMenu(ePlayer.getPlayer()).openInventory();
 	}
 }
