@@ -1,11 +1,12 @@
 plugins {
     id 'java'
+    id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'com.rikonardo.papermake' version '1.0.3'
 }
 
-group = 'me.MrGraycat'
-version = '3.1.7'
+group = 'com.github.MrGraycat'
+version = '3.2.0'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -145,6 +146,14 @@ configurations.compileOnly {
     exclude group: 'us.myles', module: 'viaversion-sponge'
     exclude group: 'us.myles', module: 'viaversion-velocity'
     exclude group: 'ch.ethz.globis.phtree', module: 'phtree'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
 }
 
 shadowJar {
