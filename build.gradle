@@ -148,14 +148,6 @@ configurations.compileOnly {
     exclude group: 'ch.ethz.globis.phtree', module: 'phtree'
 }
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from components.java
-        }
-    }
-}
-
 shadowJar {
     archiveClassifier.set('')
     archiveVersion.set('')
@@ -164,6 +156,18 @@ shadowJar {
     minimize()
 }
 tasks.build.dependsOn tasks.shadowJar
+
+jar {
+    enabled = false
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+}
 
 processResources {
     def props = [version: version]
