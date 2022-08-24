@@ -45,7 +45,6 @@ public class AdvancedGlowVisibilityAddon {
         ignoredBlocks.addAll(materials);
     }
 
-    private boolean shutdown = false;
     private final Map<UUID, Location> cache = Collections.synchronizedMap(new HashMap<>());
 
     public AdvancedGlowVisibilityAddon() {
@@ -165,10 +164,6 @@ public class AdvancedGlowVisibilityAddon {
     public void shutdown() {
         if (this.runnable != null)
             this.runnable.cancel();
-    }
-
-    private boolean isShutdown() {
-        return this.shutdown;
     }
 
     public static class Raytrace {
