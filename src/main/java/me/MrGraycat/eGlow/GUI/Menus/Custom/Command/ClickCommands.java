@@ -2,6 +2,7 @@ package me.MrGraycat.eGlow.GUI.Menus.Custom.Command;
 
 import me.MrGraycat.eGlow.GUI.Manager.MenuManager;
 import me.MrGraycat.eGlow.GUI.Menus.Custom.EGlowCustomMenu;
+import me.MrGraycat.eGlow.GUI.Menus.EGlowEffectMenu;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
@@ -126,6 +127,8 @@ public class ClickCommands {
                     case REFRESH:
                         new EGlowCustomMenu(player).refreshMenu();
                         break;
+                    case OPEN:
+                        new EGlowEffectMenu(player).openInventory();
                 }
             }
         }.runTask(plugin);

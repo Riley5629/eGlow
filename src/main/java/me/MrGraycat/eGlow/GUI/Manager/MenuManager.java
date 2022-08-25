@@ -24,7 +24,14 @@ public class MenuManager {
 			return playerMenuMetadata.get(p);
 		}
 	}
-	
+
+	public MenuMetadata isMenuOpen(Player p) {
+		if (playerMenuMetadata.containsKey(p)) {
+			return playerMenuMetadata.get(p);
+		}
+		return null;
+	}
+
 	public static class MenuMetadata {
 		private Player owner;
 		

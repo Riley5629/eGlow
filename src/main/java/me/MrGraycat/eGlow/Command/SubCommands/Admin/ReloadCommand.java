@@ -10,6 +10,7 @@ import me.MrGraycat.eGlow.Config.EGlowMessageConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Config.Playerdata.EGlowPlayerdataManager;
 import me.MrGraycat.eGlow.EGlow;
+import me.MrGraycat.eGlow.GUI.Manager.MenuManager;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
@@ -58,6 +59,10 @@ public class ReloadCommand extends SubCommand {
 			DataManager.addCustomEffects();
 
 			for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
+				// prevent bugs when reloading and the player is on the custom menu
+				MenuManager menuManager = new MenuManager();
+				if (menuManager.isMenuOpen(onlinePlayer) != null) menuManager.isMenuOpen(onlinePlayer).getOwner().closeInventory();
+
 				ePlayer = DataManager.getEGlowPlayer(onlinePlayer);
 				
 				if (ePlayer == null)
