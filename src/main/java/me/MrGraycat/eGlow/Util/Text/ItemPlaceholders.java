@@ -23,7 +23,7 @@ public class ItemPlaceholders {
             color = color.replace("fast", "");
             color = color.replace("slow", "");
             color = color.replace("blink", "");
-            if (color.equals(effect.getName()) || effect.getName().contains("rainbow")){
+            if (color.equals(effect.getName()) || color.equals(effect.getName() + "fast") || color.equals(effect.getName() + "slow")){
                 message = message.replace("%color_name%", player.getEffect().getName());
                 message = message.replace("%color_displayname%", player.getEffect().getDisplayName());
             } else {

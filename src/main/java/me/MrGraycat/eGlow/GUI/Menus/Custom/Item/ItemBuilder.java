@@ -97,7 +97,10 @@ public class ItemBuilder {
         ItemMeta meta = itemStack.getItemMeta();
         if(name != null) meta.setDisplayName(name);
         if(lore != null) meta.setLore(lore);
-        if(enchanted) meta.addEnchant(Enchantment.DURABILITY, 1, true);
+        if(enchanted) {
+            meta.addEnchant(Enchantment.DURABILITY, 1, true);
+            setHideEnchants(true);
+        }
         if(hideFlags) meta.addItemFlags(ItemFlag.values());
         if(hideAttributes) meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         if(hideEnchants) meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

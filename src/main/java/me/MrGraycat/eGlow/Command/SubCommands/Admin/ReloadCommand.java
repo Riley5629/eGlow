@@ -60,13 +60,16 @@ public class ReloadCommand extends SubCommand {
 
 			for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
 				// prevent bugs when reloading and the player is on the custom menu
-				MenuManager menuManager = new MenuManager();
-				if (menuManager.isMenuOpen(onlinePlayer) != null) menuManager.isMenuOpen(onlinePlayer).getOwner().closeInventory();
+				System.out.println("cf");
 
 				ePlayer = DataManager.getEGlowPlayer(onlinePlayer);
 				
 				if (ePlayer == null)
 					continue;
+
+				MenuManager menuManager = new MenuManager();
+				System.out.println(menuManager.isMenuOpen(ePlayer.getPlayer()));
+				if (menuManager.isMenuOpen(ePlayer.getPlayer())) ePlayer.getPlayer().closeInventory();
 				
 				ePlayer.updatePlayerTabname();
 				

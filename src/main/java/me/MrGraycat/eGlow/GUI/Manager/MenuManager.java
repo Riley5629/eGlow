@@ -25,11 +25,8 @@ public class MenuManager {
 		}
 	}
 
-	public MenuMetadata isMenuOpen(Player p) {
-		if (playerMenuMetadata.containsKey(p)) {
-			return playerMenuMetadata.get(p);
-		}
-		return null;
+	public boolean isMenuOpen(Player p) {
+		return playerMenuMetadata.containsKey(p);
 	}
 
 	public static class MenuMetadata {

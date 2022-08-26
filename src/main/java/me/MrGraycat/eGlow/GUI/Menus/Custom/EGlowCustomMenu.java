@@ -18,6 +18,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import javax.xml.crypto.Data;
 import java.util.Objects;
 
 public class EGlowCustomMenu extends Menu {
@@ -123,6 +124,8 @@ public class EGlowCustomMenu extends Menu {
                                 break;
                             }
                             if (handleRainbow(player, eGlowPlayer, clickType, itemSection.getConfigurationSection(state), color)) break;
+                            if (eGlowPlayer.getSaveData())
+                                eGlowPlayer.setSaveData(true);
                             eGlowPlayer.activateGlow(color);
                             getClickCommands(player, itemSection.getConfigurationSection(state), clickType, eGlowPlayer, color);
                             break;
@@ -143,19 +146,60 @@ public class EGlowCustomMenu extends Menu {
             ConfigurationSection optionItemSection = section.getConfigurationSection(itemBuilder.getNBT().getString(getInstance(), "eglow-options"));
             String option = optionItemSection.getName();
             if (option.equalsIgnoreCase("data")) {
-                if (eGlowPlayer.getSaveData())
-                    eGlowPlayer.setSaveData(true);
-                eGlowPlayer.setGlowOnJoin(!eGlowPlayer.getGlowOnJoin());
-                getClickCommands(player, optionItemSection, clickType, eGlowPlayer, null);
+                if (itemBuilder.getNBT().hasKey(getInstance(), "eglow-state")) {
+                    String state = itemBuilder.getNBT().getString(getInstance(), "eglow-state");
+                    switch (state) {
+                        case "Permission":
+                            getClickCommands(player, optionItemSection.getConfigurationSection(state), clickType, eGlowPlayer, null);
+                            break;
+                        case "Enabled":
+                            if (eGlowPlayer.getSaveData())
+                                eGlowPlayer.setSaveData(true);
+                            eGlowPlayer.setGlowOnJoin(!eGlowPlayer.getGlowOnJoin());
+                            getClickCommands(player, optionItemSection.getConfigurationSection(state), clickType, eGlowPlayer, null);
+                            break;
+                    }
+                } else {
+                    if (eGlowPlayer.getSaveData())
+                        eGlowPlayer.setSaveData(true);
+                    eGlowPlayer.setGlowOnJoin(!eGlowPlayer.getGlowOnJoin());
+                    getClickCommands(player, optionItemSection, clickType, eGlowPlayer, null);
+                }
             }
             if (option.equalsIgnoreCase("speed")) {
-                if (hasEffect(eGlowPlayer))
-                    updateSpeed(eGlowPlayer);
-                getClickCommands(player, optionItemSection, clickType, eGlowPlayer, null);
+                if (itemBuilder.getNBT().hasKey(getInstance(), "eglow-state")) {
+                    String state = itemBuilder.getNBT().getString(getInstance(), "eglow-state");
+                    switch (state) {
+                        case "Enabled":
+                        case "Disabled":
+                            if (hasEffect(eGlowPlayer))
+                                updateSpeed(eGlowPlayer);
+                            getClickCommands(player, optionItemSection.getConfigurationSection(state), clickType, eGlowPlayer, null);
+                            break;
+                    }
+                } else {
+                    if (hasEffect(eGlowPlayer))
+                        updateSpeed(eGlowPlayer);
+                    getClickCommands(player, optionItemSection, clickType, eGlowPlayer, null);
+                }
             }
             if (option.equalsIgnoreCase("toggle")) {
-                eGlowPlayer.toggleGlow();
-                getClickCommands(player, optionItemSection, clickType, eGlowPlayer, null);
+                if (itemBuilder.getNBT().hasKey(getInstance(), "eglow-state")) {
+                    String state = itemBuilder.getNBT().getString(getInstance(), "eglow-state");
+                    switch (state) {
+                        case "Permission":
+                            getClickCommands(player, optionItemSection.getConfigurationSection(state), clickType, eGlowPlayer, null);
+                            break;
+                        case "Enabled":
+                        case "Disabled":
+                            eGlowPlayer.toggleGlow();
+                            getClickCommands(player, optionItemSection.getConfigurationSection(state), clickType, eGlowPlayer, null);
+                            break;
+                    }
+                } else {
+                    eGlowPlayer.toggleGlow();
+                    getClickCommands(player, optionItemSection, clickType, eGlowPlayer, null);
+                }
             }
             refreshMenu();
         }
@@ -166,23 +210,6 @@ public class EGlowCustomMenu extends Menu {
             refreshMenu();
         }
 
-    }
-
-    private boolean handleRainbow(Player player, IEGlowPlayer eGlowPlayer, ClickType clickType, ConfigurationSection itemSection, IEGlowEffect color) {
-        if (color.getName().contains("rainbow")) {
-            if (getSpeed(clickType, itemSection)) {
-                IEGlowEffect rainbowfast = DataManager.getEGlowEffect("rainbowfast");
-                if (usePermissison(clickType, itemSection)) {
-                    eGlowPlayer.activateGlow(rainbowfast);
-                    getClickCommands(player, itemSection, clickType, eGlowPlayer, rainbowfast);
-                    return true;
-                }
-                eGlowPlayer.activateGlow(rainbowfast);
-                getNoPermissionCommands(player, itemSection, clickType, eGlowPlayer, rainbowfast);
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -219,21 +246,90 @@ public class EGlowCustomMenu extends Menu {
             if (section.getInt("Slot") < 0) continue;
             if (section.getInt("Slot") > getSlots()) continue;
             if (section.getName().equalsIgnoreCase("data")) {
+                if (eGlowPlayer.getPlayer().hasPermission("eglow.option.glowonjoin")) {
+                    if (section.get("Enabled") != null) {
+                        inventory.setItem(section.getInt("Slot"),
+                                ItemBuilder.getConfigItem(player, section.getConfigurationSection("Enabled"), null, eGlowPlayer)
+                                        .setString(getInstance(), "eglow-options", section.getName())
+                                        .setString(getInstance(), "eglow-state", "Enabled")
+                                        .build());
+                        continue;
+                    }
+                }
+                if (!eGlowPlayer.getPlayer().hasPermission("eglow.option.glowonjoin")){
+                    if (section.get("Permission") != null) {
+                        inventory.setItem(section.getInt("Slot"),
+                                ItemBuilder.getConfigItem(player, section.getConfigurationSection("Permission"), null, eGlowPlayer)
+                                        .setString(getInstance(), "eglow-options", section.getName())
+                                        .setString(getInstance(), "eglow-state", "Permission")
+                                        .build());
+                        continue;
+                    }
+                }
                 inventory.setItem(section.getInt("Slot"),
                         ItemBuilder.getConfigItem(player, section, null, eGlowPlayer)
-                                .setString(getInstance(), "eglow-options", section.getName()).build());
+                                .setString(getInstance(), "eglow-options", section.getName())
+                                .build());
                 continue;
             }
             if (section.getName().equalsIgnoreCase("speed")) {
+                if (eGlowPlayer.getEffect().getName().contains("blink") || eGlowPlayer.getEffect().getName().contains("rainbow")) {
+                    if (section.get("Enabled") != null) {
+                        inventory.setItem(section.getInt("Slot"),
+                                ItemBuilder.getConfigItem(player, section.getConfigurationSection("Enabled"), null, eGlowPlayer)
+                                        .setString(getInstance(), "eglow-options", section.getName())
+                                        .setString(getInstance(), "eglow-state", "Enabled")
+                                        .build());
+                        continue;
+                    }
+                }
+                if (section.get("Disabled") != null) {
+                    inventory.setItem(section.getInt("Slot"),
+                            ItemBuilder.getConfigItem(player, section.getConfigurationSection("Disabled"), null, eGlowPlayer)
+                                    .setString(getInstance(), "eglow-options", section.getName())
+                                    .setString(getInstance(), "eglow-state", "Disabled")
+                                    .build());
+                    continue;
+                }
                 inventory.setItem(section.getInt("Slot"),
                         ItemBuilder.getConfigItem(player, section, null, eGlowPlayer)
-                                .setString(getInstance(), "eglow-options", section.getName()).build());
+                                .setString(getInstance(), "eglow-options", section.getName())
+                                .build());
                 continue;
             }
             if (section.getName().equalsIgnoreCase("toggle")) {
+                if (eGlowPlayer.getFakeGlowStatus() && eGlowPlayer.getPlayer().hasPermission("eglow.command.toggle") || eGlowPlayer.getGlowStatus() && eGlowPlayer.getPlayer().hasPermission("eglow.command.toggle")) {
+                    if (section.get("Enabled") != null) {
+                        inventory.setItem(section.getInt("Slot"),
+                                ItemBuilder.getConfigItem(player, section.getConfigurationSection("Enabled"), null, eGlowPlayer)
+                                        .setString(getInstance(), "eglow-options", section.getName())
+                                        .setString(getInstance(), "eglow-state", "Enabled")
+                                        .build());
+                        continue;
+                    }
+                }
+                if (!eGlowPlayer.getPlayer().hasPermission("eglow.command.toggle")){
+                    if (section.get("Permission") != null) {
+                        inventory.setItem(section.getInt("Slot"),
+                                ItemBuilder.getConfigItem(player, section.getConfigurationSection("Permission"), null, eGlowPlayer)
+                                        .setString(getInstance(), "eglow-options", section.getName())
+                                        .setString(getInstance(), "eglow-state", "Permission")
+                                        .build());
+                        continue;
+                    }
+                }
+                if (section.get("Disabled") != null) {
+                    inventory.setItem(section.getInt("Slot"),
+                            ItemBuilder.getConfigItem(player, section.getConfigurationSection("Disabled"), null, eGlowPlayer)
+                                    .setString(getInstance(), "eglow-options", section.getName())
+                                    .setString(getInstance(), "eglow-state", "Disabled")
+                                    .build());
+                    continue;
+                }
                 inventory.setItem(section.getInt("Slot"),
                         ItemBuilder.getConfigItem(player, section, null, eGlowPlayer)
-                                .setString(getInstance(), "eglow-options", section.getName()).build());
+                                .setString(getInstance(), "eglow-options", section.getName())
+                                .build());
                 continue;
             }
             IEGlowEffect effect;
@@ -267,19 +363,19 @@ public class EGlowCustomMenu extends Menu {
                 }
                 continue;
             }
+            if (new ItemPlaceholders().checkColor(eGlowPlayer, effect) && player.hasPermission(effect.getPermission())) {
+                if (section.get("Enabled") != null) {
+                    inventory.setItem(section.getInt("Slot"), ItemBuilder.getConfigItem(player, section.getConfigurationSection("Enabled"), effect, eGlowPlayer)
+                            .setString(getInstance(), "eglow", section.getName())
+                            .setString(getInstance(), "eglow-state", "Enabled").build());
+                    continue;
+                }
+            }
             if (!(player.hasPermission(effect.getPermission()) || Objects.requireNonNull(player.getPlayer(), "Unable to retrieve player").hasPermission("eglow.effect.*"))) {
                 if (section.get("Permission") != null) {
                     inventory.setItem(section.getInt("Slot"), ItemBuilder.getConfigItem(player, section.getConfigurationSection("Permission"), effect, eGlowPlayer)
                             .setString(getInstance(), "eglow", section.getName())
                             .setString(getInstance(), "eglow-state", "Permission").build());
-                    continue;
-                }
-            }
-            if (new ItemPlaceholders().checkColor(eGlowPlayer, effect)) {
-                if (section.get("Enabled") != null) {
-                    inventory.setItem(section.getInt("Slot"), ItemBuilder.getConfigItem(player, section.getConfigurationSection("Enabled"), effect, eGlowPlayer)
-                            .setString(getInstance(), "eglow", section.getName())
-                            .setString(getInstance(), "eglow-state", "Enabled").build());
                     continue;
                 }
             }
@@ -292,6 +388,27 @@ public class EGlowCustomMenu extends Menu {
 
             inventory.setItem(section.getInt("Slot"), ItemBuilder.getConfigItem(player, section, effect, eGlowPlayer).setString(getInstance(), "eglow", section.getName()).build());
         }
+    }
+
+    private boolean handleRainbow(Player player, IEGlowPlayer eGlowPlayer, ClickType clickType, ConfigurationSection itemSection, IEGlowEffect color) {
+        if (color.getName().contains("rainbow")) {
+            if (getSpeed(clickType, itemSection)) {
+                IEGlowEffect rainbow;
+                if (eGlowPlayer.getEffect().getName().contains("fast"))
+                    rainbow = DataManager.getEGlowEffect("rainbowslow");
+                else
+                    rainbow = DataManager.getEGlowEffect("rainbowfast");
+                if (usePermissison(clickType, itemSection)) {
+                    eGlowPlayer.activateGlow(rainbow);
+                    getClickCommands(player, itemSection, clickType, eGlowPlayer, rainbow);
+                    return true;
+                }
+                eGlowPlayer.activateGlow(rainbow);
+                getNoPermissionCommands(player, itemSection, clickType, eGlowPlayer, rainbow);
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean getBlink(ClickType type, ConfigurationSection section){
