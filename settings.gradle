@@ -1,1 +1,10 @@
+pluginManagement {
+    //includeBuild("build-logic")
+    repositories {
+        gradlePluginPortal()
+        maven { url = 'https://jitpack.io' }
+        mavenCentral()
+    }
+}
+
 rootProject.name = "eGlow"
