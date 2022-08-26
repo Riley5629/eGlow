@@ -91,14 +91,14 @@ public class ReloadCommand extends SubCommand {
 				}
 			}
 
-			AdvancedGlowVisibilityAddon advGlowVis = getInstance().getAdvancedGlowVisibility();
-			if (advGlowVis != null) {
-				advGlowVis.shutdown();
+			if (MainConfig.ADVANCED_GLOW_VISIBILITY_ENABLE.getBoolean()) {
+				if (getInstance().getAdvancedGlowVisibility() == null)
+					getInstance().setAdvancedGlowVisibility(new AdvancedGlowVisibilityAddon());
+			} else {
+				if (getInstance().getAdvancedGlowVisibility() != null)
+					getInstance().getAdvancedGlowVisibility().shutdown();
+					getInstance().setAdvancedGlowVisibility(null);
 			}
-			getInstance().setAdvancedGlowVisibility(MainConfig.ADVANCED_GLOW_VISIBILITY_ENABLE.getBoolean()
-					? new AdvancedGlowVisibilityAddon()
-					: null
-			);
 
 			try{
 			    String alias = MainConfig.COMMAND_ALIAS.getString();
