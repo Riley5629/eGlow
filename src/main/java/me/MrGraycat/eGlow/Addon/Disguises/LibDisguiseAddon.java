@@ -76,6 +76,8 @@ public class LibDisguiseAddon implements Listener {
 		} catch (NoSuchMethodError ex) {
 			ChatUtil.sendToConsole("&cLibsDisguise isn't up to date &f!", true);
 			ex.printStackTrace();
+		} catch (NullPointerException e) {
+			//Caused by disconnecting while in disguise when server performance is low (rare error)
 		}
 	}
 }

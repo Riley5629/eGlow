@@ -45,7 +45,7 @@ dependencies {
     compileOnly ('LibsDisguises:LibsDisguises:10.0.28')
     compileOnly ('us.myles:viaversion:3.2.1')
     compileOnly ('com.github.MilkBowl:VaultAPI:1.7')
-    compileOnly ('org.xerial:sqlite-jdbc:3.36.0.3')
+    compileOnly ('org.xerial:sqlite-jdbc:3.39.2.0')
     compileOnly ('mysql:mysql-connector-java:8.0.30')
     compileOnly ('io.netty:netty-transport:4.1.79.Final')
     implementation ('org.bstats:bstats-bukkit:3.0.0')
@@ -160,6 +160,10 @@ shadowJar {
 }
 tasks.build.dependsOn tasks.shadowJar
 
+java {
+    withSourcesJar()
+}
+
 jar {
     enabled = false
 }
@@ -169,9 +173,6 @@ publishing {
         maven(MavenPublication) {
             from components.java
         }
-    }
-    repositories {
-        mavenLocal()
     }
 }
 

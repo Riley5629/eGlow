@@ -100,13 +100,12 @@ public class PacketUtil {
 			if (entity == null) 
 				return;
 
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				if (DataManager.getEGlowPlayer(player) != null)
-					try {
-						NMSHook.sendPacket(player, packet.toNMS(DataManager.getEGlowPlayer(player).getVersion()));
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+			for (IEGlowPlayer ePlayer : DataManager.getEGlowPlayers()) {
+				try {
+					NMSHook.sendPacket(ePlayer.getPlayer(), packet.toNMS(ePlayer.getVersion()));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
