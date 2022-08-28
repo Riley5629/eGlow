@@ -16,6 +16,8 @@ repositories {
     mavenCentral()
     //Spigot
     maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    //TAB, YAMLAssist
+    maven { url = 'https://repo.kryptonmc.org/releases' }
     //Citizens
     maven { url = 'https://repo.citizensnpcs.co/' }
     //PlaceholderAPI
@@ -30,7 +32,7 @@ repositories {
     maven { url = 'https://repo.viaversion.com/' }
     //Default unknown
     maven { url = 'https://oss.sonatype.org/content/groups/public/' }
-    //TAB, YamlAssist, Vault
+    //Vault
     maven { url = 'https://jitpack.io' }
     mavenLocal()
 }
