@@ -5,8 +5,8 @@ plugins {
     id 'com.rikonardo.papermake' version '1.0.3'
 }
 
-group = 'com.github.MrGraycat'
-version = '3.2.0'
+group = 'com.github.mrgraycat'
+version = '3.2.0-PRE2'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -16,8 +16,6 @@ repositories {
     mavenCentral()
     //Spigot
     maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-    //TAB, YamlAssist, Vault
-    maven { url = 'https://jitpack.io' }
     //Citizens
     maven { url = 'https://repo.citizensnpcs.co/' }
     //PlaceholderAPI
@@ -32,6 +30,8 @@ repositories {
     maven { url = 'https://repo.viaversion.com/' }
     //Default unknown
     maven { url = 'https://oss.sonatype.org/content/groups/public/' }
+    //TAB, YamlAssist, Vault
+    maven { url = 'https://jitpack.io' }
     mavenLocal()
 }
 
