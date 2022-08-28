@@ -89,12 +89,6 @@ public class PlaceholderAPIAddon extends PlaceholderExpansion {
         	return (eglowPlayer.getGlowOnJoin()) ? "true" : "false";
         case("glow_visibility"):
 			return (eglowPlayer.getGlowVisibility().equals(EnumUtil.GlowVisibility.UNSUPPORTEDCLIENT)) ? Message.VISIBILITY_UNSUPPORTED.get() : Message.valueOf("VISIBILITY_" + eglowPlayer.getGlowVisibility().toString()).get();
-
-		//Depreciated placeholders will be removed in a future update
-        case("selectedglow"):
-        	return "Use %eglow_activeglow%";
-        case("selectedglow_raw"):
-        	return "Use %eglow_activeglow_raw%";
         }
         return null;
     }
