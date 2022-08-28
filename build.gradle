@@ -165,8 +165,8 @@ tasks.build.dependsOn tasks.shadowJar
 
 publishing {
     publications {
-        maven(MavenPublication) {
-            artifact(tasks["shadowJar"])
+        shadow(MavenPublication) { publication ->
+            project.shadow.component(publication)
         }
         /*maven(MavenPublication) {
             from components.shadow
