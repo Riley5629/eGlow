@@ -157,9 +157,9 @@ shadowJar {
 }
 tasks.build.dependsOn tasks.shadowJar
 
-jar {
+/*jar {
     enabled = false
-}
+}*/
 
 publishing {
     publications {
