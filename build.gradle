@@ -159,9 +159,11 @@ shadowJar {
 }
 tasks.build.dependsOn tasks.shadowJar
 
-/*jar {
-    enabled = false
-}*/
+jar {
+    from sourceSets.main.output
+    from sourceSets.main.allJava
+    //enabled = false
+}
 
 publishing {
     publications {
