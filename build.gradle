@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.github.mrgraycat'
-version = '3.2.0-PRE2'
+version = '3.2.0-PRE3'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
