@@ -12,7 +12,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
 import java.io.InputStream;
@@ -64,7 +63,7 @@ public class AdvancedGlowVisibilityAddon {
                         continue;
 
                     for (Player p : playerLoc.getWorld().getPlayers()) {
-                        if (p != player && distance(p.getEyeLocation(), playerLoc) < MAX_DISTANCE) {
+                        if (p != player && distance(p.getEyeLocation(), playerLoc) < MAX_DISTANCE && p.getWorld().equals(playerLoc.getWorld())) {
                             IEGlowPlayer ePlayerNearby = DataManager.getEGlowPlayer(p);
                             if (ePlayerNearby != null) {
                                 boolean nearbyIsGlowing = ePlayerNearby.getGlowStatus();
@@ -111,11 +110,11 @@ public class AdvancedGlowVisibilityAddon {
     }
 
     /**
-     * Checks if a players location has changed from the cached value, updating the cache if necessary.
+     * Checks if a player's location has changed from the cached value, updating the cache if necessary.
      *
      * @param ePlayer   The player whose cache to check against.
      * @param playerLoc The location to check against.
-     * @return True if the players location hasn't changed, false otherwise.
+     * @return True if the player's location hasn't changed, false otherwise.
      */
     private boolean checkLocationCache(IEGlowPlayer ePlayer, Location playerLoc) {
         Location cached = cache.get(ePlayer.getUUID());
@@ -175,10 +174,12 @@ public class AdvancedGlowVisibilityAddon {
         }
 
         protected boolean hasLineOfSight() {
-            if (origin.equals(target))
+            int distance = distance();
+
+            if (distance() <= 1)
                 return true;
 
-            BlockIterator blocks = new BlockIterator(origin.getWorld(), origin.toVector(), direction, 0.0, Math.min(distance(), 50));
+            BlockIterator blocks = new BlockIterator(origin.getWorld(), origin.toVector(), direction, 0.0, Math.min(distance, 50));
 
             while (blocks.hasNext()) {
                 Block block = blocks.next();
@@ -193,7 +194,5 @@ public class AdvancedGlowVisibilityAddon {
         private int distance() {
             return (int) Math.floor(Math.sqrt(Math.pow((origin.getX() - target.getX()), 2) + Math.pow((origin.getY() - target.getY()), 2) + Math.pow((origin.getZ() - target.getZ()), 2)));
         }
-
     }
-
 }
