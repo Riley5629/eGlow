@@ -36,7 +36,7 @@ public class AdvancedGlowVisibilityAddon {
     static {
         // This config is internal only, and is assumed to be correct.
         InputStream resource = EGlow.getInstance().getResource("internal/AdvancedGlowIgnoreList.yml");
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(new InputStreamReader(resource));
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(new InputStreamReader(Objects.requireNonNull(resource)));
         List<Material> materials = config.getStringList("ignored-blocks").stream()
                 .map(Material::matchMaterial)
                 .filter(Objects::nonNull)
@@ -62,7 +62,7 @@ public class AdvancedGlowVisibilityAddon {
                     if (checkLocationCache(ePlayer, playerLoc))
                         continue;
 
-                    for (Player p : playerLoc.getWorld().getPlayers()) {
+                    for (Player p : Objects.requireNonNull(playerLoc.getWorld()).getPlayers()) {
                         if (p != player && distance(p.getEyeLocation(), playerLoc) < MAX_DISTANCE && p.getWorld().equals(playerLoc.getWorld())) {
                             IEGlowPlayer ePlayerNearby = DataManager.getEGlowPlayer(p);
                             if (ePlayerNearby != null) {
