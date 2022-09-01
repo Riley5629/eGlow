@@ -1,11 +1,12 @@
 plugins {
     id 'java'
+    id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'com.rikonardo.papermake' version '1.0.3'
 }
 
-group = 'me.MrGraycat'
-version = '3.1.7'
+group = 'com.github.mrgraycat'
+version = '3.2.0-PRE3'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -15,8 +16,10 @@ repositories {
     mavenCentral()
     //Spigot
     maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-    //TAB, YamlAssist, Vault
+    //Vault, YAMLAssist
     maven { url = 'https://jitpack.io' }
+    //TAB
+    maven { url = 'https://repo.kryptonmc.org/releases' }
     //Citizens
     maven { url = 'https://repo.citizensnpcs.co/' }
     //PlaceholderAPI
@@ -35,7 +38,6 @@ repositories {
 }
 
 dependencies {
-    compileOnly ('org.spigotmc:spigot:1.19.1-R0.1-SNAPSHOT')
     compileOnly ('org.spigotmc:spigot-api:1.19.1-R0.1-SNAPSHOT')
     compileOnly ('com.github.NEZNAMY:TAB:3.1.0')
     compileOnly ('net.luckperms:api:5.4')
@@ -45,8 +47,9 @@ dependencies {
     compileOnly ('LibsDisguises:LibsDisguises:10.0.28')
     compileOnly ('us.myles:viaversion:3.2.1')
     compileOnly ('com.github.MilkBowl:VaultAPI:1.7')
-    compileOnly ('org.xerial:sqlite-jdbc:3.36.0.3')
-    compileOnly ('mysql:mysql-connector-java:8.0.29')
+    compileOnly ('org.xerial:sqlite-jdbc:3.39.2.0')
+    compileOnly ('mysql:mysql-connector-java:8.0.30')
+    compileOnly ('io.netty:netty-transport:4.1.79.Final')
     implementation ('org.bstats:bstats-bukkit:3.0.0')
     implementation ('com.github.NEZNAMY:YamlAssist:1.0.5') {
         exclude group: 'org.yaml', module: 'snakeyaml'
@@ -139,6 +142,7 @@ configurations.compileOnly {
     exclude group: 'org.projectlombok', module: 'lombok'
     exclude group: 'org.slf4j', module: 'jcl-over-slf4j'
     exclude group: 'org.slf4j', module: 'slf4j-api'
+    exclude group: 'org.spigotmc', module: 'spigot'
     exclude group: 'us.myles', module: 'viaversion-bukkit'
     exclude group: 'us.myles', module: 'viaversion-bungee'
     exclude group: 'us.myles', module: 'viaversion-common'
@@ -157,6 +161,14 @@ shadowJar {
     minimize()
 }
 tasks.build.dependsOn tasks.shadowJar
+
+publishing {
+    publications {
+        shadow(MavenPublication) { publication ->
+            project.shadow.component(publication)
+        }
+    }
+}
 
 processResources {
     def props = [version: version]

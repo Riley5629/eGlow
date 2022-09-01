@@ -1,0 +1,1754 @@
+Title: "&aeGlow Custom Menu"
+Size: 54
+Items:
+  Decoration:
+    Slots: '36-44'
+    Displayname: ''
+    Material: GRAY_STAINED_GLASS_PANE
+
+  Data:
+    Slot: 46
+    Permission:
+      Displayname: '&eeGlow Join Data'
+      Material: BARRIER
+      Lore:
+        - '&8 No Permission'
+        - ''
+        - '&8 * &7You don''t have permission to use this state.'
+        - ''
+    Enabled:
+      Displayname: '&eeGlow Join Data'
+      Material: NAME_TAG
+      Enchanted: true
+      Lore:
+        - '&8 Options'
+        - ''
+        - '&8 * &eOption State: &a%option_join_state%'
+        - ''
+        - '&8 * &eClick &7to change the state'
+        - ''
+
+
+  Speed:
+    Slot: 49
+    Disabled:
+      Displayname: '&eToggle Speed'
+      Material: FEATHER
+      Lore:
+        - '&8 Options'
+        - ''
+        - '&8 * &eEquip a color first'
+        - ''
+    Enabled:
+      Displayname: '&eToggle Speed'
+      Material: FEATHER
+      Enchanted: true
+      Lore:
+        - '&8 Options'
+        - ''
+        - '&8 * &eSpeed State: &a%option_speed_state%'
+        - ''
+        - '&8 * &eClick &7to change the state'
+        - ''
+
+  Toggle:
+    Slot: 52
+    Permission:
+      Displayname: '&eToggle eGlow'
+      Material: BARRIER
+      Lore:
+        - '&8 Options'
+        - ''
+        - '&8 * &eToggle State: &a%option_toggle_state%'
+        - ''
+        - '&8 * &eClick &7to change the state'
+        - ''
+    Enabled:
+      Displayname: '&eToggle eGlow'
+      Material: 'PlayerHead-%player_name%'
+      Lore:
+        - '&8 Options'
+        - ''
+        - '&8 * &eToggle State: &a%option_toggle_state%'
+        - ''
+        - '&8 * &eClick &7to change the state'
+        - ''
+    Disabled:
+      Displayname: '&eToggle eGlow'
+      Material: 'PlayerHead-DoubleNico'
+      Lore:
+        - '&8 Options'
+        - ''
+        - '&8 * &eToggle State: &a%option_toggle_state%'
+        - ''
+        - '&8 * &eClick &7to change the state'
+        - ''
+
+  Red:
+    Slot: 10
+    Permission:
+      Displayname: '%color_displayname% Color'
+      Material: BARRIER
+      Lore:
+        - '&8 No Permission'
+        - ''
+        - '&8 * &7You don''t have permission to use &r%color_displayname%&7 color.'
+        - ''
+        - '&8 * &ePermission is, &a%color_permission% '
+        - ''
+    Enabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWZkZTNiZmNlMmQ4Y2I3MjRkZTg1NTZlNWVjMjFiN2YxNWY1ODQ2ODRhYjc4NTIxNGFkZDE2NGJlNzYyNGIifX19'
+      Enchanted: true
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to disable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou disabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+    Disabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWZkZTNiZmNlMmQ4Y2I3MjRkZTg1NTZlNWVjMjFiN2YxNWY1ODQ2ODRhYjc4NTIxNGFkZDE2NGJlNzYyNGIifX19'
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to enable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou enabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+
+  DarkRed:
+    Slot: 11
+    Permission:
+      Displayname: '%color_displayname% Color'
+      Material: BARRIER
+      Lore:
+        - '&8 No Permission'
+        - ''
+        - '&8 * &7You don''t have permission to use &r%color_displayname%&7 color.'
+        - ''
+        - '&8 * &ePermission is, &a%color_permission% '
+        - ''
+    Enabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGY0ZGMzYzM3NTNiZjViMGI3ZjA4MWNkYjQ5YjgzZDM3NDI4YTEyZTQxODdmNjM0NmRlYzA2ZmFjNTRjZSJ9fX0='
+      Enchanted: true
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to disable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou disabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+    Disabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGY0ZGMzYzM3NTNiZjViMGI3ZjA4MWNkYjQ5YjgzZDM3NDI4YTEyZTQxODdmNjM0NmRlYzA2ZmFjNTRjZSJ9fX0='
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to enable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou enabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+
+  Gold:
+    Slot: 12
+    Permission:
+      Displayname: '%color_displayname% Color'
+      Material: BARRIER
+      Lore:
+        - '&8 No Permission'
+        - ''
+        - '&8 * &7You don''t have permission to use &r%color_displayname%&7 color.'
+        - ''
+        - '&8 * &ePermission is, &a%color_permission% '
+        - ''
+    Enabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTQzYzc5Y2Q5YzJkMzE4N2VhMDMyNDVmZTIxMjhlMGQyYWJiZTc5NDUyMTRiYzU4MzRkZmE0MDNjMTM0ZTI3In19fQ=='
+      Enchanted: true
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to disable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou disabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+    Disabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTQzYzc5Y2Q5YzJkMzE4N2VhMDMyNDVmZTIxMjhlMGQyYWJiZTc5NDUyMTRiYzU4MzRkZmE0MDNjMTM0ZTI3In19fQ=='
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to enable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou enabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+
+  Yellow:
+    Slot: 13
+    Permission:
+      Displayname: '%color_displayname% Color'
+      Material: BARRIER
+      Lore:
+        - '&8 No Permission'
+        - ''
+        - '&8 * &7You don''t have permission to use &r%color_displayname%&7 color.'
+        - ''
+        - '&8 * &ePermission is, &a%color_permission% '
+        - ''
+    Enabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjlhMDMwY2EyYjJjNmZlNjdmZTgwOTdkM2NkMjA2OTY5ZmM1YzAwMTdjNjBiNmI0MDk5MGM3NzJhNmYwYWMwYSJ9fX0='
+      Enchanted: true
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to disable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou disabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+    Disabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjlhMDMwY2EyYjJjNmZlNjdmZTgwOTdkM2NkMjA2OTY5ZmM1YzAwMTdjNjBiNmI0MDk5MGM3NzJhNmYwYWMwYSJ9fX0='
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to enable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou enabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+
+  Green:
+    Slot: 14
+    Permission:
+      Displayname: '%color_displayname% Color'
+      Material: BARRIER
+      Lore:
+        - '&8 No Permission'
+        - ''
+        - '&8 * &7You don''t have permission to use &r%color_displayname%&7 color.'
+        - ''
+        - '&8 * &ePermission is, &a%color_permission% '
+        - ''
+    Enabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGU5YjI3ZmNjZDgwOTIxYmQyNjNjOTFkYzUxMWQwOWU5YTc0NjU1NWU2YzljYWQ1MmU4NTYyZWQwMTgyYTJmIn19fQ=='
+      Enchanted: true
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to disable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou disabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+    Disabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGU5YjI3ZmNjZDgwOTIxYmQyNjNjOTFkYzUxMWQwOWU5YTc0NjU1NWU2YzljYWQ1MmU4NTYyZWQwMTgyYTJmIn19fQ=='
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to enable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou enabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+
+  DarkGreen:
+    Slot: 15
+    Permission:
+      Displayname: '%color_displayname% Color'
+      Material: BARRIER
+      Lore:
+        - '&8 No Permission'
+        - ''
+        - '&8 * &7You don''t have permission to use &r%color_displayname%&7 color.'
+        - ''
+        - '&8 * &ePermission is, &a%color_permission% '
+        - ''
+    Enabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmM5ZTYwMWVkOTE5OGRiYjM0YzUxZGRmMzIzOTI5ZjAxYTVmOTU4YWIxMTEzM2UzZTA0MDdiNjk4MzkzYjNmIn19fQ=='
+      Enchanted: true
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to disable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou disabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+    Disabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmM5ZTYwMWVkOTE5OGRiYjM0YzUxZGRmMzIzOTI5ZjAxYTVmOTU4YWIxMTEzM2UzZTA0MDdiNjk4MzkzYjNmIn19fQ=='
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to enable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou enabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+
+  Aqua:
+    Slot: 16
+    Permission:
+      Displayname: '%color_displayname% Color'
+      Material: BARRIER
+      Lore:
+        - '&8 No Permission'
+        - ''
+        - '&8 * &7You don''t have permission to use &r%color_displayname%&7 color.'
+        - ''
+        - '&8 * &ePermission is, &a%color_permission% '
+        - ''
+    Enabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTcwNjIyOTdmMjZlNTA5Y2U2YTI0Yzk5MjAxYThmOGI0YWUwMzBkNThmNDFlNzNjZDkzZDdiZDc3ZTY0NyJ9fX0='
+      Enchanted: true
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to disable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou disabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+    Disabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTcwNjIyOTdmMjZlNTA5Y2U2YTI0Yzk5MjAxYThmOGI0YWUwMzBkNThmNDFlNzNjZDkzZDdiZDc3ZTY0NyJ9fX0='
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to enable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou enabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+
+  DarkAqua:
+    Slot: 20
+    Permission:
+      Displayname: '%color_displayname% Color'
+      Material: BARRIER
+      Lore:
+        - '&8 No Permission'
+        - ''
+        - '&8 * &7You don''t have permission to use &r%color_displayname%&7 color.'
+        - ''
+        - '&8 * &ePermission is, &a%color_permission% '
+        - ''
+    Enabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTViOWE0ODQ2N2YwMjEyYWE2ODg2NGU2MzQyMTE2ZjhmNzlhMjc1NDU0YmYyMTVmNjdmNzAxYTZmMmM4MTgifX19'
+      Enchanted: true
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to disable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou disabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+    Disabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTViOWE0ODQ2N2YwMjEyYWE2ODg2NGU2MzQyMTE2ZjhmNzlhMjc1NDU0YmYyMTVmNjdmNzAxYTZmMmM4MTgifX19'
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to enable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou enabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+
+  Blue:
+    Slot: 21
+    Permission:
+      Displayname: '%color_displayname% Color'
+      Material: BARRIER
+      Lore:
+        - '&8 No Permission'
+        - ''
+        - '&8 * &7You don''t have permission to use &r%color_displayname%&7 color.'
+        - ''
+        - '&8 * &ePermission is, &a%color_permission% '
+        - ''
+    Enabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjhhZmExNTU1ZTlmODc2NDgxZTNjNDI5OWVjNmU5MWQyMmI0MDc1ZTY3ZTU4ZWY4MGRjZDE5MGFjZTY1MTlmIn19fQ=='
+      Enchanted: true
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to disable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou disabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+    Disabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjhhZmExNTU1ZTlmODc2NDgxZTNjNDI5OWVjNmU5MWQyMmI0MDc1ZTY3ZTU4ZWY4MGRjZDE5MGFjZTY1MTlmIn19fQ=='
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to enable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou enabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+
+  DarkBlue:
+    Slot: 22
+    Permission:
+      Displayname: '%color_displayname% Color'
+      Material: BARRIER
+      Lore:
+        - '&8 No Permission'
+        - ''
+        - '&8 * &7You don''t have permission to use &r%color_displayname%&7 color.'
+        - ''
+        - '&8 * &ePermission is, &a%color_permission% '
+        - ''
+    Enabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmE0NjA1MzAxMmM2OGYyODlhYmNmYjE3YWI4MDQyZDVhZmJhOTVkY2FhOTljOTljMWUwMzYwODg2ZDM1In19fQ=='
+      Enchanted: true
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to disable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou disabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+    Disabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmE0NjA1MzAxMmM2OGYyODlhYmNmYjE3YWI4MDQyZDVhZmJhOTVkY2FhOTljOTljMWUwMzYwODg2ZDM1In19fQ=='
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to enable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou enabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+
+  Purple:
+    Slot: 23
+    Permission:
+      Displayname: '%color_displayname% Color'
+      Material: BARRIER
+      Lore:
+        - '&8 No Permission'
+        - ''
+        - '&8 * &7You don''t have permission to use &r%color_displayname%&7 color.'
+        - ''
+        - '&8 * &ePermission is, &a%color_permission% '
+        - ''
+    Enabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTQ4NzJjOGY3YTZjZWY3OTg2NDc2OWYwY2ZmNzFlZjIzZjU2NTY1NjdkZTAwMDFhZWYzNmM2YjYxNjJhYjAyZCJ9fX0='
+      Enchanted: true
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to disable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou disabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+    Disabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTQ4NzJjOGY3YTZjZWY3OTg2NDc2OWYwY2ZmNzFlZjIzZjU2NTY1NjdkZTAwMDFhZWYzNmM2YjYxNjJhYjAyZCJ9fX0='
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to enable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou enabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+
+  Pink:
+    Slot: 24
+    Permission:
+      Displayname: '%color_displayname% Color'
+      Material: BARRIER
+      Lore:
+        - '&8 No Permission'
+        - ''
+        - '&8 * &7You don''t have permission to use &r%color_displayname%&7 color.'
+        - ''
+        - '&8 * &ePermission is, &a%color_permission% '
+        - ''
+    Enabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmMxYjRjYjdmNmYxNjEyMjNiZjBiM2U2YjNkOGFhZDRjMTBhYmIyNGJhNTI1NGYwZWY0MDBjOTY3NGY5YTYzIn19fQ=='
+      Enchanted: true
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to disable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou disabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+    Disabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmMxYjRjYjdmNmYxNjEyMjNiZjBiM2U2YjNkOGFhZDRjMTBhYmIyNGJhNTI1NGYwZWY0MDBjOTY3NGY5YTYzIn19fQ=='
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to enable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou enabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+
+  DarkGray:
+    Slot: 28
+    Permission:
+      Displayname: '%color_displayname% Color'
+      Material: BARRIER
+      Lore:
+        - '&8 No Permission'
+        - ''
+        - '&8 * &7You don''t have permission to use &r%color_displayname%&7 color.'
+        - ''
+        - '&8 * &ePermission is, &a%color_permission% '
+        - ''
+    Enabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjliYTdmZWY2YTFhOGJkODk5YWJhZTRhNWI1NGNiMGVjZTUzYmFkYzY3N2MxNjY4YmVlMGE0NjIxYTgifX19'
+      Enchanted: true
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to disable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou disabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+    Disabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjliYTdmZWY2YTFhOGJkODk5YWJhZTRhNWI1NGNiMGVjZTUzYmFkYzY3N2MxNjY4YmVlMGE0NjIxYTgifX19'
+
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to enable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou enabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+
+  White:
+    Slot: 30
+    Permission:
+      Displayname: '%color_displayname% Color'
+      Material: BARRIER
+      Lore:
+        - '&8 No Permission'
+        - ''
+        - '&8 * &7You don''t have permission to use &r%color_displayname%&7 color.'
+        - ''
+        - '&8 * &ePermission is, &a%color_permission% '
+        - ''
+    Enabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjNjZDNjMTI1N2FkYzAxMGQ2OTMyNjBiMzUxY2Q5NzgxYjk4ZWZiOTgyNmMzNmU0MWI5ZDhjYjU3MDZhODkifX19'
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to disable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou disabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+    Disabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjNjZDNjMTI1N2FkYzAxMGQ2OTMyNjBiMzUxY2Q5NzgxYjk4ZWZiOTgyNmMzNmU0MWI5ZDhjYjU3MDZhODkifX19'
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to enable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou enabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+
+  Gray:
+    Slot: 31
+    Permission:
+      Displayname: '%color_displayname% Color'
+      Material: BARRIER
+      Lore:
+        - '&8 No Permission'
+        - ''
+        - '&8 * &7You don''t have permission to use &r%color_displayname%&7 color.'
+        - ''
+        - '&8 * &ePermission is, &a%color_permission% '
+        - ''
+    Enabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmQzY2ZjMjM5MDA2YjI1N2I4YjIwZjg1YTdiZjQyMDI2YzRhZGEwODRjMTQ0OGQwNGUwYzQwNmNlOGEyZWEzMSJ9fX0='
+      Enchanted: true
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to disable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou disabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+    Disabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmQzY2ZjMjM5MDA2YjI1N2I4YjIwZjg1YTdiZjQyMDI2YzRhZGEwODRjMTQ0OGQwNGUwYzQwNmNlOGEyZWEzMSJ9fX0='
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to enable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou enabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+
+  Black:
+    Slot: 32
+    Permission:
+      Displayname: '%color_displayname% Color'
+      Material: BARRIER
+      Lore:
+        - '&8 No Permission'
+        - ''
+        - '&8 * &7You don''t have permission to use &r%color_displayname%&7 color.'
+        - ''
+        - '&8 * &ePermission is, &a%color_permission% '
+        - ''
+    Enabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTY3YTJmMjE4YTZlNmUzOGYyYjU0NWY2YzE3NzMzZjRlZjliYmIyODhlNzU0MDI5NDljMDUyMTg5ZWUifX19'
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to disable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou disabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+    Disabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTY3YTJmMjE4YTZlNmUzOGYyYjU0NWY2YzE3NzMzZjRlZjliYmIyODhlNzU0MDI5NDljMDUyMTg5ZWUifX19'
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &ePermission for blink: &a%blink_slow_has_permission%'
+        - '&8 * &ePermission for fast blink: &a%blink_fast_has_permission%'
+        - ''
+        - '&8 * &eLeft-Click &7to enable this color'
+        - '&8 * &eRight-Click &7to enable blink'
+        - '&8 * &eMiddle-Click &7 to enable fast blink'
+        - ''
+      Right-Click:
+        Options:
+          Blink: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled slow blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou enabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Middle-Click:
+        Options:
+          Blink: true
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use fast blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou enabled fast blink for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+
+  rainbow:
+    Slot: 34
+    Permission:
+      Displayname: '%color_displayname% Color'
+      Material: BARRIER
+      Lore:
+        - '&8 No Permission'
+        - ''
+        - '&8 * &7You don''t have permission to use &r%color_displayname%&7 color.'
+        - ''
+        - '&8 * &ePermission is, &a%color_permission% '
+        - ''
+    Enabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzgzZmQzZDExOTUzOWEyNDI1ZjdkYzczMzNkNDJmYWQ2OTRlNjJmNWY0Mzg4MjM1MjQ3MzE5ZDU5NjNkNTY3NyJ9fX0='
+      Enchanted: true
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &eRainbow Speed: &a%rainbow_speed%'
+        - ''
+        - '&8 * &eLeft-Click &7to disable this color'
+        - '&8 * &eRight-Click &7to change speed'
+        - ''
+      Right-Click:
+        Options:
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou changed speed for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou enabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+    Disabled:
+      Displayname: '%color_displayname% Color'
+      Material: 'BaseValue-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzgzZmQzZDExOTUzOWEyNDI1ZjdkYzczMzNkNDJmYWQ2OTRlNjJmNWY0Mzg4MjM1MjQ3MzE5ZDU5NjNkNTY3NyJ9fX0='
+      Lore:
+        - '&8 Available Color'
+        - ''
+        - '&8 * &eRainbow Speed: &a%rainbow_speed%'
+        - ''
+        - '&8 * &eLeft-Click &7to enable this color'
+        - '&8 * &eRight-Click &7to change speed'
+        - ''
+      Right-Click:
+        Options:
+          Speed: true
+          Permission: true
+          Commands:
+            - 'Message: &4You don''t have permission to use blink'
+            - 'Sound: BLOCK_ANVIL_BREAK'
+            - 'Close: true'
+        Commands:
+          - 'Message: &eYou changed speed for &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'
+      Left-Click:
+        Commands:
+          - 'Message: &eYou enabled &r%color_displayname%'
+          - 'Sound: ENTITY_PLAYER_LEVELUP'
+          - 'Close: true'

@@ -15,7 +15,8 @@ public enum CommandComponent {
     CHAT("Chat:"),
     BROADCAST("Broadcast:"),
     SOUND("Sound:"),
-    SOUND_BROADCAST("SoundBroadcast:");
+    SOUND_BROADCAST("SoundBroadcast:"),
+    OPEN("Open: CustomEffects");
 
     private final String prefix;
 

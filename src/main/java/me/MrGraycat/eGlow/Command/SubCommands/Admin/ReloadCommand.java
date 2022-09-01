@@ -10,6 +10,7 @@ import me.MrGraycat.eGlow.Config.EGlowMessageConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Config.Playerdata.EGlowPlayerdataManager;
 import me.MrGraycat.eGlow.EGlow;
+import me.MrGraycat.eGlow.GUI.Manager.MenuManager;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
@@ -58,10 +59,17 @@ public class ReloadCommand extends SubCommand {
 			DataManager.addCustomEffects();
 
 			for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
+				// prevent bugs when reloading and the player is on the custom menu
+				System.out.println("cf");
+
 				ePlayer = DataManager.getEGlowPlayer(onlinePlayer);
 				
 				if (ePlayer == null)
 					continue;
+
+				MenuManager menuManager = new MenuManager();
+				System.out.println(menuManager.isMenuOpen(ePlayer.getPlayer()));
+				if (menuManager.isMenuOpen(ePlayer.getPlayer())) ePlayer.getPlayer().closeInventory();
 				
 				ePlayer.updatePlayerTabname();
 				
@@ -92,14 +100,14 @@ public class ReloadCommand extends SubCommand {
 				}
 			}
 
-			AdvancedGlowVisibilityAddon advGlowVis = getInstance().getAdvancedGlowVisibility();
-			if (advGlowVis != null) {
-				advGlowVis.shutdown();
+			if (MainConfig.ADVANCED_GLOW_VISIBILITY_ENABLE.getBoolean()) {
+				if (getInstance().getAdvancedGlowVisibility() == null)
+					getInstance().setAdvancedGlowVisibility(new AdvancedGlowVisibilityAddon());
+			} else {
+				if (getInstance().getAdvancedGlowVisibility() != null)
+					getInstance().getAdvancedGlowVisibility().shutdown();
+					getInstance().setAdvancedGlowVisibility(null);
 			}
-			getInstance().setAdvancedGlowVisibility(MainConfig.ADVANCED_GLOW_VISIBILITY_ENABLE.getBoolean()
-					? new AdvancedGlowVisibilityAddon()
-					: null
-			);
 
 			try{
 			    String alias = MainConfig.COMMAND_ALIAS.getString();

@@ -71,9 +71,7 @@ public class LuckPermsAddon implements Listener {
 							if (TAB_Addon != null && TAB_Addon.getTABSupported() && TAB_Addon.blockEGlowPackets()) {
 								TAB_Addon.updateTABPlayer(ePlayer, ePlayer.getActiveColor());
 							} else {
-								if (Vault_Addon != null) {
-									PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(), ((Vault_Addon != null) ? Vault_Addon.getPlayerTagPrefix(ePlayer) : "") + ePlayer.getActiveColor(), (Vault_Addon != null) ? Vault_Addon.getPlayerTagSuffix(ePlayer) : "", EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
-								}
+								PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(), ((Vault_Addon != null) ? Vault_Addon.getPlayerTagPrefix(ePlayer) : "") + ePlayer.getActiveColor(), (Vault_Addon != null) ? Vault_Addon.getPlayerTagSuffix(ePlayer) : "", EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
 							}
 						}
 					}
