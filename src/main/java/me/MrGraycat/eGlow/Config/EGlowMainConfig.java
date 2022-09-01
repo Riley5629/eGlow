@@ -178,6 +178,7 @@ public class EGlowMainConfig {
 
 		SETTINGS_DISABLE_GLOW_WHEN_INVISIBLE("Settings.disable-glow-when-invisible"),
 		SETTINGS_SMART_TAB_NAMETAG_HANDLER("Settings.smart-TAB-nametag-handler"),
+		SETTINGS_USE_CUSTOM_GUI("Settings.gui.use-custom-gui"),
 
 		SETTINGS_GUI_RENDER_SKULLS("Settings.gui.render-skulls"),
 		SETTINGS_GUI_ADD_GLASS_PANES("Settings.gui.add-glass-panes"),

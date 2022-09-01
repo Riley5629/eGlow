@@ -47,6 +47,7 @@ Settings:
   disable-glow-when-invisible: true
   smart-TAB-nametag-handler: false
   gui:
+    use-custom-gui: false # use custom GUI
     render-skulls: true
     add-glass-panes: true
     add-prefix-to-title: true

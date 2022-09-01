@@ -2,6 +2,7 @@ package me.MrGraycat.eGlow.Command.SubCommands.Admin;
 
 import me.MrGraycat.eGlow.Addon.Internal.AdvancedGlowVisibilityAddon;
 import me.MrGraycat.eGlow.Command.SubCommand;
+import me.MrGraycat.eGlow.Config.Custom.EGlowCustomGuiConfig;
 import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
@@ -9,6 +10,7 @@ import me.MrGraycat.eGlow.Config.EGlowMessageConfig;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.Config.Playerdata.EGlowPlayerdataManager;
 import me.MrGraycat.eGlow.EGlow;
+import me.MrGraycat.eGlow.GUI.Manager.MenuManager;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
@@ -51,16 +53,23 @@ public class ReloadCommand extends SubCommand {
 
 	@Override
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
-		if (EGlowMainConfig.reloadConfig() && EGlowMessageConfig.reloadConfig() && EGlowCustomEffectsConfig.reloadConfig()) {
+		if (EGlowMainConfig.reloadConfig() && EGlowMessageConfig.reloadConfig() && EGlowCustomEffectsConfig.reloadConfig() && EGlowCustomGuiConfig.reloadConfig()) {
 			EGlowPlayerdataManager.setMysql_Failed(false);
 			DataManager.addEGlowEffects();
 			DataManager.addCustomEffects();
 
 			for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
+				// prevent bugs when reloading and the player is on the custom menu
+				System.out.println("cf");
+
 				ePlayer = DataManager.getEGlowPlayer(onlinePlayer);
 				
 				if (ePlayer == null)
 					continue;
+
+				MenuManager menuManager = new MenuManager();
+				System.out.println(menuManager.isMenuOpen(ePlayer.getPlayer()));
+				if (menuManager.isMenuOpen(ePlayer.getPlayer())) ePlayer.getPlayer().closeInventory();
 				
 				ePlayer.updatePlayerTabname();
 				

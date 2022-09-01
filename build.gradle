@@ -54,6 +54,8 @@ dependencies {
     implementation ('com.github.NEZNAMY:YamlAssist:1.0.5') {
         exclude group: 'org.yaml', module: 'snakeyaml'
     }
+    //HypeAPI-ItemBuilder from https://jitpack.io/#DoubleNico/HypeAPI-ItemBuilder
+    implementation ('com.github.DoubleNico:HypeAPI-ItemBuilder:b5711d5ef9')
 }
 
 //Clean up unneeded external libraries
@@ -155,6 +157,7 @@ shadowJar {
     archiveVersion.set('')
     relocate("me.neznamy.yamlassist", "me.MrGraycat.eGlow.Config.YAMLAssist")
     relocate("org.bstats", "me.MrGraycat.eGlow.Addon.bStats")
+    relocate("me.doublenico.hypeapi", "me.MrGraycat.eGlow.Addon.HypeAPI")
     minimize()
 }
 tasks.build.dependsOn tasks.shadowJar
