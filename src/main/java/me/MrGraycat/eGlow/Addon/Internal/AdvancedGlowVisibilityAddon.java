@@ -30,7 +30,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class AdvancedGlowVisibilityAddon {
-    private BukkitTask runnable;
+    private final BukkitTask runnable;
     private static final int MAX_DISTANCE = 50;
     private static final Set<Material> ignoredBlocks = EnumSet.noneOf(Material.class);
 
@@ -180,7 +180,7 @@ public class AdvancedGlowVisibilityAddon {
             if (distance() <= 1)
                 return true;
 
-            BlockIterator blocks = new BlockIterator(origin.getWorld(), origin.toVector(), direction, 0.0, Math.min(distance, 50));
+            BlockIterator blocks = new BlockIterator(Objects.requireNonNull(origin.getWorld()), origin.toVector(), direction, 0.0, Math.min(distance, 50));
 
             while (blocks.hasNext()) {
                 Block block = blocks.next();
