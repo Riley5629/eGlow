@@ -440,5 +440,4 @@ public class EGlowCustomMenu extends Menu {
         if (commandClickType == null) return;
         new ClickCommands(getInstance(), player, section, commandClickType).noPermissionCommands(eGlowPlayer, effect);
     }
-
 }
