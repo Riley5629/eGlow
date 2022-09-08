@@ -136,7 +136,7 @@ public class IEGlowPlayer {
 	
 	public void activateGlow() {
 		setGlowStatus(true);
-		
+
 		if (getEffect() != null) {
 			activateGlow(getEffect());
 		} else {
@@ -165,8 +165,8 @@ public class IEGlowPlayer {
 	
 	public void disableGlow(boolean hardReset) {
 		if (getFakeGlowStatus() || getGlowStatus()) {
-			if (glowEffect != null) {
-				glowEffect.deactivateForEntity(getEntity());
+			if (getEffect() != null) {
+				getEffect().deactivateForEntity(getEntity());
 			}
 			
 			if (hardReset)
