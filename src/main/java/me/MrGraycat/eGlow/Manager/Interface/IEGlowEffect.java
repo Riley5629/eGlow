@@ -84,10 +84,14 @@ public class IEGlowEffect {
 			}
 			getActiveEntities().remove(entity);
 		}
+
+		getRunnable().cancel();
+		setRunnable(null);
+		EGlow.getInstance().getServer().getPluginManager().removePermission("eglow.effect." + getName());
 	}
 	
 	private void activateEffect() {
-		if (getRunnable() == null || getRunnable().isCancelled()) {
+		if (getRunnable() == null) {
 			setRunnable(
 			new BukkitRunnable() {
 				@Override
@@ -95,8 +99,11 @@ public class IEGlowEffect {
 					if (getActiveEntities() == null)
 						activeEntities = new ConcurrentHashMap<>();
 					
-					if (getActiveEntities().isEmpty())
+					if (getActiveEntities().isEmpty()) {
 						cancel();
+						setRunnable(null);
+					}
+
 					
 					getActiveEntities().forEach((entity, progress) -> {
 					IEGlowPlayer eglowEntity = null;
