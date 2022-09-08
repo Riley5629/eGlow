@@ -153,9 +153,10 @@ public class DataManager implements PluginMessageListener {
 					effect.setDisplayName(displayName);
 					effect.setDelay(delay);
 					effect.setColors(colors);
+					effect.reloadEffect();
 				}
 				oldEffects.remove(effectName.toLowerCase());
-				EGlow.getInstance().getServer().getPluginManager().removePermission(permission);
+
 			} else {
 				addEGlowEffect(effectName.toLowerCase(), displayName, "eglow.effect." + effectName.toLowerCase(), delay, colors);
 				try {EGlow.getInstance().getServer().getPluginManager().addPermission(new Permission(permission, "Activate " + effectName + " effect.", PermissionDefault.FALSE));} catch (IllegalArgumentException e) { /*Permission already registered*/ }
