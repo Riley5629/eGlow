@@ -102,11 +102,11 @@ public class NMSStorage {
 	public NMSStorage() {
 		serverPackage = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 		minorVersion = Integer.parseInt(serverPackage.split("_")[1]);
-		initialiseValues();
+		initializeValues();
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void initialiseValues() {
+	public void initializeValues() {
 		try {
 			this.Packet = getNMSClass("net.minecraft.network.protocol.Packet", "Packet");
 			this.EntityPlayer = getNMSClass("net.minecraft.server.level.EntityPlayer", "EntityPlayer");
@@ -271,12 +271,14 @@ public class NMSStorage {
 	//Only used for getting the bungee setting
 	private Field getField(Class<?> clazz) {
 		if (clazz == null) return null;
-		for (Field field : clazz.getDeclaredFields()) {
+		try {
+			Field field = clazz.getField("bungee");
 			field.setAccessible(true);
-			if (field.getName().equalsIgnoreCase("bungee"))
-				return field;
+
+			return field;
+		} catch (NoSuchFieldException e) {
+			return null;
 		}
-		return null;
 	}
 
 	private List<Field> getFields(Class<?> clazz, Class<?> type){
@@ -301,15 +303,8 @@ public class NMSStorage {
 	}
 
 	private Enum[] getEnumValues(Class<?> enumClass) {
-		if (enumClass == null) throw new IllegalArgumentException("Class cannot be null");
 		if (!enumClass.isEnum()) throw new IllegalArgumentException(enumClass.getName() + " is not an enum class");
-		try {
-			return (Enum[]) enumClass.getMethod("values").invoke(null);
-		} catch (ReflectiveOperationException e) {
-			//this should never happen
-			e.printStackTrace();
-			return new Enum[0];
-		}
+		return (Enum[]) enumClass.getEnumConstants();
 	}
 
 	public <T extends AccessibleObject> T setAccessible(T o) {
