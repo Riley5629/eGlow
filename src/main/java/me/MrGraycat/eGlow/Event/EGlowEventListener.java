@@ -159,8 +159,13 @@ public class EGlowEventListener implements Listener {
 						ChatUtil.sendMsg(p, Message.DISGUISE_BLOCKED.get(), true);
 						return;
 					}
-					
-					eglowPlayer.activateGlow();
+
+					try {
+						eglowPlayer.activateGlow();
+					} catch (NullPointerException e) {
+						//Prevent rare but useless message whenever something causes the player to disconnect whilst joining the server
+					}
+
 					if (MainConfig.SETTINGS_JOIN_MENTION_GLOW_STATE.getBoolean() && eglowPlayer.getPlayer().hasPermission("eglow.option.glowstate") && eglowPlayer.getEffect() != null)
 						ChatUtil.sendMsg(eglowPlayer.getPlayer(), Message.GLOWING_STATE_ON_JOIN.get(eglowPlayer.getEffect().getDisplayName()), true);
 					return;
