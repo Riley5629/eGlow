@@ -149,7 +149,8 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 
 		if (hasEffect(p))
 			inventory.setItem(32, createItem(Material.valueOf(CLOCK), Message.GUI_SPEED_ITEM_NAME.get(), 0, createSpeedLore(p)));
-		
-		inventory.setItem(34, setItemGlow(createItem(Material.BOOK, Message.GUI_CUSTOM_EFFECTS_ITEM_NAME.get(), 0, Message.GUI_CLICK_TO_OPEN.get())));
+
+		if (MainConfig.SETTINGS_GUI_CUSTOM_EFFECTS.getBoolean())
+			inventory.setItem(34, setItemGlow(createItem(Material.BOOK, Message.GUI_CUSTOM_EFFECTS_ITEM_NAME.get(), 0, Message.GUI_CLICK_TO_OPEN.get())));
 	}
 }

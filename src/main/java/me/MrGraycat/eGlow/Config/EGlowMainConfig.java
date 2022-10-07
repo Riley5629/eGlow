@@ -124,7 +124,8 @@ public class EGlowMainConfig {
 
 		replaceOrAdd("Options.Render-player-skulls", "Settings.gui.render-skulls", true);
 		replaceOrAdd("Options.Inventory-add-glass", "Settings.gui.add-glass-panes", true);
-		replaceOrAdd("Options.Disable-prefix-in-GUI", "Settings.gui.add-prefix-to-title", true);
+		replaceOrAdd("Options.Disable-prefix-in-GUI", "Settings.gui.add-prefix-to-title", true); //custom-effects-in-gui
+		replaceOrAdd("NA", "Settings.gui.custom-effects-in-gui", true);
 		replaceOrAdd("Options.Use-GUI-color-as-chat-color", "Settings.gui.use-gui-color-for-messages", false);
 		replaceOrAdd("NA", "Settings.gui.max-personal-effect-size", 10);
 
@@ -182,6 +183,7 @@ public class EGlowMainConfig {
 		SETTINGS_GUI_RENDER_SKULLS("Settings.gui.render-skulls"),
 		SETTINGS_GUI_ADD_GLASS_PANES("Settings.gui.add-glass-panes"),
 		SETTINGS_GUI_ADD_PREFIX("Settings.gui.add-prefix-to-title"),
+		SETTINGS_GUI_CUSTOM_EFFECTS("Settings.gui.custom-effects-in-gui"),
 		SETTINGS_GUI_COLOR_FOR_MESSAGES("Settings.gui.use-gui-color-for-messages"),
 		SETTINGS_GUI_MAX_PERSONAL_GLOW_SIZE("Settings.gui.max-personal-effect-size"),
 

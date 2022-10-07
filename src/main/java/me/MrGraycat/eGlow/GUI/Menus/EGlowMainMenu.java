@@ -126,6 +126,7 @@ public class EGlowMainMenu extends Menu {
 				updateSpeed(eGlowPlayer);
 		break;
 		case(34):
+			if (MainConfig.SETTINGS_GUI_CUSTOM_EFFECTS.getBoolean())
 			 new EGlowEffectMenu(eGlowPlayer.getPlayer()).openInventory();
 		break;
 		default:

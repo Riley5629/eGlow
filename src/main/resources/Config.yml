@@ -50,6 +50,7 @@ Settings:
     render-skulls: true
     add-glass-panes: true
     add-prefix-to-title: true
+    custom-effects-in-gui: true
     #Enabling this setting requires you to manually add the colors to the GUI section
     #of the messages.yml
     use-gui-color-for-messages: false
