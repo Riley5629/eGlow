@@ -179,7 +179,7 @@ public class AdvancedGlowVisibilityAddon {
             if (distance() <= 1)
                 return true;
 
-            BlockIterator blocks = new BlockIterator(Objects.requireNonNull(origin.getWorld()), origin.toVector(), direction, 0.0, Math.min(distance, 50));
+            BlockIterator blocks = new BlockIterator(Objects.requireNonNull(origin.getWorld()), origin.toVector(), direction, Math.min(distance, 50));
 
             while (blocks.hasNext()) {
                 Block block = blocks.next();

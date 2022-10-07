@@ -2,6 +2,7 @@ package me.MrGraycat.eGlow.Addon.Internal;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -26,11 +27,10 @@ public class BlockIterator implements Iterator<Block> {
     private BlockFace secondFace;
     private BlockFace thirdFace;
 
-    public BlockIterator(World world, Vector start, Vector direction, double yOffset, int maxDistance) {
+    public BlockIterator(World world, Vector start, Vector direction, int maxDistance) {
         this.maxDistance = maxDistance;
-        Vector startClone = start.clone();
-        startClone.setY(startClone.getY() + yOffset);
         this.currentDistance = 0;
+
         double mainDirection = 0.0D;
         double secondDirection = 0.0D;
         double thirdDirection = 0.0D;
@@ -38,41 +38,42 @@ public class BlockIterator implements Iterator<Block> {
         double secondPosition = 0.0D;
         double thirdPosition = 0.0D;
 
-        Block startBlock = world.getBlockAt(NumberConversions.floor(startClone.getX()), NumberConversions.floor(startClone.getY()), NumberConversions.floor(startClone.getZ()));
+        Block startBlock = world.getBlockAt((int) Math.floor(start.getX()), (int) Math.floor(start.getY()), (int) Math.floor(start.getZ()));
+        
         if (getXLength(direction) > mainDirection) {
             this.mainFace = getXFace(direction);
             mainDirection = getXLength(direction);
-            mainPosition = getXPosition(direction, startClone, startBlock);
+            mainPosition = getXPosition(direction, start, startBlock);
             this.secondFace = getYFace(direction);
             secondDirection = getYLength(direction);
-            secondPosition = getYPosition(direction, startClone, startBlock);
+            secondPosition = getYPosition(direction, start, startBlock);
             this.thirdFace = getZFace(direction);
             thirdDirection = getZLength(direction);
-            thirdPosition = getZPosition(direction, startClone, startBlock);
+            thirdPosition = getZPosition(direction, start, startBlock);
         }
 
         if (getYLength(direction) > mainDirection) {
             this.mainFace = getYFace(direction);
             mainDirection = getYLength(direction);
-            mainPosition = getYPosition(direction, startClone, startBlock);
+            mainPosition = getYPosition(direction, start, startBlock);
             this.secondFace = getZFace(direction);
             secondDirection = getZLength(direction);
-            secondPosition = getZPosition(direction, startClone, startBlock);
+            secondPosition = getZPosition(direction, start, startBlock);
             this.thirdFace = getXFace(direction);
             thirdDirection = getXLength(direction);
-            thirdPosition = getXPosition(direction, startClone, startBlock);
+            thirdPosition = getXPosition(direction, start, startBlock);
         }
 
         if (getZLength(direction) > mainDirection) {
             this.mainFace = getZFace(direction);
             mainDirection = getZLength(direction);
-            mainPosition = getZPosition(direction, startClone, startBlock);
+            mainPosition = getZPosition(direction, start, startBlock);
             this.secondFace = getXFace(direction);
             secondDirection = getXLength(direction);
-            secondPosition = getXPosition(direction, startClone, startBlock);
+            secondPosition = getXPosition(direction, start, startBlock);
             this.thirdFace = getYFace(direction);
             thirdDirection = getYLength(direction);
-            thirdPosition = getYPosition(direction, startClone, startBlock);
+            thirdPosition = getYPosition(direction, start, startBlock);
         }
 
         double d = mainPosition / mainDirection;
@@ -114,7 +115,7 @@ public class BlockIterator implements Iterator<Block> {
     }
 
     private boolean blockEquals(Block a, Block b) {
-        return (a.getX() == b.getX() && a.getY() == b.getY() && a.getZ() == b.getZ());
+        return a.getLocation().equals(b.getLocation());
     }
 
     private BlockFace getXFace(Vector direction) {
