@@ -131,6 +131,9 @@ public class PacketUtil {
 			for (Player p : (entity.getGlowTargetMode().equals(GlowTargetMode.ALL)) ? Bukkit.getOnlinePlayers() : entity.getGlowTargets()) {
 				IEGlowPlayer ep = DataManager.getEGlowPlayer(p);
 
+				if (ep == null)
+					continue;
+
 				switch(entity.getGlowVisibility()) {
 					case ALL:
 						try {NMSHook.sendPacket(p, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(ep.getVersion()));} catch (Exception e) {e.printStackTrace();}
