@@ -40,6 +40,7 @@ repositories {
 dependencies {
     compileOnly ('org.spigotmc:spigot-api:1.19.1-R0.1-SNAPSHOT')
     compileOnly ('com.github.NEZNAMY:TAB:3.1.0')
+    compileOnly ('com.github.montlikadani:TabList:master-SNAPSHOT')
     compileOnly ('net.luckperms:api:5.4')
     compileOnly ('net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT')
     compileOnly ('me.clip:placeholderapi:2.10.9')
@@ -66,6 +67,10 @@ configurations.compileOnly {
     exclude group: 'com.github.NEZNAMY.TAB', module: 'tab-bungeecord'
     exclude group: 'com.github.NEZNAMY.TAB', module: 'tab-velocity'
     exclude group: 'com.github.NEZNAMY.TAB', module: 'velocity-1.1.0'
+    exclude group: 'com.github.montlikadani.TabList', module: 'bungee'
+    exclude group: 'com.github.montlikadani.TabList', module: 'global'
+    exclude group: 'com.github.montlikadani.TabList', module: 'tablist-sponge7'
+    exclude group: 'com.github.montlikadani.TabList', module: 'tablist-sponge8'
     exclude group: 'com.github.oshi', module: 'oshi-core'
     exclude group: 'com.google.code.findbugs', module: 'jsr305'
     exclude group: 'com.google.code.gson', module: 'gson'
