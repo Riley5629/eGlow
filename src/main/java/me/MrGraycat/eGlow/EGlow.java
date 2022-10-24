@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.Objects;
 
 import me.MrGraycat.eGlow.Addon.Internal.AdvancedGlowVisibilityAddon;
+import me.MrGraycat.eGlow.Addon.TabList.TabListAddon;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
@@ -47,6 +48,7 @@ public class EGlow extends JavaPlugin {
 	private IDisguiseAddon iDisguiseAddon;
 	private LibDisguiseAddon libDisguiseAddon;
 	private TABAddon tabAddon;
+	private TabListAddon tablistAddon;
 	private LuckPermsAddon lpAddon;
 	private VaultAddon vaultAddon;
 	private Metrics metrics;
@@ -134,7 +136,9 @@ public class EGlow extends JavaPlugin {
 					} catch (NoClassDefFoundError e) {			
 						ChatUtil.sendToConsole("&cWarning&f! &cThis version of eGlow requires TAB 3.1.0 or higher!", true);
 					}
-				} 
+				} else if (DebugUtil.pluginCheck("TabList")) {
+					setTablistAddon(new TabListAddon());
+				}
 				
 				EGlow.getInstance().getServer().getPluginManager().registerEvents(new EGlowTABListenerUniv(), getInstance());
 				
@@ -218,6 +222,10 @@ public class EGlow extends JavaPlugin {
 	private void setTABAddon(TABAddon tabAddon) {
 		this.tabAddon = tabAddon;
 	}
+
+	private void setTablistAddon(TabListAddon tablistAddon) {
+		this.tablistAddon = tablistAddon;
+	}
 	
 	private void setLPAddon(LuckPermsAddon lpAddon) {
 		this.lpAddon = lpAddon;
@@ -262,6 +270,10 @@ public class EGlow extends JavaPlugin {
 	
 	public TABAddon getTABAddon() {
 		return this.tabAddon;
+	}
+
+	public TabListAddon getTablistAddon() {
+		return this.tablistAddon;
 	}
 	
 	public LuckPermsAddon getLPAddon() {
