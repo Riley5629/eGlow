@@ -53,7 +53,11 @@ public abstract class SubCommand {
 				NPC npc = null;
 				
 				if (argument.equals("s") || argument.equals("sel") || argument.equals("selected")) {
-					npc = CitizensAPI.getDefaultNPCSelector().getSelected(sender);
+					try {
+						npc = CitizensAPI.getDefaultNPCSelector().getSelected(sender);
+					} catch (NullPointerException e) {
+						ChatUtil.sendMsg(sender, Message.CITIZENS_NPC_NOT_FOUND.get(), true);
+					}
 				} else {
 					try {
 						npc = CitizensAPI.getNPCRegistry().getById(Integer.parseInt(argument));
