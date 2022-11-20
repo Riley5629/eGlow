@@ -131,7 +131,7 @@ public class EGlow extends JavaPlugin {
 						if (TAB_Plugin != null && TAB_Plugin.getClass().getName().startsWith("me.neznamy.tab"))
 							setTABAddon(new TABAddon(TAB_Plugin));
 					} catch (NoClassDefFoundError e) {			
-						ChatUtil.sendToConsole("&cWarning&f! &cThis version of eGlow requires TAB 3.1.0 or higher!", true);
+						ChatUtil.sendToConsole("&cWarning&f! &cThis version of eGlow requires TAB 3.1.4 or higher!", true);
 					}
 				}
 				
