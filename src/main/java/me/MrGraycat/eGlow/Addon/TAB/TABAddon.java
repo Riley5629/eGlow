@@ -7,11 +7,11 @@ import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import me.neznamy.tab.api.Property;
 import me.neznamy.tab.api.TabAPI;
+import me.neznamy.tab.api.TabConstants;
 import me.neznamy.tab.api.TabPlayer;
 import me.neznamy.tab.api.config.ConfigurationFile;
 import me.neznamy.tab.api.event.plugin.TabLoadEvent;
 import me.neznamy.tab.platforms.bukkit.features.unlimitedtags.BukkitNameTagX;
-import me.neznamy.tab.shared.TabConstants;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -26,8 +26,8 @@ public class TABAddon {
 	public TABAddon(Plugin TAB_Plugin) {
 		int TAB_Version = (TAB_Plugin != null) ? Integer.parseInt(TAB_Plugin.getDescription().getVersion().replaceAll("[^\\d]", "")) : 0;
 		
-		if (TAB_Version < 302) {
-			ChatUtil.sendToConsole("&cWarning&f! &cThis version of eGlow requires TAB 3.1.0 or higher!", true);
+		if (TAB_Version < 314) {
+			ChatUtil.sendToConsole("&cWarning&f! &cThis version of eGlow requires TAB 3.1.4 or higher!", true);
 			return;
 		}
 
