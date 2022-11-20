@@ -77,6 +77,6 @@ public class EGlowTABListenerUniv implements Listener {
 					ex.printStackTrace();
 				}
 			}
-		}.runTaskLaterAsynchronously(EGlow.getInstance(), 10L);
+		}.runTaskLaterAsynchronously(EGlow.getInstance(), 2L);
 	}
 }
