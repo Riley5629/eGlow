@@ -13,6 +13,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /*
  * Making sure to disable the player glow when disguised to prevent errors.
@@ -39,45 +40,55 @@ public class LibDisguiseAddon implements Listener {
 	
 	@EventHandler
 	public void onDisguise(DisguiseEvent event) {
-		try {
-			Entity entity = event.getEntity();
-			
-			if (entity instanceof Player) {
-				Player player = (Player) entity;
-				IEGlowPlayer eglowPlayer = DataManager.getEGlowPlayer(player);
-			
-				if (eglowPlayer != null && eglowPlayer.getGlowStatus() || eglowPlayer != null && eglowPlayer.getFakeGlowStatus()) {
-					eglowPlayer.setGlowDisableReason(GlowDisableReason.DISGUISE);
-					eglowPlayer.toggleGlow();
-					ChatUtil.sendMsg(player, Message.DISGUISE_BLOCKED.get(), true);
-				}	
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				try {
+					Entity entity = event.getEntity();
+
+					if (entity instanceof Player) {
+						Player player = (Player) entity;
+						IEGlowPlayer eglowPlayer = DataManager.getEGlowPlayer(player);
+
+						if (eglowPlayer != null && eglowPlayer.getGlowStatus() || eglowPlayer != null && eglowPlayer.getFakeGlowStatus()) {
+							eglowPlayer.setGlowDisableReason(GlowDisableReason.DISGUISE);
+							eglowPlayer.toggleGlow();
+							ChatUtil.sendMsg(player, Message.DISGUISE_BLOCKED.get(), true);
+						}
+					}
+				} catch (NoSuchMethodError ex) {
+					ChatUtil.sendToConsole("&cLibsDisguise isn't up to date &f!", true);
+					ex.printStackTrace();
+				}
 			}
-		} catch (NoSuchMethodError ex) {
-			ChatUtil.sendToConsole("&cLibsDisguise isn't up to date &f!", true);
-			ex.printStackTrace();
-		}
+		}.runTaskAsynchronously(EGlow.getInstance());
 	}
 	
 	@EventHandler
 	public void onUnDisguise(UndisguiseEvent event) {
-		try {
-			Entity entity = event.getDisguised();
-			
-			if (entity instanceof Player) {
-				Player player = (Player) event.getDisguised();
-				IEGlowPlayer eglowPlayer = DataManager.getEGlowPlayer(player);
-				
-				if (eglowPlayer != null && eglowPlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-					eglowPlayer.toggleGlow();
-					eglowPlayer.setGlowDisableReason(GlowDisableReason.NONE);
-					ChatUtil.sendMsg(player, Message.DISGUISE_ALLOWED.get(), true);
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				try {
+					Entity entity = event.getDisguised();
+
+					if (entity instanceof Player) {
+						Player player = (Player) event.getDisguised();
+						IEGlowPlayer eglowPlayer = DataManager.getEGlowPlayer(player);
+
+						if (eglowPlayer != null && eglowPlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
+							eglowPlayer.toggleGlow();
+							eglowPlayer.setGlowDisableReason(GlowDisableReason.NONE);
+							ChatUtil.sendMsg(player, Message.DISGUISE_ALLOWED.get(), true);
+						}
+					}
+				} catch (NoSuchMethodError ex) {
+					ChatUtil.sendToConsole("&cLibsDisguise isn't up to date &f!", true);
+					ex.printStackTrace();
+				} catch (NullPointerException e) {
+					//Caused by disconnecting while in disguise when server performance is low (rare error)
 				}
 			}
-		} catch (NoSuchMethodError ex) {
-			ChatUtil.sendToConsole("&cLibsDisguise isn't up to date &f!", true);
-			ex.printStackTrace();
-		} catch (NullPointerException e) {
-			//Caused by disconnecting while in disguise when server performance is low (rare error)
-		}
+		}.runTaskAsynchronously(EGlow.getInstance());
 	}
 }
