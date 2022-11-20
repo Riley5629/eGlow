@@ -208,6 +208,10 @@ public class IEGlowPlayer {
 		
 		getPlayer().setPlayerListName(ChatUtil.translateColors(format));
 	}
+
+	public boolean isGlowing() {
+		return (getGlowStatus() || getFakeGlowStatus());
+	}
 	
 	public String getTeamName() {
 		String playerName = name;
