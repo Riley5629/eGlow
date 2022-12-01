@@ -41,9 +41,7 @@ dependencies {
     compileOnly ('org.spigotmc:spigot-api:1.19.1-R0.1-SNAPSHOT')
     compileOnly ('com.github.NEZNAMY:TAB:3.1.4')
     compileOnly ('net.luckperms:api:5.4')
-    compileOnly ('net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT') {
-        exclude group: 'net.byteflux', module: 'libby-bukkit'
-    }
+    compileOnly ('net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT')
     compileOnly ('me.clip:placeholderapi:2.10.9')
     compileOnly ('de.robingrether.idisguise:idisguise-core:5.8.2')
     compileOnly ('LibsDisguises:LibsDisguises:10.0.28')
@@ -103,6 +101,7 @@ configurations.compileOnly {
     exclude group: 'jline', module: 'jline'
     exclude group: 'junit', module: 'junit'
     exclude group: 'me.neznamy', module: 'yamlassist'
+    exclude group: 'net.byteflux', module: 'libby-bukkit'
     exclude group: 'net.java.dev.jna', module: 'jna'
     exclude group: 'net.java.dev.jna', module: 'jna-platform'
     exclude group: 'net.kyori', module: 'adventure-api'
