@@ -1,14 +1,17 @@
  package me.MrGraycat.eGlow.Command.SubCommands;
 
  import me.MrGraycat.eGlow.Command.SubCommand;
+ import me.MrGraycat.eGlow.Config.EGlowMainConfig;
  import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
  import me.MrGraycat.eGlow.GUI.Menus.EGlowMainMenu;
  import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+ import me.MrGraycat.eGlow.Util.EnumUtil;
  import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
  import me.MrGraycat.eGlow.Util.Text.ChatUtil;
  import org.bukkit.command.CommandSender;
+ import org.bukkit.potion.PotionEffectType;
 
-public class GUICommand extends SubCommand {
+ public class GUICommand extends SubCommand {
 
 	@Override
 	public String getName() {
@@ -39,10 +42,17 @@ public class GUICommand extends SubCommand {
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {	
 		if (ePlayer.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
 			 ChatUtil.sendPlainMsg(sender, Message.UNSUPPORTED_GLOW.get(), true);
-		
+
 		if (ePlayer.isInBlockedWorld()) {
 			ChatUtil.sendMsg(sender, Message.WORLD_BLOCKED.get(), true);
 			return;
+		}
+
+		if (EGlowMainConfig.MainConfig.SETTINGS_DISABLE_GLOW_WHEN_INVISIBLE.getBoolean()) {
+			if (ePlayer.getGlowDisableReason().equals(EnumUtil.GlowDisableReason.INVISIBLE) || ePlayer.getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+				ChatUtil.sendMsg(sender, Message.INVISIBILITY_BLOCKED.get(), true);
+				return;
+			}
 		}
 		
 		new EGlowMainMenu(ePlayer.getPlayer()).openInventory();

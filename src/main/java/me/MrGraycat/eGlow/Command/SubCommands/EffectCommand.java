@@ -10,6 +10,7 @@ import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import org.bukkit.command.CommandSender;
+import org.bukkit.potion.PotionEffectType;
 
 public class EffectCommand extends SubCommand {
 	@Override
@@ -49,9 +50,11 @@ public class EffectCommand extends SubCommand {
 			return;
 		}
 		
-		if (MainConfig.SETTINGS_DISABLE_GLOW_WHEN_INVISIBLE.getBoolean() && ePlayer.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
-			ChatUtil.sendMsg(sender, Message.INVISIBILITY_BLOCKED.get(), true);
-			return;
+		if (MainConfig.SETTINGS_DISABLE_GLOW_WHEN_INVISIBLE.getBoolean()) {
+			if (ePlayer.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE) || ePlayer.getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+				ChatUtil.sendMsg(sender, Message.INVISIBILITY_BLOCKED.get(), true);
+				return;
+			}
 		}
 
 		IEGlowEffect effect = null;
