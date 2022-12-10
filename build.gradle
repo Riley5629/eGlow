@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.github.mrgraycat'
-version = '3.2.1-PRE2'
+version = '3.2.1-PRE3'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -47,9 +47,10 @@ dependencies {
     compileOnly ('LibsDisguises:LibsDisguises:10.0.28')
     compileOnly ('us.myles:viaversion:3.2.1')
     compileOnly ('com.github.MilkBowl:VaultAPI:1.7')
-    compileOnly ('org.xerial:sqlite-jdbc:3.39.3.0')
+    compileOnly ('org.xerial:sqlite-jdbc:3.40.0.0')
     compileOnly ('mysql:mysql-connector-java:8.0.30')
     compileOnly ('io.netty:netty-transport:4.1.85.Final')
+    compileOnly ('it.unimi.dsi:fastutil:8.2.1')
     implementation ('org.bstats:bstats-bukkit:3.0.0')
     implementation ('com.github.NEZNAMY:YamlAssist:1.0.5') {
         exclude group: 'org.yaml', module: 'snakeyaml'
@@ -96,7 +97,6 @@ configurations.compileOnly {
     exclude group: 'io.netty', module: 'netty-transport-classes-epoll'
     exclude group: 'io.netty', module: 'netty-transport-native-epoll'
     exclude group: 'io.netty', module: 'netty-transport-native-unix-common'
-    exclude group: 'it.unimi.dsi', module: 'fastutil'
     exclude group: 'javax.inject', module: 'javax.inject'
     exclude group: 'jline', module: 'jline'
     exclude group: 'junit', module: 'junit'

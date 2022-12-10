@@ -56,8 +56,14 @@ public class PipelineInjector{
 					}
 
 					if (NMSHook.nms.PacketPlayOutEntityMetadata.isInstance(packet)) {
-						Integer entityID = (Integer) PacketPlayOut.getField(packet, "a");
-					
+						Integer entityID;
+
+						if (NMSHook.nms.isIs1_19_3OrAbove()) {
+							entityID = (Integer) PacketPlayOut.getField(packet, "b");
+						} else {
+							entityID = (Integer) PacketPlayOut.getField(packet, "a");
+						}
+
 						if (glowingEntities.containsKey(entityID)) {
 							PacketPlayOutEntityMetadata packetPlayOutEntityMetadata;
 							IEGlowPlayer glowingTarget = glowingEntities.get(entityID);

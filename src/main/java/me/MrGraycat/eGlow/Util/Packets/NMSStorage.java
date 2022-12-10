@@ -1,9 +1,11 @@
 package me.MrGraycat.eGlow.Util.Packets;
 
 import io.netty.channel.Channel;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import us.myles.viaversion.libs.javassist.bytecode.annotation.NoSuchClassError;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -12,6 +14,7 @@ import java.util.*;
 public class NMSStorage {
 	private final String serverPackage;
 	public int minorVersion;
+	private boolean is1_19_3OrAbove;
 	
 	public Class<?> Packet;
 	public Class<?> EntityPlayer;
@@ -90,6 +93,11 @@ public class NMSStorage {
 	public Constructor<?> newDataWatcher;
 	public Method DataWatcher_REGISTER;
 
+	//1.19.3
+	public Class<?> DataWatcher$DataValue;
+	public Field DataWatcherItems;
+	public Method DataWatcherItemToData;
+
 	public Field DataWatcherItem_TYPE;
 	public Field DataWatcherItem_VALUE;
 
@@ -102,6 +110,7 @@ public class NMSStorage {
 	public NMSStorage() {
 		serverPackage = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 		minorVersion = Integer.parseInt(serverPackage.split("_")[1]);
+		is1_19_3Check();
 		initializeValues();
 	}
 	
@@ -119,7 +128,12 @@ public class NMSStorage {
 			this.getHandle = getMethod(this.CraftPlayer, new String[] { "getHandle" });
 			this.sendPacket = getMethod(this.PlayerConnection, new String[] { "sendPacket", "a", "func_147359_a" }, this.Packet);
 			this.setFlag = getMethod(this.EntityPlayer, new String[] { "setFlag", "b", "setEntityFlag" }, int.class, boolean.class);
-			this.getDataWatcher = getMethod(this.EntityPlayer, new String[] {"getDataWatcher", "ai"});
+
+			if (isIs1_19_3OrAbove()) {
+				this.getDataWatcher = getMethod(this.EntityPlayer, new String[] {"al"});
+			} else {
+				this.getDataWatcher = getMethod(this.EntityPlayer, new String[] {"getDataWatcher", "ai"});
+			}
 		
 			this.EnumChatFormat = (Class)getNMSClass(new String[] { "net.minecraft.EnumChatFormat", "EnumChatFormat" });
 			this.IChatBaseComponent = getNMSClass("net.minecraft.network.chat.IChatBaseComponent", "IChatBaseComponent");
@@ -152,16 +166,28 @@ public class NMSStorage {
 		    this.DataWatcherRegistry = getNMSClass("net.minecraft.network.syncher.DataWatcherRegistry", "DataWatcherRegistry");
 			Class<?> dataWatcherSerializer = getNMSClass("net.minecraft.network.syncher.DataWatcherSerializer", "DataWatcherSerializer");
 		    this.newDataWatcher = this.DataWatcher.getConstructors()[0];
-		    this.newDataWatcherObject = this.DataWatcherObject.getConstructors()[0];
+		    this.newDataWatcherObject = this.DataWatcherObject.getConstructor(int.class, dataWatcherSerializer);
+
+			if (isIs1_19_3OrAbove()) {
+				this.DataWatcher$DataValue = getNMSClass("net.minecraft.network.syncher.DataWatcher$b");
+				this.DataWatcherItems = getFields(this.DataWatcher, Int2ObjectMap.class).get(0);
+				this.DataWatcherItemToData = getMethods(dataWatcherItem, this.DataWatcher$DataValue).get(0);
+			}
+
 		    this.DataWatcherItem_TYPE = getFields(dataWatcherItem, this.DataWatcherObject).get(0);
 		    this.DataWatcherItem_VALUE = getFields(dataWatcherItem, Object.class).get(0);
 		    this.DataWatcherObject_SLOT = getFields(this.DataWatcherObject, int.class).get(0);
 		    this.DataWatcherObject_SERIALIZER = getFields(this.DataWatcherObject, dataWatcherSerializer).get(0);
-			//this.DataWatcher_REGISTER = this.DataWatcher.getMethod("register", new Class[] { this.DataWatcherObject, Object.class });
 			this.DataWatcher_REGISTER = getMethod(this.DataWatcher, new String[] {"register", "a"}, this.DataWatcherObject, Object.class);
-			
+
 			this.PacketPlayOutEntityMetadata = getNMSClass("net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata", "PacketPlayOutEntityMetadata", "Packet40EntityMetadata");
-			this.newPacketPlayOutEntityMetadata = this.PacketPlayOutEntityMetadata.getConstructor(int.class, this.DataWatcher, boolean.class);
+
+			if (isIs1_19_3OrAbove()) {
+				this.newPacketPlayOutEntityMetadata = this.PacketPlayOutEntityMetadata.getConstructor(int.class, List.class);
+			} else {
+				this.newPacketPlayOutEntityMetadata = this.PacketPlayOutEntityMetadata.getConstructor(int.class, this.DataWatcher, boolean.class);
+			}
+
 			this.PacketPlayOutEntityMetadata_LIST = getFields(this.PacketPlayOutEntityMetadata, List.class).get(0);
 
 			//Scoreboard
@@ -224,7 +250,20 @@ public class NMSStorage {
 			ChatUtil.reportError(e);
 		}
 	}
-	  
+
+	private void is1_19_3Check() {
+		try {
+			Class.forName("net.minecraft.network.syncher.DataWatcher$b");
+			this.is1_19_3OrAbove = true;
+		} catch (ClassNotFoundException e) {
+			this.is1_19_3OrAbove = false;
+		}
+	}
+
+	public boolean isIs1_19_3OrAbove() {
+		return this.is1_19_3OrAbove;
+	}
+
 	private Class<?> getNMSClass(String... names) throws ClassNotFoundException {
 		for (String name : names) {
 			try {
@@ -266,6 +305,25 @@ public class NMSStorage {
 			}
 		}
 		throw new NoSuchMethodException("No method found with possible names " + Arrays.toString(names) + " in class " + clazz.getName());
+	}
+
+	protected List<Method> getMethods(Class<?> clazz, Class<?> returnType, Class<?>... parameterTypes) {
+		List<Method> list = new ArrayList<>();
+		for (Method m : clazz.getDeclaredMethods()) {
+			if (m.getReturnType() == returnType && m.getParameterCount() == parameterTypes.length && Modifier.isPublic(m.getModifiers())) {
+				Class<?>[] types = m.getParameterTypes();
+				boolean valid = true;
+				for (int i = 0; i < types.length; i++) {
+					if (types[i] != parameterTypes[i]) {
+						valid = false;
+						break;
+					}
+				}
+				if (valid)
+					list.add(m);
+			}
+		}
+		return list;
 	}
 
 	//Only used for getting the bungee setting

@@ -2,8 +2,10 @@ package me.MrGraycat.eGlow.Util.Packets.Datawatcher;
 
 import me.MrGraycat.eGlow.Util.Packets.NMSHook;
 import me.MrGraycat.eGlow.Util.Packets.NMSStorage;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,18 +65,20 @@ public class DataWatcher {
 	 * @return an instance of this class with same values
 	 * @throws Exception - if something fails
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static DataWatcher fromNMS(Object nmsWatcher) throws Exception{
 		DataWatcher watcher = new DataWatcher();
 		List<Object> items;
 
-		items = (ProtocolVersion.SERVER_VERSION.getMinorVersion() == 17) ? (List<Object>)nmsWatcher.getClass().getMethod("getAll").invoke(nmsWatcher, new Object[0]) : (List<Object>)nmsWatcher.getClass().getMethod("c").invoke(nmsWatcher);
+		if (NMSHook.nms.isIs1_19_3OrAbove()) {
+			items = new ArrayList<>(((Int2ObjectMap) NMSHook.nms.DataWatcherItems.get(nmsWatcher)).values());
+		} else {
+			items = (ProtocolVersion.SERVER_VERSION.getMinorVersion() == 17) ? (List<Object>)nmsWatcher.getClass().getMethod("getAll").invoke(nmsWatcher, new Object[0]) : (List<Object>)nmsWatcher.getClass().getMethod("c").invoke(nmsWatcher);
+		}
 
-		if (items != null) {
-			for (Object watchableObject : items) {
-				DataWatcherItem w = DataWatcherItem.fromNMS(watchableObject);
-				watcher.setValue(w.type, w.value);
-			}
+		for (Object watchableObject : items) {
+			DataWatcherItem w = DataWatcherItem.fromNMS(watchableObject);
+			watcher.setValue(w.type, w.value);
 		}
 		return watcher;
 	}

@@ -2,11 +2,13 @@ package me.MrGraycat.eGlow.Util.Packets;
 
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.DebugUtil;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import org.bukkit.entity.Player;
 import us.myles.ViaVersion.api.Via;
 
 public enum ProtocolVersion {
 	UNKNOWN		(999, "Unknown"),
+	v1_19_3		(761, "1.19.3"),
 	v1_19_1		(760, "1.19.1(.2)"),
 	v1_19		(759, "1.19"),
 	v1_18_2		(758, "1.18.2"),
