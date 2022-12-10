@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.github.mrgraycat'
-version = '3.2.1-PRE3'
+version = '3.2.1'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -50,7 +50,7 @@ dependencies {
     compileOnly ('org.xerial:sqlite-jdbc:3.40.0.0')
     compileOnly ('mysql:mysql-connector-java:8.0.30')
     compileOnly ('io.netty:netty-transport:4.1.85.Final')
-    compileOnly ('it.unimi.dsi:fastutil:8.2.1')
+    compileOnly ('it.unimi.dsi:fastutil:8.5.9')
     implementation ('org.bstats:bstats-bukkit:3.0.0')
     implementation ('com.github.NEZNAMY:YamlAssist:1.0.5') {
         exclude group: 'org.yaml', module: 'snakeyaml'
