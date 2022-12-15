@@ -71,6 +71,11 @@ public class EffectCommand extends SubCommand {
 				}
 				
 				if (effectNew != null) {
+					if (!sender.hasPermission(effectNew.getPermission())) {
+						ChatUtil.sendMsg(sender, Message.NO_PERMISSION.get(), true);
+						return;
+					}
+
 					ePlayer.disableGlow(true);
 					ePlayer.activateGlow(effectNew);
 					ChatUtil.sendMsg(sender, Message.NEW_GLOW.get(effectNew.getDisplayName()), true);
@@ -85,6 +90,11 @@ public class EffectCommand extends SubCommand {
 				IEGlowEffect effectNew = switchEffectSpeed(ePlayer.getEffect().getName());
 
 				if (effectNew != null) {
+					if (!sender.hasPermission(effectNew.getPermission())) {
+						ChatUtil.sendMsg(sender, Message.NO_PERMISSION.get(), true);
+						return;
+					}
+
 					ePlayer.disableGlow(true);
 					ePlayer.activateGlow(effectNew);
 					ChatUtil.sendMsg(sender, Message.NEW_GLOW.get(effectNew.getDisplayName()), true);
