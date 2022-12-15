@@ -9,10 +9,7 @@ import org.bukkit.permissions.Permission;
 import org.yaml.snakeyaml.error.YAMLException;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class EGlowMainConfig {
 	private static YamlConfiguration config;
@@ -231,7 +228,13 @@ public class EGlowMainConfig {
 		}
 
 		public List<String> getStringList() {
-			return config.getStringList(main.getConfigPath());
+			List<String> worldNames = new ArrayList<>();
+
+			for (String worldName : config.getStringList(main.getConfigPath())) {
+				worldNames.add(worldName.toLowerCase());
+			}
+
+			return worldNames;
 		}
 
 		public int getInt() {

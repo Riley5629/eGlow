@@ -48,11 +48,14 @@
 			return;
 		}
 
-		if (EGlowMainConfig.MainConfig.SETTINGS_DISABLE_GLOW_WHEN_INVISIBLE.getBoolean()) {
-			if (ePlayer.getGlowDisableReason().equals(EnumUtil.GlowDisableReason.INVISIBLE) || ePlayer.getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-				ChatUtil.sendMsg(sender, Message.INVISIBILITY_BLOCKED.get(), true);
-				return;
-			}
+		if (ePlayer.isInvisible()) {
+			ChatUtil.sendMsg(sender, Message.INVISIBILITY_BLOCKED.get(), true);
+			return;
+		}
+
+		if (ePlayer.getGlowDisableReason().equals(EnumUtil.GlowDisableReason.DISGUISE)) {
+			ChatUtil.sendMsg(sender, Message.DISGUISE_BLOCKED.get(), true);
+			return;
 		}
 		
 		new EGlowMainMenu(ePlayer.getPlayer()).openInventory();

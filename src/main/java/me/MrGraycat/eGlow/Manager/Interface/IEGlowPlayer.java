@@ -19,6 +19,7 @@ import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.trait.ScoreboardTrait;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
@@ -273,6 +274,9 @@ public class IEGlowPlayer {
 		if (!MainConfig.WORLD_ENABLE.getBoolean())
 			return false;
 
+		if (getGlowDisableReason().equals(GlowDisableReason.BLOCKEDWORLD))
+			return true;
+
 		GlowWorldAction action;
 
 		try {
@@ -281,19 +285,27 @@ public class IEGlowPlayer {
 			action = GlowWorldAction.UNKNOWN;
 		}
 
+		List<String> worldList = MainConfig.WORLD_LIST.getStringList();
+
 		switch (action) {
 		case BLOCKED:
-			if (MainConfig.WORLD_LIST.getStringList().contains(getPlayer().getWorld().getName().toLowerCase()))
+			if (worldList.contains(getPlayer().getWorld().getName().toLowerCase()))
 				return true;
 			break;
 		case ALLOWED:
-			if (!MainConfig.WORLD_LIST.getStringList().contains(getPlayer().getWorld().getName().toLowerCase()))
+			if (!worldList.contains(getPlayer().getWorld().getName().toLowerCase()))
 				return true;
 			break;
 		case UNKNOWN:
 			return false;
 		}
 		return false;
+	}
+
+	public boolean isInvisible() {
+		if (!MainConfig.SETTINGS_DISABLE_GLOW_WHEN_INVISIBLE.getBoolean())
+			return false;
+		return getGlowDisableReason().equals(GlowDisableReason.INVISIBLE) || getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY);
 	}
 	
 	public ChatColor getActiveColor() {

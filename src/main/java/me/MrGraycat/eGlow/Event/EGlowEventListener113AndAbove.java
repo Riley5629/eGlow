@@ -43,7 +43,7 @@ public class EGlowEventListener113AndAbove implements Listener {
 				}
 				
 				if (e.getOldEffect() != null && e.getOldEffect().getType().equals(PotionEffectType.INVISIBILITY)) {
-					if (ep.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
+					if (e.getNewEffect() == null && ep.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
 						ep.activateGlow();
 						ep.setGlowDisableReason(GlowDisableReason.NONE);
 						

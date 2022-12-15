@@ -50,11 +50,9 @@ public class EffectCommand extends SubCommand {
 			return;
 		}
 		
-		if (MainConfig.SETTINGS_DISABLE_GLOW_WHEN_INVISIBLE.getBoolean()) {
-			if (ePlayer.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE) || ePlayer.getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-				ChatUtil.sendMsg(sender, Message.INVISIBILITY_BLOCKED.get(), true);
-				return;
-			}
+		if (ePlayer.isInvisible()) {
+			ChatUtil.sendMsg(sender, Message.INVISIBILITY_BLOCKED.get(), true);
+			return;
 		}
 
 		IEGlowEffect effect = null;

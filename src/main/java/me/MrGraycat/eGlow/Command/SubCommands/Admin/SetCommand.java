@@ -95,8 +95,13 @@ public class SetCommand extends SubCommand {
 					continue;
 				}
 				
-				if (MainConfig.SETTINGS_DISABLE_GLOW_WHEN_INVISIBLE.getBoolean() && eTarget.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
+				if (eTarget.isInvisible()) {
 					ChatUtil.sendMsg(sender, Message.OTHER_PLAYER_INVISIBLE.get(), true);
+					continue;
+				}
+
+				if (eTarget.isInBlockedWorld()) {
+					ChatUtil.sendMsg(sender, Message.OTHER_PLAYER_IN_DISABLED_WORLD.get(), true);
 					continue;
 				}
 			}
