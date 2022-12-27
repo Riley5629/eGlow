@@ -36,6 +36,6 @@ public enum EGlowBlink {
 	
 	@Override
 	public String toString() {
-		return super.toString().toLowerCase().replace("_", "");
+		return "blink" + super.toString().toLowerCase().replace("_", "");
 	}
 }
