@@ -3,6 +3,7 @@ package me.MrGraycat.eGlow.Addon;
 import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.DataManager;
+import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.EnumUtil;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
@@ -78,7 +79,11 @@ public class PlaceholderAPIAddon extends PlaceholderExpansion {
         case("lastglow"):
         	return (eglowPlayer.getLastGlowName());
         case("lastglow_raw"):
-        	return ChatUtil.setToBasicName(eglowPlayer.getLastGlowName());	
+        	return ChatUtil.setToBasicName(eglowPlayer.getLastGlowName());
+		case("glow_speed"):
+			return getSpeedFromEffect(eglowPlayer.getEffect(), false);
+		case("glow_speed_raw"):
+			return getSpeedFromEffect(eglowPlayer.getEffect(), true);
         case("glowstatus"):
         	return (eglowPlayer.getGlowStatus() && !eglowPlayer.getFakeGlowStatus()) ? Message.GUI_YES.get() : Message.GUI_NO.get();
         case("glowstatus_raw"):
@@ -92,4 +97,22 @@ public class PlaceholderAPIAddon extends PlaceholderExpansion {
         }
         return null;
     }
+
+	private String getSpeedFromEffect(IEGlowEffect effect, boolean raw) {
+		if (effect == null) {
+			return (raw) ? "none" : Message.COLOR.get("none");
+		}
+
+		String effectName = effect.getName();
+
+		if (effectName.contains("slow")) {
+			return (raw) ? "slow" : Message.COLOR.get("slow");
+		}
+
+		if (effectName.contains("fast")) {
+			return (raw) ? "fast" : Message.COLOR.get("fast");
+		}
+
+		return (raw) ? "none" : Message.COLOR.get("none");
+	}
 }
