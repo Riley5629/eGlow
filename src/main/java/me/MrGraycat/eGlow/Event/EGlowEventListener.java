@@ -71,7 +71,7 @@ public class EGlowEventListener implements Listener {
 		Player p = e.getPlayer();
 		IEGlowPlayer eglowPlayer = DataManager.getEGlowPlayer(p);
 		
-		if (eglowPlayer != null && MainConfig.WORLD_ENABLE.getBoolean()) {
+		if (eglowPlayer != null) {
 			if (eglowPlayer.isInBlockedWorld()) {
 				if (eglowPlayer.getGlowStatus() || eglowPlayer.getFakeGlowStatus()) {
 					eglowPlayer.toggleGlow();
@@ -80,6 +80,11 @@ public class EGlowEventListener implements Listener {
 				}
 			} else {
 				if (eglowPlayer.getGlowDisableReason() != null && eglowPlayer.getGlowDisableReason().equals(GlowDisableReason.BLOCKEDWORLD)) {
+					if (eglowPlayer.isInvisible()) {
+						eglowPlayer.setGlowDisableReason(GlowDisableReason.INVISIBLE);
+						return;
+					}
+
 					eglowPlayer.toggleGlow();
 					eglowPlayer.setGlowDisableReason(GlowDisableReason.NONE);
 					ChatUtil.sendMsg(p, Message.WORLD_ALLOWED.get(), true);

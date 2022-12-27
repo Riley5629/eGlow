@@ -77,6 +77,16 @@ public class LibDisguiseAddon implements Listener {
 						IEGlowPlayer eglowPlayer = DataManager.getEGlowPlayer(player);
 
 						if (eglowPlayer != null && eglowPlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
+							if (eglowPlayer.isInBlockedWorld()) {
+								eglowPlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
+								return;
+							}
+
+							if (eglowPlayer.isInvisible()) {
+								eglowPlayer.setGlowDisableReason(GlowDisableReason.INVISIBLE);
+								return;
+							}
+
 							eglowPlayer.toggleGlow();
 							eglowPlayer.setGlowDisableReason(GlowDisableReason.NONE);
 							ChatUtil.sendMsg(player, Message.DISGUISE_ALLOWED.get(), true);
