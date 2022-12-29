@@ -60,6 +60,7 @@ public class IEGlowEffect {
 	public void reloadEffect() {
 		if (getRunnable() != null)
 			getRunnable().cancel();
+		setRunnable(null);
 		activateEffect();
 	}
 	
