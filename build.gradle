@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.github.mrgraycat'
-version = '3.2.1'
+version = '3.2.2-PRE1'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -16,10 +16,10 @@ repositories {
     mavenCentral()
     //Spigot
     maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-    //Vault, YAMLAssist
-    maven { url = 'https://jitpack.io' }
     //TAB
     maven { url = 'https://repo.kryptonmc.org/releases' }
+    //Vault, YAMLAssist
+    maven { url = 'https://jitpack.io' }
     //Citizens
     maven { url = 'https://repo.citizensnpcs.co/' }
     //PlaceholderAPI
@@ -39,7 +39,9 @@ repositories {
 
 dependencies {
     compileOnly ('org.spigotmc:spigot-api:1.19.1-R0.1-SNAPSHOT')
-    compileOnly ('com.github.NEZNAMY:TAB:3.1.4')
+    compileOnly ('me.neznamy:tab-api:3.2.1')
+    compileOnly ('me.neznamy:tab-bukkit:3.2.1')
+    compileOnly ('me.neznamy:tab-shared:3.2.1')
     compileOnly ('net.luckperms:api:5.4')
     compileOnly ('net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT')
     compileOnly ('me.clip:placeholderapi:2.10.9')
@@ -49,8 +51,8 @@ dependencies {
     compileOnly ('com.github.MilkBowl:VaultAPI:1.7')
     compileOnly ('org.xerial:sqlite-jdbc:3.40.0.0')
     compileOnly ('mysql:mysql-connector-java:8.0.30')
-    compileOnly ('io.netty:netty-transport:4.1.85.Final')
-    compileOnly ('it.unimi.dsi:fastutil:8.5.9')
+    compileOnly ('io.netty:netty-transport:4.1.86.Final')
+    compileOnly ('it.unimi.dsi:fastutil:8.5.11')
     implementation ('org.bstats:bstats-bukkit:3.0.0')
     implementation ('com.github.NEZNAMY:YamlAssist:1.0.5') {
         exclude group: 'org.yaml', module: 'snakeyaml'
