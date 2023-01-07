@@ -54,7 +54,7 @@ public class ToggleCommand extends SubCommand {
 					return;
 				}
 				
-				if (MainConfig.SETTINGS_DISABLE_GLOW_WHEN_INVISIBLE.getBoolean() && ePlayer.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
+				if (ePlayer.isInvisible()) {
 					ChatUtil.sendMsg(sender, Message.INVISIBILITY_BLOCKED.get(), true);
 					return;
 				}
