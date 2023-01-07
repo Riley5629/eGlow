@@ -85,7 +85,12 @@ public class IEGlowPlayer {
 			PacketUtil.updateGlowing(this, status);
 			break;
 		case ("NPC"):
-			citizensNPC.data().setPersistent(NPC.GLOWING_METADATA, status);
+			try {
+				citizensNPC.data().setPersistent(NPC.Metadata.GLOWING, status);
+			} catch (Exception e) {
+				ChatUtil.sendToConsole("&cYour Citizens version is outdated please use it's latest version", true);
+			}
+
 			try {
 				if (!fake) 
 					citizensNPC.getOrAddTrait(EGlowCitizensTrait.class).setActiveOnDespawn(status);
@@ -274,9 +279,6 @@ public class IEGlowPlayer {
 		if (!MainConfig.WORLD_ENABLE.getBoolean())
 			return false;
 
-		if (getGlowDisableReason().equals(GlowDisableReason.BLOCKEDWORLD))
-			return true;
-
 		GlowWorldAction action;
 
 		try {
@@ -305,7 +307,7 @@ public class IEGlowPlayer {
 	public boolean isInvisible() {
 		if (!MainConfig.SETTINGS_DISABLE_GLOW_WHEN_INVISIBLE.getBoolean())
 			return false;
-		return getGlowDisableReason().equals(GlowDisableReason.INVISIBLE) || getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY);
+		return getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY);
 	}
 	
 	public ChatColor getActiveColor() {
