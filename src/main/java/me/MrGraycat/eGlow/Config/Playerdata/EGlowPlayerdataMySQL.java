@@ -190,14 +190,7 @@ public class EGlowPlayerdataMySQL {
 
         try {
             con = getConnection();
-            DatabaseMetaData dbm = con.getMetaData();
-            res = dbm.getTables(null, null, "eglow", null);
-
-            if (!res.next()) {
-                statement = "CREATE TABLE eglow (UUID VARCHAR(190) NOT NULL, glowOnJoin BOOLEAN, activeOnQuit BOOLEAN, lastGlowData VARCHAR(190), glowVisibility VARCHAR(190), glowDisableReason VARCHAR(190), PRIMARY KEY (UUID))";
-            } else {
-                statement = "ALTER TABLE eglow DROP lastType, ADD lastGlowData VARCHAR(190), ADD glowVisibility VARCHAR(190), ADD glowDisableReason VARCHAR(190)";
-            }
+            statement = "CREATE TABLE IF NOT EXISTS eglow (UUID VARCHAR(190) NOT NULL, glowOnJoin BOOLEAN, activeOnQuit BOOLEAN, lastGlowData VARCHAR(190), glowVisibility VARCHAR(190), glowDisableReason VARCHAR(190), PRIMARY KEY (UUID))";
             ps = con.prepareStatement(statement);
             try {ps.executeUpdate();} catch(Exception e) {/*Ignored*/}
             return true;
@@ -205,7 +198,7 @@ public class EGlowPlayerdataMySQL {
             e.printStackTrace();
             return false;
         } finally {
-            closeMySQLConnection(con, ps, res);
+            closeMySQLConnection(con, ps, null);
         }
     }
 
