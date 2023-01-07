@@ -79,7 +79,7 @@ public class EGlowEventListener implements Listener {
 					ChatUtil.sendMsg(p, Message.WORLD_BLOCKED.get(), true);
 				}
 			} else {
-				if (eglowPlayer.getGlowDisableReason() != null && eglowPlayer.getGlowDisableReason().equals(GlowDisableReason.BLOCKEDWORLD)) {
+				if (eglowPlayer.getGlowDisableReason().equals(GlowDisableReason.BLOCKEDWORLD)) {
 					if (eglowPlayer.isInvisible()) {
 						eglowPlayer.setGlowDisableReason(GlowDisableReason.INVISIBLE);
 						return;
@@ -110,6 +110,7 @@ public class EGlowEventListener implements Listener {
 			@Override
 			public void run() {
 				EGlowPlayerdataManager.loadPlayerdata(eglowPlayer);
+				eglowPlayer.setSaveData(false);
 				
 				if (!EGlow.getInstance().isUpToDate() && MainConfig.SETTINGS_NOTIFICATIONS_UPDATE.getBoolean() && p.hasPermission("eglow.option.update"))
 					ChatUtil.sendPlainMsg(p, "&aA new update is available&f!", true);
@@ -125,7 +126,7 @@ public class EGlowEventListener implements Listener {
 				}.runTask(EGlow.getInstance());
 				
 				eglowPlayer.updatePlayerTabname();
-				
+
 				IEGlowEffect effect = eglowPlayer.getForceGlow();
 
 				if (effect != null) {
@@ -150,7 +151,7 @@ public class EGlowEventListener implements Listener {
 					if (eglowPlayer.getEffect() == null || !eglowPlayer.getGlowOnJoin() || !p.hasPermission("eglow.option.glowonjoin") || MainConfig.SETTINGS_JOIN_CHECK_PERMISSION.getBoolean() && !p.hasPermission(eglowPlayer.getEffect().getPermission()))
 						return;
 					
-					if (MainConfig.WORLD_ENABLE.getBoolean() && eglowPlayer.isInBlockedWorld()) {
+					if (eglowPlayer.isInBlockedWorld()) {
 						if (eglowPlayer.getGlowStatus() || eglowPlayer.getFakeGlowStatus()) {
 							eglowPlayer.toggleGlow();
 							eglowPlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
