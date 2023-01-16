@@ -12,6 +12,7 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -273,7 +274,8 @@ public class MenuItemManager extends MenuManager {
 	 * @return true if the player has permission, false if not
 	 */
 	public String hasPermission(IEGlowPlayer player, String permission) {
-		return (player.getPlayer().hasPermission(permission)) ? Message.GUI_YES.get() : Message.GUI_NO.get();
+		Player p = player.getPlayer();
+		return (p.hasPermission(permission) || p.hasPermission("eglow.effect.*") || p.isOp()) ? Message.GUI_YES.get() : Message.GUI_NO.get();
 	}
 
 	public EGlow getInstance() {
