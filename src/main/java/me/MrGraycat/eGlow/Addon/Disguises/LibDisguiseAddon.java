@@ -18,7 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 /*
  * Making sure to disable the player glow when disguised to prevent errors.
  * Plugin: LibsDisguise
- * Versions: 1.12-1.16
+ * Versions: 1.12-latest
  */
 public class LibDisguiseAddon implements Listener {
 	/**
@@ -47,13 +47,12 @@ public class LibDisguiseAddon implements Listener {
 					Entity entity = event.getEntity();
 
 					if (entity instanceof Player) {
-						Player player = (Player) entity;
-						IEGlowPlayer eglowPlayer = DataManager.getEGlowPlayer(player);
+						IEGlowPlayer player = DataManager.getEGlowPlayer((Player) entity);
 
-						if (eglowPlayer != null && eglowPlayer.getGlowStatus() || eglowPlayer != null && eglowPlayer.getFakeGlowStatus()) {
-							eglowPlayer.setGlowDisableReason(GlowDisableReason.DISGUISE);
-							eglowPlayer.toggleGlow();
-							ChatUtil.sendMsg(player, Message.DISGUISE_BLOCKED.get(), true);
+						if (player != null && player.isGlowing()) {
+							player.setGlowDisableReason(GlowDisableReason.DISGUISE);
+							player.toggleGlow();
+							ChatUtil.sendMsg(player.getPlayer(), Message.DISGUISE_BLOCKED.get(), true);
 						}
 					}
 				} catch (NoSuchMethodError ex) {
@@ -73,23 +72,22 @@ public class LibDisguiseAddon implements Listener {
 					Entity entity = event.getDisguised();
 
 					if (entity instanceof Player) {
-						Player player = (Player) event.getDisguised();
-						IEGlowPlayer eglowPlayer = DataManager.getEGlowPlayer(player);
+						IEGlowPlayer player = DataManager.getEGlowPlayer((Player) entity);
 
-						if (eglowPlayer != null && eglowPlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-							if (eglowPlayer.isInBlockedWorld()) {
-								eglowPlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
+						if (player != null && player.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
+							if (player.isInBlockedWorld()) {
+								player.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
 								return;
 							}
 
-							if (eglowPlayer.isInvisible()) {
-								eglowPlayer.setGlowDisableReason(GlowDisableReason.INVISIBLE);
+							if (player.isInvisible()) {
+								player.setGlowDisableReason(GlowDisableReason.INVISIBLE);
 								return;
 							}
 
-							eglowPlayer.toggleGlow();
-							eglowPlayer.setGlowDisableReason(GlowDisableReason.NONE);
-							ChatUtil.sendMsg(player, Message.DISGUISE_ALLOWED.get(), true);
+							player.toggleGlow();
+							player.setGlowDisableReason(GlowDisableReason.NONE);
+							ChatUtil.sendMsg(player.getPlayer(), Message.DISGUISE_ALLOWED.get(), true);
 						}
 					}
 				} catch (NoSuchMethodError ex) {

@@ -45,7 +45,7 @@ public class IDisguiseAddon implements Listener {
 	public void onDisguise(DisguiseEvent event) {
 		IEGlowPlayer player = DataManager.getEGlowPlayer(event.getPlayer());
 		
-		if (player != null && player.getGlowStatus() || player != null && player.getFakeGlowStatus()) {
+		if (player != null && player.isGlowing()) {
 			player.setGlowDisableReason(GlowDisableReason.DISGUISE);
 			player.toggleGlow();
 			ChatUtil.sendMsg(player.getPlayer(), Message.DISGUISE_BLOCKED.get(), true);
