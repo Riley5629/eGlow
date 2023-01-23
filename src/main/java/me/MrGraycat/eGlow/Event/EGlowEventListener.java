@@ -73,7 +73,7 @@ public class EGlowEventListener implements Listener {
 		
 		if (eglowPlayer != null) {
 			if (eglowPlayer.isInBlockedWorld()) {
-				if (eglowPlayer.getGlowStatus() || eglowPlayer.getFakeGlowStatus()) {
+				if (eglowPlayer.isGlowing()) {
 					eglowPlayer.toggleGlow();
 					eglowPlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
 					ChatUtil.sendMsg(p, Message.WORLD_BLOCKED.get(), true);
@@ -152,7 +152,7 @@ public class EGlowEventListener implements Listener {
 						return;
 					
 					if (eglowPlayer.isInBlockedWorld()) {
-						if (eglowPlayer.getGlowStatus() || eglowPlayer.getFakeGlowStatus()) {
+						if (eglowPlayer.isGlowing()) {
 							eglowPlayer.toggleGlow();
 							eglowPlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
 							ChatUtil.sendMsg(p, Message.WORLD_BLOCKED.get(), true);
@@ -205,7 +205,7 @@ public class EGlowEventListener implements Listener {
 	
 	private static void PlayerDisconnectNext(IEGlowPlayer eglowPlayer) {
 		if (eglowPlayer != null) {
-			eglowPlayer.setActiveOnQuit(eglowPlayer.getFakeGlowStatus() || eglowPlayer.getGlowStatus());
+			eglowPlayer.setActiveOnQuit(eglowPlayer.isGlowing());
 			EGlowPlayerdataManager.savePlayerdata(eglowPlayer);
 			
 			PipelineInjector.uninject(eglowPlayer);

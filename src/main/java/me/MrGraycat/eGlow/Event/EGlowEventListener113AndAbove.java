@@ -32,7 +32,7 @@ public class EGlowEventListener113AndAbove implements Listener {
 			
 			if (MainConfig.SETTINGS_DISABLE_GLOW_WHEN_INVISIBLE.getBoolean()) {
 				if (e.getNewEffect() != null && e.getNewEffect().getType().equals(PotionEffectType.INVISIBILITY)) {
-					if (ep.getGlowStatus() || ep.getFakeGlowStatus()) {
+					if (ep.isGlowing()) {
 						ep.disableGlow(false);
 						ep.setGlowDisableReason(GlowDisableReason.INVISIBLE);
 						
