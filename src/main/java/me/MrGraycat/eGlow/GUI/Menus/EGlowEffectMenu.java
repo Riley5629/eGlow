@@ -51,7 +51,7 @@ public class EGlowEffectMenu extends PaginatedMenu {
 		break;
 		case(29):
 			if (eGlowPlayer.getPlayer().hasPermission("eglow.command.toggle")) {
-				if (eGlowPlayer.getFakeGlowStatus() || eGlowPlayer.getGlowStatus()) {
+				if (eGlowPlayer.isGlowing()) {
 					eGlowPlayer.toggleGlow();
 					ChatUtil.sendMsgFromGUI(player, Message.DISABLE_GLOW.get());
 				} else {

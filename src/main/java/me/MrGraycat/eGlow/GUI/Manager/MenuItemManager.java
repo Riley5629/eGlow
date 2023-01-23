@@ -177,12 +177,12 @@ public class MenuItemManager extends MenuManager {
 	public ItemStack createGlowingStatus(IEGlowPlayer player) {
 		List<String> prelores = new ArrayList<>();
 		
-		prelores.add(Message.GUI_GLOWING.get() + ((player.getFakeGlowStatus() || player.getGlowStatus()) ? Message.GUI_YES.get() : Message.GUI_NO.get()));
+		prelores.add(Message.GUI_GLOWING.get() + ((player.isGlowing()) ? Message.GUI_YES.get() : Message.GUI_NO.get()));
 		prelores.add(Message.GUI_LAST_GLOW.get() + ((player.getEffect() == null) ? Message.GUI_NOT_AVAILABLE.get() : player.getEffect().getDisplayName()));
 		prelores.add(Message.GUI_CLICK_TO_TOGGLE.get());
 		
 		String[] lores = new String[prelores.size()];
-		return (player.getFakeGlowStatus() || player.getGlowStatus()) ? createItem(Material.GLOWSTONE_DUST, Message.GUI_GLOW_ITEM_NAME.get(), 0, prelores.toArray(lores)) : createItem(Material.valueOf(GUNPOWDER), Message.GUI_GLOW_ITEM_NAME.get(), 0, prelores.toArray(lores));
+		return (player.isGlowing()) ? createItem(Material.GLOWSTONE_DUST, Message.GUI_GLOW_ITEM_NAME.get(), 0, prelores.toArray(lores)) : createItem(Material.valueOf(GUNPOWDER), Message.GUI_GLOW_ITEM_NAME.get(), 0, prelores.toArray(lores));
 	}
 	
 	/**
@@ -264,14 +264,14 @@ public class MenuItemManager extends MenuManager {
 	 * @return true if the player has an effect & has it enabled, false if not
 	 */
 	public boolean hasEffect(IEGlowPlayer player) {
-		return player.getEffect() != null && (player.getGlowStatus() || player.getFakeGlowStatus()) && (player.getEffect().getName().contains("slow") || player.getEffect().getName().contains("fast"));
+		return player.getEffect() != null && (player.isGlowing()) && (player.getEffect().getName().contains("slow") || player.getEffect().getName().contains("fast"));
 	}
 	
 	/**
 	 * Check if the player has a specific permission
 	 * @param player to check this for
 	 * @param permission to check for
-	 * @return true if the player has permission, false if not
+	 * @return yes if the player has permission, no if not
 	 */
 	public String hasPermission(IEGlowPlayer player, String permission) {
 		Player p = player.getPlayer();

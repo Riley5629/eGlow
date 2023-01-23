@@ -92,7 +92,7 @@ public class EGlowMainMenu extends Menu {
 		break;
 		case(30):
 			if (eGlowPlayer.getPlayer().hasPermission("eglow.command.toggle")) {
-				if (eGlowPlayer.getFakeGlowStatus() || eGlowPlayer.getGlowStatus()) {
+				if (eGlowPlayer.isGlowing()) {
 					eGlowPlayer.toggleGlow();
 					ChatUtil.sendMsgFromGUI(player, Message.DISABLE_GLOW.get());
 				} else {
@@ -137,7 +137,6 @@ public class EGlowMainMenu extends Menu {
 			return;
 		}
 
-		//setMenuItems();
 		UpdateMainNavigationBar(eGlowPlayer);
 	}
 
