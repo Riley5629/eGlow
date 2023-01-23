@@ -61,7 +61,7 @@ public class EGlowAPI {
 	    if (player == null)
 	      return ""; 
 	    
-	    return (player.getGlowStatus() || player.getFakeGlowStatus()) ? player.getActiveColor() + "" : "";
+	    return (player.isGlowing()) ? player.getActiveColor() + "" : "";
 	}
 	
 	/**
