@@ -95,7 +95,7 @@ public class IEGlowPlayer {
 				if (!fake) 
 					citizensNPC.getOrAddTrait(EGlowCitizensTrait.class).setActiveOnDespawn(status);
 			} catch(NoSuchMethodError e) {
-				ChatUtil.sendToConsole("&cYour Citizens version is outdated please use 2.0.27 or later", true);
+				ChatUtil.sendToConsole("&cYour Citizens version is outdated please use it's latest version", true);
 			}
 			break;
 		}
@@ -449,9 +449,6 @@ public class IEGlowPlayer {
 	}
 	
 	public void setDataFromLastGlow(String lastGlow) {
-		if (lastGlow.contains("SOLID:") || lastGlow.contains("EFFECT:"))
-			lastGlow = lastGlow.replace("SOLID:", "").replace("EFFECT:", "");
-		
 		IEGlowEffect effect = DataManager.getEGlowEffect(lastGlow);
 		setEffect(effect);
 	}

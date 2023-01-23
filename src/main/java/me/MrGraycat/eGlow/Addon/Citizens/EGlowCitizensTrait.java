@@ -20,29 +20,17 @@ public class EGlowCitizensTrait extends Trait {
 	}
 	
 	public void load(DataKey key) {
-		if (key.keyExists("ActiveOnDespawn")) {
-			activeOnDespawn = key.getBoolean("ActiveOnDespawn");
-		} else {
-			activeOnDespawn = key.getBoolean("ActiveOnDespawn", true);
-		}
-			
-		if (key.keyExists("LastEffect")) {
-			lastEffect = key.getString("LastEffect");
-			
-			if (lastEffect.contains("SOLID:") || lastEffect.contains("EFFECT:"))
-				lastEffect = lastEffect.replace("SOLID:", "").replace("EFFECT:", "");
-		} else {
-			lastEffect = key.getString("LastEffect", "none");	
-		}
+		setActiveOnDespawn(key.getBoolean("ActiveOnDespawn", true));
+		setLastEffect(key.getString("LastEffect", "none"));
 	}
 	
 	public void save(DataKey key) {
-		if (eGlowNPC != null) {
-			setActiveOnDespawn((eGlowNPC.getFakeGlowStatus() || eGlowNPC.getGlowStatus()));
-			setLastEffect(eGlowNPC.getEffect().getName());
+		if (getEGlowNPC() != null) {
+			setActiveOnDespawn(getEGlowNPC().isGlowing());
+			setLastEffect(getEGlowNPC().getEffect().getName());
 
-			key.setBoolean("ActiveOnDespawn", activeOnDespawn);
-			key.setString("LastEffect", lastEffect);
+			key.setBoolean("ActiveOnDespawn", getActiveOnDespawn());
+			key.setString("LastEffect", getLastEffect());
 		}
 	}
 	
@@ -51,12 +39,12 @@ public class EGlowCitizensTrait extends Trait {
 			setEGlowNPC(new IEGlowPlayer(npc));
 		}
 
-		eGlowNPC.disableGlow(true);
-		eGlowNPC.setDataFromLastGlow(getLastEffect());
+		getEGlowNPC().disableGlow(true);
+		getEGlowNPC().setDataFromLastGlow(getLastEffect());
 		
 		try {
 			if (!npc.getOrAddTrait(EGlowCitizensTrait.class).getLastEffect().equals("none") && npc.getOrAddTrait(EGlowCitizensTrait.class).getActiveOnDespawn())
-				eGlowNPC.activateGlow();		
+				getEGlowNPC().activateGlow();
 		} catch(NoSuchMethodError e) {
 			ChatUtil.sendToConsole("&cYour Citizens version is outdated please use 2.0.27 or later", true);
 		}
