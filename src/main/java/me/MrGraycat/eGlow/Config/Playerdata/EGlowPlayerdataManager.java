@@ -69,25 +69,6 @@ public class EGlowPlayerdataManager {
 			break;
 		}
 	}
-	
-	/**
-	 * Save the data for the given player
-	 *
-	 */
-	public static void savePlayerdata(String uuid, String lastGlowData, boolean glowOnJoin, boolean activeOnQuit, String glowVisibility, String glowDisableReason) {
-		switch((MainConfig.MYSQL_ENABLE.getBoolean()) ? ConfigType.MYSQL : ConfigType.SQLITE) {
-		case SQLITE:
-			if (sqlite == null)
-				return;
-			
-			sqlite.savePlayerdata(uuid, lastGlowData, glowOnJoin, activeOnQuit, glowVisibility, glowDisableReason);
-		case MYSQL:
-			if (mysql == null)
-				return;
-
-			mysql.savePlayerdata(uuid, lastGlowData, glowOnJoin, activeOnQuit, glowVisibility, glowDisableReason);
-		}
-	}
 
 	public static boolean getMySQL_Failed() {
 		return mysql_Failed;

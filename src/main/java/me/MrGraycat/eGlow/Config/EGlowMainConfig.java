@@ -35,7 +35,8 @@ public class EGlowMainConfig {
 			config.load(configFile);
 			
 			registerCustomPermissions();
-			
+
+			//TODO to be removed soon
 			if (!config.isConfigurationSection("Command-alias")) {
 				File oldFile = new File(EGlow.getInstance().getDataFolder(), "OLDConfig.yml");
 				

@@ -125,38 +125,6 @@ public class EGlowPlayerdataMySQL {
         }
     }
 
-    public void savePlayerdata(String uuid, String lastGlowData, boolean glowOnJoin, boolean activeOnQuit, String glowVisibility, String glowDisableReason) {
-        Connection con = null;
-        PreparedStatement ps = null;
-        String statement;
-
-        statement = "INSERT INTO eglow (UUID, glowOnJoin, activeOnQuit, lastGlowData, glowVisibility, glowDisableReason)" + " VALUES(?,?,?,?,?,?) ON DUPLICATE KEY UPDATE UUID=?, glowonJoin=?, activeOnQuit=?, lastGlowData=?, glowVisibility= ?, glowDisableReason=?";
-
-        try {
-            con = getConnection();
-            ps = Objects.requireNonNull(con, "Failed to retrieve MySQL connection").prepareStatement(statement);
-
-            ps.setString(1, uuid);
-            ps.setBoolean(2, glowOnJoin);
-            ps.setBoolean(3, activeOnQuit);
-            ps.setString(4, lastGlowData);
-            ps.setString(5, glowVisibility);
-            ps.setString(6, glowDisableReason);
-            ps.setString(7, uuid);
-            ps.setBoolean(8, glowOnJoin);
-            ps.setBoolean(9, activeOnQuit);
-            ps.setString(10, lastGlowData);
-            ps.setString(11, glowVisibility);
-            ps.setString(12, glowDisableReason);
-
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeMySQLConnection(con, ps, null);
-        }
-    }
-
     private void setupMySQLConnection() {
         mysql = getMySQLDataSource();
 
@@ -172,7 +140,6 @@ public class EGlowPlayerdataMySQL {
     private boolean testMySQLConnection() {
         Connection con = null;
         PreparedStatement ps = null;
-        ResultSet res = null;
 
         String statement = "CREATE DATABASE IF NOT EXISTS " + ((!MainConfig.MYSQL_DBNAME.getString().isEmpty()) ? "`" + MainConfig.MYSQL_DBNAME.getString() + "`": "eglow");
 

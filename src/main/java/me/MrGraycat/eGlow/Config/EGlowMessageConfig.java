@@ -34,7 +34,8 @@ public class EGlowMessageConfig {
 			
 			config = new YamlConfiguration();
 			config.load(configFile);
-			
+
+			//TODO to be removed soon
 			if (!config.isConfigurationSection("main")) {
 				File oldFile = new File(EGlow.getInstance().getDataFolder(), "OLDMessages.yml");
 				

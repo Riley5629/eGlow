@@ -108,12 +108,6 @@ public class EGlowPlayerdataSQLite {
 		}
 	}
 
-	public void savePlayerdata(String uuid, String lastGlowData, boolean glowOnJoin, boolean activeOnQuit, String glowVisibility, String glowDisableReason) {
-		String values = lastGlowData + "," + glowOnJoin + "," + activeOnQuit + "," + glowVisibility + "," + glowDisableReason;
-
-		SavingQueue.put(uuid, values);
-	}
-
 	private boolean isActive = false;
 	
 	private void startSavingQueueHandler() {
@@ -167,12 +161,6 @@ public class EGlowPlayerdataSQLite {
 	}
 	
 	private boolean setupSQLiteConnection() {
-		File dbFile = new File(EGlow.getInstance().getDataFolder(), "Playerdata.db;PRAGMA journal_mode=WAL;");
-		
-		//Check if the db exists with incorrect WAL journal mode implementation and renaming it to a proper DB file
-		if (dbFile.exists())
-			dbFile.renameTo(new File(EGlow.getInstance().getDataFolder(), "Playerdata.db"));
-		
 		sqlite = new SQLiteDataSource();
 		sqlite.setUrl("jdbc:sqlite:" + EGlow.getInstance().getDataFolder() + File.separator + "Playerdata.db");
 
