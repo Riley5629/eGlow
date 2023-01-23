@@ -51,7 +51,6 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 		subcmds.add(new UnsetCommand());
 		subcmds.add(new ReloadCommand());
 		subcmds.add(new DebugCommand());
-		subcmds.add(new ConvertCommand());
 	}
 	
 	@Override

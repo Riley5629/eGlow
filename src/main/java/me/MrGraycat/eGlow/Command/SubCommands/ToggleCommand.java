@@ -42,7 +42,7 @@ public class ToggleCommand extends SubCommand {
 			return;
 		}
 		
-		if (ePlayer.getFakeGlowStatus() || ePlayer.getGlowStatus()) {
+		if (ePlayer.isGlowing()) {
 			ePlayer.toggleGlow();
 			ChatUtil.sendMsg(sender, Message.DISABLE_GLOW.get(), true);
 		} else {

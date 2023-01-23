@@ -107,7 +107,7 @@ public class SetCommand extends SubCommand {
 			}
 			
 			if (effect.getName().equals("none")) {
-				if (eTarget.getGlowStatus() || eTarget.getFakeGlowStatus())
+				if (eTarget.isGlowing())
 					eTarget.toggleGlow();
 				
 				if (eTarget.getEntityType().equals("PLAYER") && MainConfig.SETTINGS_NOTIFICATIONS_TARGET_COMMAND.getBoolean() && !eTarget.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))

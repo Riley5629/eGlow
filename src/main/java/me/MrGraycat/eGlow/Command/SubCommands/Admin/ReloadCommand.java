@@ -77,7 +77,7 @@ public class ReloadCommand extends SubCommand {
 				}
 				
 				if (MainConfig.WORLD_ENABLE.getBoolean() && ePlayer.isInBlockedWorld()) {
-					if (ePlayer.getGlowStatus() || ePlayer.getFakeGlowStatus()) {
+					if (ePlayer.isGlowing()) {
 						ePlayer.toggleGlow();
 						ePlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
 						ChatUtil.sendMsg(ePlayer.getPlayer(), Message.WORLD_BLOCKED_RELOAD.get(), true);
@@ -97,7 +97,7 @@ public class ReloadCommand extends SubCommand {
 			} else {
 				if (getInstance().getAdvancedGlowVisibility() != null)
 					getInstance().getAdvancedGlowVisibility().shutdown();
-					getInstance().setAdvancedGlowVisibility(null);
+				getInstance().setAdvancedGlowVisibility(null);
 			}
 
 			try{

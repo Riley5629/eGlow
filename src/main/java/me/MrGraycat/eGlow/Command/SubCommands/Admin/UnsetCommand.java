@@ -48,7 +48,7 @@ public class UnsetCommand extends SubCommand {
 			if (eTarget == null)
 				continue;
 			
-			if (eTarget.getFakeGlowStatus() || eTarget.getGlowStatus()) {
+			if (eTarget.isGlowing()) {
 				eTarget.toggleGlow();
 				
 				if (eTarget.getEntityType().equals("PLAYER") && MainConfig.SETTINGS_NOTIFICATIONS_TARGET_COMMAND.getBoolean())
