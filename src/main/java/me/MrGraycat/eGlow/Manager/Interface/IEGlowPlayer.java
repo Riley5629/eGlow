@@ -331,6 +331,8 @@ public class IEGlowPlayer {
 	}
 	
 	public void setGlowDisableReason(GlowDisableReason reason) {
+		if (reason.equals(GlowDisableReason.DISGUISE))
+				reason = GlowDisableReason.NONE;
 		this.glowDisableReason = reason;
 	}
 	

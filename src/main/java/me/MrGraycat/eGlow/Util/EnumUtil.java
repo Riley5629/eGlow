@@ -24,6 +24,7 @@ public class EnumUtil {
 	 */
 	public enum GlowDisableReason {
 		BLOCKEDWORLD,
+		DISGUISE,
 		INVISIBLE,
 		NONE
 	}
