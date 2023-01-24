@@ -20,8 +20,6 @@ import me.MrGraycat.eGlow.Util.DebugUtil;
 import me.MrGraycat.eGlow.Util.Packets.NMSHook;
 import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
-import org.bstats.bukkit.Metrics;
-import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -44,7 +42,11 @@ public class EGlow extends JavaPlugin {
 	private TABAddon tabAddon;
 	private LuckPermsAddon lpAddon;
 	private VaultAddon vaultAddon;
-	private Metrics metrics;
+
+	//TODO
+	/*
+	Optimize glow blocking system (reduce repeating code)
+	 */
 
 	@Override
 	public void onEnable() {
@@ -103,11 +105,6 @@ public class EGlow extends JavaPlugin {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				setMetricsAddon(new Metrics(getInstance(), 9468));
-
-				getMetricsAddon().addCustomChart(new SimplePie("custom_glow_visibility_usage", () -> (MainConfig.ADVANCED_GLOW_VISIBILITY_ENABLE.getBoolean()) ? "Yes" : "No"));
-				getMetricsAddon().addCustomChart(new SimplePie("database_type", () -> (MainConfig.MYSQL_ENABLE.getBoolean()) ? "MySQL" : "SQLite"));
-
 				if (MainConfig.ADVANCED_GLOW_VISIBILITY_ENABLE.getBoolean() && getAdvancedGlowVisibility() == null)
 					setAdvancedGlowVisibility(new AdvancedGlowVisibilityAddon());
 				if (DebugUtil.pluginCheck("PlaceholderAPI"))
@@ -186,10 +183,6 @@ public class EGlow extends JavaPlugin {
 		this.UP_TO_DATE = up_to_date;
 	}
 
-	private void setMetricsAddon(Metrics metrics) {
-		this.metrics = metrics;
-	}
-
 	public void setAdvancedGlowVisibility(AdvancedGlowVisibilityAddon glowAddon) {
 		this.glowAddon = glowAddon;
 	}
@@ -221,10 +214,6 @@ public class EGlow extends JavaPlugin {
 	
 	public boolean isUpToDate() {
 		return UP_TO_DATE;
-	}
-
-	public Metrics getMetricsAddon() {
-		return this.metrics;
 	}
 
 	public AdvancedGlowVisibilityAddon getAdvancedGlowVisibility() {
