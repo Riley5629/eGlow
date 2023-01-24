@@ -90,14 +90,6 @@ public class IEGlowPlayer {
 			} catch (Exception e) {
 				ChatUtil.sendToConsole("&cYour Citizens version is outdated please use it's latest version", true);
 			}
-
-			try {
-				if (!fake) 
-					citizensNPC.getOrAddTrait(EGlowCitizensTrait.class).setActiveOnDespawn(status);
-			} catch(NoSuchMethodError e) {
-				ChatUtil.sendToConsole("&cYour Citizens version is outdated please use it's latest version", true);
-			}
-			break;
 		}
 	}
 	

@@ -9,9 +9,6 @@ import net.citizensnpcs.api.util.DataKey;
 public class EGlowCitizensTrait extends Trait {
 	IEGlowPlayer eGlowNPC = null;
 	
-	@Persist("ActiveOnDespawn")
-	boolean activeOnDespawn = false;
-	
 	@Persist("LastEffect")
 	String lastEffect = "none";
 	
@@ -20,17 +17,12 @@ public class EGlowCitizensTrait extends Trait {
 	}
 	
 	public void load(DataKey key) {
-		setActiveOnDespawn(key.getBoolean("ActiveOnDespawn", true));
 		setLastEffect(key.getString("LastEffect", "none"));
 	}
 	
 	public void save(DataKey key) {
 		if (getEGlowNPC() != null) {
-			setActiveOnDespawn(getEGlowNPC().isGlowing());
-			setLastEffect(getEGlowNPC().getEffect().getName());
-
-			key.setBoolean("ActiveOnDespawn", getActiveOnDespawn());
-			key.setString("LastEffect", getLastEffect());
+			key.setString("LastEffect", (getEGlowNPC().isGlowing()) ? getEGlowNPC().getEffect().getName() : "none");
 		}
 	}
 	
@@ -43,10 +35,10 @@ public class EGlowCitizensTrait extends Trait {
 		getEGlowNPC().setDataFromLastGlow(getLastEffect());
 		
 		try {
-			if (!npc.getOrAddTrait(EGlowCitizensTrait.class).getLastEffect().equals("none") && npc.getOrAddTrait(EGlowCitizensTrait.class).getActiveOnDespawn())
+			if (!npc.getOrAddTrait(EGlowCitizensTrait.class).getLastEffect().equals("none"))
 				getEGlowNPC().activateGlow();
 		} catch(NoSuchMethodError e) {
-			ChatUtil.sendToConsole("&cYour Citizens version is outdated please use 2.0.27 or later", true);
+			ChatUtil.sendToConsole("&cYour Citizens version is outdated please update it", true);
 		}
 	}
 	
@@ -68,13 +60,5 @@ public class EGlowCitizensTrait extends Trait {
 	
 	private String getLastEffect() {
 		return this.lastEffect;
-	}
-	
-	public void setActiveOnDespawn(boolean activeOnDespawn) {
-		this.activeOnDespawn = activeOnDespawn;
-	}
-	
-	private Boolean getActiveOnDespawn() {
-		return this.activeOnDespawn;
 	}
 }
