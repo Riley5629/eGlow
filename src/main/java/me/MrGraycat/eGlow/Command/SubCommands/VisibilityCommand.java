@@ -59,7 +59,7 @@ public class VisibilityCommand extends SubCommand {
 			if (oldVisibility != newVisibility) 
 				PacketUtil.forceUpdateGlow(ePlayer);
 			
-			ChatUtil.sendMsg(sender, Message.VISIBILITY_CHANGE.get(newVisibility.getVisibility()), true);
+			ChatUtil.sendMsg(sender, Message.VISIBILITY_CHANGE.get(newVisibility.name()), true);
 		} else {
 			sendSyntax(sender, getSyntax()[0], true);
 		}
