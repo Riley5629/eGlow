@@ -90,11 +90,6 @@ public class SetCommand extends SubCommand {
 			}
 			
 			if (eTarget.getEntityType().equals("PLAYER")) {
-				if (eTarget.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-					ChatUtil.sendMsg(sender, Message.OTHER_PLAYER_DISGUISE.get(), true);
-					continue;
-				}
-				
 				if (eTarget.isInvisible()) {
 					ChatUtil.sendMsg(sender, Message.OTHER_PLAYER_INVISIBLE.get(), true);
 					continue;

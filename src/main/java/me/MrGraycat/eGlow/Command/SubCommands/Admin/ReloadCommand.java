@@ -67,12 +67,7 @@ public class ReloadCommand extends SubCommand {
 				IEGlowEffect effect = ePlayer.getForceGlow();
 				
 				if (effect != null) {
-					if (getInstance().getLibDisguiseAddon() != null && getInstance().getLibDisguiseAddon().isDisguised(ePlayer.getPlayer()) || getInstance().getIDisguiseAddon() != null && getInstance().getIDisguiseAddon().isDisguised(ePlayer.getPlayer())) {
-						ePlayer.setGlowDisableReason(GlowDisableReason.DISGUISE);
-						ChatUtil.sendMsg(ePlayer.getPlayer(), Message.DISGUISE_BLOCKED.get(), true);
-					} else {
-						ePlayer.activateGlow(effect);
-					}
+					ePlayer.activateGlow(effect);
 					continue;
 				}
 				

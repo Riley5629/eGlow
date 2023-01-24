@@ -2,8 +2,6 @@ package me.MrGraycat.eGlow;
 
 import me.MrGraycat.eGlow.API.EGlowAPI;
 import me.MrGraycat.eGlow.Addon.Citizens.CitizensAddon;
-import me.MrGraycat.eGlow.Addon.Disguises.IDisguiseAddon;
-import me.MrGraycat.eGlow.Addon.Disguises.LibDisguiseAddon;
 import me.MrGraycat.eGlow.Addon.Internal.AdvancedGlowVisibilityAddon;
 import me.MrGraycat.eGlow.Addon.LuckPermsAddon;
 import me.MrGraycat.eGlow.Addon.PlaceholderAPIAddon;
@@ -43,8 +41,6 @@ public class EGlow extends JavaPlugin {
 	//Addons
 	private AdvancedGlowVisibilityAddon glowAddon;
 	private CitizensAddon citizensAddon;
-	private IDisguiseAddon iDisguiseAddon;
-	private LibDisguiseAddon libDisguiseAddon;
 	private TABAddon tabAddon;
 	private LuckPermsAddon lpAddon;
 	private VaultAddon vaultAddon;
@@ -120,10 +116,6 @@ public class EGlow extends JavaPlugin {
 					setVaultAddon(new VaultAddon());
 				if (DebugUtil.pluginCheck("Citizens") && getCitizensAddon() == null)
 					setCitizensAddon(new CitizensAddon());
-				if (DebugUtil.pluginCheck("iDisguise"))
-					setIDisguiseAddon(new IDisguiseAddon());
-				if (DebugUtil.pluginCheck("LibsDisguises"))
-					setLibDisguiseAddon(new LibDisguiseAddon());
 				if (DebugUtil.pluginCheck("TAB")) {
 					try {
 						Plugin TAB_Plugin = DebugUtil.getPlugin("TAB");
@@ -206,14 +198,6 @@ public class EGlow extends JavaPlugin {
 		this.citizensAddon = citizensAddon;
 	}
 	
-	private void setIDisguiseAddon(IDisguiseAddon iDisguiseAddon) {
-		this.iDisguiseAddon = iDisguiseAddon;
-	}
-	
-	private void setLibDisguiseAddon(LibDisguiseAddon libDisguiseAddon) {
-		this.libDisguiseAddon = libDisguiseAddon;
-	}
-	
 	private void setTABAddon(TABAddon tabAddon) {
 		this.tabAddon = tabAddon;
 	}
@@ -249,14 +233,6 @@ public class EGlow extends JavaPlugin {
 
 	public CitizensAddon getCitizensAddon() {
 		return this.citizensAddon;
-	}
-	
-	public IDisguiseAddon getIDisguiseAddon() {
-		return this.iDisguiseAddon;
-	}
-	
-	public LibDisguiseAddon getLibDisguiseAddon() {
-		return this.libDisguiseAddon;
 	}
 	
 	public TABAddon getTABAddon() {

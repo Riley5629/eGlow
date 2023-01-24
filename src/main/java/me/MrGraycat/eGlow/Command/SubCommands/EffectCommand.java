@@ -45,11 +45,6 @@ public class EffectCommand extends SubCommand {
 			return;
 		}
 		
-		if (ePlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-			ChatUtil.sendMsg(sender, Message.DISGUISE_BLOCKED.get(), true);
-			return;
-		}
-		
 		if (ePlayer.isInvisible()) {
 			ChatUtil.sendMsg(sender, Message.INVISIBILITY_BLOCKED.get(), true);
 			return;

@@ -49,11 +49,6 @@ public class ToggleCommand extends SubCommand {
 			if (ePlayer.getEffect() == null || ePlayer.getEffect().getName().equals("none")) {
 				ChatUtil.sendMsg(sender, Message.NO_LAST_GLOW.get(), true);
 			} else {
-				if (ePlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-					ChatUtil.sendMsg(sender, Message.DISGUISE_BLOCKED.get(), true);
-					return;
-				}
-				
 				if (ePlayer.isInvisible()) {
 					ChatUtil.sendMsg(sender, Message.INVISIBILITY_BLOCKED.get(), true);
 					return;

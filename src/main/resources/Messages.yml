@@ -21,7 +21,6 @@ main:
   other-glow-on-join-confirm: "&e%target%'s &fglowonjoin has been set to &e%value%"
   other-glow-player-confirm-off: "&e%target% &fis no longer glowing!"
   other-glow-player-disabled-world: "&e%target% &cis in a world where glowing is disabled!"
-  other-glow-player-disguise: "&e%target% &cis in disguise which disabled the glow&f."
   other-glow-player-invisible: "&e%target% &cis invisible which disables the glow&f."
   other-glow-target-notification-prefix: "&f[&cRemote&f]"
 
@@ -41,9 +40,6 @@ main:
   invisibility-glow-blocked: "&cGlowing is disabled while you're invisible&f."
   invisibility-glow-disabled: "&cDisabling glow while you're invisible&f."
   invisibility-glow-enabled: "&aRe-enabling you glow as you're no longer invisible&f."
-
-  disguise-glow-blocked: "&cGlowing is not allowed while in disguise&f!"
-  disguise-glow-allowed: "&aYou have undisguised and are allowed to glow again&f! &aReactivating glow&f!"
 
   world-glow-blocked: "&cGlowing is not allowed in this world&f!"
   world-glow-blocked-reload: "&cGlowing is no longer allowed in this world&f! &cDeactivating glow&f!"

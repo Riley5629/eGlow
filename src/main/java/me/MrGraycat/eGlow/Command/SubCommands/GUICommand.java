@@ -52,11 +52,6 @@
 			ChatUtil.sendMsg(sender, Message.INVISIBILITY_BLOCKED.get(), true);
 			return;
 		}
-
-		if (ePlayer.getGlowDisableReason().equals(EnumUtil.GlowDisableReason.DISGUISE)) {
-			ChatUtil.sendMsg(sender, Message.DISGUISE_BLOCKED.get(), true);
-			return;
-		}
 		
 		new EGlowMainMenu(ePlayer.getPlayer()).openInventory();
 	}

@@ -100,11 +100,6 @@ public class EGlowMainMenu extends Menu {
 						ChatUtil.sendMsgFromGUI(player, Message.NO_LAST_GLOW.get());
 						return;
 					} else {
-						if (eGlowPlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-							ChatUtil.sendMsgFromGUI(player, Message.DISGUISE_BLOCKED.get());
-							return;
-						}
-
 						if (eGlowPlayer.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
 							ChatUtil.sendMsgFromGUI(player, Message.INVISIBILITY_BLOCKED.get());
 						}

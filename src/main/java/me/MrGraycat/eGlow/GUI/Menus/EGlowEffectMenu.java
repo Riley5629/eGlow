@@ -59,11 +59,6 @@ public class EGlowEffectMenu extends PaginatedMenu {
 						ChatUtil.sendMsgFromGUI(player, Message.NO_LAST_GLOW.get());
 						return;
 					} else {
-						if (eGlowPlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-							ChatUtil.sendMsgFromGUI(player, Message.DISGUISE_BLOCKED.get());
-							return;
-						}
-						
 						if (eGlowPlayer.getPlayer().hasPermission(eGlowPlayer.getEffect().getPermission())) {
 							eGlowPlayer.toggleGlow();
 						} else {

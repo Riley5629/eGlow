@@ -130,10 +130,7 @@ public class EGlowEventListener implements Listener {
 				IEGlowEffect effect = eglowPlayer.getForceGlow();
 
 				if (effect != null) {
-					if (EGlow.getInstance().getLibDisguiseAddon() != null && EGlow.getInstance().getLibDisguiseAddon().isDisguised(p) || EGlow.getInstance().getIDisguiseAddon() != null && EGlow.getInstance().getIDisguiseAddon().isDisguised(p)) {
-						eglowPlayer.setGlowDisableReason(GlowDisableReason.DISGUISE);
-						ChatUtil.sendMsg(p, Message.DISGUISE_BLOCKED.get(), true);
-					} else if (eglowPlayer.getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY) && !eglowPlayer.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
+					if (eglowPlayer.getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY) && !eglowPlayer.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
 						eglowPlayer.setGlowDisableReason(GlowDisableReason.INVISIBLE);
 						ChatUtil.sendMsg(eglowPlayer.getPlayer(), Message.INVISIBILITY_DISABLED.get(), true);
 					} else {
@@ -158,12 +155,6 @@ public class EGlowEventListener implements Listener {
 							ChatUtil.sendMsg(p, Message.WORLD_BLOCKED.get(), true);
 							return;
 						}
-					}
-
-					if (EGlow.getInstance().getLibDisguiseAddon() != null && EGlow.getInstance().getLibDisguiseAddon().isDisguised(p) || EGlow.getInstance().getIDisguiseAddon() != null && EGlow.getInstance().getIDisguiseAddon().isDisguised(p)) {
-						eglowPlayer.setGlowDisableReason(GlowDisableReason.DISGUISE);
-						ChatUtil.sendMsg(p, Message.DISGUISE_BLOCKED.get(), true);
-						return;
 					}
 
 					try {
