@@ -4,7 +4,6 @@ import me.MrGraycat.eGlow.Config.EGlowMainConfig;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.BiPair;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

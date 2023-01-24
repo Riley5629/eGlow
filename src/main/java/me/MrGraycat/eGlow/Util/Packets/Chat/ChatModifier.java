@@ -59,51 +59,6 @@ public class ChatModifier {
         this.obfuscated = obfuscated;
     }
 
-    /**
-     * Returns true if bold is defined and set to true, false otherwise
-     *
-     * @return  true if bold is defined and set to true, false otherwise
-     */
-    public boolean isBold(){
-        return Boolean.TRUE.equals(bold);
-    }
-
-    /**
-     * Returns true if italic is defined and set to true, false otherwise
-     *
-     * @return  true if italic is defined and set to true, false otherwise
-     */
-    public boolean isItalic(){
-        return Boolean.TRUE.equals(italic);
-    }
-
-    /**
-     * Returns true if underlined is defined and set to true, false otherwise
-     *
-     * @return  true if underlined is defined and set to true, false otherwise
-     */
-    public boolean isUnderlined(){
-        return Boolean.TRUE.equals(underlined);
-    }
-
-    /**
-     * Returns true if strikethrough is defined and set to true, false otherwise
-     *
-     * @return  true if strikethrough is defined and set to true, false otherwise
-     */
-    public boolean isStrikethrough(){
-        return Boolean.TRUE.equals(strikethrough);
-    }
-
-    /**
-     * Returns true if obfuscation is defined and set to true, false otherwise
-     *
-     * @return  true if obfuscation is defined and set to true, false otherwise
-     */
-    public boolean isObfuscated(){
-        return Boolean.TRUE.equals(obfuscated);
-    }
-
     @SuppressWarnings("unchecked")
     public JSONObject serialize() {
         JSONObject json = new JSONObject();
@@ -115,16 +70,6 @@ public class ChatModifier {
         if (obfuscated != null) json.put("obfuscated", obfuscated);
         if (font != null) json.put("font", font);
         return json;
-    }
-
-    public String getMagicCodes() {
-        StringBuilder builder = new StringBuilder();
-        if (isBold()) builder.append(EnumChatFormat.BOLD.getFormat());
-        if (isItalic()) builder.append(EnumChatFormat.ITALIC.getFormat());
-        if (isUnderlined()) builder.append(EnumChatFormat.UNDERLINE.getFormat());
-        if (isStrikethrough()) builder.append(EnumChatFormat.STRIKETHROUGH.getFormat());
-        if (isObfuscated()) builder.append(EnumChatFormat.OBFUSCATED.getFormat());
-        return builder.toString();
     }
 
     public void setTargetVersion(ProtocolVersion targetVersion) {

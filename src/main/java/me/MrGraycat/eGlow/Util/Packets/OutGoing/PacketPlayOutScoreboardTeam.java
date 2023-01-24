@@ -51,17 +51,6 @@ public class PacketPlayOutScoreboardTeam extends PacketPlayOut {
 		this.collisionRule = collision;
 		this.options = options;
 	}
-	
-	//ADD-REMOVE PLAYERS
-	/*public PacketPlayOutScoreboardTeam(String team, Collection<String> players, boolean add) {
-		this(add ? 3 : 4, team);
-		this.players = players;
-	}
-	
-	public PacketPlayOutScoreboardTeam setTeamOptions(int options) {
-		this.options = options;
-		return this;
-	}*/
 
 	public PacketPlayOutScoreboardTeam setColor(EnumChatFormat color) {
 		this.color = color;
