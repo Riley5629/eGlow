@@ -185,7 +185,7 @@ public class DataManager implements PluginMessageListener {
 			dataEffects.put(name.toLowerCase(), new IEGlowEffect(name, displayName, permissionNode, 0, color));
 	}
 	
-	private static void addEGlowEffect(String name, String displayName, String permissionNode, int delay, ChatColor... colors) {
+	public static void addEGlowEffect(String name, String displayName, String permissionNode, int delay, ChatColor... colors) {
 		if (!dataEffects.containsKey(name.toLowerCase()))
 			dataEffects.put(name.toLowerCase(), new IEGlowEffect(name, displayName, permissionNode, delay, colors));
 	}
