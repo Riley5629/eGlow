@@ -53,16 +53,6 @@ public class EGlowEventListener113AndAbove implements Listener {
 									if (MainConfig.SETTINGS_NOTIFICATIONS_INVISIBILITY.getBoolean())
 										ChatUtil.sendMsg(ep.getPlayer(), Message.INVISIBILITY_ENABLED.get(), true);
 								}
-						/*if (ep.isInBlockedWorld()) {
-							ep.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
-							return;
-						}
-
-						ep.activateGlow();
-						ep.setGlowDisableReason(GlowDisableReason.NONE);
-
-						if (MainConfig.SETTINGS_NOTIFICATIONS_INVISIBILITY.getBoolean())
-							ChatUtil.sendMsg(ep.getPlayer(), Message.INVISIBILITY_ENABLED.get(), true);*/
 							}
 						}
 					} else {
