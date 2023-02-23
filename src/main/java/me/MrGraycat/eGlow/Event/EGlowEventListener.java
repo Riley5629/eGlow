@@ -65,7 +65,7 @@ public class EGlowEventListener implements Listener {
 			menu.handleMenu(e);
 		}
 	}
-	
+
 	@EventHandler
 	public void onPlayerWorldChange(PlayerChangedWorldEvent e) {
 		Player p = e.getPlayer();
@@ -74,20 +74,16 @@ public class EGlowEventListener implements Listener {
 		if (eglowPlayer != null) {
 			if (eglowPlayer.isInBlockedWorld()) {
 				if (eglowPlayer.isGlowing()) {
-					eglowPlayer.toggleGlow();
-					eglowPlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
+					eglowPlayer.disableGlow(false);
+					eglowPlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD, false);
 					ChatUtil.sendMsg(p, Message.WORLD_BLOCKED.get(), true);
 				}
 			} else {
 				if (eglowPlayer.getGlowDisableReason().equals(GlowDisableReason.BLOCKEDWORLD)) {
-					if (eglowPlayer.isInvisible()) {
-						eglowPlayer.setGlowDisableReason(GlowDisableReason.INVISIBLE);
-						return;
+					if (eglowPlayer.setGlowDisableReason(GlowDisableReason.NONE, false)) {
+						eglowPlayer.activateGlow();
+						ChatUtil.sendMsg(p, Message.WORLD_ALLOWED.get(), true);
 					}
-
-					eglowPlayer.toggleGlow();
-					eglowPlayer.setGlowDisableReason(GlowDisableReason.NONE);
-					ChatUtil.sendMsg(p, Message.WORLD_ALLOWED.get(), true);
 				}
 			}
 		}
@@ -131,7 +127,7 @@ public class EGlowEventListener implements Listener {
 
 				if (effect != null) {
 					if (eglowPlayer.getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY) && !eglowPlayer.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
-						eglowPlayer.setGlowDisableReason(GlowDisableReason.INVISIBLE);
+						eglowPlayer.setGlowDisableReason(GlowDisableReason.INVISIBLE, false);
 						ChatUtil.sendMsg(eglowPlayer.getPlayer(), Message.INVISIBILITY_DISABLED.get(), true);
 					} else {
 						eglowPlayer.activateGlow(effect);
@@ -151,7 +147,7 @@ public class EGlowEventListener implements Listener {
 					if (eglowPlayer.isInBlockedWorld()) {
 						if (eglowPlayer.isGlowing()) {
 							eglowPlayer.toggleGlow();
-							eglowPlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
+							eglowPlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD, false);
 							ChatUtil.sendMsg(p, Message.WORLD_BLOCKED.get(), true);
 							return;
 						}

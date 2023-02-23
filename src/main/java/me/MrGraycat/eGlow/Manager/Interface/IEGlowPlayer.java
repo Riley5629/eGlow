@@ -247,9 +247,8 @@ public class IEGlowPlayer {
 			return;
 		
 		for (String permission : MainConfig.SETTINGS_JOIN_FORCE_GLOWS_LIST.getConfigSection()) {
-			ChatUtil.sendToConsole(permission, false);
 			if (getPlayer().hasPermission("eglow.force." + permission.toLowerCase())) {
-				IEGlowEffect effect = DataManager.getEGlowEffect(MainConfig.SETTINGS_JOIN_FORCE_GLOWS_LIST.getString(permission)); //TODO test!
+				IEGlowEffect effect = DataManager.getEGlowEffect(MainConfig.SETTINGS_JOIN_FORCE_GLOWS_LIST.getString(permission));
 				
 				if (!forcedEffects.contains(effect))
 					forcedEffects.add(effect);
@@ -329,11 +328,38 @@ public class IEGlowPlayer {
 	public GlowDisableReason getGlowDisableReason() {
 		return this.glowDisableReason;
 	}
-	
-	public void setGlowDisableReason(GlowDisableReason reason) {
-		if (reason.equals(GlowDisableReason.DISGUISE))
+
+	//TODO UNFINISHED MAKE IT A SEPERATE METHOD!
+	public boolean setGlowDisableReason(GlowDisableReason reason, boolean skip) {
+		if (skip) {
+			this.glowDisableReason = reason;
+			return false;
+		}
+
+		switch (reason) {
+			case BLOCKEDWORLD:
+			case INVISIBLE:
+				break;
+			case DISGUISE:
 				reason = GlowDisableReason.NONE;
+				break;
+			case NONE:
+				if (!this.glowDisableReason.equals(reason)) {
+					if (isInBlockedWorld()) {
+						this.glowDisableReason = GlowDisableReason.BLOCKEDWORLD;
+						return false;
+					}
+
+					if (isInvisible()) {
+						this.glowDisableReason = GlowDisableReason.INVISIBLE;
+						return false;
+					}
+				}
+				break;
+		}
+
 		this.glowDisableReason = reason;
+		return true;
 	}
 	
 	public GlowVisibility getGlowVisibility() {

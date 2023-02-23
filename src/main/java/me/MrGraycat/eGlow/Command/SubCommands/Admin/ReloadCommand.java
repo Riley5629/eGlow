@@ -70,18 +70,19 @@ public class ReloadCommand extends SubCommand {
 					ePlayer.activateGlow(effect);
 					continue;
 				}
-				
+
 				if (MainConfig.WORLD_ENABLE.getBoolean() && ePlayer.isInBlockedWorld()) {
 					if (ePlayer.isGlowing()) {
 						ePlayer.toggleGlow();
-						ePlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
+						ePlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD, false);
 						ChatUtil.sendMsg(ePlayer.getPlayer(), Message.WORLD_BLOCKED_RELOAD.get(), true);
 					}
 				} else {
 					if (ePlayer.getGlowDisableReason() != null && ePlayer.getGlowDisableReason().equals(GlowDisableReason.BLOCKEDWORLD)) {
-						ePlayer.toggleGlow();
-						ePlayer.setGlowDisableReason(GlowDisableReason.NONE);
-						ChatUtil.sendMsg(ePlayer.getPlayer(), Message.WORLD_ALLOWED.get(), true);
+						if (ePlayer.setGlowDisableReason(GlowDisableReason.NONE, false)) {
+							ePlayer.activateGlow();
+							ChatUtil.sendMsg(ePlayer.getPlayer(), Message.WORLD_ALLOWED.get(), true);
+						}
 					}
 				}
 			}

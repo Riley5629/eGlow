@@ -63,9 +63,9 @@ public class EGlowPlayerdataMySQL {
                 }
 
                 if (res.getString("glowDisableReason") == null || res.getString("glowDisableReason").isEmpty()) {
-                    ePlayer.setGlowDisableReason(EnumUtil.GlowDisableReason.NONE);
+                    ePlayer.setGlowDisableReason(EnumUtil.GlowDisableReason.NONE, true);
                 } else {
-                    ePlayer.setGlowDisableReason(EnumUtil.GlowDisableReason.valueOf(res.getString("glowDisableReason")));
+                    ePlayer.setGlowDisableReason(EnumUtil.GlowDisableReason.valueOf(res.getString("glowDisableReason")), true);
                 }
             } else {
                 EGlowPlayerdataManager.setDefaultValues(ePlayer);

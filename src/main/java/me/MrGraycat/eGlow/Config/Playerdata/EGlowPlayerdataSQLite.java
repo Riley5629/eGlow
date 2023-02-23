@@ -45,7 +45,7 @@ public class EGlowPlayerdataSQLite {
 			ePlayer.setGlowOnJoin(Boolean.parseBoolean(data[1]));
 			ePlayer.setActiveOnQuit(Boolean.parseBoolean(data[2]));
 			ePlayer.setGlowVisibility(GlowVisibility.valueOf(data[3]));
-			ePlayer.setGlowDisableReason(GlowDisableReason.valueOf(data[4]));
+			ePlayer.setGlowDisableReason(GlowDisableReason.valueOf(data[4]), true);
 			return;
 		}
 		
@@ -78,11 +78,11 @@ public class EGlowPlayerdataSQLite {
 				} else {
 					ePlayer.setGlowVisibility((res.getString("glowVisibility").equals(GlowVisibility.UNSUPPORTEDCLIENT.name()) ? ePlayer.getGlowVisibility() : GlowVisibility.valueOf(res.getString("glowVisibility"))));
 				}
-			
+
 				if (res.getString("glowDisableReason") == null || res.getString("glowDisableReason").isEmpty()) {
-					ePlayer.setGlowDisableReason(GlowDisableReason.NONE);
+					ePlayer.setGlowDisableReason(GlowDisableReason.NONE, true);
 				} else {
-					ePlayer.setGlowDisableReason(GlowDisableReason.valueOf(res.getString("glowDisableReason")));
+					ePlayer.setGlowDisableReason(GlowDisableReason.valueOf(res.getString("glowDisableReason")), true);
 				}
 			} else {
 				EGlowPlayerdataManager.setDefaultValues(ePlayer);
