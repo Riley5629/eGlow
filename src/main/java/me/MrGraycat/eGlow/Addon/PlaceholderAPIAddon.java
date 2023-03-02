@@ -94,6 +94,20 @@ public class PlaceholderAPIAddon extends PlaceholderExpansion {
         	return (eglowPlayer.getGlowOnJoin()) ? "true" : "false";
         case("glow_visibility"):
 			return (eglowPlayer.getGlowVisibility().equals(EnumUtil.GlowVisibility.UNSUPPORTEDCLIENT)) ? Message.VISIBILITY_UNSUPPORTED.get() : Message.valueOf("VISIBILITY_" + eglowPlayer.getGlowVisibility().toString()).get();
+		default:
+			boolean raw = identifier.toLowerCase().endsWith("_raw");
+			if (identifier.toLowerCase().contains("has_permission_")) {
+				IEGlowEffect effect = DataManager.getEGlowEffect(identifier.toLowerCase().replace("has_permission_", "").replace("_raw", ""));
+				if (effect != null) {
+					if (player.hasPermission(effect.getPermission())) {
+						return (raw) ? "true" : Message.GUI_YES.get();
+					} else {
+						return (raw) ? "false" : Message.GUI_NO.get();
+					}
+				} else {
+					return "Invalid effect";
+				}
+			}
         }
         return null;
     }
