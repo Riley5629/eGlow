@@ -43,7 +43,7 @@ public class PipelineInjector{
 								super.write(context, packet, channelPromise);
 								return;
 							} else {
-								if (!EGlow.getInstance().getTABAddon().getTABSupported() || EGlow.getInstance().getTABAddon().blockEGlowPackets()) {
+								if (!EGlow.getInstance().getTABAddon().getTABSupported() || EGlow.getInstance().getTABAddon().blockEGlowPackets() || DebugUtil.isTABBridgeInstalled()) {
 									super.write(context, packet, channelPromise);
 									return;
 								}

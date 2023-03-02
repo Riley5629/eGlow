@@ -4,6 +4,7 @@ import me.MrGraycat.eGlow.Addon.TAB.TABAddon;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.DebugUtil;
 import me.MrGraycat.eGlow.Util.Packets.Chat.EnumChatFormat;
 import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
 import net.luckperms.api.LuckPerms;
@@ -50,8 +51,10 @@ public class LuckPermsAddon implements Listener {
 						if (TAB_Addon != null && TAB_Addon.getTABSupported() && TAB_Addon.blockEGlowPackets()) {
 							TAB_Addon.updateTABPlayer(ePlayer, ePlayer.getActiveColor());
 						} else {
-							ePlayer.updatePlayerTabname();
-							PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(),((Vault_Addon != null) ? Vault_Addon.getPlayerTagPrefix(ePlayer) : "") + ePlayer.getActiveColor(), (Vault_Addon != null) ? Vault_Addon.getPlayerTagSuffix(ePlayer) : "", EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
+							if (!DebugUtil.isTABBridgeInstalled()) {
+								ePlayer.updatePlayerTabname();
+								PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(),((Vault_Addon != null) ? Vault_Addon.getPlayerTagPrefix(ePlayer) : "") + ePlayer.getActiveColor(), (Vault_Addon != null) ? Vault_Addon.getPlayerTagSuffix(ePlayer) : "", EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
+							}
 						}
 					}
 				}.runTaskLaterAsynchronously(EGlow.getInstance(), 20);
@@ -71,7 +74,10 @@ public class LuckPermsAddon implements Listener {
 							if (TAB_Addon != null && TAB_Addon.getTABSupported() && TAB_Addon.blockEGlowPackets()) {
 								TAB_Addon.updateTABPlayer(ePlayer, ePlayer.getActiveColor());
 							} else {
-								PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(), ((Vault_Addon != null) ? Vault_Addon.getPlayerTagPrefix(ePlayer) : "") + ePlayer.getActiveColor(), (Vault_Addon != null) ? Vault_Addon.getPlayerTagSuffix(ePlayer) : "", EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
+								if (!DebugUtil.isTABBridgeInstalled()) {
+									PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(), ((Vault_Addon != null) ? Vault_Addon.getPlayerTagPrefix(ePlayer) : "") + ePlayer.getActiveColor(), (Vault_Addon != null) ? Vault_Addon.getPlayerTagSuffix(ePlayer) : "", EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
+
+								}
 							}
 						}
 					}

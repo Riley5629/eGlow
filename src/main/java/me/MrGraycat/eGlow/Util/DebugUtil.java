@@ -69,6 +69,10 @@ public class DebugUtil {
 		return pluginCheck("ViaVersion");
 	}
 
+	public static boolean isTABBridgeInstalled() {
+		return pluginCheck("TAB-Bridge");
+	}
+
 	public static boolean onBungee() {
 		return !Bukkit.getServer().getOnlineMode() && NMSHook.isBungee();
 	}
