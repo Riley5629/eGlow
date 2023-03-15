@@ -2,11 +2,10 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
-    id 'com.rikonardo.papermake' version '1.0.3'
 }
 
 group = 'com.github.mrgraycat'
-version = '3.2.2-PRE1'
+version = '3.2.2'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -18,7 +17,7 @@ repositories {
     maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
     //TAB
     maven { url = 'https://repo.kryptonmc.org/releases' }
-    //Vault, YAMLAssist
+    //Vault
     maven { url = 'https://jitpack.io' }
     //Citizens
     maven { url = 'https://repo.citizensnpcs.co/' }
@@ -148,8 +147,6 @@ configurations.compileOnly {
 shadowJar {
     archiveClassifier.set('')
     archiveVersion.set('')
-    relocate("me.neznamy.yamlassist", "me.MrGraycat.eGlow.Config.YAMLAssist")
-    relocate("org.bstats", "me.MrGraycat.eGlow.Addon.bStats")
     minimize()
 }
 tasks.build.dependsOn tasks.shadowJar
