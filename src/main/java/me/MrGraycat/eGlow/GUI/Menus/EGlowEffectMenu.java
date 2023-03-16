@@ -52,7 +52,7 @@ public class EGlowEffectMenu extends PaginatedMenu {
 		case(29):
 			if (eGlowPlayer.getPlayer().hasPermission("eglow.command.toggle")) {
 				if (eGlowPlayer.isGlowing()) {
-					eGlowPlayer.toggleGlow();
+					eGlowPlayer.disableGlow(false);
 					ChatUtil.sendMsgFromGUI(player, Message.DISABLE_GLOW.get());
 				} else {
 					if (eGlowPlayer.getEffect() == null || eGlowPlayer.getEffect().getName().equals("none")) {
@@ -60,7 +60,7 @@ public class EGlowEffectMenu extends PaginatedMenu {
 						return;
 					} else {
 						if (eGlowPlayer.getPlayer().hasPermission(eGlowPlayer.getEffect().getPermission())) {
-							eGlowPlayer.toggleGlow();
+							eGlowPlayer.activateGlow();
 						} else {
 							ChatUtil.sendMsgFromGUI(player, Message.NO_PERMISSION.get());
 							return;
@@ -81,7 +81,7 @@ public class EGlowEffectMenu extends PaginatedMenu {
 			}
 			break;
 		case(34):
-			if (DataManager.getCustomEffects().size() > (page * getMaxItemsPerPage())) {
+			if (hasNextPage()) {
 				page = page + 1;
 				super.openInventory();
 			}
@@ -99,58 +99,58 @@ public class EGlowEffectMenu extends PaginatedMenu {
 
 	@Override
 	public void setMenuItems() {
-		IEGlowPlayer p = DataManager.getEGlowPlayer(menuMetadata.getOwner());
+		Player player = menuMetadata.getOwner();
+		IEGlowPlayer p = DataManager.getEGlowPlayer(player);
 		effects = new ConcurrentHashMap<>();
 		UpdateMainEffectsNavigationBar(p);
+		setHasNextPage(false);
+
+		int slot = 0;
+
+		int currentEffect = 0;
+		int nextEffect = (26 * (page - 1)) + ((page > 1) ? 1 : 0);
 		
 		for (String effect : Effect.GET_ALL_EFFECTS.get()) {
 			IEGlowEffect Eeffect = DataManager.getEGlowEffect(effect.toLowerCase());
 			if (Eeffect == null)
 				continue;
-			
-			int pageNumb = getPage(effect);
-			
-			if (pageNumb != page)
-				continue;
-			
-			int slot = getSlot(effect);
-			
-			if (slot > 26)
-				continue;
-			
-			Material material = getMaterial(effect);
-			String name = getName(effect);
-			int meta = getMeta(effect);
-			int model = getModelID(effect);
-			ArrayList<String> lores = new ArrayList<>();
 
-			for (String lore : Effect.GET_LORES.getList(effect)) {
-				lore = ChatUtil.translateColors(lore.replace("%effect_name%", Eeffect.getDisplayName()).replace("%effect_has_permission%", hasPermission(p, Eeffect.getPermission())));
-				lores.add(lore);
+			if (player.hasPermission(Eeffect.getPermission()) || player.hasPermission("eglow.effect.*")) {
+				if (currentEffect != nextEffect) {
+					currentEffect++;
+					continue;
+				}
+
+				if (slot > getMaxItemsPerPage()) {
+					setHasNextPage(true);
+					UpdateMainEffectsNavigationBar(p);
+					return;
+				}
+
+
+				Material material = getMaterial(effect);
+				String name = getName(effect);
+				int meta = getMeta(effect);
+				int model = getModelID(effect);
+				ArrayList<String> lores = new ArrayList<>();
+
+				for (String lore : Effect.GET_LORES.getList(effect)) {
+					lore = ChatUtil.translateColors(lore.replace("%effect_name%", Eeffect.getDisplayName()).replace("%effect_has_permission%", hasPermission(p, Eeffect.getPermission())));
+					lores.add(lore);
+				}
+
+				if (model < 0) {
+					inventory.setItem(slot, createItem(material, name, meta, lores));
+				} else {
+					inventory.setItem(slot, createItem(material, name, meta, lores, model));
+				}
+
+				if (!effects.containsKey(slot))
+					effects.put(slot , Eeffect.getName());
+
+				slot++;
 			}
-			
-			if (model < 0) {
-				inventory.setItem(slot, createItem(material, name, meta, lores));
-			} else {
-				inventory.setItem(slot, createItem(material, name, meta, lores, model));
-			}
-			
-			if (!effects.containsKey(slot))
-				effects.put(slot , Eeffect.getName());
 		}
-	}
-	
-	private int getPage(String effect) {
-		return Effect.GET_PAGE.getInt(effect);
-	}
-	
-	private int getSlot(String effect) {
-		int slot = Effect.GET_SLOT.getInt(effect) - 1;
-		if (slot == -1 || slot > 26) {
-			ChatUtil.sendToConsole("Slot: " + (slot + 1) + " for effect " + effect + "is not valid.", true);
-			return 100;
-		}
-		return slot;
 	}
 	
 	private Material getMaterial(String effect) {

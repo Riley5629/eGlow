@@ -6,8 +6,6 @@ Effects:
      - "red"
      - "darkgreen"
     GUI:
-     Page: 1
-     Slot: 1
      Material: "SAPLING"
      Meta: 1
      Name: "&cC&2h&cr&2i&cs&2t&cm&2a&cs"
@@ -21,8 +19,6 @@ Effects:
      - "gold"
      - "yellow"
     GUI:
-     Page: 1
-     Slot: 2
      Material: "PUMPKIN"
      Meta: 0
      Name: "&6H&ea&6l&el&6o&ew&6e&ee&6n"
