@@ -103,7 +103,7 @@ public class SetCommand extends SubCommand {
 			
 			if (effect.getName().equals("none")) {
 				if (eTarget.isGlowing())
-					eTarget.toggleGlow();
+					eTarget.disableGlow(false);
 				
 				if (eTarget.getEntityType().equals("PLAYER") && MainConfig.SETTINGS_NOTIFICATIONS_TARGET_COMMAND.getBoolean() && !eTarget.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
 					ChatUtil.sendMsg(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.DISABLE_GLOW.get(), true);

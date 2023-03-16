@@ -73,7 +73,7 @@ public class ReloadCommand extends SubCommand {
 
 				if (MainConfig.WORLD_ENABLE.getBoolean() && ePlayer.isInBlockedWorld()) {
 					if (ePlayer.isGlowing()) {
-						ePlayer.toggleGlow();
+						ePlayer.disableGlow(false);
 						ePlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD, false);
 						ChatUtil.sendMsg(ePlayer.getPlayer(), Message.WORLD_BLOCKED_RELOAD.get(), true);
 					}

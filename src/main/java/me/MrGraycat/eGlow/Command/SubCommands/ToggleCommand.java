@@ -43,7 +43,7 @@ public class ToggleCommand extends SubCommand {
 		}
 		
 		if (ePlayer.isGlowing()) {
-			ePlayer.toggleGlow();
+			ePlayer.disableGlow(false);
 			ChatUtil.sendMsg(sender, Message.DISABLE_GLOW.get(), true);
 		} else {
 			if (ePlayer.getEffect() == null || ePlayer.getEffect().getName().equals("none")) {
@@ -55,7 +55,7 @@ public class ToggleCommand extends SubCommand {
 				}
 				
 				if (ePlayer.getPlayer().hasPermission(ePlayer.getEffect().getPermission()) || ePlayer.isForcedGlow(ePlayer.getEffect())) {
-					ePlayer.toggleGlow();
+					ePlayer.activateGlow();
 				} else {
 					ChatUtil.sendMsg(sender, Message.NO_PERMISSION.get(), true);
 					return;

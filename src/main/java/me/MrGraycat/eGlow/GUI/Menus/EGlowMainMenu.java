@@ -93,7 +93,7 @@ public class EGlowMainMenu extends Menu {
 		case(30):
 			if (eGlowPlayer.getPlayer().hasPermission("eglow.command.toggle")) {
 				if (eGlowPlayer.isGlowing()) {
-					eGlowPlayer.toggleGlow();
+					eGlowPlayer.disableGlow(false);
 					ChatUtil.sendMsgFromGUI(player, Message.DISABLE_GLOW.get());
 				} else {
 					if (eGlowPlayer.getEffect() == null || eGlowPlayer.getEffect().getName().equals("none")) {
@@ -105,7 +105,7 @@ public class EGlowMainMenu extends Menu {
 						}
 						
 						if (eGlowPlayer.getPlayer().hasPermission(eGlowPlayer.getEffect().getPermission()) || eGlowPlayer.isForcedGlow(eGlowPlayer.getEffect())) {
-							eGlowPlayer.toggleGlow();
+							eGlowPlayer.activateGlow();
 						} else {
 							ChatUtil.sendMsgFromGUI(player, Message.NO_PERMISSION.get());
 							return;

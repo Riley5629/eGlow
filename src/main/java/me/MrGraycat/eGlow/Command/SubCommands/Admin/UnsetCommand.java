@@ -49,7 +49,7 @@ public class UnsetCommand extends SubCommand {
 				continue;
 			
 			if (eTarget.isGlowing()) {
-				eTarget.toggleGlow();
+				eTarget.disableGlow(false);
 				
 				if (eTarget.getEntityType().equals("PLAYER") && MainConfig.SETTINGS_NOTIFICATIONS_TARGET_COMMAND.getBoolean())
 					ChatUtil.sendMsg(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.DISABLE_GLOW.get(), true);
