@@ -60,4 +60,16 @@ public class EnumUtil {
 		SQLITE,
 		MYSQL
 	}
+
+	/*
+	 * Entity types:
+	 * PLAYER
+	 * NPC
+	 * ENTITY
+	 */
+	public enum EntityType {
+		PLAYER,
+		NPC,
+		ENTITY;
+	}
 }
