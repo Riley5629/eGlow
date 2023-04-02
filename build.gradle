@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.github.mrgraycat'
-version = '3.2.2'
+version = '3.2.3'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -31,19 +31,21 @@ repositories {
 }
 
 dependencies {
-    compileOnly ('org.spigotmc:spigot-api:1.19.1-R0.1-SNAPSHOT')
-    compileOnly ('me.neznamy:tab-api:3.2.4')
-    compileOnly ('me.neznamy:tab-bukkit:3.2.4')
-    compileOnly ('me.neznamy:tab-shared:3.2.4')
-    compileOnly ('net.luckperms:api:5.4')
-    compileOnly ('net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT')
-    compileOnly ('me.clip:placeholderapi:2.10.9')
-    compileOnly ('us.myles:viaversion:3.2.1')
-    compileOnly ('com.github.MilkBowl:VaultAPI:1.7')
-    compileOnly ('org.xerial:sqlite-jdbc:3.40.0.0')
-    compileOnly ('mysql:mysql-connector-java:8.0.30')
-    compileOnly ('io.netty:netty-transport:4.1.86.Final')
-    compileOnly ('it.unimi.dsi:fastutil:8.5.11')
+    compileOnly('org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT')
+    compileOnly('me.neznamy:tab-api:3.2.4')
+    compileOnly('me.neznamy:tab-bukkit:3.2.4')
+    compileOnly('me.neznamy:tab-shared:3.2.4')
+    compileOnly('net.luckperms:api:5.4')
+    compileOnly('net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT')
+    compileOnly('me.clip:placeholderapi:2.10.9')
+    compileOnly('us.myles:viaversion:3.2.1')
+    compileOnly('com.github.MilkBowl:VaultAPI:1.7')
+    compileOnly('com.github.Gecolay:GSit:1.3.7')
+    compileOnly('org.xerial:sqlite-jdbc:3.40.0.0')
+    compileOnly('mysql:mysql-connector-java:8.0.32')
+    compileOnly('io.netty:netty-transport:4.1.86.Final')
+    compileOnly('it.unimi.dsi:fastutil:8.5.11')
+    //compileOnly('com.googlecode.json-simple:json-simple:1.1.1')
 }
 
 //Clean up unneeded external libraries
@@ -135,6 +137,7 @@ configurations.compileOnly {
     exclude group: 'org.slf4j', module: 'jcl-over-slf4j'
     exclude group: 'org.slf4j', module: 'slf4j-api'
     exclude group: 'org.spigotmc', module: 'spigot'
+    exclude group: 'org.yaml', module: 'snakeyaml'
     exclude group: 'us.myles', module: 'viaversion-bukkit'
     exclude group: 'us.myles', module: 'viaversion-bungee'
     exclude group: 'us.myles', module: 'viaversion-common'
