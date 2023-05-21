@@ -9,135 +9,151 @@ import me.neznamy.tab.api.Property;
 import me.neznamy.tab.api.TabAPI;
 import me.neznamy.tab.api.TabConstants;
 import me.neznamy.tab.api.TabPlayer;
-import me.neznamy.tab.api.config.ConfigurationFile;
 import me.neznamy.tab.api.event.plugin.TabLoadEvent;
+import me.neznamy.tab.shared.TAB;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
 import java.util.UUID;
 
 public class TABAddon {
-    private boolean TAB_Supported = false;
-    private boolean TAB_NametagPrefixSuffixEnabled;
-    private boolean TAB_TeamPacketBlockingEnabled;
+	private boolean TAB_Supported = false;
 
-    public TABAddon(Plugin TAB_Plugin) {
-        int TAB_Version = (TAB_Plugin != null) ? Integer.parseInt(TAB_Plugin.getDescription().getVersion().replaceAll("[^\\d]", "")) : 0;
+	private YamlConfiguration config;
+	private File configFile;
+	private boolean TAB_NametagPrefixSuffixEnabled;
+	private boolean TAB_TeamPacketBlockingEnabled;
 
-        if (TAB_Version < 314) {
-            ChatUtil.sendToConsole("&cWarning&f! &cThis version of eGlow requires TAB 3.1.4 or higher!", true);
-            return;
-        }
+	public TABAddon(Plugin TAB_Plugin) {
+		int TAB_Version = (TAB_Plugin != null) ? Integer.parseInt(TAB_Plugin.getDescription().getVersion().replaceAll("[^\\d]", "")) : 0;
 
-        loadTABSettings();
+		if (TAB_Version < 314) {
+			ChatUtil.sendToConsole("&cWarning&f! &cThis version of eGlow requires TAB 3.1.4 or higher!", true);
+			return;
+		}
 
-        TabAPI.getInstance().getEventBus().register(TabLoadEvent.class, event -> new BukkitRunnable() {
-            @Override
-            public void run() {
-                try {
-                    TABAddon TAB_Addon = EGlow.getInstance().getTABAddon();
-                    TAB_Addon.loadTABSettings();
+		loadTABSettings();
 
-                    if (TAB_Addon.blockEGlowPackets()) {
-                        for (IEGlowPlayer ePlayer : DataManager.getEGlowPlayers()) {
-                            if (ePlayer.getFakeGlowStatus() || ePlayer.getGlowStatus())
-                                TAB_Addon.updateTABPlayer(ePlayer, ePlayer.getActiveColor());
-                        }
-                    } else {
-                        cancel();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }.runTaskAsynchronously(EGlow.getInstance()));
+		TabAPI.getInstance().getEventBus().register(TabLoadEvent.class, event -> new BukkitRunnable() {
+			@Override
+			public void run() {
+				try {
+					TABAddon TAB_Addon = EGlow.getInstance().getTABAddon();
+					TAB_Addon.loadTABSettings();
 
-        setTABSupported();
-    }
+					if (TAB_Addon.blockEGlowPackets()) {
+						for (IEGlowPlayer ePlayer : DataManager.getEGlowPlayers()) {
+							if (ePlayer.getFakeGlowStatus() || ePlayer.getGlowStatus())
+								TAB_Addon.updateTABPlayer(ePlayer, ePlayer.getActiveColor());
+						}
+					} else {
+						cancel();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.runTaskAsynchronously(EGlow.getInstance()));
 
-    public void loadTABSettings() {
-        ConfigurationFile TAB_Config = TabAPI.getInstance().getConfig();
+		setTABSupported();
+	}
 
-        setTABNametagPrefixSuffixEnabled(TAB_Config.getBoolean("scoreboard-teams.enabled", false));
-        setTABTeamPacketBlockingEnabled(TAB_Config.getBoolean("scoreboard-teams.anti-override", false));
+	public void loadTABSettings() {
+		configFile = new File(TAB.getInstance().getDataFolder(), "config.yml");
 
-        if (MainConfig.SETTINGS_SMART_TAB_NAMETAG_HANDLER.getBoolean()) {
-            if (!TAB_Config.getBoolean("scoreboard-teams.unlimited-nametag-mode.enabled", false)) {
-                TAB_Config.set("scoreboard-teams.unlimited-nametag-mode.enabled", true);
-                ChatUtil.sendToConsole("&6Enabled unlimited-nametag-mode in TAB&f! &6Please reload TAB or restart the server&f.", true);
-            }
-        }
-    }
+		try {
+			if (!TAB.getInstance().getDataFolder().exists() || !configFile.exists()) {
+				ChatUtil.sendToConsole("&cFailed to retreive TAB config&f!", true);
+				return;
+			}
 
-    public void updateTABPlayer(IEGlowPlayer ePlayer, ChatColor glowColor) {
-        TabPlayer tabPlayer = getTABPlayer(ePlayer.getUUID());
+			config = new YamlConfiguration();
+			config.load(configFile);
+		} catch (Exception ignored) {
+		}
 
-        if (tabPlayer == null || TabAPI.getInstance().getTeamManager() == null)
-            return;
+		setTABNametagPrefixSuffixEnabled(config.getBoolean("scoreboard-teams.enabled", false));
+		setTABTeamPacketBlockingEnabled(config.getBoolean("scoreboard-teams.anti-override", false));
 
-        String tagPrefix;
-        String color = (glowColor.equals(ChatColor.RESET)) ? "" : glowColor + "";
+		if (MainConfig.SETTINGS_SMART_TAB_NAMETAG_HANDLER.getBoolean()) {
+			if (!config.getBoolean("scoreboard-teams.unlimited-nametag-mode.enabled", false)) {
+				config.set("scoreboard-teams.unlimited-nametag-mode.enabled", true);
+				ChatUtil.sendToConsole("&6Enabled unlimited-nametag-mode in TAB&f! &6Please reload TAB or restart the server&f.", true);
+			}
+		}
+	}
 
-        try {
-            tagPrefix = TabAPI.getInstance().getTeamManager().getOriginalPrefix(tabPlayer);
-        } catch (Exception ex) {
-            tagPrefix = color;
-        }
+	public void updateTABPlayer(IEGlowPlayer ePlayer, ChatColor glowColor) {
+		TabPlayer tabPlayer = getTABPlayer(ePlayer.getUUID());
 
-        try {
-            if (!MainConfig.SETTINGS_SMART_TAB_NAMETAG_HANDLER.getBoolean()) {
-                TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, tagPrefix + color);
-            } else {
-                Property propertyCustomTagName = tabPlayer.getProperty(TabConstants.Property.CUSTOMTAGNAME);
+		if (tabPlayer == null || TabAPI.getInstance().getTeamManager() == null)
+			return;
 
-                if (propertyCustomTagName == null) {
-                    TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, tagPrefix + color);
-                } else {
-                    String originalTagName = propertyCustomTagName.getOriginalRawValue();
+		String tagPrefix;
+		String color = (glowColor.equals(ChatColor.RESET)) ? "" : glowColor + "";
 
-                    if (!propertyCustomTagName.getCurrentRawValue().equals(tagPrefix + originalTagName))
-                        propertyCustomTagName.setTemporaryValue(tagPrefix + originalTagName);
+		try {
+			tagPrefix = TabAPI.getInstance().getTeamManager().getOriginalPrefix(tabPlayer);
+		} catch (Exception ex) {
+			tagPrefix = color;
+		}
 
-                    TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, color);
-                }
-            }
-        } catch (IllegalStateException | NullPointerException e) {
-            //Wierd NPE on first join ignoring it
-        }
-    }
+		try {
+			if (!MainConfig.SETTINGS_SMART_TAB_NAMETAG_HANDLER.getBoolean()) {
+				TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, tagPrefix + color);
+			} else {
+				Property propertyCustomTagName = tabPlayer.getProperty(TabConstants.Property.CUSTOMTAGNAME);
 
-    public TabPlayer getTABPlayer(UUID uuid) {
-        return TabAPI.getInstance().getPlayer(uuid);
-    }
+				if (propertyCustomTagName == null) {
+					TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, tagPrefix + color);
+				} else {
+					String originalTagName = propertyCustomTagName.getOriginalRawValue();
 
-    public boolean blockEGlowPackets() {
-        return (getTABNametagPrefixSuffixEnabled() && getTABTeamPacketBlockingEnabled());
-    }
+					if (!propertyCustomTagName.getCurrentRawValue().equals(tagPrefix + originalTagName))
+						propertyCustomTagName.setTemporaryValue(tagPrefix + originalTagName);
 
-    //Getter
-    public boolean getTABSupported() {
-        return this.TAB_Supported;
-    }
+					TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, color);
+				}
+			}
+		} catch (IllegalStateException | NullPointerException e) {
+			//Wierd NPE on first join ignoring it
+		}
+	}
 
-    public boolean getTABNametagPrefixSuffixEnabled() {
-        return this.TAB_NametagPrefixSuffixEnabled;
-    }
+	public TabPlayer getTABPlayer(UUID uuid) {
+		return TabAPI.getInstance().getPlayer(uuid);
+	}
 
-    public boolean getTABTeamPacketBlockingEnabled() {
-        return this.TAB_TeamPacketBlockingEnabled;
-    }
+	public boolean blockEGlowPackets() {
+		return (getTABNametagPrefixSuffixEnabled() && getTABTeamPacketBlockingEnabled());
+	}
 
-    //Setter
-    private void setTABSupported() {
-        this.TAB_Supported = true;
-    }
+	//Getter
+	public boolean getTABSupported() {
+		return this.TAB_Supported;
+	}
 
-    private void setTABNametagPrefixSuffixEnabled(boolean status) {
-        this.TAB_NametagPrefixSuffixEnabled = status;
-    }
+	public boolean getTABNametagPrefixSuffixEnabled() {
+		return this.TAB_NametagPrefixSuffixEnabled;
+	}
 
-    private void setTABTeamPacketBlockingEnabled(boolean status) {
-        this.TAB_TeamPacketBlockingEnabled = status;
-    }
+	public boolean getTABTeamPacketBlockingEnabled() {
+		return this.TAB_TeamPacketBlockingEnabled;
+	}
+
+	//Setter
+	private void setTABSupported() {
+		this.TAB_Supported = true;
+	}
+
+	private void setTABNametagPrefixSuffixEnabled(boolean status) {
+		this.TAB_NametagPrefixSuffixEnabled = status;
+	}
+
+	private void setTABTeamPacketBlockingEnabled(boolean status) {
+		this.TAB_TeamPacketBlockingEnabled = status;
+	}
 }
