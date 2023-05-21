@@ -2,6 +2,8 @@ package me.MrGraycat.eGlow;
 
 import me.MrGraycat.eGlow.API.EGlowAPI;
 import me.MrGraycat.eGlow.Addon.Citizens.CitizensAddon;
+import me.MrGraycat.eGlow.Addon.Disguises.IDisguiseAddon;
+import me.MrGraycat.eGlow.Addon.Disguises.LibDisguiseAddon;
 import me.MrGraycat.eGlow.Addon.Internal.AdvancedGlowVisibilityAddon;
 import me.MrGraycat.eGlow.Addon.LuckPermsAddon;
 import me.MrGraycat.eGlow.Addon.PlaceholderAPIAddon;
@@ -39,6 +41,8 @@ public class EGlow extends JavaPlugin {
 	//Addons
 	private AdvancedGlowVisibilityAddon glowAddon;
 	private CitizensAddon citizensAddon;
+	private IDisguiseAddon iDisguiseAddon;
+	private LibDisguiseAddon libDisguiseAddon;
 	private TABAddon tabAddon;
 	private LuckPermsAddon lpAddon;
 	private VaultAddon vaultAddon;
@@ -59,9 +63,9 @@ public class EGlow extends JavaPlugin {
 			NMSHook.initialize();
 
 			loadConfigs();
-			
+
 			DataManager.initialize();
-			
+
 			registerEventsAndCommands();
 			checkForUpdates();
 			runAddonHooks();
@@ -71,7 +75,7 @@ public class EGlow extends JavaPlugin {
 			getServer().getPluginManager().disablePlugin(this);
 		}
 	}
-	
+
 	@Override
 	public void onDisable() {
 		if (getAdvancedGlowVisibility() != null) {
@@ -88,14 +92,14 @@ public class EGlow extends JavaPlugin {
 	private boolean versionIsCompactible() {
 		return !DebugUtil.getServerVersion().equals("v_1_9_R1") && DebugUtil.getMinorVersion() >= 9 && DebugUtil.getMinorVersion() <= 19;
 	}
-	
+
 	private void loadConfigs() {
 		EGlowMainConfig.initialize();
 		EGlowMessageConfig.initialize();
 		EGlowCustomEffectsConfig.initialize();
 		EGlowPlayerdataManager.initialize();
 	}
-	
+
 	private void registerEventsAndCommands() {
 		Objects.requireNonNull(getCommand("eglow")).setExecutor(new EGlowCommand());
 		new EGlowEventListener();
@@ -113,26 +117,30 @@ public class EGlow extends JavaPlugin {
 					setVaultAddon(new VaultAddon());
 				if (DebugUtil.pluginCheck("Citizens") && getCitizensAddon() == null)
 					setCitizensAddon(new CitizensAddon());
+				if (DebugUtil.pluginCheck("iDisguise"))
+					setIDisguiseAddon(new IDisguiseAddon());
+				if (DebugUtil.pluginCheck("LibsDisguises"))
+					setLibDisguiseAddon(new LibDisguiseAddon());
 				if (DebugUtil.pluginCheck("TAB")) {
 					try {
 						Plugin TAB_Plugin = DebugUtil.getPlugin("TAB");
-						
+
 						if (TAB_Plugin != null && TAB_Plugin.getClass().getName().startsWith("me.neznamy.tab"))
 							setTABAddon(new TABAddon(TAB_Plugin));
-					} catch (NoClassDefFoundError e) {			
+					} catch (NoClassDefFoundError e) {
 						ChatUtil.sendToConsole("&cWarning&f! &cThis version of eGlow requires TAB 3.1.4 or higher!", true);
 					}
 				}
-				
+
 				EGlow.getInstance().getServer().getPluginManager().registerEvents(new EGlowTABListenerUniv(), getInstance());
-				
+
 				if (DebugUtil.pluginCheck("LuckPerms")) {
 					setLPAddon(new LuckPermsAddon());
 				}
 			}
 		}.runTask(this);
 	}
-	
+
 	private void runPlayerCheckOnEnable() {
 		if (!getServer().getOnlinePlayers().isEmpty()) {
 			for (Player player : getServer().getOnlinePlayers()) {
@@ -141,7 +149,7 @@ public class EGlow extends JavaPlugin {
 			}
 		}
 	}
-	
+
 	private void runPlayerCheckOnDisable() {
 		if (!getServer().getOnlinePlayers().isEmpty()) {
 			for (Player player : getServer().getOnlinePlayers()) {
@@ -150,13 +158,13 @@ public class EGlow extends JavaPlugin {
 			}
 		}
 	}
-	
+
 	private void checkForUpdates() {
-		  try { 			
+		try {
 			URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=63295");
 			String currentVersion = getInstance().getDescription().getVersion();
 			String latestVersion = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream())).readLine();
-			
+
 			if (currentVersion.contains("PRE")) {
 				String betaVersion = currentVersion.split("-")[0];
 				setUpToDate(!betaVersion.equals(latestVersion));
@@ -164,21 +172,21 @@ public class EGlow extends JavaPlugin {
 				if (!latestVersion.contains(currentVersion)) {
 					setUpToDate(false);
 				}
-			}		
-		  } catch (Exception e) {
-			  //None would care if this fails
-		  }
+			}
+		} catch (Exception e) {
+			//None would care if this fails
+		}
 	}
-	
+
 	//Setter
 	private static void setInstance(EGlow instance) {
 		EGlow.instance = instance;
 	}
-	
+
 	private void setAPI(EGlowAPI api) {
 		EGlow.API = api;
 	}
-	
+
 	private void setUpToDate(boolean up_to_date) {
 		this.UP_TO_DATE = up_to_date;
 	}
@@ -190,28 +198,36 @@ public class EGlow extends JavaPlugin {
 	private void setCitizensAddon(CitizensAddon citizensAddon) {
 		this.citizensAddon = citizensAddon;
 	}
-	
+
+	private void setIDisguiseAddon(IDisguiseAddon iDisguiseAddon) {
+		this.iDisguiseAddon = iDisguiseAddon;
+	}
+
+	private void setLibDisguiseAddon(LibDisguiseAddon libDisguiseAddon) {
+		this.libDisguiseAddon = libDisguiseAddon;
+	}
+
 	private void setTABAddon(TABAddon tabAddon) {
 		this.tabAddon = tabAddon;
 	}
-	
+
 	private void setLPAddon(LuckPermsAddon lpAddon) {
 		this.lpAddon = lpAddon;
 	}
-	
+
 	private void setVaultAddon(VaultAddon vaultAddon) {
 		this.vaultAddon = vaultAddon;
 	}
-	
+
 	//Getter
 	public static EGlow getInstance() {
 		return EGlow.instance;
 	}
-	
+
 	public static EGlowAPI getAPI() {
 		return API;
 	}
-	
+
 	public boolean isUpToDate() {
 		return UP_TO_DATE;
 	}
@@ -223,15 +239,23 @@ public class EGlow extends JavaPlugin {
 	public CitizensAddon getCitizensAddon() {
 		return this.citizensAddon;
 	}
-	
+
+	public IDisguiseAddon getIDisguiseAddon() {
+		return this.iDisguiseAddon;
+	}
+
+	public LibDisguiseAddon getLibDisguiseAddon() {
+		return this.libDisguiseAddon;
+	}
+
 	public TABAddon getTABAddon() {
 		return this.tabAddon;
 	}
-	
+
 	public LuckPermsAddon getLPAddon() {
 		return this.lpAddon;
 	}
-	
+
 	public VaultAddon getVaultAddon() {
 		return this.vaultAddon;
 	}

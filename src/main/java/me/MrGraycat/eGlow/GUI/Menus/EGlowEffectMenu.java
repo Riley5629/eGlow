@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class EGlowEffectMenu extends PaginatedMenu {
-	private ConcurrentHashMap<Integer, String> effects = new ConcurrentHashMap<>();	
-	
+	private ConcurrentHashMap<Integer, String> effects = new ConcurrentHashMap<>();
+
 	public EGlowEffectMenu(Player player) {
 		super(player);
 	}
@@ -41,59 +41,64 @@ public class EGlowEffectMenu extends PaginatedMenu {
 		IEGlowPlayer eGlowPlayer = DataManager.getEGlowPlayer(player);
 		ClickType clickType = e.getClick();
 		int clickedSlot = e.getSlot();
-		
-		switch(clickedSlot) {
-		case(28):
-			if (eGlowPlayer.getSaveData())
-				eGlowPlayer.setSaveData(true);
-			
-			eGlowPlayer.setGlowOnJoin(!eGlowPlayer.getGlowOnJoin());
-		break;
-		case(29):
-			if (eGlowPlayer.getPlayer().hasPermission("eglow.command.toggle")) {
-				if (eGlowPlayer.isGlowing()) {
-					eGlowPlayer.disableGlow(false);
-					ChatUtil.sendMsgFromGUI(player, Message.DISABLE_GLOW.get());
-				} else {
-					if (eGlowPlayer.getEffect() == null || eGlowPlayer.getEffect().getName().equals("none")) {
-						ChatUtil.sendMsgFromGUI(player, Message.NO_LAST_GLOW.get());
-						return;
+
+		switch (clickedSlot) {
+			case (28):
+				if (eGlowPlayer.getSaveData())
+					eGlowPlayer.setSaveData(true);
+
+				eGlowPlayer.setGlowOnJoin(!eGlowPlayer.getGlowOnJoin());
+				break;
+			case (29):
+				if (eGlowPlayer.getPlayer().hasPermission("eglow.command.toggle")) {
+					if (eGlowPlayer.isGlowing()) {
+						eGlowPlayer.disableGlow(false);
+						ChatUtil.sendMsgFromGUI(player, Message.DISABLE_GLOW.get());
 					} else {
-						if (eGlowPlayer.getPlayer().hasPermission(eGlowPlayer.getEffect().getPermission())) {
-							eGlowPlayer.activateGlow();
-						} else {
-							ChatUtil.sendMsgFromGUI(player, Message.NO_PERMISSION.get());
+						if (eGlowPlayer.getEffect() == null || eGlowPlayer.getEffect().getName().equals("none")) {
+							ChatUtil.sendMsgFromGUI(player, Message.NO_LAST_GLOW.get());
 							return;
+						} else {
+							if (eGlowPlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
+								ChatUtil.sendMsgFromGUI(player, Message.DISGUISE_BLOCKED.get());
+								return;
+							}
+
+							if (eGlowPlayer.getPlayer().hasPermission(eGlowPlayer.getEffect().getPermission())) {
+								eGlowPlayer.activateGlow();
+							} else {
+								ChatUtil.sendMsgFromGUI(player, Message.NO_PERMISSION.get());
+								return;
+							}
+							ChatUtil.sendMsgFromGUI(player, Message.NEW_GLOW.get(eGlowPlayer.getLastGlowName()));
 						}
-						ChatUtil.sendMsgFromGUI(player, Message.NEW_GLOW.get(eGlowPlayer.getLastGlowName()));
 					}
+				} else {
+					ChatUtil.sendMsgFromGUI(player, Message.NO_PERMISSION.get());
 				}
-			} else {
-				ChatUtil.sendMsgFromGUI(player, Message.NO_PERMISSION.get());
-			}
-		break;
-		case(33):
-			if (page == 1) {
-				new EGlowMainMenu(eGlowPlayer.getPlayer()).openInventory();
-			} else {
-				page = page - 1;
-				super.openInventory();
-			}
-			break;
-		case(34):
-			if (hasNextPage()) {
-				page = page + 1;
-				super.openInventory();
-			}
-			break;
-		default:
-			if (effects.containsKey(clickedSlot)) {
-				String effect = effects.get(clickedSlot);
-				enableGlow(eGlowPlayer.getPlayer(), clickType, effect);	
-			}
-			break;
+				break;
+			case (33):
+				if (page == 1) {
+					new EGlowMainMenu(eGlowPlayer.getPlayer()).openInventory();
+				} else {
+					page = page - 1;
+					super.openInventory();
+				}
+				break;
+			case (34):
+				if (hasNextPage()) {
+					page = page + 1;
+					super.openInventory();
+				}
+				break;
+			default:
+				if (effects.containsKey(clickedSlot)) {
+					String effect = effects.get(clickedSlot);
+					enableGlow(eGlowPlayer.getPlayer(), clickType, effect);
+				}
+				break;
 		}
-		
+
 		UpdateMainEffectsNavigationBar(eGlowPlayer);
 	}
 
@@ -109,7 +114,7 @@ public class EGlowEffectMenu extends PaginatedMenu {
 
 		int currentEffect = 0;
 		int nextEffect = (26 * (page - 1)) + ((page > 1) ? 1 : 0);
-		
+
 		for (String effect : Effect.GET_ALL_EFFECTS.get()) {
 			IEGlowEffect Eeffect = DataManager.getEGlowEffect(effect.toLowerCase());
 			if (Eeffect == null)
@@ -146,13 +151,13 @@ public class EGlowEffectMenu extends PaginatedMenu {
 				}
 
 				if (!effects.containsKey(slot))
-					effects.put(slot , Eeffect.getName());
+					effects.put(slot, Eeffect.getName());
 
 				slot++;
 			}
 		}
 	}
-	
+
 	private Material getMaterial(String effect) {
 		String mat = Effect.GET_MATERIAL.getString(effect).toUpperCase();
 		try {
@@ -164,15 +169,15 @@ public class EGlowEffectMenu extends PaginatedMenu {
 			return Material.valueOf("DIRT");
 		}
 	}
-	
+
 	private String getName(String effect) {
 		return Effect.GET_NAME.getString(effect);
 	}
-	
+
 	private int getMeta(String effect) {
 		return Effect.GET_META.getInt(effect);
 	}
-	
+
 	private int getModelID(String effect) {
 		return (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 14) ? Effect.GET_MODEL_ID.getInt(effect) : -1;
 	}

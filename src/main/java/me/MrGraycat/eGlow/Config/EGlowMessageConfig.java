@@ -7,21 +7,20 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.util.List;
 
 public class EGlowMessageConfig {
 
 	private static YamlConfiguration config;
 	private static File configFile;
-	
+
 	public static void initialize() {
 		configFile = new File(EGlow.getInstance().getDataFolder(), "Messages.yml");
-		
+
 		try {
 			if (!EGlow.getInstance().getDataFolder().exists()) {
 				EGlow.getInstance().getDataFolder().mkdirs();
 			}
-			
+
 			if (!configFile.exists()) {
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4Messages.yml not found&f! &eCreating&f...", false);
 				configFile.getParentFile().mkdirs();
@@ -29,49 +28,49 @@ public class EGlowMessageConfig {
 			} else {
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &aLoading messages config&f.", false);
 			}
-			
+
 			config = new YamlConfiguration();
 			config.load(configFile);
 
 			//TODO to be removed soon
 			if (!config.isConfigurationSection("main")) {
 				File oldFile = new File(EGlow.getInstance().getDataFolder(), "OLDMessages.yml");
-				
+
 				if (oldFile.exists())
 					oldFile.delete();
-				
+
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &cDetected old messages config&f! &eRenamed it to OLDMessages&f! &eReconfiguring might be required&f!", false);
 				configFile.renameTo(oldFile);
 				initialize();
 			}
-			
+
 			configCheck();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			ChatUtil.reportError(e);
 		}
 	}
-	
+
 	public static boolean reloadConfig() {
 		YamlConfiguration configBackup = config;
 		File configFileBackup = configFile;
-		
+
 		try {
 			config = null;
 			configFile = null;
-			
+
 			configFile = new File(EGlow.getInstance().getDataFolder(), "Messages.yml");
 			config = new YamlConfiguration();
 			config.load(configFile);
 			return true;
-		} catch(Exception e) {
+		} catch (Exception e) {
 			config = configBackup;
 			configFile = configFileBackup;
-			
+
 			ChatUtil.reportError(e);
 			return false;
 		}
 	}
-	
+
 	public enum Message {
 		PREFIX("main.prefix"),
 		NO_PERMISSION("main.no-permission"),
@@ -141,90 +140,90 @@ public class EGlowMessageConfig {
 		GUI_SPEED_ITEM_NAME("gui.speed-item-name"),
 		GUI_SPEED("gui.speed-speed"),
 		GUI_CUSTOM_EFFECTS_ITEM_NAME("gui.custom-effect-item-name");
-		
+
 		private final Message msg;
 		private final String configPath;
-		
+
 		Message(String configPath) {
 			this.msg = this;
 			this.configPath = configPath;
 		}
-		
+
 		public String getConfigPath() {
 			return configPath;
 		}
-		
+
 		public String get() {
 			return getColorValue(getConfigPath());
 		}
-		
+
 		public String get(String value) {
-			switch(msg) {
-			case COLOR:
-				return getColorValue(msg.getConfigPath() + value);
-			case GUI_PAGE_LORE:
-				return getColorValue(msg.getConfigPath(), "%page%", value);
-			case GUI_COLOR:
-				if (config.contains(msg.getConfigPath() + value))
+			switch (msg) {
+				case COLOR:
 					return getColorValue(msg.getConfigPath() + value);
-				return getColorValue(Message.COLOR.getConfigPath() + value);
-			case VISIBILITY_CHANGE:
-				return (value.toUpperCase().equals(EnumUtil.GlowVisibility.UNSUPPORTEDCLIENT.toString())) ? getColorValue(msg.getConfigPath(), "%value%", Message.VISIBILITY_UNSUPPORTED.get()) : getColorValue(msg.getConfigPath(), "%value%", Message.valueOf("VISIBILITY_" + value).get());
-			case INCORRECT_USAGE:
-				return getColorValue(msg.getConfigPath(), "%command%", value);
-			case NEW_GLOW:
-			case GLOWING_STATE_ON_JOIN:
-				return getColorValue(msg.getConfigPath(), "%glowname%", value);
-			default:
-				break;
+				case GUI_PAGE_LORE:
+					return getColorValue(msg.getConfigPath(), "%page%", value);
+				case GUI_COLOR:
+					if (config.contains(msg.getConfigPath() + value))
+						return getColorValue(msg.getConfigPath() + value);
+					return getColorValue(Message.COLOR.getConfigPath() + value);
+				case VISIBILITY_CHANGE:
+					return (value.toUpperCase().equals(EnumUtil.GlowVisibility.UNSUPPORTEDCLIENT.toString())) ? getColorValue(msg.getConfigPath(), "%value%", Message.VISIBILITY_UNSUPPORTED.get()) : getColorValue(msg.getConfigPath(), "%value%", Message.valueOf("VISIBILITY_" + value).get());
+				case INCORRECT_USAGE:
+					return getColorValue(msg.getConfigPath(), "%command%", value);
+				case NEW_GLOW:
+				case GLOWING_STATE_ON_JOIN:
+					return getColorValue(msg.getConfigPath(), "%glowname%", value);
+				default:
+					break;
 			}
 			return "Incorrect handled message for: " + msg;
 		}
-		
+
 		public String get(IEGlowPlayer target, String value) {
-			switch(msg) {
-			case OTHER_CONFIRM:
-				return getColorValue(msg.getConfigPath(), target, "%glowname%", value);
-			case OTHER_GLOW_ON_JOIN_CONFIRM:
-				return getColorValue(msg.getConfigPath(), target, "%value%", value);
-			default:
-				break;
+			switch (msg) {
+				case OTHER_CONFIRM:
+					return getColorValue(msg.getConfigPath(), target, "%glowname%", value);
+				case OTHER_GLOW_ON_JOIN_CONFIRM:
+					return getColorValue(msg.getConfigPath(), target, "%value%", value);
+				default:
+					break;
 			}
 			return "Incorrect handled message for: " + msg;
 		}
-		
+
 		public String get(IEGlowPlayer target) {
 			return getColorValue(msg.getConfigPath(), "%target%", target.getDisplayName());
 		}
 
 		private String getColorValue(String path) {
 			String text = config.getString(path);
-			
+
 			if (text == null)
 				return "&cFailed to get text for&f: '&e" + path + "'";
 
 			return ChatUtil.translateColors(text);
 		}
-		
+
 		private String getColorValue(String path, String textToReplace, String replacement) {
 			String text = config.getString(path);
-			
+
 			if (text == null)
 				return "&cFailed to get text for&f: '&e" + path + "'";
 			if (replacement == null)
 				return "&cInvalid effectname&f.";
 			return ChatUtil.translateColors(text.replace(textToReplace, replacement));
 		}
-		
+
 		private String getColorValue(String path, IEGlowPlayer ePlayer, String textToReplace, String replacement) {
 			String text = config.getString(path);
-			
+
 			if (text == null)
 				return "&cFailed to get text for&f: '&e" + path + "'";
 			return ChatUtil.translateColors(text.replace(textToReplace, replacement).replace("%target%", ePlayer.getDisplayName()));
 		}
 	}
-	
+
 	private static void configCheck() {
 		addIfMissing("gui.custom-effect-item-name", "&eCustom effects menu");
 		addIfMissing("gui.misc-click-to-open", "&9Click to open&f.");
@@ -245,13 +244,13 @@ public class EGlowMessageConfig {
 		addIfMissing("main.glowing-state-on-join", "&fYou are now glowing&f! &f[&e%glowname%&f]");
 		addIfMissing("main.non-glowing-state-on-join", "&fYou're not glowing.");
 	}
-	
+
 	private static void addIfMissing(String path, String text) {
 		try {
 			if (!config.contains(path)) {
 				config.set(path, text);
 				config.save(configFile);
-			}	
+			}
 		} catch (Exception e) {
 			ChatUtil.reportError(e);
 		}

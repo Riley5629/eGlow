@@ -41,7 +41,7 @@ public class ReloadCommand extends SubCommand {
 
 	@Override
 	public String[] getSyntax() {
-		return new String[] {"/eGlow reload"};
+		return new String[]{"/eGlow reload"};
 	}
 
 	@Override
@@ -58,16 +58,21 @@ public class ReloadCommand extends SubCommand {
 
 			for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
 				ePlayer = DataManager.getEGlowPlayer(onlinePlayer);
-				
+
 				if (ePlayer == null)
 					continue;
-				
+
 				ePlayer.updatePlayerTabname();
-				
+
 				IEGlowEffect effect = ePlayer.getForceGlow();
-				
+
 				if (effect != null) {
-					ePlayer.activateGlow(effect);
+					if (getInstance().getLibDisguiseAddon() != null && getInstance().getLibDisguiseAddon().isDisguised(ePlayer.getPlayer()) || getInstance().getIDisguiseAddon() != null && getInstance().getIDisguiseAddon().isDisguised(ePlayer.getPlayer())) {
+						ePlayer.setGlowDisableReason(GlowDisableReason.DISGUISE, false);
+						ChatUtil.sendMsg(ePlayer.getPlayer(), Message.DISGUISE_BLOCKED.get(), true);
+					} else {
+						ePlayer.activateGlow(effect);
+					}
 					continue;
 				}
 
@@ -96,19 +101,19 @@ public class ReloadCommand extends SubCommand {
 				getInstance().setAdvancedGlowVisibility(null);
 			}
 
-			try{
-			    String alias = MainConfig.COMMAND_ALIAS.getString();
-			    
-			    if (MainConfig.COMMAND_ALIAS_ENABLE.getBoolean() && alias != null && Bukkit.getServer().getPluginCommand(alias) == null) {
-			    	 final Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-			    	 commandMapField.setAccessible(true);
-					 CommandMap commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
+			try {
+				String alias = MainConfig.COMMAND_ALIAS.getString();
+
+				if (MainConfig.COMMAND_ALIAS_ENABLE.getBoolean() && alias != null && Bukkit.getServer().getPluginCommand(alias) == null) {
+					final Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+					commandMapField.setAccessible(true);
+					CommandMap commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
 					commandMap.register(alias, alias, Objects.requireNonNull(EGlow.getInstance().getCommand("eglow"), "Unable to retrieve eGlow command to register alias"));
-			    }
-			} catch (NoSuchFieldException  | IllegalArgumentException | IllegalAccessException e){
-			    ChatUtil.reportError(e);
+				}
+			} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
+				ChatUtil.reportError(e);
 			}
-			
+
 			ChatUtil.sendMsg(sender, Message.RELOAD_SUCCESS.get(), true);
 		} else {
 			ChatUtil.sendMsg(sender, Message.RELOAD_SUCCESS.get(), true);
