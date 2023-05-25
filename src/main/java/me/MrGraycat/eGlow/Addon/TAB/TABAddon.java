@@ -5,11 +5,10 @@ import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.Text.ChatUtil;
-import me.neznamy.tab.api.Property;
 import me.neznamy.tab.api.TabAPI;
-import me.neznamy.tab.api.TabConstants;
 import me.neznamy.tab.api.TabPlayer;
 import me.neznamy.tab.api.event.plugin.TabLoadEvent;
+import me.neznamy.tab.api.nametag.UnlimitedNameTagManager;
 import me.neznamy.tab.shared.TAB;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -87,35 +86,36 @@ public class TABAddon {
 	}
 
 	public void updateTABPlayer(IEGlowPlayer ePlayer, ChatColor glowColor) {
-		TabPlayer tabPlayer = getTABPlayer(ePlayer.getUUID());
+		TabPlayer tabPlayer = (TabPlayer) getTABPlayer(ePlayer.getUUID());
 
-		if (tabPlayer == null || TabAPI.getInstance().getTeamManager() == null)
+		if (tabPlayer == null || TabAPI.getInstance().getNameTagManager() == null)
 			return;
 
 		String tagPrefix;
 		String color = (glowColor.equals(ChatColor.RESET)) ? "" : glowColor + "";
 
 		try {
-			tagPrefix = TabAPI.getInstance().getTeamManager().getOriginalPrefix(tabPlayer);
+			tagPrefix = TabAPI.getInstance().getNameTagManager().getOriginalPrefix(tabPlayer);
 		} catch (Exception ex) {
 			tagPrefix = color;
 		}
 
 		try {
 			if (!MainConfig.SETTINGS_SMART_TAB_NAMETAG_HANDLER.getBoolean()) {
-				TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, tagPrefix + color);
+				TabAPI.getInstance().getNameTagManager().setPrefix(tabPlayer, tagPrefix + color);
 			} else {
-				Property propertyCustomTagName = tabPlayer.getProperty(TabConstants.Property.CUSTOMTAGNAME);
+				UnlimitedNameTagManager unlimitedNameTagManager = (UnlimitedNameTagManager) TabAPI.getInstance().getNameTagManager();
+				//Property propertyCustomTagName = tabPlayer.getProperty(TabConstants.Property.CUSTOMTAGNAME);
 
-				if (propertyCustomTagName == null) {
-					TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, tagPrefix + color);
+				if (unlimitedNameTagManager == null) {
+					TabAPI.getInstance().getNameTagManager().setPrefix(tabPlayer, tagPrefix + color);
 				} else {
-					String originalTagName = propertyCustomTagName.getOriginalRawValue();
+					String originalTagName = unlimitedNameTagManager.getOriginalName(tabPlayer);
 
-					if (!propertyCustomTagName.getCurrentRawValue().equals(tagPrefix + originalTagName))
-						propertyCustomTagName.setTemporaryValue(tagPrefix + originalTagName);
+					if (!originalTagName.equals(tagPrefix + originalTagName))
+						unlimitedNameTagManager.setName(tabPlayer, tagPrefix + originalTagName);
 
-					TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, color);
+					TabAPI.getInstance().getNameTagManager().setPrefix(tabPlayer, color);
 				}
 			}
 		} catch (IllegalStateException | NullPointerException e) {
