@@ -23,50 +23,57 @@ import java.util.Objects;
 
 public class PacketUtil {
 	private static boolean sendPackets = true;
-	
+
 	public static void updatePlayer(IEGlowPlayer ePlayer) {
 		ProtocolVersion pVersion = ePlayer.getVersion();
-		
+
 		for (IEGlowPlayer ep : DataManager.getEGlowPlayers()) {
 			if (!(ep.getEntity() instanceof Player) || ep.equals(ePlayer))
 				continue;
-			
+
 			if (sendPackets && MainConfig.ADVANCED_TEAMS_SEND_PACKETS.getBoolean()) {
 				if (EGlow.getInstance().getTABAddon() == null || !EGlow.getInstance().getTABAddon().blockEGlowPackets() || !DebugUtil.isTABBridgeInstalled()) {
 					try {
-						NMSHook.sendPacket(ePlayer, new PacketPlayOutScoreboardTeam(ep.getTeamName(), ((EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagPrefix(ep) : "") + ep.getActiveColor(), (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagSuffix(ep) : "", (MainConfig.ADVANCED_TEAMS_NAMETAG_VISIBILITY.getBoolean() ? "always" : "never"), (MainConfig.ADVANCED_TEAMS_ENTITY_COLLISION.getBoolean() ? "always" : "never"), Sets.newHashSet(ep.getDisplayName()), 21).setColor(EnumChatFormat.valueOf(ep.getActiveColor().name())).toNMS(pVersion));} catch (Exception e) {e.printStackTrace();}
-				}	
+						NMSHook.sendPacket(ePlayer, new PacketPlayOutScoreboardTeam(ep.getTeamName(), ((EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagPrefix(ep) : "") + ep.getActiveColor(), (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagSuffix(ep) : "", (MainConfig.ADVANCED_TEAMS_NAMETAG_VISIBILITY.getBoolean() ? "always" : "never"), (MainConfig.ADVANCED_TEAMS_ENTITY_COLLISION.getBoolean() ? "always" : "never"), Sets.newHashSet(ep.getDisplayName()), 21).setColor(EnumChatFormat.valueOf(ep.getActiveColor().name())).toNMS(pVersion));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 			}
-			
+
 			if (!ePlayer.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT)) {
 				if (!ep.getGlowStatus() && !ep.getFakeGlowStatus())
 					return;
-				
+
 				Object glowingEntity = ep.getEntity();
 				int glowingEntityID = ep.getPlayer().getEntityId();
 				PacketPlayOutEntityMetadata packetPlayOutEntityMetadata = null;
-				
+
 				try {
 					packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(glowingEntityID, NMSHook.setGlowFlag(glowingEntity, true));
 				} catch (Exception e1) {
 					e1.printStackTrace();
-				} 
+				}
 
 				if (ep.getGlowTargetMode().equals(GlowTargetMode.ALL) || ep.getGlowTargetMode().equals(GlowTargetMode.CUSTOM) && ep.getGlowTargets().contains(ePlayer.getPlayer())) {
 					if (ePlayer.getGlowVisibility().equals(GlowVisibility.ALL)) {
-						try {NMSHook.sendPacket(ePlayer, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(ePlayer.getVersion()));} catch (Exception e) {e.printStackTrace();}
+						try {
+							NMSHook.sendPacket(ePlayer, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(ePlayer.getVersion()));
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
 		}
 	}
-	
+
 	public static synchronized void scoreboardPacket(IEGlowPlayer to, boolean join) {
 		try {
 			if (sendPackets && MainConfig.ADVANCED_TEAMS_SEND_PACKETS.getBoolean()) {
 				if (to == null || EGlow.getInstance() == null)
 					return;
-				
+
 				if (to.getVersion().getMinorVersion() >= 8) {
 					if (EGlow.getInstance().getTABAddon() == null || !EGlow.getInstance().getTABAddon().blockEGlowPackets() || !DebugUtil.isTABBridgeInstalled()) {
 						for (IEGlowPlayer players : DataManager.getEGlowPlayers()) {
@@ -74,15 +81,15 @@ public class PacketUtil {
 						}
 					}
 				}
-				
+
 				if (join) {
 					if (EGlow.getInstance().getTABAddon() == null || !EGlow.getInstance().getTABAddon().blockEGlowPackets() || !DebugUtil.isTABBridgeInstalled()) {
 						for (IEGlowPlayer players : DataManager.getEGlowPlayers()) {
 							NMSHook.sendPacket(players, new PacketPlayOutScoreboardTeam(to.getTeamName(), (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagPrefix(to) : "", (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagSuffix(to) : "", (MainConfig.ADVANCED_TEAMS_NAMETAG_VISIBILITY.getBoolean() ? "always" : "never"), (MainConfig.ADVANCED_TEAMS_ENTITY_COLLISION.getBoolean() ? "always" : "never"), Sets.newHashSet(to.getDisplayName()), 21).setColor(EnumChatFormat.RESET).toNMS(to.getVersion()));
 						}
-					}	
+					}
 				}
-			}	
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -90,15 +97,15 @@ public class PacketUtil {
 
 	public static void updateScoreboardTeam(IEGlowPlayer entity, String teamName, String prefix, String suffix, EnumChatFormat color) {
 		PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam(teamName, prefix, suffix, (MainConfig.ADVANCED_TEAMS_NAMETAG_VISIBILITY.getBoolean() ? "always" : "never"), (MainConfig.ADVANCED_TEAMS_ENTITY_COLLISION.getBoolean() ? "always" : "never"), 21).setColor(color);
-		
+
 		if (sendPackets && MainConfig.ADVANCED_TEAMS_SEND_PACKETS.getBoolean()) {
 			if (EGlow.getInstance() == null)
 				return;
-			
+
 			if (EGlow.getInstance().getTABAddon() != null && EGlow.getInstance().getTABAddon().blockEGlowPackets() || DebugUtil.isTABBridgeInstalled())
 				return;
-			
-			if (entity == null) 
+
+			if (entity == null)
 				return;
 
 			for (IEGlowPlayer ePlayer : DataManager.getEGlowPlayers()) {
@@ -110,21 +117,21 @@ public class PacketUtil {
 			}
 		}
 	}
-	
+
 	public static void updateGlowing(IEGlowPlayer entity, boolean status) {
-		if (entity == null || EGlow.getInstance() == null) 
+		if (entity == null || EGlow.getInstance() == null)
 			return;
-		
+
 		Object glowingEntity = entity.getEntity();
 		int glowingEntityID = entity.getPlayer().getEntityId();
 		PacketPlayOutEntityMetadata packetPlayOutEntityMetadata = null;
-		
+
 		try {
 			packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(glowingEntityID, NMSHook.setGlowFlag(glowingEntity, status));
 		} catch (Exception e1) {
 			e1.printStackTrace();
-		} 
-		
+		}
+
 		if (status) {
 			if (!PipelineInjector.glowingEntities.containsKey(glowingEntityID))
 				PipelineInjector.glowingEntities.put(glowingEntityID, entity);
@@ -135,13 +142,21 @@ public class PacketUtil {
 				if (ep == null)
 					continue;
 
-				switch(entity.getGlowVisibility()) {
+				switch (entity.getGlowVisibility()) {
 					case ALL:
-						try {NMSHook.sendPacket(p, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(ep.getVersion()));} catch (Exception e) {e.printStackTrace();}
+						try {
+							NMSHook.sendPacket(p, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(ep.getVersion()));
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 						break;
 					case OWN:
 						if (entity.getPlayer().equals(p))
-							try {NMSHook.sendPacket(p, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(ep.getVersion()));} catch (Exception e) {e.printStackTrace();}
+							try {
+								NMSHook.sendPacket(p, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(ep.getVersion()));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						break;
 					default:
 						break;
@@ -150,11 +165,15 @@ public class PacketUtil {
 		} else {
 			if (PipelineInjector.glowingEntities.containsKey(glowingEntityID))
 				PipelineInjector.glowingEntities.remove(glowingEntityID, entity);
-		
+
 			for (Player player : Bukkit.getOnlinePlayers()) {
 				IEGlowPlayer eglowPlayer = DataManager.getEGlowPlayer(player);
 				if (eglowPlayer != null)
-					try {NMSHook.sendPacket(player, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(eglowPlayer.getVersion()));} catch (Exception e) {e.printStackTrace();}
+					try {
+						NMSHook.sendPacket(player, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(eglowPlayer.getVersion()));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 			}
 		}
 	}
@@ -173,7 +192,7 @@ public class PacketUtil {
 		if (type && !(main.getGlowStatus() || main.getFakeGlowStatus()))
 			type = false;
 
-		switch(target.getGlowVisibility()) {
+		switch (target.getGlowVisibility()) {
 			case ALL:
 				packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(glowingEntityID, NMSHook.setGlowFlag(glowingEntity, type));
 				break;
@@ -184,10 +203,14 @@ public class PacketUtil {
 				packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(glowingEntityID, NMSHook.setGlowFlag(glowingEntity, false));
 				break;
 			case UNSUPPORTEDCLIENT:
-				break;
+				return;
 		}
 
-		try {NMSHook.sendPacket(target, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(target.getVersion()));} catch (Exception e) {e.printStackTrace();}
+		try {
+			NMSHook.sendPacket(target, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(target.getVersion()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void updateGlowTarget(IEGlowPlayer ePlayer) {
@@ -198,21 +221,33 @@ public class PacketUtil {
 		int glowingEntityID = ePlayer.getPlayer().getEntityId();
 		PacketPlayOutEntityMetadata packetPlayOutEntityMetadata = null;
 
-		try {packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(glowingEntityID, NMSHook.setGlowFlag(glowingEntity, ePlayer.getGlowTargetMode().equals(GlowTargetMode.ALL) && ePlayer.getGlowStatus()));} catch (Exception e1) {e1.printStackTrace();}
+		try {
+			packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(glowingEntityID, NMSHook.setGlowFlag(glowingEntity, ePlayer.getGlowTargetMode().equals(GlowTargetMode.ALL) && ePlayer.getGlowStatus()));
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 
-		switch(ePlayer.getGlowTargetMode()) {
+		switch (ePlayer.getGlowTargetMode()) {
 			case ALL:
 				for (IEGlowPlayer ep : players) {
 					if (ep.getGlowVisibility().equals(GlowVisibility.ALL) || ep.equals(ePlayer) && ep.getGlowVisibility().equals(GlowVisibility.OWN)) {
-						try {NMSHook.sendPacket(ep, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(ep.getVersion()));} catch (Exception e) {e.printStackTrace();}
+						try {
+							NMSHook.sendPacket(ep, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(ep.getVersion()));
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 				break;
-				//TODO keep in mind glow visibility
+			//TODO keep in mind glow visibility
 			case CUSTOM:
 				for (IEGlowPlayer ep : players) {
 					if (!customTargets.contains(ep.getPlayer())) {
-						try {NMSHook.sendPacket(ep, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(ep.getVersion()));} catch (Exception e) {e.printStackTrace();}
+						try {
+							NMSHook.sendPacket(ep, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(ep.getVersion()));
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 				break;
@@ -225,7 +260,7 @@ public class PacketUtil {
 			boolean isGlowing = ep.getGlowStatus() || ep.getFakeGlowStatus();
 			PacketPlayOutEntityMetadata packetPlayOutEntityMetadata = null;
 
-			switch(ePlayer.getGlowVisibility()) {
+			switch (ePlayer.getGlowVisibility()) {
 				case ALL:
 					packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(p.getEntityId(), NMSHook.setGlowFlag(p, isGlowing));
 					break;
@@ -239,7 +274,11 @@ public class PacketUtil {
 					return;
 			}
 
-			try {NMSHook.sendPacket(ePlayer.getPlayer(), packetPlayOutEntityMetadata.toNMS(ePlayer.getVersion()));} catch (Exception e) {e.printStackTrace();}
+			try {
+				NMSHook.sendPacket(ePlayer.getPlayer(), packetPlayOutEntityMetadata.toNMS(ePlayer.getVersion()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -254,7 +293,7 @@ public class PacketUtil {
 
 			try {
 				NMSHook.sendPacket(ePlayer.getPlayer(), packetPlayOutActionBar.toNMS(ePlayer.getVersion()));
-			} catch (Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
@@ -262,7 +301,7 @@ public class PacketUtil {
 
 			try {
 				NMSHook.sendPacket(ePlayer.getPlayer(), packetPlayOutChat.toNMS(ePlayer.getVersion()));
-			} catch (Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
