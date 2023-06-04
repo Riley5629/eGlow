@@ -202,7 +202,7 @@ public class IEGlowPlayer {
 	}
 
 	public String getTeamName() {
-		String playerName = name;
+		String playerName = String.valueOf(name.hashCode()).replace("-", "2");
 		return (playerName.length() > 15) ? "E" + playerName.substring(0, 14) : "E" + playerName;
 	}
 
