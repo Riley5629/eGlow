@@ -17,26 +17,28 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 
 import java.util.*;
 
-public class PipelineInjector{
+public class PipelineInjector {
 	private static final String DECODER_NAME = "eGlowReader";
 	public static HashMap<Integer, IEGlowPlayer> glowingEntities = new HashMap<>();
-	
-	public static void inject(IEGlowPlayer eglowPlayer) {		
+
+	public static void inject(IEGlowPlayer eglowPlayer) {
 		Channel channel = (Channel) NMSHook.getChannel(eglowPlayer.getPlayer());
-		
+
 		if (!Objects.requireNonNull(channel).pipeline().names().contains("packet_handler"))
 			return;
-		
-		if (channel.pipeline().names().contains(DECODER_NAME)) 
+
+		if (channel.pipeline().names().contains(DECODER_NAME))
 			channel.pipeline().remove(DECODER_NAME);
-		
+
 		try {
 			channel.pipeline().addBefore("packet_handler", DECODER_NAME, new ChannelDuplexHandler() {
+				@Override
 				public void channelRead(ChannelHandlerContext context, Object packet) throws Exception {
 					super.channelRead(context, packet);
 				}
-				
-				public void write(ChannelHandlerContext context, Object packet, ChannelPromise channelPromise) throws Exception {		
+
+				@Override
+				public void write(ChannelHandlerContext context, Object packet, ChannelPromise channelPromise) throws Exception {
 					if (NMSHook.nms.PacketPlayOutScoreboardTeam.isInstance(packet)) {
 						if (DebugUtil.TABInstalled()) {
 							if (EGlow.getInstance().getTABAddon() == null) {
@@ -49,7 +51,7 @@ public class PipelineInjector{
 								}
 							}
 						}
-						
+
 						modifyPlayers(packet);
 						super.write(context, packet, channelPromise);
 						return;
@@ -67,18 +69,18 @@ public class PipelineInjector{
 						if (glowingEntities.containsKey(entityID)) {
 							PacketPlayOutEntityMetadata packetPlayOutEntityMetadata;
 							IEGlowPlayer glowingTarget = glowingEntities.get(entityID);
-							
+
 							if (glowingTarget == null) {
 								glowingEntities.remove(entityID);
 								super.write(context, channel, channelPromise);
 								return;
 							}
-							
+
 							GlowVisibility gv = eglowPlayer.getGlowVisibility();
-							
+
 							if (gv.equals(GlowVisibility.UNSUPPORTEDCLIENT) || gv.equals(GlowVisibility.NONE) || //Player can't see the glow & has it enabled
-								glowingTarget.getGlowTargetMode().equals(GlowTargetMode.CUSTOM) && !glowingTarget.getGlowTargets().contains(eglowPlayer.getPlayer()) || //API method check
-								gv.equals(GlowVisibility.OWN) && !glowingTarget.getPlayer().equals(eglowPlayer.getPlayer())) { //if glow is set to personal
+									glowingTarget.getGlowTargetMode().equals(GlowTargetMode.CUSTOM) && !glowingTarget.getGlowTargets().contains(eglowPlayer.getPlayer()) || //API method check
+									gv.equals(GlowVisibility.OWN) && !glowingTarget.getPlayer().equals(eglowPlayer.getPlayer())) { //if glow is set to personal
 								super.write(context, packet, channelPromise);
 								return;
 							}
@@ -101,17 +103,18 @@ public class PipelineInjector{
 	public static void uninject(IEGlowPlayer eglowPlayer) {
 		if (glowingEntities.containsValue(eglowPlayer))
 			glowingEntities.remove(eglowPlayer.getPlayer().getEntityId());
-		
+
 		try {
 			Channel channel = (Channel) NMSHook.getChannel(eglowPlayer.getPlayer());
-			if (Objects.requireNonNull(channel).pipeline().names().contains(DECODER_NAME)) channel.pipeline().remove(DECODER_NAME);
+			if (Objects.requireNonNull(channel).pipeline().names().contains(DECODER_NAME))
+				channel.pipeline().remove(DECODER_NAME);
 		} catch (NoSuchElementException e) {
 			//for whatever reason this rarely throws
-            //java.util.NoSuchElementException: eGlowReader
+			//java.util.NoSuchElementException: eGlowReader
 		}
-		
+
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private static void modifyPlayers(Object packetPlayOutScoreboardTeam) throws Exception {
 		if (!blockPackets() || !MainConfig.ADVANCED_PACKETS_SMART_BLOCKER.getBoolean())
@@ -149,7 +152,7 @@ public class PipelineInjector{
 	}
 
 	private static boolean blockPackets = true;
-	
+
 	public static boolean blockPackets() {
 		return blockPackets;
 	}
