@@ -22,7 +22,6 @@ public class TABAddon {
 	private boolean TAB_Supported = false;
 
 	private YamlConfiguration config;
-	private File configFile;
 	private boolean TAB_NametagPrefixSuffixEnabled;
 	private boolean TAB_TeamPacketBlockingEnabled;
 
@@ -61,7 +60,7 @@ public class TABAddon {
 	}
 
 	public void loadTABSettings() {
-		configFile = new File(TAB.getInstance().getDataFolder(), "config.yml");
+		File configFile = new File(TAB.getInstance().getDataFolder(), "config.yml");
 
 		try {
 			if (!TAB.getInstance().getDataFolder().exists() || !configFile.exists()) {
@@ -86,7 +85,7 @@ public class TABAddon {
 	}
 
 	public void updateTABPlayer(IEGlowPlayer ePlayer, ChatColor glowColor) {
-		TabPlayer tabPlayer = (TabPlayer) getTABPlayer(ePlayer.getUUID());
+		TabPlayer tabPlayer = getTABPlayer(ePlayer.getUUID());
 
 		if (tabPlayer == null || TabAPI.getInstance().getNameTagManager() == null)
 			return;
@@ -105,7 +104,6 @@ public class TABAddon {
 				TabAPI.getInstance().getNameTagManager().setPrefix(tabPlayer, tagPrefix + color);
 			} else {
 				UnlimitedNameTagManager unlimitedNameTagManager = (UnlimitedNameTagManager) TabAPI.getInstance().getNameTagManager();
-				//Property propertyCustomTagName = tabPlayer.getProperty(TabConstants.Property.CUSTOMTAGNAME);
 
 				if (unlimitedNameTagManager == null) {
 					TabAPI.getInstance().getNameTagManager().setPrefix(tabPlayer, tagPrefix + color);
