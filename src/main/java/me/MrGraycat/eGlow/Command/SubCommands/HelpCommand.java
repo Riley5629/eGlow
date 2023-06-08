@@ -24,7 +24,7 @@ public class HelpCommand extends SubCommand {
 
 	@Override
 	public String[] getSyntax() {
-		return new String[] {"/eGlow help"};
+		return new String[]{"/eGlow help"};
 	}
 
 	@Override
@@ -35,13 +35,14 @@ public class HelpCommand extends SubCommand {
 	@Override
 	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
 		String cmd = "&f- &eeGlow &f";
-		
+
 		ChatUtil.sendPlainMsg(sender, "&f&m                 &r &fCommands for &eeGlow &r&f&m                 ", false);
 		ChatUtil.sendPlainMsg(sender, "&fUser commands:", false);
 		ChatUtil.sendPlainMsg(sender, cmd + "(&eOpens GUI&f)", false);
 		ChatUtil.sendPlainMsg(sender, cmd + "help", false);
 		ChatUtil.sendPlainMsg(sender, cmd + "toggle", false);
-		ChatUtil.sendPlainMsg(sender, cmd + "visibility <&eall&f/&eown&f/&enone&f>", false);
+		ChatUtil.sendPlainMsg(sender, cmd + "toggleglowonjoin", false);
+		ChatUtil.sendPlainMsg(sender, cmd + "visibility <&eall&f/&eother&f/&eown&f/&enone&f>", false);
 		ChatUtil.sendPlainMsg(sender, cmd + "list", false);
 		ChatUtil.sendPlainMsg(sender, cmd + "<&eColor&f>", false);
 		ChatUtil.sendPlainMsg(sender, cmd + "<&eBlink&f> <&eColor&f> <&eSpeed&f>", false);

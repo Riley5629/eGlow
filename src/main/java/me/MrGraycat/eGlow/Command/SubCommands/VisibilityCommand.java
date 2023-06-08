@@ -27,7 +27,7 @@ public class VisibilityCommand extends SubCommand {
 
 	@Override
 	public String[] getSyntax() {
-		return new String[] {"/eGlow visibility <all/own/none>"};
+		return new String[]{"/eGlow visibility <all/other/own/none>"};
 	}
 
 	@Override
@@ -42,23 +42,23 @@ public class VisibilityCommand extends SubCommand {
 				ChatUtil.sendMsg(sender, Message.UNSUPPORTED_GLOW.get(), true);
 				return;
 			}
-			
-			if (!args[1].equalsIgnoreCase("all") && !args[1].equalsIgnoreCase("own") && !args[1].equalsIgnoreCase("none")) {
+
+			if (!args[1].equalsIgnoreCase("all") && !args[1].equalsIgnoreCase("other") && !args[1].equalsIgnoreCase("own") && !args[1].equalsIgnoreCase("none")) {
 				sendSyntax(sender, getSyntax()[0], true);
 				return;
 			}
-			
+
 			GlowVisibility oldVisibility = ePlayer.getGlowVisibility();
 			GlowVisibility newVisibility = GlowVisibility.valueOf(args[1].toUpperCase());
-			
+
 			if (!ePlayer.getGlowVisibility().equals(newVisibility) && ePlayer.getSaveData())
-					ePlayer.setSaveData(true);
-				
+				ePlayer.setSaveData(true);
+
 			ePlayer.setGlowVisibility(newVisibility);
-			
-			if (oldVisibility != newVisibility) 
+
+			if (oldVisibility != newVisibility)
 				PacketUtil.forceUpdateGlow(ePlayer);
-			
+
 			ChatUtil.sendMsg(sender, Message.VISIBILITY_CHANGE.get(newVisibility.name()), true);
 		} else {
 			sendSyntax(sender, getSyntax()[0], true);

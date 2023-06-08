@@ -13,6 +13,7 @@ main:
   glow-glowonjoin-toggle: "&fToggled glow on join setting to: &e%value%"
   glow-visibility-change: "&fYou will now only see the following glows: &e%value%"
   glow-visibility-all: "All"
+  glow-visibility-other: "Other"
   glow-visibility-own: "Own"
   glow-visibility-none: "None"
   glow-visibility-unsupported-version: "Unsupported client"

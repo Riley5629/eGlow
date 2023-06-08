@@ -32,7 +32,7 @@ public class PacketUtil {
 				continue;
 
 			if (sendPackets && MainConfig.ADVANCED_TEAMS_SEND_PACKETS.getBoolean()) {
-				if (EGlow.getInstance().getTABAddon() == null || !EGlow.getInstance().getTABAddon().blockEGlowPackets() || (EGlow.getInstance().getTABAddon() == null && !DebugUtil.isTABBridgeInstalled())) {
+				if ((EGlow.getInstance().getTABAddon() != null && !EGlow.getInstance().getTABAddon().blockEGlowPackets()) || !DebugUtil.isTABBridgeInstalled()) {
 					try {
 						NMSHook.sendPacket(ePlayer, new PacketPlayOutScoreboardTeam(ep.getTeamName(), ((EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagPrefix(ep) : "") + ep.getActiveColor(), (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagSuffix(ep) : "", (MainConfig.ADVANCED_TEAMS_NAMETAG_VISIBILITY.getBoolean() ? "always" : "never"), (MainConfig.ADVANCED_TEAMS_ENTITY_COLLISION.getBoolean() ? "always" : "never"), Sets.newHashSet(ep.getDisplayName()), 21).setColor(EnumChatFormat.valueOf(ep.getActiveColor().name())).toNMS(pVersion));
 					} catch (Exception e) {
@@ -56,7 +56,7 @@ public class PacketUtil {
 				}
 
 				if (ep.getGlowTargetMode().equals(GlowTargetMode.ALL) || ep.getGlowTargetMode().equals(GlowTargetMode.CUSTOM) && ep.getGlowTargets().contains(ePlayer.getPlayer())) {
-					if (ePlayer.getGlowVisibility().equals(GlowVisibility.ALL)) {
+					if (ePlayer.getGlowVisibility().equals(GlowVisibility.ALL) || ePlayer.getGlowVisibility().equals(GlowVisibility.OTHER)) {
 						try {
 							NMSHook.sendPacket(ePlayer, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(ePlayer.getVersion()));
 						} catch (Exception e) {
@@ -157,6 +157,14 @@ public class PacketUtil {
 							e.printStackTrace();
 						}
 						break;
+					case OTHER:
+						if (!entity.getPlayer().equals(p))
+							try {
+								NMSHook.sendPacket(p, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(ep.getVersion()));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						break;
 					case OWN:
 						if (entity.getPlayer().equals(p))
 							try {
@@ -203,6 +211,9 @@ public class PacketUtil {
 			case ALL:
 				packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(glowingEntityID, NMSHook.setGlowFlag(glowingEntity, type));
 				break;
+			case OTHER:
+				packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(glowingEntityID, NMSHook.setGlowFlag(glowingEntity, (!change.equals(main.getPlayer()) && type)));
+				break;
 			case OWN:
 				packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(glowingEntityID, NMSHook.setGlowFlag(glowingEntity, (change.equals(main.getPlayer()) && type)));
 				break;
@@ -237,7 +248,7 @@ public class PacketUtil {
 		switch (ePlayer.getGlowTargetMode()) {
 			case ALL:
 				for (IEGlowPlayer ep : players) {
-					if (ep.getGlowVisibility().equals(GlowVisibility.ALL) || ep.equals(ePlayer) && ep.getGlowVisibility().equals(GlowVisibility.OWN)) {
+					if (ep.getGlowVisibility().equals(GlowVisibility.ALL) || (ep.getGlowVisibility().equals(GlowVisibility.OTHER) && !ep.getPlayer().equals(ePlayer.getPlayer())) || ep.getGlowVisibility().equals(GlowVisibility.OWN) && (ep.getPlayer().equals(ePlayer.getPlayer()))) {
 						try {
 							NMSHook.sendPacket(ep, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(ep.getVersion()));
 						} catch (Exception e) {
@@ -250,10 +261,12 @@ public class PacketUtil {
 			case CUSTOM:
 				for (IEGlowPlayer ep : players) {
 					if (!customTargets.contains(ep.getPlayer())) {
-						try {
-							NMSHook.sendPacket(ep, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(ep.getVersion()));
-						} catch (Exception e) {
-							e.printStackTrace();
+						if (ep.getGlowVisibility().equals(GlowVisibility.ALL) || (ep.getGlowVisibility().equals(GlowVisibility.OTHER) && !ep.getPlayer().equals(ePlayer.getPlayer())) || (ep.getPlayer().equals(ePlayer.getPlayer()) && ep.getGlowVisibility().equals(GlowVisibility.OWN))) {
+							try {
+								NMSHook.sendPacket(ep, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(ep.getVersion()));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
@@ -270,6 +283,9 @@ public class PacketUtil {
 			switch (ePlayer.getGlowVisibility()) {
 				case ALL:
 					packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(p.getEntityId(), NMSHook.setGlowFlag(p, isGlowing));
+					break;
+				case OTHER:
+					packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(p.getEntityId(), NMSHook.setGlowFlag(p, (!p.equals(ePlayer.getPlayer()) && isGlowing)));
 					break;
 				case OWN:
 					packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(p.getEntityId(), NMSHook.setGlowFlag(p, (p.equals(ePlayer.getPlayer()) && isGlowing)));

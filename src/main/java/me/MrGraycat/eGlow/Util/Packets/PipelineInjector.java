@@ -9,7 +9,7 @@ import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
 import me.MrGraycat.eGlow.Util.DebugUtil;
-import me.MrGraycat.eGlow.Util.EnumUtil.GlowTargetMode;
+import me.MrGraycat.eGlow.Util.EnumUtil;
 import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
 import me.MrGraycat.eGlow.Util.Packets.OutGoing.PacketPlayOut;
 import me.MrGraycat.eGlow.Util.Packets.OutGoing.PacketPlayOutEntityMetadata;
@@ -78,10 +78,22 @@ public class PipelineInjector {
 
 							GlowVisibility gv = eglowPlayer.getGlowVisibility();
 
-							if (gv.equals(GlowVisibility.UNSUPPORTEDCLIENT) || gv.equals(GlowVisibility.NONE) || //Player can't see the glow & has it enabled
-									glowingTarget.getGlowTargetMode().equals(GlowTargetMode.CUSTOM) && !glowingTarget.getGlowTargets().contains(eglowPlayer.getPlayer()) || //API method check
-									gv.equals(GlowVisibility.OWN) && !glowingTarget.getPlayer().equals(eglowPlayer.getPlayer())) { //if glow is set to personal
+							if (gv.equals(GlowVisibility.UNSUPPORTEDCLIENT)) {
 								super.write(context, packet, channelPromise);
+								return;
+							}
+
+							if (glowingTarget.getGlowTargetMode().equals(EnumUtil.GlowTargetMode.CUSTOM) && !glowingTarget.getGlowTargets().contains(eglowPlayer.getPlayer())) {
+								packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(entityID, NMSHook.setGlowFlag(glowingTarget.getEntity(), false));
+								super.write(context, packetPlayOutEntityMetadata.toNMS(eglowPlayer.getVersion()), channelPromise);
+								return;
+							}
+
+							if (gv.equals(GlowVisibility.NONE) || //Player can't see the glow or set to none
+									(gv.equals(GlowVisibility.OTHER) && glowingTarget.getPlayer().equals(eglowPlayer.getPlayer())) || //if glow is set to other
+									(gv.equals(GlowVisibility.OWN) && !glowingTarget.getPlayer().equals(eglowPlayer.getPlayer()))) { //if glow is set to own
+								packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(entityID, NMSHook.setGlowFlag(glowingTarget.getEntity(), false));
+								super.write(context, packetPlayOutEntityMetadata.toNMS(eglowPlayer.getVersion()), channelPromise);
 								return;
 							}
 

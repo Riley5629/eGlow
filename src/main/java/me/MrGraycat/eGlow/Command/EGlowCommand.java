@@ -159,7 +159,7 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 				case (2):
 					switch (args[0].toLowerCase()) {
 						case ("visibility"):
-							suggestions = new ArrayList<>(Arrays.asList("all", "own", "none"));
+							suggestions = new ArrayList<>(Arrays.asList("all", "other", "own", "none"));
 							break;
 						case ("blink"):
 							for (String color : colors) {

@@ -85,6 +85,7 @@ public class EGlowMessageConfig {
 		GLOWONJOIN_TOGGLE("main.glow-glowonjoin-toggle"),
 		VISIBILITY_CHANGE("main.glow-visibility-change"),
 		VISIBILITY_ALL("main.glow-visibility-all"),
+		VISIBILITY_OTHER("main.glow-visibility-other"),
 		VISIBILITY_OWN("main.glow-visibility-own"),
 		VISIBILITY_NONE("main.glow-visibility-none"),
 		VISIBILITY_UNSUPPORTED("main.glow-visibility-unsupported-version"),
@@ -242,6 +243,7 @@ public class EGlowMessageConfig {
 		addIfMissing("main.other-glow-player-disguise", "&e%target% &cis in disguise which disabled the glow&f.");
 		addIfMissing("main.glow-glowonjoin-toggle", "&fToggled glow on join setting to: &e%value%");
 		addIfMissing("main.glow-visibility-all", "All");
+		addIfMissing("main.glow-visibility-other", "Other");
 		addIfMissing("main.glow-visibility-own", "Own");
 		addIfMissing("main.glow-visibility-none", "None");
 		addIfMissing("main.glow-visibility-unsupported-version", "Unsupported version");
