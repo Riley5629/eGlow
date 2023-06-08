@@ -8,7 +8,7 @@ import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import me.neznamy.tab.api.TabAPI;
 import me.neznamy.tab.api.TabPlayer;
 import me.neznamy.tab.api.event.plugin.TabLoadEvent;
-import me.neznamy.tab.api.nametag.UnlimitedNameTagManager;
+import me.neznamy.tab.api.team.UnlimitedNametagManager;
 import me.neznamy.tab.shared.TAB;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -87,33 +87,33 @@ public class TABAddon {
 	public void updateTABPlayer(IEGlowPlayer ePlayer, ChatColor glowColor) {
 		TabPlayer tabPlayer = getTABPlayer(ePlayer.getUUID());
 
-		if (tabPlayer == null || TabAPI.getInstance().getNameTagManager() == null)
+		if (tabPlayer == null || TabAPI.getInstance().getTeamManager() == null)
 			return;
 
 		String tagPrefix;
 		String color = (glowColor.equals(ChatColor.RESET)) ? "" : glowColor + "";
 
 		try {
-			tagPrefix = TabAPI.getInstance().getNameTagManager().getOriginalPrefix(tabPlayer);
+			tagPrefix = TabAPI.getInstance().getTeamManager().getOriginalPrefix(tabPlayer);
 		} catch (Exception ex) {
 			tagPrefix = color;
 		}
 
 		try {
 			if (!MainConfig.SETTINGS_SMART_TAB_NAMETAG_HANDLER.getBoolean()) {
-				TabAPI.getInstance().getNameTagManager().setPrefix(tabPlayer, tagPrefix + color);
+				TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, tagPrefix + color);
 			} else {
-				UnlimitedNameTagManager unlimitedNameTagManager = (UnlimitedNameTagManager) TabAPI.getInstance().getNameTagManager();
+				UnlimitedNametagManager  unlimitedNameTagManager = (UnlimitedNametagManager) TabAPI.getInstance().getTeamManager();
 
 				if (unlimitedNameTagManager == null) {
-					TabAPI.getInstance().getNameTagManager().setPrefix(tabPlayer, tagPrefix + color);
+					TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, tagPrefix + color);
 				} else {
 					String originalTagName = unlimitedNameTagManager.getOriginalName(tabPlayer);
 
 					if (!originalTagName.equals(tagPrefix + originalTagName))
 						unlimitedNameTagManager.setName(tabPlayer, tagPrefix + originalTagName);
 
-					TabAPI.getInstance().getNameTagManager().setPrefix(tabPlayer, color);
+					TabAPI.getInstance().getTeamManager().setPrefix(tabPlayer, color);
 				}
 			}
 		} catch (IllegalStateException | NullPointerException e) {
