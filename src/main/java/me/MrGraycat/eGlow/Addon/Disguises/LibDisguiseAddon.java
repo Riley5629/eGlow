@@ -33,7 +33,7 @@ public class LibDisguiseAddon implements Listener {
 	 * Check to see if player is disguised
 	 *
 	 * @param player Player to check
-	 * @return true is disguised, false if not
+	 * @return whether player is disguised
 	 */
 	public boolean isDisguised(Player player) {
 		return DisguiseAPI.isDisguised(player);
@@ -48,17 +48,17 @@ public class LibDisguiseAddon implements Listener {
 					Entity entity = event.getEntity();
 
 					if (entity instanceof Player) {
-						IEGlowPlayer player = DataManager.getEGlowPlayer((Player) entity);
+						IEGlowPlayer eGlowPlayer = DataManager.getEGlowPlayer((Player) entity);
 
-						if (player != null && player.isGlowing()) {
-							player.setGlowDisableReason(GlowDisableReason.DISGUISE, false);
-							player.disableGlow(false);
-							ChatUtil.sendMsg(player.getPlayer(), Message.DISGUISE_BLOCKED.get(), true);
+						if (eGlowPlayer != null && eGlowPlayer.isGlowing()) {
+							eGlowPlayer.setGlowDisableReason(GlowDisableReason.DISGUISE, false);
+							eGlowPlayer.disableGlow(false);
+							ChatUtil.sendMsg(eGlowPlayer.getPlayer(), Message.DISGUISE_BLOCKED.get(), true);
 						}
 					}
-				} catch (NoSuchMethodError ex) {
+				} catch (NoSuchMethodError error) {
 					ChatUtil.sendToConsole("&cLibsDisguise isn't up to date &f!", true);
-					ex.printStackTrace();
+					error.printStackTrace();
 				}
 			}
 		}.runTaskAsynchronously(EGlow.getInstance());
@@ -73,28 +73,19 @@ public class LibDisguiseAddon implements Listener {
 					Entity entity = event.getDisguised();
 
 					if (entity instanceof Player) {
-						IEGlowPlayer player = DataManager.getEGlowPlayer((Player) entity);
+						IEGlowPlayer eGlowPlayer = DataManager.getEGlowPlayer((Player) entity);
 
-						if (player != null && player.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-							if (player.isInBlockedWorld()) {
-								player.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD, false);
-								return;
+						if (eGlowPlayer != null && eGlowPlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
+							if (eGlowPlayer.setGlowDisableReason(GlowDisableReason.NONE, false)) {
+								eGlowPlayer.activateGlow();
+								ChatUtil.sendMsg(eGlowPlayer.getPlayer(), Message.DISGUISE_ALLOWED.get(), true);
 							}
-
-							if (player.isInvisible()) {
-								player.setGlowDisableReason(GlowDisableReason.INVISIBLE, false);
-								return;
-							}
-
-							player.activateGlow();
-							player.setGlowDisableReason(GlowDisableReason.NONE, false);
-							ChatUtil.sendMsg(player.getPlayer(), Message.DISGUISE_ALLOWED.get(), true);
 						}
 					}
-				} catch (NoSuchMethodError ex) {
+				} catch (NoSuchMethodError error) {
 					ChatUtil.sendToConsole("&cLibsDisguise isn't up to date &f!", true);
-					ex.printStackTrace();
-				} catch (NullPointerException e) {
+					error.printStackTrace();
+				} catch (NullPointerException ignored) {
 					//Caused by disconnecting while in disguise when server performance is low (rare error)
 				}
 			}
