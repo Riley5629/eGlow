@@ -67,6 +67,7 @@ permissions:
       eglow.command.help: true
       eglow.command.list: true
       eglow.command.toggle: true
+      eglow.command.toggleglowonjoin: true
       eglow.command.visibility: true
       eglow.option.glowstate: true
       eglow.option.glowonjoin: true
@@ -192,6 +193,9 @@ permissions:
     default: true
   eglow.command.toggle:
     description: Gives access to use toggle command.
+    default: false
+  eglow.command.toggleglowonjoin:
+    description: Gives access to use toggleglowonjoin command.
     default: false
   eglow.command.visibility:
     description: Gives access to use visbilility command.

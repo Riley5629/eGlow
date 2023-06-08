@@ -10,6 +10,7 @@ main:
   glow-enable: "&fYour glow has been enabled!"
   glow-disable: "&fYour glow has been disabled!"
   glow-removed: "&cDisabling glow&f! &eThe effect your were using got removed."
+  glow-glowonjoin-toggle: "&fToggled glow on join setting to: &e%value%"
   glow-visibility-change: "&fYou will now only see the following glows: &e%value%"
   glow-visibility-all: "All"
   glow-visibility-own: "Own"

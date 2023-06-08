@@ -82,6 +82,7 @@ public class EGlowMessageConfig {
 		ENABLE_GLOW("main.glow-enable"),
 		DISABLE_GLOW("main.glow-disable"),
 		GLOW_REMOVED("main.glow-removed"),
+		GLOWONJOIN_TOGGLE("main.glow-glowonjoin-toggle"),
 		VISIBILITY_CHANGE("main.glow-visibility-change"),
 		VISIBILITY_ALL("main.glow-visibility-all"),
 		VISIBILITY_OWN("main.glow-visibility-own"),
@@ -167,6 +168,8 @@ public class EGlowMessageConfig {
 					if (config.contains(msg.getConfigPath() + value))
 						return getColorValue(msg.getConfigPath() + value);
 					return getColorValue(Message.COLOR.getConfigPath() + value);
+				case GLOWONJOIN_TOGGLE:
+					return getColorValue(msg.getConfigPath(), "%value%", value);
 				case VISIBILITY_CHANGE:
 					return (value.toUpperCase().equals(EnumUtil.GlowVisibility.UNSUPPORTEDCLIENT.toString())) ? getColorValue(msg.getConfigPath(), "%value%", Message.VISIBILITY_UNSUPPORTED.get()) : getColorValue(msg.getConfigPath(), "%value%", Message.valueOf("VISIBILITY_" + value).get());
 				case INCORRECT_USAGE:
@@ -237,6 +240,7 @@ public class EGlowMessageConfig {
 		addIfMissing("main.invisibility-glow-enabled", "&aRe-enabling you glow as you're no longer invisible&f.");
 		addIfMissing("main.other-glow-player-invisible", "&e%target% &cis invisible which disables the glow&f.");
 		addIfMissing("main.other-glow-player-disguise", "&e%target% &cis in disguise which disabled the glow&f.");
+		addIfMissing("main.glow-glowonjoin-toggle", "&fToggled glow on join setting to: &e%value%");
 		addIfMissing("main.glow-visibility-all", "All");
 		addIfMissing("main.glow-visibility-own", "Own");
 		addIfMissing("main.glow-visibility-none", "None");
