@@ -90,7 +90,7 @@ public class EGlow extends JavaPlugin {
 	}
 
 	private boolean versionIsCompactible() {
-		return !DebugUtil.getServerVersion().equals("v_1_9_R1") && DebugUtil.getMinorVersion() >= 9 && DebugUtil.getMinorVersion() <= 19;
+		return !DebugUtil.getServerVersion().equals("v_1_9_R1") && DebugUtil.getMinorVersion() >= 9 && DebugUtil.getMinorVersion() <= 20;
 	}
 
 	private void loadConfigs() {
