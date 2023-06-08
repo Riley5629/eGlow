@@ -15,20 +15,20 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ConcurrentModificationException;
 
-public class EGlowTABListenerUniv implements Listener { 	
+public class EGlowTABListenerUniv implements Listener {
 
 	@EventHandler
 	public void onColorChange(GlowColorChangeEvent e) {
 		Player p = e.getPlayer();
 		ChatColor chatColor = e.getChatColor();
 		String color = e.getColor();
-		
+
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				try {
 					TABAddon TAB_Addon = EGlow.getInstance().getTABAddon();
-					
+
 					if (TAB_Addon != null && TAB_Addon.blockEGlowPackets()) {
 						if (p != null && TAB_Addon.getTABPlayer(p.getUniqueId()) != null) {
 							IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(p);
@@ -69,7 +69,7 @@ public class EGlowTABListenerUniv implements Listener {
 							TAB_Addon.updateTABPlayer(ePlayer, ePlayer.getActiveColor());
 						}
 					} else if (DebugUtil.onBungee()) {
-						DataManager.TABProxyUpdateRequest(p, (ePlayer.getActiveColor().equals(ChatColor.RESET) || !ePlayer.isGlowing()) ? "" :  ePlayer.getActiveColor() + "");
+						DataManager.TABProxyUpdateRequest(p, (ePlayer.getActiveColor().equals(ChatColor.RESET) || !ePlayer.isGlowing()) ? "" : ePlayer.getActiveColor() + "");
 					}
 				} catch (ConcurrentModificationException ex2) {
 					//Ignore caused by updating to fast
@@ -77,6 +77,6 @@ public class EGlowTABListenerUniv implements Listener {
 					ex.printStackTrace();
 				}
 			}
-		}.runTaskLaterAsynchronously(EGlow.getInstance(), 2L);
+		}.runTaskLaterAsynchronously(EGlow.getInstance(), 5L);
 	}
 }
