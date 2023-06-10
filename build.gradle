@@ -39,10 +39,8 @@ repositories {
 
 dependencies {
     compileOnly('org.spigotmc:spigot-api:1.20-R0.1-SNAPSHOT')
-    compileOnly fileTree(dir: '/lib/')
-    //compileOnly('me.neznamy:tab-api:3.2.4')
-    //compileOnly('me.neznamy:tab-bukkit:3.2.4')
-    //compileOnly('me.neznamy:tab-shared:3.2.4')
+    compileOnly('me.neznamy:tab-api:4.0.0')
+    compileOnly('me.neznamy:tab-shared:4.0.0')
     compileOnly('net.luckperms:api:5.4')
     compileOnly('net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT')
     compileOnly('me.clip:placeholderapi:2.10.9')
@@ -56,6 +54,7 @@ dependencies {
     compileOnly('io.netty:netty-transport:4.1.86.Final')
     compileOnly('it.unimi.dsi:fastutil:8.5.11')
     compileOnly('com.googlecode.json-simple:json-simple:1.1.1')
+    //compileOnly fileTree(dir: '/lib/')
 }
 
 //Clean up unneeded external libraries
