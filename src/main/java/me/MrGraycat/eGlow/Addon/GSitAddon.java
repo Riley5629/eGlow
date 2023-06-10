@@ -3,6 +3,7 @@ package me.MrGraycat.eGlow.Addon;
 import dev.geco.gsit.api.GSitAPI;
 import dev.geco.gsit.api.event.PlayerGetUpPoseEvent;
 import dev.geco.gsit.api.event.PlayerPoseEvent;
+import lombok.Getter;
 import me.MrGraycat.eGlow.API.Event.GlowColorChangeEvent;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.DataManager;
@@ -13,11 +14,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Set;
 
 public class GSitAddon implements Listener {
 
-	static ArrayList<Player> activePlayers = new ArrayList<>();
+	@Getter
+	Set<Player> posingPlayers = Collections.emptySet();
 
 	public GSitAddon() {
 		EGlow.getInstance().getServer().getPluginManager().registerEvents(this, EGlow.getInstance());
@@ -47,27 +50,20 @@ public class GSitAddon implements Listener {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				if (GSitAPI.isPosing(player)) {
-					IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(player);
-					ePlayer.disableGlow(false);
-				}
+				checkGlow(player, GSitAPI.isPosing(player));
 			}
-		}.runTaskLater(EGlow.getInstance(), 2L);
+		}.runTaskLater(EGlow.getInstance(), 5L);
 	}
 
-	private void checkGlow(Player player, boolean posing) {
-		IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(player);
+	private void checkGlow(Player player, boolean isPosing) {
+		IEGlowPlayer eGlowPlayer = DataManager.getEGlowPlayer(player);
 
-		if (posing) {
-			if (ePlayer.getGlowStatus() || ePlayer.getFakeGlowStatus()) {
-				if (!activePlayers.contains(player)) activePlayers.add(player);
-				ePlayer.disableGlow(false);
-			}
+		if (isPosing && eGlowPlayer.isGlowing()) {
+			getPosingPlayers().add(player);
+			eGlowPlayer.disableGlow(false);
 		} else {
-			if (activePlayers.contains(player)) {
-				activePlayers.remove(player);
-				ePlayer.activateGlow();
-			}
+			if (getPosingPlayers().remove(player))
+				eGlowPlayer.activateGlow();
 		}
 	}
 }

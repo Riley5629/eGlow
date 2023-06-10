@@ -4,6 +4,7 @@ import me.MrGraycat.eGlow.API.EGlowAPI;
 import me.MrGraycat.eGlow.Addon.Citizens.CitizensAddon;
 import me.MrGraycat.eGlow.Addon.Disguises.IDisguiseAddon;
 import me.MrGraycat.eGlow.Addon.Disguises.LibDisguiseAddon;
+import me.MrGraycat.eGlow.Addon.GSitAddon;
 import me.MrGraycat.eGlow.Addon.Internal.AdvancedGlowVisibilityAddon;
 import me.MrGraycat.eGlow.Addon.LuckPermsAddon;
 import me.MrGraycat.eGlow.Addon.PlaceholderAPIAddon;
@@ -121,6 +122,8 @@ public class EGlow extends JavaPlugin {
 					setIDisguiseAddon(new IDisguiseAddon());
 				if (DebugUtil.pluginCheck("LibsDisguises"))
 					setLibDisguiseAddon(new LibDisguiseAddon());
+				if (DebugUtil.pluginCheck("GSit"))
+					new GSitAddon();
 				if (DebugUtil.pluginCheck("TAB")) {
 					try {
 						Plugin TAB_Plugin = DebugUtil.getPlugin("TAB");
