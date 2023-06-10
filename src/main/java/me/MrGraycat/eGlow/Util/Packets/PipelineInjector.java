@@ -45,11 +45,14 @@ public class PipelineInjector {
 								super.write(context, packet, channelPromise);
 								return;
 							} else {
-								if (!EGlow.getInstance().getTABAddon().getTABSupported() || EGlow.getInstance().getTABAddon().blockEGlowPackets() || DebugUtil.isTABBridgeInstalled()) {
+								if (!EGlow.getInstance().getTABAddon().isVersionSupported() || EGlow.getInstance().getTABAddon().blockEGlowPackets()) {
 									super.write(context, packet, channelPromise);
 									return;
 								}
 							}
+						} else if (DebugUtil.isTABBridgeInstalled()) {
+							super.write(context, packet, channelPromise);
+							return;
 						}
 
 						modifyPlayers(packet);
