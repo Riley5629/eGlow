@@ -28,6 +28,7 @@ public class EnumUtil {
 		BLOCKEDWORLD,
 		DISGUISE,
 		INVISIBLE,
+		ANIMATION,
 		NONE
 	}
 

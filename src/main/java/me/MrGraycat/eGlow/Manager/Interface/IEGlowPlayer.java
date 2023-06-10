@@ -329,6 +329,7 @@ public class IEGlowPlayer {
 			case BLOCKEDWORLD:
 			case INVISIBLE:
 			case DISGUISE:
+			case ANIMATION:
 				break;
 			case NONE:
 				if (!this.glowDisableReason.equals(reason)) {

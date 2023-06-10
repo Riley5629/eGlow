@@ -8,19 +8,20 @@ import me.MrGraycat.eGlow.API.Event.GlowColorChangeEvent;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.DataManager;
 import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 public class GSitAddon implements Listener {
 
 	@Getter
-	Set<Player> posingPlayers = Collections.emptySet();
+	Set<Player> posingPlayers = new HashSet<>();
 
 	public GSitAddon() {
 		EGlow.getInstance().getServer().getPluginManager().registerEvents(this, EGlow.getInstance());
@@ -58,12 +59,17 @@ public class GSitAddon implements Listener {
 	private void checkGlow(Player player, boolean isPosing) {
 		IEGlowPlayer eGlowPlayer = DataManager.getEGlowPlayer(player);
 
-		if (isPosing && eGlowPlayer.isGlowing()) {
-			getPosingPlayers().add(player);
-			eGlowPlayer.disableGlow(false);
+		if (isPosing) {
+			if (eGlowPlayer.isGlowing()) {
+				getPosingPlayers().add(player);
+				eGlowPlayer.setGlowDisableReason(GlowDisableReason.ANIMATION, false);
+				eGlowPlayer.disableGlow(false);
+			}
 		} else {
-			if (getPosingPlayers().remove(player))
+			if (getPosingPlayers().remove(player)) {
+				eGlowPlayer.setGlowDisableReason(GlowDisableReason.NONE, false);
 				eGlowPlayer.activateGlow();
+			}
 		}
 	}
 }
