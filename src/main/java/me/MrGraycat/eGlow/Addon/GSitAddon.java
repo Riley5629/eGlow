@@ -72,4 +72,9 @@ public class GSitAddon implements Listener {
 			}
 		}
 	}
+
+	//TODO non static access
+	public static boolean isPlayerPosing(Player player) {
+		return GSitAPI.isPosing(player);
+	}
 }

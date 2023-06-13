@@ -17,7 +17,7 @@ public class PlaceholderAPIAddon extends PlaceholderExpansion {
 	public PlaceholderAPIAddon() {
 		register();
 	}
-	
+
 	@Override
 	public String getAuthor() {
 		return EGlow.getInstance().getDescription().getAuthors().toString();
@@ -37,80 +37,80 @@ public class PlaceholderAPIAddon extends PlaceholderExpansion {
 	public String getRequiredPlugin() {
 		return "eGlow";
 	}
-	
+
 	@Override
 	public boolean canRegister() {
 		return EGlow.getInstance() != null;
 	}
-	
+
 	@Override
 	public boolean register() {
 		if (!canRegister())
 			return false;
 		return super.register();
 	}
-	
+
 	@Override
 	public boolean persist() {
 		return true;
 	}
-	
-    @Override
-    public String onPlaceholderRequest(Player player, String identifier) {
-    	if (player == null)
-    		return "";
-    	
-        IEGlowPlayer eglowPlayer = DataManager.getEGlowPlayer(player);
-        
-        if (eglowPlayer == null)
-        	return "";
-        
-        switch(identifier.toLowerCase()) {
-        case("client_version"):
-        	return eglowPlayer.getVersion().getFriendlyName();
-        case("glowcolor"):
-        	return (eglowPlayer.getGlowStatus() && !eglowPlayer.getFakeGlowStatus()) ? eglowPlayer.getActiveColor() + "" : "";
-        case("colorchar"):
-        	return (eglowPlayer.getGlowStatus() && !eglowPlayer.getFakeGlowStatus()) ? eglowPlayer.getActiveColor().getChar() + "" : "r";
-        case("activeglow"):
-        	return (!eglowPlayer.getGlowStatus() && !eglowPlayer.getFakeGlowStatus()) ? Message.COLOR.get("none") : ChatUtil.getEffectChatName(eglowPlayer);
-        case("activeglow_raw"):
-        	return (!eglowPlayer.getGlowStatus() && !eglowPlayer.getFakeGlowStatus()) ? ChatUtil.setToBasicName(Message.COLOR.get("none")) : ChatUtil.setToBasicName(ChatUtil.getEffectChatName(eglowPlayer));
-        case("lastglow"):
-        	return (eglowPlayer.getLastGlowName());
-        case("lastglow_raw"):
-        	return ChatUtil.setToBasicName(eglowPlayer.getLastGlowName());
-		case("glow_speed"):
-			return getSpeedFromEffect(eglowPlayer.getEffect(), false);
-		case("glow_speed_raw"):
-			return getSpeedFromEffect(eglowPlayer.getEffect(), true);
-        case("glowstatus"):
-        	return (eglowPlayer.getGlowStatus() && !eglowPlayer.getFakeGlowStatus()) ? Message.GUI_YES.get() : Message.GUI_NO.get();
-        case("glowstatus_raw"):
-        	return (eglowPlayer.getGlowStatus() && !eglowPlayer.getFakeGlowStatus()) ? "true" : "false";
-        case("glowstatus_join"):
-        	return (eglowPlayer.getGlowOnJoin()) ? Message.GUI_YES.get() : Message.GUI_NO.get();
-        case("glowstatus_join_raw"):
-        	return (eglowPlayer.getGlowOnJoin()) ? "true" : "false";
-        case("glow_visibility"):
-			return (eglowPlayer.getGlowVisibility().equals(EnumUtil.GlowVisibility.UNSUPPORTEDCLIENT)) ? Message.VISIBILITY_UNSUPPORTED.get() : Message.valueOf("VISIBILITY_" + eglowPlayer.getGlowVisibility().toString()).get();
-		default:
-			boolean raw = identifier.toLowerCase().endsWith("_raw");
-			if (identifier.toLowerCase().contains("has_permission_")) {
-				IEGlowEffect effect = DataManager.getEGlowEffect(identifier.toLowerCase().replace("has_permission_", "").replace("_raw", ""));
-				if (effect != null) {
-					if (player.hasPermission(effect.getPermission())) {
-						return (raw) ? "true" : Message.GUI_YES.get();
+
+	@Override
+	public String onPlaceholderRequest(Player player, String identifier) {
+		if (player == null)
+			return "";
+
+		IEGlowPlayer eGlowPlayer = DataManager.getEGlowPlayer(player);
+
+		if (eGlowPlayer == null)
+			return "";
+
+		switch (identifier.toLowerCase()) {
+			case ("client_version"):
+				return eGlowPlayer.getVersion().getFriendlyName();
+			case ("glowcolor"):
+				return (eGlowPlayer.getGlowStatus() && !eGlowPlayer.getFakeGlowStatus()) ? eGlowPlayer.getActiveColor().toString() : "";
+			case ("colorchar"):
+				return (eGlowPlayer.getGlowStatus() && !eGlowPlayer.getFakeGlowStatus()) ? String.valueOf(eGlowPlayer.getActiveColor().getChar()) : "r";
+			case ("activeglow"):
+				return (eGlowPlayer.isGlowing()) ? ChatUtil.getEffectChatName(eGlowPlayer) : Message.COLOR.get("none");
+			case ("activeglow_raw"):
+				return (eGlowPlayer.isGlowing()) ? ChatUtil.setToBasicName(ChatUtil.getEffectChatName(eGlowPlayer)) : ChatUtil.setToBasicName(Message.COLOR.get("none"));
+			case ("lastglow"):
+				return (eGlowPlayer.getLastGlowName());
+			case ("lastglow_raw"):
+				return ChatUtil.setToBasicName(eGlowPlayer.getLastGlowName());
+			case ("glow_speed"):
+				return getSpeedFromEffect(eGlowPlayer.getEffect(), false);
+			case ("glow_speed_raw"):
+				return getSpeedFromEffect(eGlowPlayer.getEffect(), true);
+			case ("glowstatus"):
+				return (eGlowPlayer.getGlowStatus() && !eGlowPlayer.getFakeGlowStatus()) ? Message.GUI_YES.get() : Message.GUI_NO.get();
+			case ("glowstatus_raw"):
+				return (eGlowPlayer.getGlowStatus() && !eGlowPlayer.getFakeGlowStatus()) ? "true" : "false";
+			case ("glowstatus_join"):
+				return (eGlowPlayer.getGlowOnJoin()) ? Message.GUI_YES.get() : Message.GUI_NO.get();
+			case ("glowstatus_join_raw"):
+				return (eGlowPlayer.getGlowOnJoin()) ? "true" : "false";
+			case ("glow_visibility"):
+				return (eGlowPlayer.getGlowVisibility().equals(EnumUtil.GlowVisibility.UNSUPPORTEDCLIENT)) ? Message.VISIBILITY_UNSUPPORTED.get() : Message.valueOf("VISIBILITY_" + eGlowPlayer.getGlowVisibility().toString()).get();
+			default:
+				boolean raw = identifier.toLowerCase().endsWith("_raw");
+				if (identifier.toLowerCase().contains("has_permission_")) {
+					IEGlowEffect effect = DataManager.getEGlowEffect(identifier.toLowerCase().replace("has_permission_", "").replace("_raw", ""));
+					if (effect != null) {
+						if (player.hasPermission(effect.getPermission())) {
+							return (raw) ? "true" : Message.GUI_YES.get();
+						} else {
+							return (raw) ? "false" : Message.GUI_NO.get();
+						}
 					} else {
-						return (raw) ? "false" : Message.GUI_NO.get();
+						return "Invalid effect";
 					}
-				} else {
-					return "Invalid effect";
 				}
-			}
-        }
-        return null;
-    }
+		}
+		return null;
+	}
 
 	private String getSpeedFromEffect(IEGlowEffect effect, boolean raw) {
 		if (effect == null) {

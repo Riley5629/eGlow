@@ -1,5 +1,7 @@
 package me.MrGraycat.eGlow.Addon;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.MrGraycat.eGlow.Addon.TAB.TABAddon;
 import me.MrGraycat.eGlow.EGlow;
 import me.MrGraycat.eGlow.Manager.DataManager;
@@ -19,8 +21,11 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class LuckPermsAddon implements Listener {
-
+	@Getter
+	@Setter
 	private EventSubscription<UserDataRecalculateEvent> luckPermsSub;
+	@Getter
+	@Setter
 	private EventSubscription<GroupDataRecalculateEvent> luckPermsSub2;
 
 	public LuckPermsAddon() {
@@ -29,42 +34,38 @@ public class LuckPermsAddon implements Listener {
 		if (provider == null)
 			return;
 
-		EventBus LP_EventBus = provider.getProvider().getEventBus();
-		TABAddon TAB_Addon = EGlow.getInstance().getTABAddon();
-		VaultAddon Vault_Addon = EGlow.getInstance().getVaultAddon();
+		EventBus lpEventBus = provider.getProvider().getEventBus();
+		TABAddon tabAddon = EGlow.getInstance().getTABAddon();
+		VaultAddon vaultAddon = EGlow.getInstance().getVaultAddon();
 
-		luckPermsSub = LP_EventBus.subscribe(UserDataRecalculateEvent.class, event -> {
+		setLuckPermsSub(lpEventBus.subscribe(UserDataRecalculateEvent.class, event -> {
 			try {
-				if (EGlow.getInstance() == null)
-					return;
-
-				if (event.getUser().getUsername() == null)
+				if (EGlow.getInstance() == null || event.getUser().getUsername() == null)
 					return;
 
 				new BukkitRunnable() {
 					@Override
 					public void run() {
-						IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(event.getUser().getUniqueId());
+						IEGlowPlayer eGlowPlayer = DataManager.getEGlowPlayer(event.getUser().getUniqueId());
 
-						if (ePlayer == null)
+						if (eGlowPlayer == null)
 							return;
 
-						if (TAB_Addon != null && TAB_Addon.isVersionSupported() && TAB_Addon.blockEGlowPackets()) {
-							TAB_Addon.updateTABPlayer(ePlayer, ePlayer.getActiveColor());
+						if (tabAddon != null && tabAddon.isVersionSupported() && tabAddon.blockEGlowPackets()) {
+							tabAddon.updateTABPlayer(eGlowPlayer, eGlowPlayer.getActiveColor());
 						} else {
-							if (!DebugUtil.isTABBridgeInstalled()) {
-								ePlayer.updatePlayerTabname();
-								PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(), ((Vault_Addon != null) ? Vault_Addon.getPlayerTagPrefix(ePlayer) : "") + ePlayer.getActiveColor(), (Vault_Addon != null) ? Vault_Addon.getPlayerTagSuffix(ePlayer) : "", EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
-							}
+							eGlowPlayer.updatePlayerTabname();
+							if (!DebugUtil.isTABBridgeInstalled())
+								PacketUtil.updateScoreboardTeam(eGlowPlayer, eGlowPlayer.getTeamName(), ((vaultAddon != null) ? vaultAddon.getPlayerTagPrefix(eGlowPlayer) : "") + eGlowPlayer.getActiveColor(), (vaultAddon != null) ? vaultAddon.getPlayerTagSuffix(eGlowPlayer) : "", EnumChatFormat.valueOf(eGlowPlayer.getActiveColor().name()));
 						}
 					}
 				}.runTaskLaterAsynchronously(EGlow.getInstance(), 20);
-			} catch (IllegalPluginAccessException e) {
+			} catch (IllegalPluginAccessException ignored) {
 				//Prevent error spam when eGlow is unloading
 			}
-		});
+		}));
 
-		luckPermsSub2 = LP_EventBus.subscribe(GroupDataRecalculateEvent.class, event -> {
+		setLuckPermsSub2(lpEventBus.subscribe(GroupDataRecalculateEvent.class, event -> {
 			try {
 				if (EGlow.getInstance() == null)
 					return;
@@ -72,30 +73,29 @@ public class LuckPermsAddon implements Listener {
 				new BukkitRunnable() {
 					@Override
 					public void run() {
-						for (IEGlowPlayer ePlayer : DataManager.getEGlowPlayers()) {
-							if (TAB_Addon != null && TAB_Addon.isVersionSupported() && TAB_Addon.blockEGlowPackets()) {
-								TAB_Addon.updateTABPlayer(ePlayer, ePlayer.getActiveColor());
+						for (IEGlowPlayer eGlowPlayer : DataManager.getEGlowPlayers()) {
+							if (tabAddon != null && tabAddon.isVersionSupported() && tabAddon.blockEGlowPackets()) {
+								tabAddon.updateTABPlayer(eGlowPlayer, eGlowPlayer.getActiveColor());
 							} else {
 								if (!DebugUtil.isTABBridgeInstalled()) {
-									PacketUtil.updateScoreboardTeam(ePlayer, ePlayer.getTeamName(), ((Vault_Addon != null) ? Vault_Addon.getPlayerTagPrefix(ePlayer) : "") + ePlayer.getActiveColor(), (Vault_Addon != null) ? Vault_Addon.getPlayerTagSuffix(ePlayer) : "", EnumChatFormat.valueOf(ePlayer.getActiveColor().name()));
-
+									PacketUtil.updateScoreboardTeam(eGlowPlayer, eGlowPlayer.getTeamName(), ((vaultAddon != null) ? vaultAddon.getPlayerTagPrefix(eGlowPlayer) : "") + eGlowPlayer.getActiveColor(), (vaultAddon != null) ? vaultAddon.getPlayerTagSuffix(eGlowPlayer) : "", EnumChatFormat.valueOf(eGlowPlayer.getActiveColor().name()));
 								}
 							}
 						}
 					}
 				}.runTaskLaterAsynchronously(EGlow.getInstance(), 20);
-			} catch (IllegalPluginAccessException e) {
+			} catch (IllegalPluginAccessException ignored) {
 				//Prevent error spam when eGlow is unloading
 			}
-		});
+		}));
 	}
 
 	public void unload() {
 		try {
-			luckPermsSub.close();
-			luckPermsSub2.close();
-		} catch (NoClassDefFoundError e) {
-			//Rare error when disabling eGlow no clue how this could happen
+			getLuckPermsSub().close();
+			getLuckPermsSub2().close();
+		} catch (NoClassDefFoundError ignored) {
+			//Rare error when disabling eGlow, no idea how this is caused
 		}
 	}
 }
