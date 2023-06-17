@@ -1,8 +1,8 @@
 name: eGlow
-main: me.MrGraycat.eGlow.EGlow
+main: me.mrgraycat.eglow.EGlow
 version: ${version}
 api-version: 1.13
-softdepend: [ TAB,Citizens,PlaceholderAPI,Vault,iDisguise,LibsDisguises,ViaVersion,ProtocolSupport,LuckPerms,GSit ]
+softdepend: [TAB ,Citizens ,PlaceholderAPI ,Vault ,iDisguise ,LibsDisguises ,ViaVersion ,ProtocolSupport ,LuckPerms ,GSit]
 author: MrGraycat
 description: Adds a static/animated glow outline to players.
 commands:

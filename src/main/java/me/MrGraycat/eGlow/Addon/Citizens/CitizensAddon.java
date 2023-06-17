@@ -1,17 +1,22 @@
-package me.MrGraycat.eGlow.Addon.Citizens;
+package me.mrgraycat.eglow.addon.citizens;
 
+import me.mrgraycat.eglow.EGlow;
+import me.mrgraycat.eglow.addon.GlowAddon;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.TraitInfo;
 import net.citizensnpcs.trait.ScoreboardTrait;
 
-public class CitizensAddon {
+public class CitizensAddon extends GlowAddon {
+
 	/**
-	 * Loads in the custom EGlow trait for citizen NPC's
+	 * Loads in the custom EGlow trait for citizen NPCs
 	 *
 	 * @throws IllegalArgumentException thrown when the trait is already registered (Ignored)
 	 */
-	public CitizensAddon() {
+	public CitizensAddon(EGlow instance) {
+		super(instance);
+
 		try {
 			CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(EGlowCitizensTrait.class).withName("eGlow"));
 		} catch (IllegalArgumentException ignored) {
@@ -33,8 +38,10 @@ public class CitizensAddon {
 			return false;
 		}
 
-		if (!npc.hasTrait(EGlowCitizensTrait.class))
+		if (!npc.hasTrait(EGlowCitizensTrait.class)) {
 			npc.addTrait(EGlowCitizensTrait.class);
+		}
+
 		return true;
 	}
 }
