@@ -1,7 +1,7 @@
-package me.mrgraycat.eglow.migration;
+package me.MrGraycat.eGlow.migration;
 
 import lombok.AllArgsConstructor;
-import me.mrgraycat.eglow.EGlow;
+import me.MrGraycat.eGlow.EGlow;
 
 import java.io.File;
 

@@ -1,12 +1,12 @@
-package me.mrgraycat.eglow.menu.impl;
+package me.MrGraycat.eGlow.menu.impl;
 
-import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
-import me.mrgraycat.eglow.config.EGlowMessageConfig.Message;
-import me.mrgraycat.eglow.menu.Menu;
-import me.mrgraycat.eglow.manager.DataManager;
-import me.mrgraycat.eglow.manager.glow.IEGlowPlayer;
-import me.mrgraycat.eglow.util.Common.GlowDisableReason;
-import me.mrgraycat.eglow.util.chat.ChatUtil;
+import me.MrGraycat.eGlow.config.EGlowMainConfig;
+import me.MrGraycat.eGlow.config.EGlowMessageConfig;
+import me.MrGraycat.eGlow.manager.DataManager;
+import me.MrGraycat.eGlow.util.Common;
+import me.MrGraycat.eGlow.util.chat.ChatUtil;
+import me.MrGraycat.eGlow.menu.Menu;
+import me.MrGraycat.eGlow.manager.glow.IEGlowPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -20,7 +20,7 @@ public class EGlowMainMenu extends Menu {
 
 	@Override
 	public String getMenuName() {
-		return ChatUtil.translateColors(((MainConfig.SETTINGS_GUI_ADD_PREFIX.getBoolean()) ? Message.GUI_TITLE.get() : Message.PREFIX.get() + Message.GUI_TITLE.get()));
+		return ChatUtil.translateColors(((EGlowMainConfig.MainConfig.SETTINGS_GUI_ADD_PREFIX.getBoolean()) ? EGlowMessageConfig.Message.GUI_TITLE.get() : EGlowMessageConfig.Message.PREFIX.get() + EGlowMessageConfig.Message.GUI_TITLE.get()));
 	}
 
 	@Override
@@ -94,32 +94,32 @@ public class EGlowMainMenu extends Menu {
 				if (eGlowPlayer.getPlayer().hasPermission("eglow.command.toggle")) {
 					if (eGlowPlayer.isGlowing()) {
 						eGlowPlayer.disableGlow(false);
-						ChatUtil.sendMenuFromMessage(player, Message.DISABLE_GLOW.get());
+						ChatUtil.sendMenuFromMessage(player, EGlowMessageConfig.Message.DISABLE_GLOW.get());
 					} else {
 						if (eGlowPlayer.getGlowEffect() == null || eGlowPlayer.getGlowEffect().getName().equals("none")) {
-							ChatUtil.sendMenuFromMessage(player, Message.NO_LAST_GLOW.get());
+							ChatUtil.sendMenuFromMessage(player, EGlowMessageConfig.Message.NO_LAST_GLOW.get());
 							return;
 						} else {
-							if (eGlowPlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-								ChatUtil.sendMenuFromMessage(player, Message.DISGUISE_BLOCKED.get());
+							if (eGlowPlayer.getGlowDisableReason().equals(Common.GlowDisableReason.DISGUISE)) {
+								ChatUtil.sendMenuFromMessage(player, EGlowMessageConfig.Message.DISGUISE_BLOCKED.get());
 								return;
 							}
 
-							if (eGlowPlayer.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
-								ChatUtil.sendMenuFromMessage(player, Message.INVISIBILITY_BLOCKED.get());
+							if (eGlowPlayer.getGlowDisableReason().equals(Common.GlowDisableReason.INVISIBLE)) {
+								ChatUtil.sendMenuFromMessage(player, EGlowMessageConfig.Message.INVISIBILITY_BLOCKED.get());
 							}
 
 							if (eGlowPlayer.getPlayer().hasPermission(eGlowPlayer.getGlowEffect().getPermission()) || eGlowPlayer.isForcedGlow(eGlowPlayer.getGlowEffect())) {
 								eGlowPlayer.activateGlow();
 							} else {
-								ChatUtil.sendMenuFromMessage(player, Message.NO_PERMISSION.get());
+								ChatUtil.sendMenuFromMessage(player, EGlowMessageConfig.Message.NO_PERMISSION.get());
 								return;
 							}
-							ChatUtil.sendMenuFromMessage(player, Message.NEW_GLOW.get(eGlowPlayer.getLastGlowName()));
+							ChatUtil.sendMenuFromMessage(player, EGlowMessageConfig.Message.NEW_GLOW.get(eGlowPlayer.getLastGlowName()));
 						}
 					}
 				} else {
-					ChatUtil.sendMenuFromMessage(player, Message.NO_PERMISSION.get());
+					ChatUtil.sendMenuFromMessage(player, EGlowMessageConfig.Message.NO_PERMISSION.get());
 				}
 				break;
 			case (31):
@@ -130,7 +130,7 @@ public class EGlowMainMenu extends Menu {
 					updateSpeed(eGlowPlayer);
 				break;
 			case (34):
-				if (MainConfig.SETTINGS_GUI_CUSTOM_EFFECTS.getBoolean())
+				if (EGlowMainConfig.MainConfig.SETTINGS_GUI_CUSTOM_EFFECTS.getBoolean())
 					new EGlowEffectMenu(eGlowPlayer.getPlayer()).openInventory();
 				break;
 			default:

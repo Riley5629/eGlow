@@ -1,4 +1,4 @@
-package me.mrgraycat.eglow.database.credentials;
+package me.MrGraycat.eGlow.database.credentials;
 
 public interface DatabaseCredentials {
 }

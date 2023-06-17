@@ -1,35 +1,33 @@
-package me.mrgraycat.eglow;
+package me.MrGraycat.eGlow;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.mrgraycat.eglow.api.EGlowAPI;
-import me.mrgraycat.eglow.addon.citizens.CitizensAddon;
-import me.mrgraycat.eglow.addon.disguise.IDisguiseAddon;
-import me.mrgraycat.eglow.addon.disguise.LibDisguiseAddon;
-import me.mrgraycat.eglow.addon.gsit.GSitAddon;
-import me.mrgraycat.eglow.addon.internal.AdvancedGlowVisibilityAddon;
-import me.mrgraycat.eglow.addon.luckperms.LuckPermsAddon;
-import me.mrgraycat.eglow.addon.placeholderapi.PlaceholderAPIAddon;
-import me.mrgraycat.eglow.addon.tab.TabAddon;
-import me.mrgraycat.eglow.addon.vault.VaultAddon;
-import me.mrgraycat.eglow.command.EGlowCommand;
-import me.mrgraycat.eglow.config.EGlowCustomEffectsConfig;
-import me.mrgraycat.eglow.config.EGlowMainConfig;
-import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
-import me.mrgraycat.eglow.config.EGlowMessageConfig;
-import me.mrgraycat.eglow.manager.EGlowPlayerdataManager;
-import me.mrgraycat.eglow.event.EGlowEventListener;
-import me.mrgraycat.eglow.manager.DataManager;
-import me.mrgraycat.eglow.migration.Migration;
-import me.mrgraycat.eglow.migration.impl.ConfigMigration;
-import me.mrgraycat.eglow.migration.impl.CustomEffectsMigration;
-import me.mrgraycat.eglow.migration.impl.MessagesMigration;
-import me.mrgraycat.eglow.util.GlowPlayerUtil;
-import me.mrgraycat.eglow.util.ServerUtil;
-import me.mrgraycat.eglow.util.dependency.Dependency;
-import me.mrgraycat.eglow.util.packet.NMSHook;
-import me.mrgraycat.eglow.util.packet.ProtocolVersion;
-import me.mrgraycat.eglow.util.chat.ChatUtil;
+import me.MrGraycat.eGlow.addon.citizens.CitizensAddon;
+import me.MrGraycat.eGlow.addon.disguise.IDisguiseAddon;
+import me.MrGraycat.eGlow.addon.disguise.LibDisguiseAddon;
+import me.MrGraycat.eGlow.addon.gsit.GSitAddon;
+import me.MrGraycat.eGlow.addon.tab.TabAddon;
+import me.MrGraycat.eGlow.addon.vault.VaultAddon;
+import me.MrGraycat.eGlow.api.EGlowAPI;
+import me.MrGraycat.eGlow.command.EGlowCommand;
+import me.MrGraycat.eGlow.config.EGlowCustomEffectsConfig;
+import me.MrGraycat.eGlow.config.EGlowMainConfig;
+import me.MrGraycat.eGlow.event.EGlowEventListener;
+import me.MrGraycat.eGlow.manager.DataManager;
+import me.MrGraycat.eGlow.migration.impl.ConfigMigration;
+import me.MrGraycat.eGlow.util.GlowPlayerUtil;
+import me.MrGraycat.eGlow.util.ServerUtil;
+import me.MrGraycat.eGlow.util.chat.ChatUtil;
+import me.MrGraycat.eGlow.util.dependency.Dependency;
+import me.MrGraycat.eGlow.addon.Internal.AdvancedGlowVisibilityAddon;
+import me.MrGraycat.eGlow.addon.luckperms.LuckPermsAddon;
+import me.MrGraycat.eGlow.addon.placeholderapi.PlaceholderAPIAddon;
+import me.MrGraycat.eGlow.config.EGlowMessageConfig;
+import me.MrGraycat.eGlow.manager.EGlowPlayerdataManager;
+import me.MrGraycat.eGlow.migration.impl.CustomEffectsMigration;
+import me.MrGraycat.eGlow.migration.impl.MessagesMigration;
+import me.MrGraycat.eGlow.util.packet.NMSHook;
+import me.MrGraycat.eGlow.util.packet.ProtocolVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -39,7 +37,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -149,7 +146,7 @@ public class EGlow extends JavaPlugin {
 	}
 
 	private void runAddonHooks() {
-		if (MainConfig.ADVANCED_GLOW_VISIBILITY_ENABLE.getBoolean() && glowAddon == null) {
+		if (EGlowMainConfig.MainConfig.ADVANCED_GLOW_VISIBILITY_ENABLE.getBoolean() && glowAddon == null) {
 			glowAddon = new AdvancedGlowVisibilityAddon();
 		}
 

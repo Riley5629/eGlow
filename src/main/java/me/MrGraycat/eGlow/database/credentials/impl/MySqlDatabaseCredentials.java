@@ -1,8 +1,8 @@
-package me.mrgraycat.eglow.database.credentials.impl;
+package me.MrGraycat.eGlow.database.credentials.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import me.mrgraycat.eglow.database.credentials.DatabaseCredentials;
+import me.MrGraycat.eGlow.database.credentials.DatabaseCredentials;
 
 @Getter @AllArgsConstructor
 public class MySqlDatabaseCredentials implements DatabaseCredentials {

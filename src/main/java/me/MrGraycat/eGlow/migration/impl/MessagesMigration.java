@@ -1,8 +1,8 @@
-package me.mrgraycat.eglow.migration.impl;
+package me.MrGraycat.eGlow.migration.impl;
 
 import lombok.SneakyThrows;
-import me.mrgraycat.eglow.EGlow;
-import me.mrgraycat.eglow.migration.Migration;
+import me.MrGraycat.eGlow.EGlow;
+import me.MrGraycat.eGlow.migration.Migration;
 
 import java.io.File;
 import java.nio.file.Files;

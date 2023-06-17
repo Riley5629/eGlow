@@ -1,13 +1,13 @@
-package me.mrgraycat.eglow.database.impl;
+package me.MrGraycat.eGlow.database.impl;
 
 import lombok.SneakyThrows;
-import me.mrgraycat.eglow.database.DatabaseClient;
-import me.mrgraycat.eglow.database.credentials.DatabaseCredentials;
-import me.mrgraycat.eglow.database.credentials.impl.MySqlDatabaseCredentials;
-import me.mrgraycat.eglow.database.credentials.impl.SqLiteDatabaseCredentials;
-import me.mrgraycat.eglow.manager.EGlowPlayerdataManager;
-import me.mrgraycat.eglow.manager.glow.IEGlowPlayer;
-import me.mrgraycat.eglow.util.Common;
+import me.MrGraycat.eGlow.database.DatabaseClient;
+import me.MrGraycat.eGlow.database.credentials.impl.MySqlDatabaseCredentials;
+import me.MrGraycat.eGlow.database.credentials.impl.SqLiteDatabaseCredentials;
+import me.MrGraycat.eGlow.database.credentials.DatabaseCredentials;
+import me.MrGraycat.eGlow.manager.EGlowPlayerdataManager;
+import me.MrGraycat.eGlow.manager.glow.IEGlowPlayer;
+import me.MrGraycat.eGlow.util.Common;
 
 import java.sql.*;
 

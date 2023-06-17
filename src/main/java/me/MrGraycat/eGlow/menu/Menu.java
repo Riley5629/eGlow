@@ -1,12 +1,12 @@
-package me.mrgraycat.eglow.menu;
+package me.MrGraycat.eGlow.menu;
 
-import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
-import me.mrgraycat.eglow.config.EGlowMessageConfig.Message;
-import me.mrgraycat.eglow.manager.MenuItemManager;
-import me.mrgraycat.eglow.manager.DataManager;
-import me.mrgraycat.eglow.manager.glow.IEGlowEffect;
-import me.mrgraycat.eglow.manager.glow.IEGlowPlayer;
-import me.mrgraycat.eglow.util.chat.ChatUtil;
+import me.MrGraycat.eGlow.config.EGlowMainConfig;
+import me.MrGraycat.eGlow.config.EGlowMessageConfig;
+import me.MrGraycat.eGlow.manager.DataManager;
+import me.MrGraycat.eGlow.manager.MenuItemManager;
+import me.MrGraycat.eGlow.util.chat.ChatUtil;
+import me.MrGraycat.eGlow.manager.glow.IEGlowEffect;
+import me.MrGraycat.eGlow.manager.glow.IEGlowPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -58,32 +58,32 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 					return;
 				
 				if (!(player.hasPermission(color.getPermission()) || DataManager.isCustomEffect(color.getName()) && Objects.requireNonNull(player.getPlayer(), "Unable to retrieve player").hasPermission("eglow.effect.*"))) {
-					ChatUtil.sendMenuFromMessage(player, Message.NO_PERMISSION.get());
+					ChatUtil.sendMenuFromMessage(player, EGlowMessageConfig.Message.NO_PERMISSION.get());
 					return;
 				}
 					
 				if (eGlowPlayer.isSameGlow(color)) {
-					ChatUtil.sendMenuFromMessage(player, Message.SAME_GLOW.get());
+					ChatUtil.sendMenuFromMessage(player, EGlowMessageConfig.Message.SAME_GLOW.get());
 					return;
 				}
 					
 				eGlowPlayer.activateGlow(color);
-				ChatUtil.sendMenuFromMessage(player, Message.NEW_GLOW.get(color.getDisplayName()));
+				ChatUtil.sendMenuFromMessage(player, EGlowMessageConfig.Message.NEW_GLOW.get(color.getDisplayName()));
 			} else if (DataManager.getEGlowEffect(effectName + "slow") != null) { //for rainbow effect 
 				IEGlowEffect effect = DataManager.getEGlowEffect(effectName + "slow");
 				
 				if (!player.hasPermission(Objects.requireNonNull(effect, "Unable to retrieve effect from given name").getPermission())) {
-					ChatUtil.sendMenuFromMessage(player, Message.NO_PERMISSION.get());
+					ChatUtil.sendMenuFromMessage(player, EGlowMessageConfig.Message.NO_PERMISSION.get());
 					return;
 				}
 				
 				if (eGlowPlayer.isSameGlow(effect)) {
-					ChatUtil.sendMenuFromMessage(player, Message.SAME_GLOW.get());
+					ChatUtil.sendMenuFromMessage(player, EGlowMessageConfig.Message.SAME_GLOW.get());
 					return;
 				}
 				
 				eGlowPlayer.activateGlow(effect);
-				ChatUtil.sendMenuFromMessage(player, Message.NEW_GLOW.get(effect.getDisplayName()));
+				ChatUtil.sendMenuFromMessage(player, EGlowMessageConfig.Message.NEW_GLOW.get(effect.getDisplayName()));
 			}
 				
 		} else if (clickType.equals(ClickType.RIGHT)){
@@ -93,17 +93,17 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 				return;
 			
 			if (!player.hasPermission(effect.getPermission())) {
-				ChatUtil.sendMenuFromMessage(player, Message.NO_PERMISSION.get());
+				ChatUtil.sendMenuFromMessage(player, EGlowMessageConfig.Message.NO_PERMISSION.get());
 				return;
 			}
 			
 			if (eGlowPlayer.isSameGlow(effect)) {
-				ChatUtil.sendMenuFromMessage(player, Message.SAME_GLOW.get());
+				ChatUtil.sendMenuFromMessage(player, EGlowMessageConfig.Message.SAME_GLOW.get());
 				return;
 			}
 			
 			eGlowPlayer.activateGlow(effect);
-			ChatUtil.sendMenuFromMessage(player, Message.NEW_GLOW.get(effect.getDisplayName()));
+			ChatUtil.sendMenuFromMessage(player, EGlowMessageConfig.Message.NEW_GLOW.get(effect.getDisplayName()));
 		}
 	}
 	
@@ -123,7 +123,7 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 				eGlowEffect = DataManager.getEGlowEffect(effect.replace("fast", "slow"));
 			
 			player.activateGlow(eGlowEffect);
-			ChatUtil.sendMenuFromMessage(menuMetadata.getOwner(), Message.NEW_GLOW.get(Objects.requireNonNull(eGlowEffect, "Unable to get displayname from effect").getDisplayName()));
+			ChatUtil.sendMenuFromMessage(menuMetadata.getOwner(), EGlowMessageConfig.Message.NEW_GLOW.get(Objects.requireNonNull(eGlowEffect, "Unable to get displayname from effect").getDisplayName()));
 		}
 	}
 	
@@ -132,7 +132,7 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 	 * @param p to update the navigationbar for
 	 */
 	public void UpdateMainNavigationBar(IEGlowPlayer p) {
-		if (MainConfig.SETTINGS_GUI_ADD_GLASS_PANES.getBoolean()) {
+		if (EGlowMainConfig.MainConfig.SETTINGS_GUI_ADD_GLASS_PANES.getBoolean()) {
 			inventory.setItem(27, createItem(Material.valueOf(GLASS_PANE), "&f", 5, ""));
 			inventory.setItem(29, createItem(Material.valueOf(GLASS_PANE), "&f", 5, ""));
 			inventory.setItem(32, createItem(Material.valueOf(GLASS_PANE), "&f", 5, ""));
@@ -145,12 +145,12 @@ public abstract class Menu extends MenuItemManager implements InventoryHolder {
 		
 		inventory.setItem(28, createPlayerSkull(p));
 		inventory.setItem(30, createGlowingStatus(p));
-		inventory.setItem(31, createItem(Material.NETHER_STAR, Message.GUI_COLOR.get("effect-rainbow"), 0, Message.GUI_LEFT_CLICK.get() + Message.COLOR.get("effect-rainbow"), Message.GUI_EFFECT_PERMISSION.get() + ((p.getPlayer().hasPermission(Objects.requireNonNull(DataManager.getEGlowEffect("rainbowslow"), "Unable to retrieve effect from given name").getPermission()) ? Message.GUI_YES.get() : Message.GUI_NO.get()))));
+		inventory.setItem(31, createItem(Material.NETHER_STAR, EGlowMessageConfig.Message.GUI_COLOR.get("effect-rainbow"), 0, EGlowMessageConfig.Message.GUI_LEFT_CLICK.get() + EGlowMessageConfig.Message.COLOR.get("effect-rainbow"), EGlowMessageConfig.Message.GUI_EFFECT_PERMISSION.get() + ((p.getPlayer().hasPermission(Objects.requireNonNull(DataManager.getEGlowEffect("rainbowslow"), "Unable to retrieve effect from given name").getPermission()) ? EGlowMessageConfig.Message.GUI_YES.get() : EGlowMessageConfig.Message.GUI_NO.get()))));
 
 		if (hasEffect(p))
-			inventory.setItem(32, createItem(Material.valueOf(CLOCK), Message.GUI_SPEED_ITEM_NAME.get(), 0, createSpeedLore(p)));
+			inventory.setItem(32, createItem(Material.valueOf(CLOCK), EGlowMessageConfig.Message.GUI_SPEED_ITEM_NAME.get(), 0, createSpeedLore(p)));
 
-		if (MainConfig.SETTINGS_GUI_CUSTOM_EFFECTS.getBoolean())
-			inventory.setItem(34, setItemGlow(createItem(Material.BOOK, Message.GUI_CUSTOM_EFFECTS_ITEM_NAME.get(), 0, Message.GUI_CLICK_TO_OPEN.get())));
+		if (EGlowMainConfig.MainConfig.SETTINGS_GUI_CUSTOM_EFFECTS.getBoolean())
+			inventory.setItem(34, setItemGlow(createItem(Material.BOOK, EGlowMessageConfig.Message.GUI_CUSTOM_EFFECTS_ITEM_NAME.get(), 0, EGlowMessageConfig.Message.GUI_CLICK_TO_OPEN.get())));
 	}
 }

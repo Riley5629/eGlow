@@ -1,7 +1,7 @@
-package me.mrgraycat.eglow.database;
+package me.MrGraycat.eGlow.database;
 
-import me.mrgraycat.eglow.database.credentials.DatabaseCredentials;
-import me.mrgraycat.eglow.manager.glow.IEGlowPlayer;
+import me.MrGraycat.eGlow.database.credentials.DatabaseCredentials;
+import me.MrGraycat.eGlow.manager.glow.IEGlowPlayer;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
