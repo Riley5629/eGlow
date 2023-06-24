@@ -224,6 +224,10 @@ public class EGlowMessageConfig {
 
 			if (text == null)
 				return "&cFailed to get text for&f: '&e" + path + "'";
+
+			if (replacement == null)
+				replacement = "NULL";
+
 			return ChatUtil.translateColors(text.replace(textToReplace, replacement).replace("%target%", ePlayer.getDisplayName()));
 		}
 	}
