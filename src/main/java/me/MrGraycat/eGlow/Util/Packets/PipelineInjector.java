@@ -24,7 +24,7 @@ public class PipelineInjector {
 	public static void inject(IEGlowPlayer eglowPlayer) {
 		Channel channel = (Channel) NMSHook.getChannel(eglowPlayer.getPlayer());
 
-		if (!Objects.requireNonNull(channel).pipeline().names().contains("packet_handler"))
+		if (channel == null || !channel.pipeline().names().contains("packet_handler"))
 			return;
 
 		if (channel.pipeline().names().contains(DECODER_NAME))
