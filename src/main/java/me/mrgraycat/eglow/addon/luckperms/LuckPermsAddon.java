@@ -1,11 +1,14 @@
-package me.mrgraycat.eglow.addon;
+package me.mrgraycat.eglow.addon.luckperms;
 
+import me.mrgraycat.eglow.addon.GlowAddon;
+import me.mrgraycat.eglow.addon.vault.VaultAddon;
+import me.mrgraycat.eglow.addon.tab.TabAddon;
 import me.mrgraycat.eglow.EGlow;
 import me.mrgraycat.eglow.manager.DataManager;
 import me.mrgraycat.eglow.manager.glow.IEGlowPlayer;
 import me.mrgraycat.eglow.util.ServerUtil;
-import me.mrgraycat.eglow.util.packet.PacketUtil;
 import me.mrgraycat.eglow.util.packet.chat.EnumChatFormat;
+import me.mrgraycat.eglow.util.packet.PacketUtil;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.event.EventBus;
 import net.luckperms.api.event.EventSubscription;
@@ -64,24 +67,28 @@ public class LuckPermsAddon extends GlowAddon implements Listener {
 			}, 20L);
 		}));
 
-		this.luckPermsSub2 = (lpEventBus.subscribe(GroupDataRecalculateEvent.class, event -> runTaskLaterAsynchronously(() -> DataManager.getGlowPlayers().forEach(glowPlayer -> {
-			if (tabAddon != null && tabAddon.isVersionSupported() && tabAddon.blockEGlowPackets()) {
-				tabAddon.updateTabPlayer(glowPlayer, glowPlayer.getActiveColor());
-			} else {
-				String prefix = "";
-				String suffix = "";
+		this.luckPermsSub2 = (lpEventBus.subscribe(GroupDataRecalculateEvent.class, event -> {
+			runTaskLaterAsynchronously(() -> {
+				DataManager.getGlowPlayers().forEach(glowPlayer -> {
+					if (tabAddon != null && tabAddon.isVersionSupported() && tabAddon.blockEGlowPackets()) {
+						tabAddon.updateTabPlayer(glowPlayer, glowPlayer.getActiveColor());
+					} else {
+						String prefix = "";
+						String suffix = "";
 
-				if (vaultAddon != null) {
-					prefix = vaultAddon.getPlayerPrefix(glowPlayer);
-					suffix = vaultAddon.getPlayerSuffix(glowPlayer);
-				}
+						if (vaultAddon != null) {
+							prefix = vaultAddon.getPlayerPrefix(glowPlayer);
+							suffix = vaultAddon.getPlayerSuffix(glowPlayer);
+						}
 
-				if (!ServerUtil.isBridgeEnabled()) {
-					PacketUtil.updateScoreboardTeam(glowPlayer, glowPlayer.getTeamName(), prefix, suffix,
-							EnumChatFormat.valueOf(glowPlayer.getActiveColor().name()));
-				}
-			}
-		}), 20L)));
+						if (!ServerUtil.isBridgeEnabled()) {
+							PacketUtil.updateScoreboardTeam(glowPlayer, glowPlayer.getTeamName(), prefix, suffix,
+									EnumChatFormat.valueOf(glowPlayer.getActiveColor().name()));
+						}
+					}
+				});
+			}, 20L);
+		}));
 	}
 
 	public void unload() {

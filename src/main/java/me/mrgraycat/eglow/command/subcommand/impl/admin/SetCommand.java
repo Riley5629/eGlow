@@ -44,11 +44,11 @@ public class SetCommand extends SubCommand {
 	}
 
 	@Override
-	public void perform(CommandSender commandSender, IEGlowPlayer eGlowPlayer, String[] args) {
-		List<IEGlowPlayer> eTargets = getTarget(commandSender, args);
+	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
+		List<IEGlowPlayer> eTargets = getTarget(sender, args);
 
 		if (eTargets == null) {
-			sendSyntax(commandSender);
+			sendSyntax(sender);
 			return;
 		}
 
@@ -65,7 +65,7 @@ public class SetCommand extends SubCommand {
 				case (4):
 					if (args[2].equalsIgnoreCase("glowonjoin")) {
 						eTarget.setGlowOnJoin(Boolean.parseBoolean(args[3].toLowerCase()));
-						ChatUtil.sendMessage(commandSender, Message.OTHER_GLOW_ON_JOIN_CONFIRM.get(eTarget, args[3].toLowerCase()), true);
+						ChatUtil.sendMessage(sender, Message.OTHER_GLOW_ON_JOIN_CONFIRM.get(eTarget, args[3].toLowerCase()), true);
 						continue;
 
 					}
@@ -77,23 +77,23 @@ public class SetCommand extends SubCommand {
 			}
 
 			if (effect == null) {
-				sendSyntax(commandSender);
+				sendSyntax(sender);
 				return;
 			}
 
 			if (eTarget.getEntityType().equals("PLAYER")) {
 				if (eTarget.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-					ChatUtil.sendMessage(commandSender, Message.OTHER_PLAYER_DISGUISE.get(), true);
+					ChatUtil.sendMessage(sender, Message.OTHER_PLAYER_DISGUISE.get(), true);
 					continue;
 				}
 
 				if (eTarget.isInvisible()) {
-					ChatUtil.sendMessage(commandSender, Message.OTHER_PLAYER_INVISIBLE.get(), true);
+					ChatUtil.sendMessage(sender, Message.OTHER_PLAYER_INVISIBLE.get(), true);
 					continue;
 				}
 
 				if (eTarget.isInBlockedWorld()) {
-					ChatUtil.sendMessage(commandSender, Message.OTHER_PLAYER_IN_DISABLED_WORLD.get(), true);
+					ChatUtil.sendMessage(sender, Message.OTHER_PLAYER_IN_DISABLED_WORLD.get(), true);
 					continue;
 				}
 			}
@@ -104,7 +104,7 @@ public class SetCommand extends SubCommand {
 
 				if (eTarget.getEntityType().equals("PLAYER") && MainConfig.SETTINGS_NOTIFICATIONS_TARGET_COMMAND.getBoolean() && !eTarget.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
 					ChatUtil.sendMessage(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.DISABLE_GLOW.get(), true);
-				ChatUtil.sendMessage(commandSender, Message.OTHER_CONFIRM_OFF.get(eTarget), true);
+				ChatUtil.sendMessage(sender, Message.OTHER_CONFIRM_OFF.get(eTarget), true);
 				continue;
 			}
 
@@ -116,7 +116,7 @@ public class SetCommand extends SubCommand {
 					ChatUtil.sendMessage(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.NEW_GLOW.get(effect.getDisplayName()), true);
 			}
 
-			ChatUtil.sendMessage(commandSender, Message.OTHER_CONFIRM.get(eTarget, effect.getDisplayName()), true);
+			ChatUtil.sendMessage(sender, Message.OTHER_CONFIRM.get(eTarget, effect.getDisplayName()), true);
 		}
 	}
 }

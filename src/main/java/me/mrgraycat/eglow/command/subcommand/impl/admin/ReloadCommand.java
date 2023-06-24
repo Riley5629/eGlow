@@ -1,14 +1,14 @@
 package me.mrgraycat.eglow.command.subcommand.impl.admin;
 
-import me.mrgraycat.eglow.EGlow;
 import me.mrgraycat.eglow.command.subcommand.SubCommand;
 import me.mrgraycat.eglow.config.EGlowCustomEffectsConfig;
 import me.mrgraycat.eglow.config.EGlowMainConfig;
 import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
 import me.mrgraycat.eglow.config.EGlowMessageConfig;
 import me.mrgraycat.eglow.config.EGlowMessageConfig.Message;
-import me.mrgraycat.eglow.manager.DataManager;
 import me.mrgraycat.eglow.manager.EGlowPlayerdataManager;
+import me.mrgraycat.eglow.EGlow;
+import me.mrgraycat.eglow.manager.DataManager;
 import me.mrgraycat.eglow.manager.glow.IEGlowEffect;
 import me.mrgraycat.eglow.manager.glow.IEGlowPlayer;
 import me.mrgraycat.eglow.util.Common.GlowDisableReason;
@@ -48,10 +48,11 @@ public class ReloadCommand extends SubCommand {
 	}
 
 	@Override
-	public void perform(CommandSender commandSender, IEGlowPlayer eGlowPlayer, String[] args) {
+	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
 		if (EGlowMainConfig.reloadConfig() && EGlowMessageConfig.reloadConfig() && EGlowCustomEffectsConfig.reloadConfig()) {
 			EGlowPlayerdataManager.setMysql_Failed(false);
 			DataManager.addEGlowEffects();
+			DataManager.addCustomEffects();
 
 			Bukkit.getOnlinePlayers().stream()
 					.map(DataManager::getEGlowPlayer)
@@ -60,40 +61,33 @@ public class ReloadCommand extends SubCommand {
 						glowPlayer.updatePlayerTabName();
 
 						IEGlowEffect effect = glowPlayer.getForceGlow();
-						GlowDisableReason oldGlowDisableReason = glowPlayer.getGlowDisableReason();
 
-						glowPlayer.setGlowDisableReason(GlowDisableReason.NONE, false);
-
-						GlowDisableReason newGlowDisableReason = glowPlayer.getGlowDisableReason();
-
-						if (newGlowDisableReason.equals(GlowDisableReason.NONE) && !oldGlowDisableReason.equals(GlowDisableReason.NONE)) {
-							if (glowPlayer.isGlowing()) {
-								return;
-							}
-
-							if (effect == null) {
-								glowPlayer.activateGlow();
+						if (effect != null) {
+							if (glowPlayer.isDisguised()) {
+								glowPlayer.setGlowDisableReason(GlowDisableReason.DISGUISE, false);
+								ChatUtil.sendMessage(glowPlayer, Message.DISGUISE_BLOCKED.get(), true);
 							} else {
 								glowPlayer.activateGlow(effect);
 							}
-							ChatUtil.sendMessage(glowPlayer, Message.WORLD_ALLOWED.get(), true);
-						} else {
-							if (!glowPlayer.isGlowing() || newGlowDisableReason.equals(oldGlowDisableReason) || oldGlowDisableReason.equals(GlowDisableReason.NONE)) {
-								return;
-							}
+							return;
+						}
 
-							switch (newGlowDisableReason) {
-								case BLOCKEDWORLD:
-									ChatUtil.sendMessage(glowPlayer, Message.WORLD_BLOCKED.get(), true);
-									break;
-								case DISGUISE:
-									ChatUtil.sendMessage(glowPlayer, Message.DISGUISE_BLOCKED.get(), true);
-									break;
-								case INVISIBLE:
-									ChatUtil.sendMessage(glowPlayer, Message.INVISIBILITY_DISABLED.get(), true);
-									break;
+						if (MainConfig.WORLD_ENABLE.getBoolean() && glowPlayer.isInBlockedWorld()) {
+							if (glowPlayer.isGlowing()) {
+								glowPlayer.disableGlow(false);
+								glowPlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD, false);
+
+								ChatUtil.sendMessage(glowPlayer, Message.WORLD_BLOCKED_RELOAD.get(), true);
 							}
-							glowPlayer.disableGlow(false);
+						} else {
+							if (glowPlayer.getGlowDisableReason() != null &&
+									glowPlayer.getGlowDisableReason().equals(GlowDisableReason.BLOCKEDWORLD)) {
+
+								if (glowPlayer.setGlowDisableReason(GlowDisableReason.NONE, false)) {
+									glowPlayer.activateGlow();
+									ChatUtil.sendMessage(glowPlayer, Message.WORLD_ALLOWED.get(), true);
+								}
+							}
 						}
 					});
 
@@ -111,9 +105,9 @@ public class ReloadCommand extends SubCommand {
 				ChatUtil.reportError(e);
 			}
 
-			ChatUtil.sendMessage(commandSender, Message.RELOAD_SUCCESS.get(), true);
+			ChatUtil.sendMessage(sender, Message.RELOAD_SUCCESS.get(), true);
 		} else {
-			ChatUtil.sendMessage(commandSender, Message.RELOAD_FAIL.get(), true);
+			ChatUtil.sendMessage(sender, Message.RELOAD_SUCCESS.get(), true);
 		}
 	}
 }

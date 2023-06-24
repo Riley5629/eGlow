@@ -2,21 +2,21 @@ package me.mrgraycat.eglow.manager.glow;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.mrgraycat.eglow.EGlow;
-import me.mrgraycat.eglow.addon.VaultAddon;
+import me.mrgraycat.eglow.addon.vault.VaultAddon;
 import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
 import me.mrgraycat.eglow.config.EGlowMessageConfig.Message;
+import me.mrgraycat.eglow.EGlow;
 import me.mrgraycat.eglow.manager.DataManager;
 import me.mrgraycat.eglow.util.Common.GlowDisableReason;
 import me.mrgraycat.eglow.util.Common.GlowTargetMode;
 import me.mrgraycat.eglow.util.Common.GlowVisibility;
 import me.mrgraycat.eglow.util.Common.GlowWorldAction;
-import me.mrgraycat.eglow.util.chat.ChatUtil;
 import me.mrgraycat.eglow.util.dependency.Dependency;
+import me.mrgraycat.eglow.util.packet.chat.EnumChatFormat;
 import me.mrgraycat.eglow.util.packet.PacketUtil;
 import me.mrgraycat.eglow.util.packet.ProtocolVersion;
-import me.mrgraycat.eglow.util.packet.chat.EnumChatFormat;
+import me.mrgraycat.eglow.util.chat.ChatUtil;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.trait.ScoreboardTrait;
 import org.bukkit.ChatColor;
@@ -43,14 +43,11 @@ public class IEGlowPlayer {
 	private boolean glowStatus = false;
 	private boolean fakeGlowStatus = false;
 
-	@Setter
-	private IEGlowEffect glowEffect;
+	@Setter private IEGlowEffect glowEffect;
 
 	private boolean glowOnJoin;
-	@Setter
-	private boolean activeOnQuit;
-	@Setter
-	private boolean saveData = false;
+	@Setter private boolean activeOnQuit;
+	@Setter private boolean saveData = false;
 
 	private GlowDisableReason glowDisableReason = GlowDisableReason.NONE;
 	private GlowVisibility glowVisibility;

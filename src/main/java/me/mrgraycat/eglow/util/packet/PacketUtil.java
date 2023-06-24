@@ -2,10 +2,10 @@ package me.mrgraycat.eglow.util.packet;
 
 import com.google.common.collect.Sets;
 import lombok.experimental.UtilityClass;
-import me.mrgraycat.eglow.EGlow;
-import me.mrgraycat.eglow.addon.TabAddon;
-import me.mrgraycat.eglow.addon.VaultAddon;
+import me.mrgraycat.eglow.addon.vault.VaultAddon;
+import me.mrgraycat.eglow.addon.tab.TabAddon;
 import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
+import me.mrgraycat.eglow.EGlow;
 import me.mrgraycat.eglow.manager.DataManager;
 import me.mrgraycat.eglow.manager.glow.IEGlowPlayer;
 import me.mrgraycat.eglow.util.Common.GlowTargetMode;
@@ -137,8 +137,8 @@ public class PacketUtil {
 					String entityCollision = (MainConfig.ADVANCED_TEAMS_ENTITY_COLLISION.getBoolean() ? "always" : "never");
 
 					sendPacketNms(glowPlayer, new PacketPlayOutScoreboardTeam(
-							to.getTeamName(), playerPrefix, playerSuffix, nameTagVisibility, entityCollision,
-							Sets.newHashSet(to.getDisplayName()), 21).setColor(EnumChatFormat.RESET));
+								to.getTeamName(), playerPrefix, playerSuffix, nameTagVisibility, entityCollision,
+								Sets.newHashSet(to.getDisplayName()), 21).setColor(EnumChatFormat.RESET));
 				});
 	}
 
@@ -281,8 +281,8 @@ public class PacketUtil {
 		switch (ePlayer.getGlowTarget()) {
 			case ALL:
 				players.stream().filter(glowPlayer -> glowPlayer.getGlowVisibility().equals(GlowVisibility.ALL) ||
-								(glowPlayer.getGlowVisibility().equals(GlowVisibility.OTHER) && !glowPlayer.getPlayer().equals(player) ||
-										(glowPlayer.getGlowVisibility().equals(GlowVisibility.OWN) && (glowPlayer.getPlayer().equals(player)))))
+						(glowPlayer.getGlowVisibility().equals(GlowVisibility.OTHER) && !glowPlayer.getPlayer().equals(player) ||
+								(glowPlayer.getGlowVisibility().equals(GlowVisibility.OWN) && (glowPlayer.getPlayer().equals(player)))))
 						.forEach(glowPlayer -> sendPacketNms(glowPlayer, packet));
 				break;
 			//TODO keep in mind glow visibility

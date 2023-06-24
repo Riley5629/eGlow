@@ -4,9 +4,9 @@ import de.robingrether.idisguise.api.DisguiseAPI;
 import de.robingrether.idisguise.api.DisguiseEvent;
 import de.robingrether.idisguise.api.UndisguiseEvent;
 import lombok.Getter;
-import me.mrgraycat.eglow.EGlow;
 import me.mrgraycat.eglow.addon.GlowAddon;
 import me.mrgraycat.eglow.config.EGlowMessageConfig.Message;
+import me.mrgraycat.eglow.EGlow;
 import me.mrgraycat.eglow.manager.DataManager;
 import me.mrgraycat.eglow.manager.glow.IEGlowPlayer;
 import me.mrgraycat.eglow.util.Common.GlowDisableReason;
@@ -36,7 +36,7 @@ public class IDisguiseAddon extends GlowAddon implements Listener {
 		super(instance);
 
 		this.disguiseApi = Objects.requireNonNull(instance.getServer().getServicesManager()
-				.getRegistration(DisguiseAPI.class), "Unable to hook into IDisguise").getProvider();
+						.getRegistration(DisguiseAPI.class), "Unable to hook into IDisguise").getProvider();
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class IDisguiseAddon extends GlowAddon implements Listener {
 	 * @return whether player is disguised
 	 */
 	public boolean isDisguised(Player player) {
-		return getDisguiseApi().isDisguised(player);
+		return disguiseApi.isDisguised(player);
 	}
 
 	@EventHandler

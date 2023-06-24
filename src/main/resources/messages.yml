@@ -48,6 +48,7 @@ main:
   disguise-glow-allowed: "&aYou have undisguised and are allowed to glow again&f! &aReactivating glow&f!"
 
   world-glow-blocked: "&cGlowing is not allowed in this world&f!"
+  world-glow-blocked-reload: "&cGlowing is no longer allowed in this world&f! &cDeactivating glow&f!"
   world-glow-allowed: "&aGlowing is back allowed in this world&f! &aReactivating glow&f!"
 
   color-red: "&cRed"

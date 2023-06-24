@@ -2,28 +2,34 @@ package me.mrgraycat.eglow;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.mrgraycat.eglow.addon.*;
+import me.mrgraycat.eglow.api.EGlowAPI;
 import me.mrgraycat.eglow.addon.citizens.CitizensAddon;
 import me.mrgraycat.eglow.addon.disguise.IDisguiseAddon;
 import me.mrgraycat.eglow.addon.disguise.LibDisguiseAddon;
-import me.mrgraycat.eglow.api.EGlowAPI;
+import me.mrgraycat.eglow.addon.gsit.GSitAddon;
+import me.mrgraycat.eglow.addon.internal.AdvancedGlowVisibilityAddon;
+import me.mrgraycat.eglow.addon.luckperms.LuckPermsAddon;
+import me.mrgraycat.eglow.addon.placeholderapi.PlaceholderAPIAddon;
+import me.mrgraycat.eglow.addon.tab.TabAddon;
+import me.mrgraycat.eglow.addon.vault.VaultAddon;
 import me.mrgraycat.eglow.command.EGlowCommand;
 import me.mrgraycat.eglow.config.EGlowCustomEffectsConfig;
 import me.mrgraycat.eglow.config.EGlowMainConfig;
 import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
 import me.mrgraycat.eglow.config.EGlowMessageConfig;
+import me.mrgraycat.eglow.manager.EGlowPlayerdataManager;
 import me.mrgraycat.eglow.event.EGlowEventListener;
 import me.mrgraycat.eglow.manager.DataManager;
-import me.mrgraycat.eglow.manager.EGlowPlayerdataManager;
+import me.mrgraycat.eglow.migration.Migration;
 import me.mrgraycat.eglow.migration.impl.ConfigMigration;
 import me.mrgraycat.eglow.migration.impl.CustomEffectsMigration;
 import me.mrgraycat.eglow.migration.impl.MessagesMigration;
 import me.mrgraycat.eglow.util.GlowPlayerUtil;
 import me.mrgraycat.eglow.util.ServerUtil;
-import me.mrgraycat.eglow.util.chat.ChatUtil;
 import me.mrgraycat.eglow.util.dependency.Dependency;
 import me.mrgraycat.eglow.util.packet.NMSHook;
 import me.mrgraycat.eglow.util.packet.ProtocolVersion;
+import me.mrgraycat.eglow.util.chat.ChatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,19 +39,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
 public class EGlow extends JavaPlugin {
 
-	@Getter
-	private static EGlow instance;
+	@Getter private static EGlow instance;
 	private EGlowAPI api;
 	private boolean upToDate;
 
 	//Addons
-	@Setter
-	private AdvancedGlowVisibilityAddon glowAddon;
+	@Setter private AdvancedGlowVisibilityAddon glowAddon;
 	private CitizensAddon citizensAddon;
 	private IDisguiseAddon iDisguiseAddon;
 	private LibDisguiseAddon libDisguiseAddon;
@@ -157,7 +162,7 @@ public class EGlow extends JavaPlugin {
 		}
 
 		if (Dependency.CITIZENS.isLoaded() && citizensAddon == null) {
-			this.citizensAddon = new CitizensAddon();
+			this.citizensAddon = new CitizensAddon(this);
 		}
 
 		if (Dependency.I_DISGUISE.isLoaded()) {
