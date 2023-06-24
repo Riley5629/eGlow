@@ -168,7 +168,7 @@ public class EGlow extends JavaPlugin {
 			String currentVersion = getInstance().getDescription().getVersion();
 			String latestVersion = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream())).readLine();
 
-			if (currentVersion.contains("PRE")) {
+			if (currentVersion.contains("PRE") || currentVersion.contains("SNAPSHOT")) {
 				String betaVersion = currentVersion.split("-")[0];
 				setUpToDate(!betaVersion.equals(latestVersion));
 			} else {
