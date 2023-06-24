@@ -1,9 +1,9 @@
 package me.mrgraycat.eglow.command.subcommand.impl;
 
+import me.mrgraycat.eglow.command.subcommand.SubCommand;
 import me.mrgraycat.eglow.config.EGlowMessageConfig;
 import me.mrgraycat.eglow.manager.glow.IEGlowPlayer;
 import me.mrgraycat.eglow.util.chat.ChatUtil;
-import me.mrgraycat.eglow.command.subcommand.SubCommand;
 import org.bukkit.command.CommandSender;
 
 public class ToggleGlowOnJoinCommand extends SubCommand {
@@ -34,8 +34,8 @@ public class ToggleGlowOnJoinCommand extends SubCommand {
 	}
 
 	@Override
-	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
-		ePlayer.setGlowOnJoin(!ePlayer.isGlowOnJoin());
-		ChatUtil.sendMessage(sender, EGlowMessageConfig.Message.GLOWONJOIN_TOGGLE.get(String.valueOf(ePlayer.isGlowOnJoin())), true);
+	public void perform(CommandSender commandSender, IEGlowPlayer eGlowPlayer, String[] args) {
+		eGlowPlayer.setGlowOnJoin(!eGlowPlayer.isGlowOnJoin());
+		ChatUtil.sendMessage(commandSender, EGlowMessageConfig.Message.GLOWONJOIN_TOGGLE.get(String.valueOf(eGlowPlayer.isGlowOnJoin())), true);
 	}
 }

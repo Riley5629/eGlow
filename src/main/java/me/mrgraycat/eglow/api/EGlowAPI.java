@@ -1,15 +1,15 @@
 package me.mrgraycat.eglow.api;
 
+import me.mrgraycat.eglow.EGlow;
 import me.mrgraycat.eglow.api.enums.EGlowBlink;
 import me.mrgraycat.eglow.api.enums.EGlowColor;
 import me.mrgraycat.eglow.api.enums.EGlowEffect;
-import me.mrgraycat.eglow.EGlow;
 import me.mrgraycat.eglow.manager.DataManager;
 import me.mrgraycat.eglow.manager.glow.IEGlowEffect;
 import me.mrgraycat.eglow.manager.glow.IEGlowPlayer;
+import me.mrgraycat.eglow.util.chat.ChatUtil;
 import me.mrgraycat.eglow.util.packet.PacketUtil;
 import me.mrgraycat.eglow.util.packet.PipelineInjector;
-import me.mrgraycat.eglow.util.chat.ChatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -44,14 +44,14 @@ public class EGlowAPI {
 	/**
 	 * Get the IEGlowEffect from eGlow
 	 *
-	 * @param name name for the effect
+	 * @param effectName name for the effect
 	 * @return IEGlowEffect is found, null if not
 	 */
-	public IEGlowEffect getEGlowEffect(String name) {
-		IEGlowEffect eGlowEffect = DataManager.getEGlowEffect(name);
+	public IEGlowEffect getEGlowEffect(String effectName) {
+		IEGlowEffect eGlowEffect = DataManager.getEGlowEffect(effectName);
 
 		if (eGlowEffect == null)
-			ChatUtil.sendToConsole("(API) Unable to find effect for name: " + name, true);
+			ChatUtil.sendToConsole("(API) Unable to find effect for name: " + effectName, true);
 		return eGlowEffect;
 	}
 

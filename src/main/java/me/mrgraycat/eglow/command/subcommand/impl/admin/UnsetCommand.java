@@ -27,7 +27,7 @@ public class UnsetCommand extends SubCommand {
 
 	@Override
 	public String[] getSyntax() {
-		return new String[] {"/eGlow unset <player/npc>"};
+		return new String[]{"/eGlow unset <player/npc>"};
 	}
 
 	@Override
@@ -36,26 +36,26 @@ public class UnsetCommand extends SubCommand {
 	}
 
 	@Override
-	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
-		List<IEGlowPlayer> eTargets = getTarget(sender, args);
+	public void perform(CommandSender commandSender, IEGlowPlayer eGlowPlayer, String[] args) {
+		List<IEGlowPlayer> eTargets = getTarget(commandSender, args);
 
 		if (eTargets == null) {
-			sendSyntax(sender);
+			sendSyntax(commandSender);
 			return;
 		}
 
 		for (IEGlowPlayer eTarget : eTargets) {
 			if (eTarget == null)
 				continue;
-			
+
 			if (eTarget.isGlowing()) {
 				eTarget.disableGlow(false);
-				
+
 				if (eTarget.getEntityType().equals("PLAYER") && MainConfig.SETTINGS_NOTIFICATIONS_TARGET_COMMAND.getBoolean())
 					ChatUtil.sendMessage(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.DISABLE_GLOW.get(), true);
 			}
 
-			ChatUtil.sendMessage(sender, Message.OTHER_CONFIRM_OFF.get(eTarget), true);
-		}	
+			ChatUtil.sendMessage(commandSender, Message.OTHER_CONFIRM_OFF.get(eTarget), true);
+		}
 	}
 }

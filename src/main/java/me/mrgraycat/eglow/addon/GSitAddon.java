@@ -1,12 +1,10 @@
-package me.mrgraycat.eglow.addon.gsit;
+package me.mrgraycat.eglow.addon;
 
 import dev.geco.gsit.api.GSitAPI;
 import dev.geco.gsit.api.event.PlayerGetUpPoseEvent;
 import dev.geco.gsit.api.event.PlayerPoseEvent;
-import lombok.Getter;
-import me.mrgraycat.eglow.addon.GlowAddon;
-import me.mrgraycat.eglow.api.event.GlowColorChangeEvent;
 import me.mrgraycat.eglow.EGlow;
+import me.mrgraycat.eglow.api.event.GlowColorChangeEvent;
 import me.mrgraycat.eglow.manager.DataManager;
 import me.mrgraycat.eglow.manager.glow.IEGlowPlayer;
 import me.mrgraycat.eglow.util.Common.GlowDisableReason;
@@ -14,7 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,8 +22,6 @@ public class GSitAddon extends GlowAddon implements Listener {
 
 	public GSitAddon(EGlow instance) {
 		super(instance);
-
-		EGlow.getInstance().getServer().getPluginManager().registerEvents(this, EGlow.getInstance());
 	}
 
 	@EventHandler
@@ -48,12 +43,13 @@ public class GSitAddon extends GlowAddon implements Listener {
 		checkGlow(event.getPlayer(), false);
 	}
 
+	//TODO is this needed?
 	@EventHandler
 	public void onGlowChange(GlowColorChangeEvent event) {
 		Player player = event.getPlayer();
 
 		runTaskLater(() -> {
-			checkGlow(player, GSitAPI.isPosing(player));
+			checkGlow(player, isPlayerPosing(player));
 		}, 5L);
 	}
 
@@ -74,8 +70,7 @@ public class GSitAddon extends GlowAddon implements Listener {
 		}
 	}
 
-	// Why is this static?
-	public static boolean isPlayerPosing(Player player) {
+	public boolean isPlayerPosing(Player player) {
 		return GSitAPI.isPosing(player);
 	}
 }

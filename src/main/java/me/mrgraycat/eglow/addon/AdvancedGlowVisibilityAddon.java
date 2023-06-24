@@ -1,11 +1,11 @@
-package me.mrgraycat.eglow.addon.internal;
+package me.mrgraycat.eglow.addon;
 
-import me.mrgraycat.eglow.config.EGlowMainConfig;
 import me.mrgraycat.eglow.EGlow;
+import me.mrgraycat.eglow.config.EGlowMainConfig;
 import me.mrgraycat.eglow.manager.DataManager;
 import me.mrgraycat.eglow.manager.glow.IEGlowPlayer;
-import me.mrgraycat.eglow.util.pair.BiPair;
 import me.mrgraycat.eglow.util.iterator.BlockIterator;
+import me.mrgraycat.eglow.util.pair.BiPair;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -46,7 +46,7 @@ public class AdvancedGlowVisibilityAddon {
 			public void run() {
 				Collection<IEGlowPlayer> ePlayers = DataManager.getGlowPlayers();
 
-				// Nothing is ever done with checkedPlayers
+				//TODO Nothing is ever done with checkedPlayers
 				List<BiPair<UUID, UUID>> checkedPlayers = ePlayers.stream()
 						.map(glowPlayer -> {
 							Player player = glowPlayer.getPlayer();
@@ -205,8 +205,8 @@ public class AdvancedGlowVisibilityAddon {
 		private int distance() {
 			return (int) Math.floor(Math.sqrt(
 					Math.pow((origin.getX() - target.getX()), 2) +
-					Math.pow((origin.getY() - target.getY()), 2) +
-					Math.pow((origin.getZ() - target.getZ()), 2))
+							Math.pow((origin.getY() - target.getY()), 2) +
+							Math.pow((origin.getZ() - target.getZ()), 2))
 			);
 		}
 	}

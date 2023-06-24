@@ -1,16 +1,13 @@
-package me.mrgraycat.eglow.addon.vault;
+package me.mrgraycat.eglow.addon;
 
 import lombok.Getter;
-import lombok.Setter;
-import me.mrgraycat.eglow.addon.GlowAddon;
-import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.mrgraycat.eglow.EGlow;
+import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
 import me.mrgraycat.eglow.manager.glow.IEGlowPlayer;
-import me.mrgraycat.eglow.util.ServerUtil;
+import me.mrgraycat.eglow.util.chat.ChatUtil;
 import me.mrgraycat.eglow.util.dependency.Dependency;
 import me.mrgraycat.eglow.util.packet.ProtocolVersion;
-import me.mrgraycat.eglow.util.chat.ChatUtil;
-import me.clip.placeholderapi.PlaceholderAPI;
 import net.milkbowl.vault.chat.Chat;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -18,7 +15,8 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class VaultAddon extends GlowAddon {
 
-	@Getter private Chat chat;
+	@Getter
+	private Chat chat;
 
 	/**
 	 * Get vault's chat & check if PlaceholderAPI is installed for placeholder support

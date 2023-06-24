@@ -1,14 +1,14 @@
 package me.mrgraycat.eglow.command.subcommand.impl;
 
+import me.mrgraycat.eglow.command.subcommand.SubCommand;
 import me.mrgraycat.eglow.config.EGlowMessageConfig.Message;
 import me.mrgraycat.eglow.manager.DataManager;
 import me.mrgraycat.eglow.manager.glow.IEGlowEffect;
 import me.mrgraycat.eglow.manager.glow.IEGlowPlayer;
-import me.mrgraycat.eglow.util.effect.EffectMapper;
 import me.mrgraycat.eglow.util.Common.GlowDisableReason;
 import me.mrgraycat.eglow.util.Common.GlowVisibility;
 import me.mrgraycat.eglow.util.chat.ChatUtil;
-import me.mrgraycat.eglow.command.subcommand.SubCommand;
+import me.mrgraycat.eglow.util.effect.EffectMapper;
 import org.bukkit.command.CommandSender;
 
 public class EffectCommand extends SubCommand {
@@ -39,19 +39,19 @@ public class EffectCommand extends SubCommand {
 	}
 
 	@Override
-	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
-		if (ePlayer.isInBlockedWorld()) {
-			ChatUtil.sendMessage(sender, Message.WORLD_BLOCKED.get(), true);
-			return;
-		}
-		
-		if (ePlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-			ChatUtil.sendMessage(sender, Message.DISGUISE_BLOCKED.get(), true);
+	public void perform(CommandSender commandSender, IEGlowPlayer eGlowPlayer, String[] args) {
+		if (eGlowPlayer.isInBlockedWorld()) {
+			ChatUtil.sendMessage(commandSender, Message.WORLD_BLOCKED.get(), true);
 			return;
 		}
 
-		if (ePlayer.isInvisible()) {
-			ChatUtil.sendMessage(sender, Message.INVISIBILITY_BLOCKED.get(), true);
+		if (eGlowPlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
+			ChatUtil.sendMessage(commandSender, Message.DISGUISE_BLOCKED.get(), true);
+			return;
+		}
+
+		if (eGlowPlayer.isInvisible()) {
+			ChatUtil.sendMessage(commandSender, Message.INVISIBILITY_BLOCKED.get(), true);
 			return;
 		}
 
@@ -61,24 +61,24 @@ public class EffectCommand extends SubCommand {
 			case 1:
 				effect = DataManager.getEGlowEffect(args[0].replace("off", "none").replace("disable", "none"));
 
-				if (effect == null && ePlayer.getGlowEffect() != null) {
+				if (effect == null && eGlowPlayer.getGlowEffect() != null) {
 					IEGlowEffect effectNew = null;
 
-					if (ePlayer.getGlowEffect().getName().contains(args[0].toLowerCase())) {
-						effectNew = EffectMapper.flip(ePlayer.getGlowEffect());
-					} else if (DataManager.getEGlowEffect(args[0].toLowerCase() + ePlayer.getGlowEffect().getName() + "slow") != null) {
-						effectNew = DataManager.getEGlowEffect(args[0].toLowerCase() + ePlayer.getGlowEffect().getName() + "slow");
+					if (eGlowPlayer.getGlowEffect().getName().contains(args[0].toLowerCase())) {
+						effectNew = EffectMapper.flip(eGlowPlayer.getGlowEffect());
+					} else if (DataManager.getEGlowEffect(args[0].toLowerCase() + eGlowPlayer.getGlowEffect().getName() + "slow") != null) {
+						effectNew = DataManager.getEGlowEffect(args[0].toLowerCase() + eGlowPlayer.getGlowEffect().getName() + "slow");
 					}
 
 					if (effectNew != null) {
-						if (!sender.hasPermission(effectNew.getPermission())) {
-							ChatUtil.sendMessage(sender, Message.NO_PERMISSION.get(), true);
+						if (!commandSender.hasPermission(effectNew.getPermission())) {
+							ChatUtil.sendMessage(commandSender, Message.NO_PERMISSION.get(), true);
 							return;
 						}
 
-						ePlayer.disableGlow(true);
-						ePlayer.activateGlow(effectNew);
-						ChatUtil.sendMessage(sender, Message.NEW_GLOW.get(effectNew.getDisplayName()), true);
+						eGlowPlayer.disableGlow(true);
+						eGlowPlayer.activateGlow(effectNew);
+						ChatUtil.sendMessage(commandSender, Message.NEW_GLOW.get(effectNew.getDisplayName()), true);
 						return;
 					}
 				}
@@ -86,18 +86,18 @@ public class EffectCommand extends SubCommand {
 			case 2:
 				effect = DataManager.getEGlowEffect(args[0] + args[1]);
 
-				if (effect == null && ePlayer.getGlowEffect() != null && ePlayer.getGlowEffect().getName().contains(args[0].toLowerCase() + args[1].toLowerCase())) {
-					IEGlowEffect effectNew = EffectMapper.flip(ePlayer.getGlowEffect());
+				if (effect == null && eGlowPlayer.getGlowEffect() != null && eGlowPlayer.getGlowEffect().getName().contains(args[0].toLowerCase() + args[1].toLowerCase())) {
+					IEGlowEffect effectNew = EffectMapper.flip(eGlowPlayer.getGlowEffect());
 
 					if (effectNew != null) {
-						if (!sender.hasPermission(effectNew.getPermission())) {
-							ChatUtil.sendMessage(sender, Message.NO_PERMISSION.get(), true);
+						if (!commandSender.hasPermission(effectNew.getPermission())) {
+							ChatUtil.sendMessage(commandSender, Message.NO_PERMISSION.get(), true);
 							return;
 						}
 
-						ePlayer.disableGlow(true);
-						ePlayer.activateGlow(effectNew);
-						ChatUtil.sendMessage(sender, Message.NEW_GLOW.get(effectNew.getDisplayName()), true);
+						eGlowPlayer.disableGlow(true);
+						eGlowPlayer.activateGlow(effectNew);
+						ChatUtil.sendMessage(commandSender, Message.NEW_GLOW.get(effectNew.getDisplayName()), true);
 						return;
 					}
 				}
@@ -108,34 +108,34 @@ public class EffectCommand extends SubCommand {
 		}
 
 		if (effect == null) {
-			sendSyntax(sender);
+			sendSyntax(commandSender);
 			return;
 		}
 
-		if (ePlayer.getPlayer().hasPermission(effect.getPermission()) || DataManager.isCustomEffect(effect.getName()) && ePlayer.getPlayer().hasPermission("eglow.effect.*")) {
+		if (eGlowPlayer.getPlayer().hasPermission(effect.getPermission()) || DataManager.isCustomEffect(effect.getName()) && eGlowPlayer.getPlayer().hasPermission("eglow.effect.*")) {
 			if (effect.getName().equals("none")) {
-				if (ePlayer.getGlowStatus() || ePlayer.getFakeGlowStatus()) {
-					ePlayer.disableGlow(false);
+				if (eGlowPlayer.getGlowStatus() || eGlowPlayer.getFakeGlowStatus()) {
+					eGlowPlayer.disableGlow(false);
 				}
-				ChatUtil.sendMessage(sender, Message.DISABLE_GLOW.get(), true);
+				ChatUtil.sendMessage(commandSender, Message.DISABLE_GLOW.get(), true);
 				return;
 			}
 
-			if (!ePlayer.isSameGlow(effect)) {
-				ePlayer.disableGlow(true);
-				ePlayer.activateGlow(effect);
+			if (!eGlowPlayer.isSameGlow(effect)) {
+				eGlowPlayer.disableGlow(true);
+				eGlowPlayer.activateGlow(effect);
 
-				ChatUtil.sendMessage(sender, Message.NEW_GLOW.get(effect.getDisplayName()), true);
+				ChatUtil.sendMessage(commandSender, Message.NEW_GLOW.get(effect.getDisplayName()), true);
 
-				if (ePlayer.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
-					ChatUtil.sendMessage(sender, Message.UNSUPPORTED_GLOW.get(), true);
+				if (eGlowPlayer.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
+					ChatUtil.sendMessage(commandSender, Message.UNSUPPORTED_GLOW.get(), true);
 				return;
 			}
 
-			ChatUtil.sendMessage(sender, Message.SAME_GLOW.get(), true);
+			ChatUtil.sendMessage(commandSender, Message.SAME_GLOW.get(), true);
 			return;
 		}
 
-		ChatUtil.sendMessage(sender, Message.NO_PERMISSION.get(), true);
+		ChatUtil.sendMessage(commandSender, Message.NO_PERMISSION.get(), true);
 	}
 }

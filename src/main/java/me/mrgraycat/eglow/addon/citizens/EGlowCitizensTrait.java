@@ -26,25 +26,25 @@ public class EGlowCitizensTrait extends Trait {
 
 	@Override
 	public void save(DataKey key) {
-		if (eGlowNPC == null) {
+		if (getEGlowNPC() == null) {
 			return;
 		}
 
-		key.setString("LastEffect", (eGlowNPC.isGlowing()) ? eGlowNPC.getGlowEffect().getName() : "none");
+		key.setString("LastEffect", (getEGlowNPC().isGlowing()) ? getEGlowNPC().getGlowEffect().getName() : "none");
 	}
 
 	@Override
 	public void onSpawn() {
-		if (eGlowNPC == null) {
-			this.eGlowNPC = new IEGlowPlayer(this.npc);
+		if (getEGlowNPC() == null) {
+			this.eGlowNPC = new IEGlowPlayer(getNPC());
 		}
 
-		this.eGlowNPC.disableGlow(true);
-		this.eGlowNPC.setDataFromLastGlow(lastEffect);
+		getEGlowNPC().disableGlow(true);
+		getEGlowNPC().setDataFromLastGlow(getLastEffect());
 
 		try {
-			if (!this.npc.getOrAddTrait(EGlowCitizensTrait.class).getLastEffect().equals("none")) {
-				this.eGlowNPC.activateGlow();
+			if (!getNPC().getOrAddTrait(EGlowCitizensTrait.class).getLastEffect().equals("none")) {
+				getEGlowNPC().activateGlow();
 			}
 		} catch (NoSuchMethodError ignored) {
 			ChatUtil.sendToConsole("&cYour Citizens version is outdated please update it", true);

@@ -1,13 +1,13 @@
-package me.mrgraycat.eglow.addon.placeholderapi;
+package me.mrgraycat.eglow.addon;
 
-import me.mrgraycat.eglow.config.EGlowMessageConfig.Message;
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.mrgraycat.eglow.EGlow;
+import me.mrgraycat.eglow.config.EGlowMessageConfig.Message;
 import me.mrgraycat.eglow.manager.DataManager;
 import me.mrgraycat.eglow.manager.glow.IEGlowEffect;
 import me.mrgraycat.eglow.manager.glow.IEGlowPlayer;
 import me.mrgraycat.eglow.util.Common;
 import me.mrgraycat.eglow.util.chat.ChatUtil;
-import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
 public class PlaceholderAPIAddon extends PlaceholderExpansion {

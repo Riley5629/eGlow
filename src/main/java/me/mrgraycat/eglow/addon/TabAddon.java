@@ -1,10 +1,9 @@
-package me.mrgraycat.eglow.addon.tab;
+package me.mrgraycat.eglow.addon;
 
 import lombok.Getter;
-import me.mrgraycat.eglow.addon.GlowAddon;
+import me.mrgraycat.eglow.EGlow;
 import me.mrgraycat.eglow.api.event.GlowColorChangeEvent;
 import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
-import me.mrgraycat.eglow.EGlow;
 import me.mrgraycat.eglow.manager.DataManager;
 import me.mrgraycat.eglow.manager.glow.IEGlowPlayer;
 import me.mrgraycat.eglow.util.ServerUtil;
@@ -35,6 +34,7 @@ import java.util.UUID;
 public class TabAddon extends GlowAddon {
 
 	private final boolean versionSupported;
+	private final int minVersion = 400;
 
 	private boolean tagPrefixSuffixEnabled;
 	private boolean teamPacketBlocking;
@@ -49,9 +49,9 @@ public class TabAddon extends GlowAddon {
 		int tabVersion = (tabPlugin != null) ?
 				Integer.parseInt(tabPlugin.getDescription().getVersion().replaceAll("[^\\d]", "")) : 0;
 
-		this.versionSupported = tabVersion >= 400;
+		this.versionSupported = tabVersion >= getMinVersion();
 
-		if (tabVersion < 400) {
+		if (tabVersion < getMinVersion()) {
 			ChatUtil.sendToConsole("&cWarning&f! &cThis version of eGlow requires a higher TAB version&f!", true);
 			return;
 		}
@@ -86,23 +86,23 @@ public class TabAddon extends GlowAddon {
 		if (TAB.getInstance().getDataFolder().exists() && configFile.exists()) {
 			try {
 				tabConfig = new YamlConfiguration();
-				tabConfig.load(configFile);
+				getTabConfig().load(configFile);
 			} catch (IOException | InvalidConfigurationException exc) {
 				exc.printStackTrace();
 			}
 		}
 
-		tagPrefixSuffixEnabled = tabConfig.getBoolean("scoreboard-teams.enabled", false);
-		teamPacketBlocking = tabConfig.getBoolean("scoreboard-teams.anti-override", false);
+		tagPrefixSuffixEnabled = getTabConfig().getBoolean("scoreboard-teams.enabled", false);
+		teamPacketBlocking = getTabConfig().getBoolean("scoreboard-teams.anti-override", false);
 
 		if (!MainConfig.SETTINGS_SMART_TAB_NAMETAG_HANDLER.getBoolean()) {
 			return;
 		}
 
-		if (!tabConfig.getBoolean("scoreboard-teams.unlimited-nametag-mode.enabled", false)) {
+		if (!getTabConfig().getBoolean("scoreboard-teams.unlimited-nametag-mode.enabled", false)) {
 			try {
-				tabConfig.set("scoreboard-teams.unlimited-nametag-mode.enabled", true);
-				tabConfig.save(configFile);
+				getTabConfig().set("scoreboard-teams.unlimited-nametag-mode.enabled", true);
+				getTabConfig().save(configFile);
 
 				ChatUtil.sendToConsole("&6Enabled unlimited-nametag-mode in TAB&f!", true);
 				ChatUtil.sendToConsole("&6TAB reload triggered by eGlow&f!", true);
@@ -203,6 +203,6 @@ public class TabAddon extends GlowAddon {
 	}
 
 	public boolean blockEGlowPackets() {
-		return tagPrefixSuffixEnabled && teamPacketBlocking;
+		return isTagPrefixSuffixEnabled() && isTeamPacketBlocking();
 	}
 }

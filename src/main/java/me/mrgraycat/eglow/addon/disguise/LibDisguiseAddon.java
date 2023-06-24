@@ -1,15 +1,15 @@
 package me.mrgraycat.eglow.addon.disguise;
 
+import me.libraryaddict.disguise.DisguiseAPI;
+import me.libraryaddict.disguise.events.DisguiseEvent;
+import me.libraryaddict.disguise.events.UndisguiseEvent;
+import me.mrgraycat.eglow.EGlow;
 import me.mrgraycat.eglow.addon.GlowAddon;
 import me.mrgraycat.eglow.config.EGlowMessageConfig.Message;
-import me.mrgraycat.eglow.EGlow;
 import me.mrgraycat.eglow.manager.DataManager;
 import me.mrgraycat.eglow.manager.glow.IEGlowPlayer;
 import me.mrgraycat.eglow.util.Common.GlowDisableReason;
 import me.mrgraycat.eglow.util.chat.ChatUtil;
-import me.libraryaddict.disguise.DisguiseAPI;
-import me.libraryaddict.disguise.events.DisguiseEvent;
-import me.libraryaddict.disguise.events.UndisguiseEvent;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
