@@ -24,16 +24,16 @@ public class EGlowEventListener113AndAbove implements Listener {
 	@EventHandler
 	public void PlayerPotionEvent(EntityPotionEffectEvent e) {
 		Entity entity = e.getEntity();
-		
+
 		if (entity instanceof Player) {
 			IEGlowPlayer ep = DataManager.getEGlowPlayer((Player) entity);
-
-			if (ep == null)
-				return;
 
 			new BukkitRunnable() {
 				@Override
 				public void run() {
+					if (ep == null)
+						return;
+
 					if (MainConfig.SETTINGS_DISABLE_GLOW_WHEN_INVISIBLE.getBoolean()) {
 						if (e.getNewEffect() != null && e.getNewEffect().getType().equals(PotionEffectType.INVISIBILITY)) {
 							if (ep.isGlowing()) {
