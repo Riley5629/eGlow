@@ -1,22 +1,20 @@
-package me.MrGraycat.eGlow.config;
+package me.MrGraycat.eGlow.Config;
 
-import lombok.experimental.UtilityClass;
 import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.util.chat.ChatUtil;
-import me.MrGraycat.eGlow.manager.glow.IEGlowPlayer;
-import me.MrGraycat.eGlow.util.Common;
+import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.EnumUtil;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 
-@UtilityClass
 public class EGlowMessageConfig {
 
-	private YamlConfiguration config;
-	private File configFile;
+	private static YamlConfiguration config;
+	private static File configFile;
 
-	public void initialize() {
-		configFile = new File(EGlow.getInstance().getDataFolder(), "messages.yml");
+	public static void initialize() {
+		configFile = new File(EGlow.getInstance().getDataFolder(), "Messages.yml");
 
 		try {
 			if (!EGlow.getInstance().getDataFolder().exists()) {
@@ -24,9 +22,9 @@ public class EGlowMessageConfig {
 			}
 
 			if (!configFile.exists()) {
-				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4messages.yml not found&f! &eCreating&f...", false);
+				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4Messages.yml not found&f! &eCreating&f...", false);
 				configFile.getParentFile().mkdirs();
-				EGlow.getInstance().saveResource("messages.yml", false);
+				EGlow.getInstance().saveResource("Messages.yml", false);
 			} else {
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &aLoading messages config&f.", false);
 			}
@@ -52,7 +50,7 @@ public class EGlowMessageConfig {
 		}
 	}
 
-	public boolean reloadConfig() {
+	public static boolean reloadConfig() {
 		YamlConfiguration configBackup = config;
 		File configFileBackup = configFile;
 
@@ -60,7 +58,7 @@ public class EGlowMessageConfig {
 			config = null;
 			configFile = null;
 
-			configFile = new File(EGlow.getInstance().getDataFolder(), "messages.yml");
+			configFile = new File(EGlow.getInstance().getDataFolder(), "Messages.yml");
 			config = new YamlConfiguration();
 			config.load(configFile);
 			return true;
@@ -174,7 +172,7 @@ public class EGlowMessageConfig {
 				case GLOWONJOIN_TOGGLE:
 					return getColorValue(msg.getConfigPath(), "%value%", value);
 				case VISIBILITY_CHANGE:
-					return (value.toUpperCase().equals(Common.GlowVisibility.UNSUPPORTEDCLIENT.toString())) ? getColorValue(msg.getConfigPath(), "%value%", Message.VISIBILITY_UNSUPPORTED.get()) : getColorValue(msg.getConfigPath(), "%value%", Message.valueOf("VISIBILITY_" + value).get());
+					return (value.toUpperCase().equals(EnumUtil.GlowVisibility.UNSUPPORTEDCLIENT.toString())) ? getColorValue(msg.getConfigPath(), "%value%", Message.VISIBILITY_UNSUPPORTED.get()) : getColorValue(msg.getConfigPath(), "%value%", Message.valueOf("VISIBILITY_" + value).get());
 				case INCORRECT_USAGE:
 					return getColorValue(msg.getConfigPath(), "%command%", value);
 				case NEW_GLOW:
@@ -230,7 +228,7 @@ public class EGlowMessageConfig {
 		}
 	}
 
-	private void configCheck() {
+	private static void configCheck() {
 		addIfMissing("gui.custom-effect-item-name", "&eCustom effects menu");
 		addIfMissing("gui.misc-click-to-open", "&9Click to open&f.");
 		addIfMissing("gui.misc-previous-page", "&e< Previous page");
@@ -253,7 +251,7 @@ public class EGlowMessageConfig {
 		addIfMissing("main.non-glowing-state-on-join", "&fYou're not glowing.");
 	}
 
-	private void addIfMissing(String path, String text) {
+	private static void addIfMissing(String path, String text) {
 		try {
 			if (!config.contains(path)) {
 				config.set(path, text);

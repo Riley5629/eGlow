@@ -1,26 +1,20 @@
 
-package me.MrGraycat.eGlow.config;
+package me.MrGraycat.eGlow.Config;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.experimental.UtilityClass;
-import me.MrGraycat.eGlow.util.chat.ChatUtil;
 import me.MrGraycat.eGlow.EGlow;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.permissions.Permission;
 
 import java.io.File;
 import java.util.*;
-import java.util.stream.Collectors;
 
-@UtilityClass
 public class EGlowMainConfig {
-
 	private static YamlConfiguration config;
 	private static File configFile;
 	
-	public void initialize() {
-		configFile = new File(EGlow.getInstance().getDataFolder(), "config.yml");
+	public static void initialize() {
+		configFile = new File(EGlow.getInstance().getDataFolder(), "Config.yml");
 		
 		try {
 			if (!EGlow.getInstance().getDataFolder().exists()) {
@@ -30,7 +24,7 @@ public class EGlowMainConfig {
 			if (!configFile.exists()) {
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4Config.yml not found&f! &eCreating&f...", false);
 				configFile.getParentFile().mkdirs();
-				EGlow.getInstance().saveResource("config.yml", false);
+				EGlow.getInstance().saveResource("Config.yml", false);
 			} else {
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &aLoading main config&f.", false);
 			}
@@ -44,9 +38,8 @@ public class EGlowMainConfig {
 			if (!config.isConfigurationSection("Command-alias")) {
 				File oldFile = new File(EGlow.getInstance().getDataFolder(), "OLDConfig.yml");
 				
-				if (oldFile.exists()) {
+				if (oldFile.exists())
 					oldFile.delete();
-				}
 				
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &cDetected old main config&f! &eRenamed it to OLDConfig&f! &eReconfiguring might be required&f!", false);
 				configFile.renameTo(oldFile);
@@ -54,12 +47,12 @@ public class EGlowMainConfig {
 			}
 
 			configCheck();
-		} catch (Exception e) {
+		} catch(Exception e) {
 			ChatUtil.reportError(e);
 		}
 	}
 	
-	public boolean reloadConfig() {
+	public static boolean reloadConfig() {
 		YamlConfiguration configBackup = config;
 		File configFileBackup = configFile;
 		
@@ -67,7 +60,7 @@ public class EGlowMainConfig {
 			config = null;
 			configFile = null;
 			
-			configFile = new File(EGlow.getInstance().getDataFolder(), "config.yml");
+			configFile = new File(EGlow.getInstance().getDataFolder(), "Config.yml");
 			config = new YamlConfiguration();
 			config.load(configFile);
 			
@@ -83,7 +76,7 @@ public class EGlowMainConfig {
 		}
 	}
 	
-	private void configCheck() {
+	private static void configCheck() {
 		replaceOrAdd("Actionbars.Enable", "Actionbars.enable", true);
 		replaceOrAdd("Actionbars.Use-in-GUI","Actionbars.use-in-GUI", false);
 
@@ -141,7 +134,6 @@ public class EGlowMainConfig {
 		remove( "Delays.Player", "Tabname", "Tabname.tabPrefix", "Tabname.tabName", "Tabname.tabSuffix", "Tagname", "Force-glow", "Options");
 	}
 
-	@AllArgsConstructor @Getter
 	public enum MainConfig {
 		ACTIONBARS_ENABLE("Actionbars.enable"),
 		ACTIONBARS_IN_GUI("Actionbars.use-in-GUI"),
@@ -210,6 +202,10 @@ public class EGlowMainConfig {
 			this.configPath = configPath;
 		}
 
+		public String getConfigPath() {
+			return configPath;
+		}
+
 		public String getString() {
 			return config.getString(main.getConfigPath());
 		}
@@ -219,10 +215,13 @@ public class EGlowMainConfig {
 		}
 
 		public List<String> getStringList() {
-			return config.getStringList(main.getConfigPath())
-					.stream()
-					.map(String::toLowerCase)
-					.collect(Collectors.toList());
+			List<String> worldNames = new ArrayList<>();
+
+			for (String worldName : config.getStringList(main.getConfigPath())) {
+				worldNames.add(worldName.toLowerCase());
+			}
+
+			return worldNames;
 		}
 
 		public int getInt() {
@@ -236,17 +235,16 @@ public class EGlowMainConfig {
 			}
 		}
 
-		public boolean getBoolean() {
+		public Boolean getBoolean() {
 			return config.getBoolean(main.getConfigPath());
 		}
 
 		public Set<String> getConfigSection() {
-			return Objects.requireNonNull(config.getConfigurationSection(main.getConfigPath()),
-					main.getConfigPath() + " isn't a valid path").getKeys(false);
+			return Objects.requireNonNull(config.getConfigurationSection(main.getConfigPath()), main.getConfigPath() + " isn't a valid path").getKeys(false);
 		}
 	}
 
-	private void replaceOrAdd(String oldPath, String newPath, Object value) {
+	private static void replaceOrAdd(String oldPath, String newPath, Object value) {
 		try {
 			if (config.contains(oldPath)) {
 				config.set(newPath, config.get(oldPath));
@@ -261,7 +259,7 @@ public class EGlowMainConfig {
 		}
 	}
 
-	private void remove(String... paths) {
+	private static void remove(String... paths) {
 		try {
 			for (String path : paths) {
 				config.set(path, null);
@@ -273,16 +271,14 @@ public class EGlowMainConfig {
 		}
 	}
 	
-	private void registerCustomPermissions() {
-		if (!MainConfig.SETTINGS_JOIN_FORCE_GLOWS_ENABLE.getBoolean()) {
+	private static void registerCustomPermissions() {
+		if (!MainConfig.SETTINGS_JOIN_FORCE_GLOWS_ENABLE.getBoolean())
 			return;
-		}
-
-		MainConfig.SETTINGS_JOIN_FORCE_GLOWS_LIST.getConfigSection().forEach((name) -> {
+		
+		for (String name : MainConfig.SETTINGS_JOIN_FORCE_GLOWS_LIST.getConfigSection()) {
 			try {
-				EGlow.getInstance().getServer().getPluginManager().addPermission(
-						new Permission("eglow.force." + name.toLowerCase()));
+				EGlow.getInstance().getServer().getPluginManager().addPermission(new Permission("eglow.force." + name.toLowerCase()));
 			} catch (Exception ignored) {}
-		});
+		}
 	}
 }

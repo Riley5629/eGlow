@@ -1,15 +1,15 @@
-package me.MrGraycat.eGlow.api;
+package me.MrGraycat.eGlow.API;
 
-import me.MrGraycat.eGlow.api.enums.EGlowBlink;
-import me.MrGraycat.eGlow.api.enums.EGlowColor;
-import me.MrGraycat.eGlow.api.enums.EGlowEffect;
-import me.MrGraycat.eGlow.manager.DataManager;
+import me.MrGraycat.eGlow.API.Enum.EGlowBlink;
+import me.MrGraycat.eGlow.API.Enum.EGlowColor;
+import me.MrGraycat.eGlow.API.Enum.EGlowEffect;
 import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.manager.glow.IEGlowEffect;
-import me.MrGraycat.eGlow.manager.glow.IEGlowPlayer;
-import me.MrGraycat.eGlow.util.packet.PacketUtil;
-import me.MrGraycat.eGlow.util.packet.PipelineInjector;
-import me.MrGraycat.eGlow.util.chat.ChatUtil;
+import me.MrGraycat.eGlow.Manager.DataManager;
+import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
+import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
+import me.MrGraycat.eGlow.Util.Packets.PipelineInjector;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;

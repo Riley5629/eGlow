@@ -1,19 +1,18 @@
-package me.MrGraycat.eGlow.command;
+package me.MrGraycat.eGlow.Command;
 
-import me.MrGraycat.eGlow.manager.DataManager;
-import me.MrGraycat.eGlow.util.GlowPlayerUtil;
-import me.MrGraycat.eGlow.command.subcommand.impl.admin.DebugCommand;
-import me.MrGraycat.eGlow.command.subcommand.impl.admin.ReloadCommand;
-import me.MrGraycat.eGlow.command.subcommand.impl.admin.SetCommand;
-import me.MrGraycat.eGlow.command.subcommand.impl.admin.UnsetCommand;
-import me.mrgraycat.eglow.command.subcommand.*;
-import me.MrGraycat.eGlow.config.EGlowMainConfig.MainConfig;
-import me.MrGraycat.eGlow.config.EGlowMessageConfig.Message;
+import me.MrGraycat.eGlow.Command.SubCommands.Admin.DebugCommand;
+import me.MrGraycat.eGlow.Command.SubCommands.Admin.ReloadCommand;
+import me.MrGraycat.eGlow.Command.SubCommands.Admin.SetCommand;
+import me.MrGraycat.eGlow.Command.SubCommands.Admin.UnsetCommand;
+import me.MrGraycat.eGlow.Command.SubCommands.*;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
 import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.manager.glow.IEGlowEffect;
-import me.MrGraycat.eGlow.manager.glow.IEGlowPlayer;
-import me.MrGraycat.eGlow.util.chat.ChatUtil;
-import me.mrgraycat.eglow.command.subcommand.impl.*;
+import me.MrGraycat.eGlow.Event.EGlowEventListener;
+import me.MrGraycat.eGlow.Manager.DataManager;
+import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
+import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -80,22 +79,22 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 			}
 
 			if (cmd == null) {
-				ChatUtil.sendMessage(sender, Message.COMMAND_LIST.get(), true);
+				ChatUtil.sendMsg(sender, Message.COMMAND_LIST.get(), true);
 				return true;
 			}
 			if (sender instanceof ConsoleCommandSender && cmd.isPlayerCmd()) {
-				ChatUtil.sendMessage(sender, Message.PLAYER_ONLY.get(), true);
+				ChatUtil.sendMsg(sender, Message.PLAYER_ONLY.get(), true);
 				return true;
 			}
 			if (!cmd.getPermission().isEmpty() && !sender.hasPermission(cmd.getPermission())) {
-				ChatUtil.sendMessage(sender, Message.NO_PERMISSION.get(), true);
+				ChatUtil.sendMsg(sender, Message.NO_PERMISSION.get(), true);
 				return true;
 			}
 			if (sender instanceof Player) {
 				ePlayer = DataManager.getEGlowPlayer((Player) sender);
 
 				if (ePlayer == null) {
-					GlowPlayerUtil.handlePlayerJoin((Player) sender);
+					EGlowEventListener.PlayerConnect((Player) sender, ((Player) sender).getUniqueId());
 					ePlayer = DataManager.getEGlowPlayer((Player) sender);
 				}
 			}

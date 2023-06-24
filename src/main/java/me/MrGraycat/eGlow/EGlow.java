@@ -1,58 +1,51 @@
 package me.MrGraycat.eGlow;
 
-import lombok.Getter;
-import lombok.Setter;
-import me.MrGraycat.eGlow.addon.citizens.CitizensAddon;
-import me.MrGraycat.eGlow.addon.disguise.IDisguiseAddon;
-import me.MrGraycat.eGlow.addon.disguise.LibDisguiseAddon;
-import me.MrGraycat.eGlow.addon.gsit.GSitAddon;
-import me.MrGraycat.eGlow.addon.tab.TabAddon;
-import me.MrGraycat.eGlow.addon.vault.VaultAddon;
-import me.MrGraycat.eGlow.api.EGlowAPI;
-import me.MrGraycat.eGlow.command.EGlowCommand;
-import me.MrGraycat.eGlow.config.EGlowCustomEffectsConfig;
-import me.MrGraycat.eGlow.config.EGlowMainConfig;
-import me.MrGraycat.eGlow.event.EGlowEventListener;
-import me.MrGraycat.eGlow.manager.DataManager;
-import me.MrGraycat.eGlow.migration.impl.ConfigMigration;
-import me.MrGraycat.eGlow.util.GlowPlayerUtil;
-import me.MrGraycat.eGlow.util.ServerUtil;
-import me.MrGraycat.eGlow.util.chat.ChatUtil;
-import me.MrGraycat.eGlow.util.dependency.Dependency;
-import me.MrGraycat.eGlow.addon.Internal.AdvancedGlowVisibilityAddon;
-import me.MrGraycat.eGlow.addon.luckperms.LuckPermsAddon;
-import me.MrGraycat.eGlow.addon.placeholderapi.PlaceholderAPIAddon;
-import me.MrGraycat.eGlow.config.EGlowMessageConfig;
-import me.MrGraycat.eGlow.manager.EGlowPlayerdataManager;
-import me.MrGraycat.eGlow.migration.impl.CustomEffectsMigration;
-import me.MrGraycat.eGlow.migration.impl.MessagesMigration;
-import me.MrGraycat.eGlow.util.packet.NMSHook;
-import me.MrGraycat.eGlow.util.packet.ProtocolVersion;
+import me.MrGraycat.eGlow.API.EGlowAPI;
+import me.MrGraycat.eGlow.Addon.Citizens.CitizensAddon;
+import me.MrGraycat.eGlow.Addon.Disguises.IDisguiseAddon;
+import me.MrGraycat.eGlow.Addon.Disguises.LibDisguiseAddon;
+import me.MrGraycat.eGlow.Addon.GSitAddon;
+import me.MrGraycat.eGlow.Addon.Internal.AdvancedGlowVisibilityAddon;
+import me.MrGraycat.eGlow.Addon.LuckPermsAddon;
+import me.MrGraycat.eGlow.Addon.PlaceholderAPIAddon;
+import me.MrGraycat.eGlow.Addon.TAB.Listeners.EGlowTABListenerUniv;
+import me.MrGraycat.eGlow.Addon.TAB.TABAddon;
+import me.MrGraycat.eGlow.Addon.VaultAddon;
+import me.MrGraycat.eGlow.Command.EGlowCommand;
+import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
+import me.MrGraycat.eGlow.Config.EGlowMessageConfig;
+import me.MrGraycat.eGlow.Config.Playerdata.EGlowPlayerdataManager;
+import me.MrGraycat.eGlow.Event.EGlowEventListener;
+import me.MrGraycat.eGlow.Manager.DataManager;
+import me.MrGraycat.eGlow.Util.DebugUtil;
+import me.MrGraycat.eGlow.Util.Packets.NMSHook;
+import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Listener;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Objects;
 
-@Getter
 public class EGlow extends JavaPlugin {
-
-	@Getter private static EGlow instance;
-	private EGlowAPI api;
-	private boolean upToDate;
+	private static EGlow instance;
+	private static EGlowAPI API;
+	private boolean UP_TO_DATE = true;
 
 	//Addons
-	@Setter private AdvancedGlowVisibilityAddon glowAddon;
+	private AdvancedGlowVisibilityAddon glowAddon;
 	private CitizensAddon citizensAddon;
 	private IDisguiseAddon iDisguiseAddon;
 	private LibDisguiseAddon libDisguiseAddon;
-	private TabAddon tabAddon;
-	private LuckPermsAddon luckPermsAddon;
+	private TABAddon tabAddon;
+	private LuckPermsAddon lpAddon;
 	private VaultAddon vaultAddon;
 
 	//TODO
@@ -62,28 +55,10 @@ public class EGlow extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		instance = this;
-		api = new EGlowAPI();
+		setInstance(this);
+		setAPI(new EGlowAPI());
 
-		saveDefaultConfig();
-
-		Arrays.asList(
-				new ConfigMigration(this),
-				new CustomEffectsMigration(this),
-				new MessagesMigration(this)
-		).forEach(migration -> {
-			if (migration.applies()) {
-				if (!migration.migrate()) {
-					ChatUtil.sendToConsole(String.format("An unexpected error occurred while attempting to migrate configuration %s",
-							migration.getName()), true);
-				} else {
-					ChatUtil.sendToConsole(String.format("Successfully migrated configuration %s!",
-							migration.getName()), true);
-				}
-			}
-		});
-
-		if (versionIsCompatible()) {
+		if (versionIsCompactible()) {
 			ProtocolVersion.SERVER_VERSION = ProtocolVersion.fromServerString(Bukkit.getBukkitVersion().split("-")[0]);
 
 			NMSHook.initialize();
@@ -92,46 +67,31 @@ public class EGlow extends JavaPlugin {
 
 			DataManager.initialize();
 
-			registerCommands();
-			registerEvents(new EGlowEventListener(this));
-
-			try {
-				this.upToDate = checkUpToDate();
-			} catch (IOException exc) {
-				ChatUtil.sendToConsole("An unexpected error occurred while attempting to check for updates!", true);
-			}
-
+			registerEventsAndCommands();
+			checkForUpdates();
 			runAddonHooks();
 			runPlayerCheckOnEnable();
 		} else {
-			ChatUtil.sendToConsole("Disabling eGlow! Your server version is not compatible! (" + ServerUtil.getVersion() + ")", false);
+			ChatUtil.sendToConsole("Disabling eGlow! Your server version is not compatible! (" + DebugUtil.getServerVersion() + ")", false);
 			getServer().getPluginManager().disablePlugin(this);
 		}
 	}
 
 	@Override
 	public void onDisable() {
-		if (glowAddon != null) {
-			glowAddon.shutdown();
+		if (getAdvancedGlowVisibility() != null) {
+			getAdvancedGlowVisibility().shutdown();
 		}
 
-		if (luckPermsAddon != null) {
-			luckPermsAddon.unload();
+		if (getLPAddon() != null) {
+			getLPAddon().unload();
 		}
 
 		runPlayerCheckOnDisable();
 	}
 
-	public void registerEvents(Listener... listeners) {
-		Arrays.stream(listeners).forEach(listener -> {
-			Bukkit.getPluginManager().registerEvents(listener, this);
-		});
-	}
-
-	private boolean versionIsCompatible() {
-		return !ServerUtil.getVersion().equals("v_1_9_R1")
-				&& ServerUtil.getMinorVersion() >= 9
-				&& ServerUtil.getMinorVersion() <= 20;
+	private boolean versionIsCompactible() {
+		return !DebugUtil.getServerVersion().equals("v_1_9_R1") && DebugUtil.getMinorVersion() >= 9 && DebugUtil.getMinorVersion() <= 20;
 	}
 
 	private void loadConfigs() {
@@ -141,78 +101,165 @@ public class EGlow extends JavaPlugin {
 		EGlowPlayerdataManager.initialize();
 	}
 
-	private void registerCommands() {
+	private void registerEventsAndCommands() {
 		Objects.requireNonNull(getCommand("eglow")).setExecutor(new EGlowCommand());
+		new EGlowEventListener();
 	}
 
 	private void runAddonHooks() {
-		if (EGlowMainConfig.MainConfig.ADVANCED_GLOW_VISIBILITY_ENABLE.getBoolean() && glowAddon == null) {
-			glowAddon = new AdvancedGlowVisibilityAddon();
-		}
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (MainConfig.ADVANCED_GLOW_VISIBILITY_ENABLE.getBoolean() && getAdvancedGlowVisibility() == null)
+					setAdvancedGlowVisibility(new AdvancedGlowVisibilityAddon());
+				if (DebugUtil.pluginCheck("PlaceholderAPI"))
+					new PlaceholderAPIAddon();
+				if (DebugUtil.pluginCheck("Vault"))
+					setVaultAddon(new VaultAddon());
+				if (DebugUtil.pluginCheck("Citizens") && getCitizensAddon() == null)
+					setCitizensAddon(new CitizensAddon());
+				if (DebugUtil.pluginCheck("iDisguise"))
+					setIDisguiseAddon(new IDisguiseAddon());
+				if (DebugUtil.pluginCheck("LibsDisguises"))
+					setLibDisguiseAddon(new LibDisguiseAddon());
+				if (DebugUtil.pluginCheck("GSit"))
+					new GSitAddon();
+				if (DebugUtil.pluginCheck("TAB")) {
+					try {
+						Plugin TAB_Plugin = DebugUtil.getPlugin("TAB");
 
-		if (Dependency.PLACEHOLDER_API.isLoaded()) {
-			new PlaceholderAPIAddon();
-		}
+						if (TAB_Plugin != null && TAB_Plugin.getClass().getName().startsWith("me.neznamy.tab"))
+							setTABAddon(new TABAddon(TAB_Plugin));
+					} catch (NoClassDefFoundError e) {
+						ChatUtil.sendToConsole("&cWarning&f! &cThis version of eGlow requires TAB 3.1.4 or higher!", true);
+					}
+				}
 
-		if (Dependency.VAULT.isLoaded()) {
-			vaultAddon = new VaultAddon(this);
-		}
+				EGlow.getInstance().getServer().getPluginManager().registerEvents(new EGlowTABListenerUniv(), getInstance());
 
-		if (Dependency.CITIZENS.isLoaded() && citizensAddon == null) {
-			this.citizensAddon = new CitizensAddon(this);
-		}
-
-		if (Dependency.I_DISGUISE.isLoaded()) {
-			this.iDisguiseAddon = new IDisguiseAddon(this);
-		}
-
-		if (Dependency.LIBS_DISGUISES.isLoaded()) {
-			this.libDisguiseAddon = new LibDisguiseAddon(this);
-		}
-
-		if (Dependency.GSIT.isLoaded()) {
-			new GSitAddon(this);
-		}
-
-		if (Dependency.TAB.isLoaded()) {
-			if (!Dependency.isDefined("me.neznamy.tab")) {
-				ChatUtil.sendToConsole("&cWarning&f! &cThis version of eGlow requires TAB 3.1.4 or higher!", true);
-				return;
+				if (DebugUtil.pluginCheck("LuckPerms")) {
+					setLPAddon(new LuckPermsAddon());
+				}
 			}
-
-			this.tabAddon = new TabAddon(this);
-		}
-
-		if (Dependency.LUCK_PERMS.isLoaded()) {
-			this.luckPermsAddon = new LuckPermsAddon(this);
-		}
+		}.runTask(this);
 	}
 
 	private void runPlayerCheckOnEnable() {
-		Bukkit.getOnlinePlayers().stream()
-				.filter(player -> DataManager.getEGlowPlayer(player) != null)
-				.forEach(GlowPlayerUtil::handlePlayerJoin);
-	}
-
-	private void runPlayerCheckOnDisable() {
-		Bukkit.getOnlinePlayers().stream()
-				.filter(player -> DataManager.getEGlowPlayer(player) != null)
-				.forEach(player -> GlowPlayerUtil.handlePlayerDisconnect(player, true));
-	}
-
-	private boolean checkUpToDate() throws IOException {
-		URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=63295");
-
-		String currentVersion = getInstance().getDescription().getVersion();
-		String latestVersion = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream())).readLine();
-
-		if (currentVersion.contains("PRE")) {
-			String betaVersion = currentVersion.split("-")[0];
-
-			return !betaVersion.equals(latestVersion);
-		} else {
-			return latestVersion.contains(currentVersion);
+		if (!getServer().getOnlinePlayers().isEmpty()) {
+			for (Player player : getServer().getOnlinePlayers()) {
+				if (DataManager.getEGlowPlayer(player) == null)
+					EGlowEventListener.PlayerConnect(player, player.getUniqueId());
+			}
 		}
 	}
 
+	private void runPlayerCheckOnDisable() {
+		if (!getServer().getOnlinePlayers().isEmpty()) {
+			for (Player player : getServer().getOnlinePlayers()) {
+				if (DataManager.getEGlowPlayer(player) == null)
+					EGlowEventListener.PlayerDisconnect(player, true);
+			}
+		}
+	}
+
+	private void checkForUpdates() {
+		try {
+			URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=63295");
+			String currentVersion = getInstance().getDescription().getVersion();
+			String latestVersion = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream())).readLine();
+
+			if (currentVersion.contains("PRE")) {
+				String betaVersion = currentVersion.split("-")[0];
+				setUpToDate(!betaVersion.equals(latestVersion));
+			} else {
+				if (!latestVersion.contains(currentVersion)) {
+					setUpToDate(false);
+				}
+			}
+		} catch (Exception e) {
+			//None would care if this fails
+		}
+	}
+
+	//Setter
+	private static void setInstance(EGlow instance) {
+		EGlow.instance = instance;
+	}
+
+	private void setAPI(EGlowAPI api) {
+		EGlow.API = api;
+	}
+
+	private void setUpToDate(boolean up_to_date) {
+		this.UP_TO_DATE = up_to_date;
+	}
+
+	public void setAdvancedGlowVisibility(AdvancedGlowVisibilityAddon glowAddon) {
+		this.glowAddon = glowAddon;
+	}
+
+	private void setCitizensAddon(CitizensAddon citizensAddon) {
+		this.citizensAddon = citizensAddon;
+	}
+
+	private void setIDisguiseAddon(IDisguiseAddon iDisguiseAddon) {
+		this.iDisguiseAddon = iDisguiseAddon;
+	}
+
+	private void setLibDisguiseAddon(LibDisguiseAddon libDisguiseAddon) {
+		this.libDisguiseAddon = libDisguiseAddon;
+	}
+
+	private void setTABAddon(TABAddon tabAddon) {
+		this.tabAddon = tabAddon;
+	}
+
+	private void setLPAddon(LuckPermsAddon lpAddon) {
+		this.lpAddon = lpAddon;
+	}
+
+	private void setVaultAddon(VaultAddon vaultAddon) {
+		this.vaultAddon = vaultAddon;
+	}
+
+	//Getter
+	public static EGlow getInstance() {
+		return EGlow.instance;
+	}
+
+	public static EGlowAPI getAPI() {
+		return API;
+	}
+
+	public boolean isUpToDate() {
+		return UP_TO_DATE;
+	}
+
+	public AdvancedGlowVisibilityAddon getAdvancedGlowVisibility() {
+		return this.glowAddon;
+	}
+
+	public CitizensAddon getCitizensAddon() {
+		return this.citizensAddon;
+	}
+
+	public IDisguiseAddon getIDisguiseAddon() {
+		return this.iDisguiseAddon;
+	}
+
+	public LibDisguiseAddon getLibDisguiseAddon() {
+		return this.libDisguiseAddon;
+	}
+
+	public TABAddon getTABAddon() {
+		return this.tabAddon;
+	}
+
+	public LuckPermsAddon getLPAddon() {
+		return this.lpAddon;
+	}
+
+	public VaultAddon getVaultAddon() {
+		return this.vaultAddon;
+	}
 }

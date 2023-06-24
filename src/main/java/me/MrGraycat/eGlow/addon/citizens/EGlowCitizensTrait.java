@@ -1,19 +1,22 @@
-package me.MrGraycat.eGlow.addon.citizens;
+package me.MrGraycat.eGlow.Addon.Citizens;
 
 import lombok.Getter;
-import me.MrGraycat.eGlow.manager.glow.IEGlowPlayer;
-import me.MrGraycat.eGlow.util.chat.ChatUtil;
+import lombok.Setter;
+import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
 
-@Getter
 public class EGlowCitizensTrait extends Trait {
+	@Getter
+	@Setter
+	IEGlowPlayer eGlowNPC = null;
 
-	private IEGlowPlayer eGlowNPC;
-
+	@Getter
+	@Setter
 	@Persist("LastEffect")
-	private String lastEffect = "none";
+	String lastEffect = "none";
 
 	public EGlowCitizensTrait() {
 		super("eGlow");
@@ -21,31 +24,28 @@ public class EGlowCitizensTrait extends Trait {
 
 	@Override
 	public void load(DataKey key) {
-		this.lastEffect = key.getString("LastEffect", "none");
+		setLastEffect(key.getString("LastEffect", "none"));
 	}
 
 	@Override
 	public void save(DataKey key) {
-		if (eGlowNPC == null) {
-			return;
+		if (getEGlowNPC() != null) {
+			key.setString("LastEffect", (getEGlowNPC().isGlowing()) ? getEGlowNPC().getEffect().getName() : "none");
 		}
-
-		key.setString("LastEffect", (eGlowNPC.isGlowing()) ? eGlowNPC.getGlowEffect().getName() : "none");
 	}
 
 	@Override
 	public void onSpawn() {
-		if (eGlowNPC == null) {
-			this.eGlowNPC = new IEGlowPlayer(this.npc);
+		if (getEGlowNPC() == null) {
+			setEGlowNPC(new IEGlowPlayer(this.npc));
 		}
 
-		this.eGlowNPC.disableGlow(true);
-		this.eGlowNPC.setDataFromLastGlow(lastEffect);
+		getEGlowNPC().disableGlow(true);
+		getEGlowNPC().setDataFromLastGlow(getLastEffect());
 
 		try {
-			if (!this.npc.getOrAddTrait(EGlowCitizensTrait.class).getLastEffect().equals("none")) {
-				this.eGlowNPC.activateGlow();
-			}
+			if (!this.npc.getOrAddTrait(EGlowCitizensTrait.class).getLastEffect().equals("none"))
+				getEGlowNPC().activateGlow();
 		} catch (NoSuchMethodError ignored) {
 			ChatUtil.sendToConsole("&cYour Citizens version is outdated please update it", true);
 		}

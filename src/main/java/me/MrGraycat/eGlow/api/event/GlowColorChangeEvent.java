@@ -1,6 +1,5 @@
-package me.MrGraycat.eGlow.api.event;
+package me.MrGraycat.eGlow.API.Event;
 
-import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -8,9 +7,7 @@ import org.bukkit.event.HandlerList;
 
 import java.util.UUID;
 
-@Getter
 public class GlowColorChangeEvent extends Event {
-
 	private static final HandlerList handlers = new HandlerList();
 
 	private final Player player;
@@ -23,6 +20,24 @@ public class GlowColorChangeEvent extends Event {
 		this.UUID = uuid;
 		this.color = color;
 		this.isGlowing = isGlowing;
+	}
+
+	/**
+	 * Get the player
+	 *
+	 * @return Player
+	 */
+	public Player getPlayer() {
+		return this.player;
+	}
+
+	/**
+	 * Get the player's UUID
+	 *
+	 * @return UUID
+	 */
+	public UUID getPlayerUUID() {
+		return this.UUID;
 	}
 
 	/**

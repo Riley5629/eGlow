@@ -1,8 +1,7 @@
-package me.MrGraycat.eGlow.config;
+package me.MrGraycat.eGlow.Config;
 
-import lombok.experimental.UtilityClass;
-import me.MrGraycat.eGlow.util.chat.ChatUtil;
 import me.MrGraycat.eGlow.EGlow;
+import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -11,14 +10,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-@UtilityClass
 public class EGlowCustomEffectsConfig {
 
-	private YamlConfiguration config;
-	private File configFile;
+	private static YamlConfiguration config;
+	private static File configFile;
 	
-	public void initialize() {
-		configFile = new File(EGlow.getInstance().getDataFolder(), "custom-effects.yml");
+	public static void initialize() {
+		configFile = new File(EGlow.getInstance().getDataFolder(), "CustomEffects.yml");
 		
 		try {
 			if (!EGlow.getInstance().getDataFolder().exists()) {
@@ -26,21 +24,21 @@ public class EGlowCustomEffectsConfig {
 			}
 			
 			if (!configFile.exists()) {
-				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4custom-effrts.yml not found&f! &eCreating&f...", false);
+				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4CustomEffects.yml not found&f! &eCreating&f...", false);
 				configFile.getParentFile().mkdirs();
-				EGlow.getInstance().saveResource("custom-effrts.yml", false);
+				EGlow.getInstance().saveResource("CustomEffects.yml", false);
 			} else {
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &aLoading CustomEffects config&f.", false);
 			}
 			
 			config = new YamlConfiguration();
 			config.load(configFile);
-		} catch (Exception e) {
+		} catch(Exception e) {
 			ChatUtil.reportError(e);
 		}
 	}
 	
-	public boolean reloadConfig() {
+	public static boolean reloadConfig() {
 		YamlConfiguration configBackup = config;
 		File configFileBackup = configFile;
 		
@@ -48,7 +46,7 @@ public class EGlowCustomEffectsConfig {
 			config = null;
 			configFile = null;
 			
-			configFile = new File(EGlow.getInstance().getDataFolder(), "custom-effects.yml");
+			configFile = new File(EGlow.getInstance().getDataFolder(), "CustomEffects.yml");
 			config = new YamlConfiguration();
 			config.load(configFile);
 			return true;
