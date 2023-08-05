@@ -21,23 +21,23 @@ public class ChatUtil {
 
 	public static String setToBasicName(String effect) {
 		effect = ChatColor.stripColor(effect).toLowerCase();
-		
+
 		if (effect.contains("slow"))
 			effect = effect.replace("slow", "");
-		
+
 		if (effect.contains("fast"))
 			effect = effect.replace("fast", "");
-		
+
 		if (effect.contains("("))
 			effect = effect.replace("(", "").replace(")", "");
-		
+
 		return effect.replace(" ", "");
 	}
 
 	public static String translateColors(String text) {
 		if (text == null || text.isEmpty())
 			return "";
-		
+
 		try {
 			if (ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 15) {
 				text = RGBUtils.getInstance().convertRGBtoLegacy(text);
@@ -50,7 +50,7 @@ public class ChatUtil {
 		text = RGBUtils.getInstance().applyFormats(text);
 
 		Matcher match = rgb.matcher(text);
-		while(match.find()) {
+		while (match.find()) {
 			String color = text.substring(match.start(), match.end());
 			text = text.replace(color, ChatColor.of(color) + "");
 			match = rgb.matcher(text);
@@ -102,22 +102,26 @@ public class ChatUtil {
 	private static void sendActionbar(Player player, String message) {
 		IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(player);
 
+		if (ePlayer == null) {
+			return;
+		}
+
 		if (ePlayer.getVersion().getMinorVersion() < 9) {
 			sendPlainMsg(player, message, false);
 		} else {
 			PacketUtil.sendActionbar(ePlayer, message);
 		}
 	}
-	
+
 	public static void reportError(Exception e) {
 		sendToConsole("&f[&eeGlow&f]: &4Please report this error to MrGraycat&f!:", false);
 		e.printStackTrace();
 	}
-	
+
 	public static String getEffectChatName(IEGlowPlayer entity) {
 		return (entity.getEffect() == null) ? Message.GUI_NOT_AVAILABLE.get() : entity.getEffect().getDisplayName();
 	}
-	
+
 	public static String getEffectName(String effect) {
 		return "&e" + effect + " &f(" + Objects.requireNonNull(DataManager.getEGlowEffect(effect), "Unable to retrieve effect from given name").getDisplayName() + "&f)";
 	}
