@@ -1,6 +1,6 @@
-package me.MrGraycat.eGlow.Util.Packets.Chat;
+package me.mrgraycat.eglow.util.packets.chat;
 
-import me.MrGraycat.eGlow.Util.Packets.Chat.rgb.RGBUtils;
+import me.mrgraycat.eglow.util.packets.chat.rgb.RGBUtils;
 
 public enum EnumChatFormat {
 
@@ -27,37 +27,51 @@ public enum EnumChatFormat {
 	ITALIC('o'),
 	RESET('r');
 
-	/** Creating a constant to avoid memory allocations on each request */
+	/**
+	 * Creating a constant to avoid memory allocations on each request
+	 */
 	public static final EnumChatFormat[] VALUES = values();
 
-	/** The symbol minecraft uses to colorize text */
+	/**
+	 * The symbol minecraft uses to colorize text
+	 */
 	public static final char COLOR_CHAR = 0x00a7;
 
-	/** Character representing the color or magic code */
+	/**
+	 * Character representing the color or magic code
+	 */
 	private final char character;
 
-	/** Red value of this constant, 0 for magic codes */
+	/**
+	 * Red value of this constant, 0 for magic codes
+	 */
 	private final short red;
 
-	/** Green value of this constant, 0 for magic codes */
+	/**
+	 * Green value of this constant, 0 for magic codes
+	 */
 	private final short green;
 
-	/** Blue value of this constant, 0 for magic codes */
+	/**
+	 * Blue value of this constant, 0 for magic codes
+	 */
 	private final short blue;
 
-	/** Color as 6-digit hex code, null for magic codes */
+	/**
+	 * Color as 6-digit hex code, null for magic codes
+	 */
 	private final String hexCode;
 
-	/** Color symbol followed by constant's character */
+	/**
+	 * Color symbol followed by constant's character
+	 */
 	private final String chatFormat;
 
 	/**
 	 * Constructs new color instance with given character and hex code
 	 *
-	 * @param   character
-	 *          character which the color goes by
-	 * @param   hexCode
-	 *          6-digit hex code of the color
+	 * @param character character which the color goes by
+	 * @param hexCode   6-digit hex code of the color
 	 */
 	EnumChatFormat(char character, String hexCode) {
 		this.character = character;
@@ -72,8 +86,7 @@ public enum EnumChatFormat {
 	/**
 	 * Constructs new magic code instance with given character
 	 *
-	 * @param   character
-	 *          character representing the magic code
+	 * @param character character representing the magic code
 	 */
 	EnumChatFormat(char character) {
 		this.character = character;
@@ -87,7 +100,7 @@ public enum EnumChatFormat {
 	/**
 	 * Returns red value of this color code
 	 *
-	 * @return  red value
+	 * @return red value
 	 */
 	public short getRed() {
 		return red;
@@ -96,7 +109,7 @@ public enum EnumChatFormat {
 	/**
 	 * Returns green value of this color code
 	 *
-	 * @return  green value
+	 * @return green value
 	 */
 	public short getGreen() {
 		return green;
@@ -105,7 +118,7 @@ public enum EnumChatFormat {
 	/**
 	 * Returns blue value of this color code
 	 *
-	 * @return  blue value
+	 * @return blue value
 	 */
 	public short getBlue() {
 		return blue;
@@ -114,9 +127,8 @@ public enum EnumChatFormat {
 	/**
 	 * Returns enum value based on provided character or null if character is not valid
 	 *
-	 * @param   c
-	 *          color code character (0-9, a-f, k-o, r)
-	 * @return  instance from the character or null if character is not valid
+	 * @param c color code character (0-9, a-f, k-o, r)
+	 * @return instance from the character or null if character is not valid
 	 */
 	public static EnumChatFormat getByChar(char c) {
 		for (EnumChatFormat format : VALUES) {
@@ -129,9 +141,8 @@ public enum EnumChatFormat {
 	 * Returns enum value of last colors used in given string.
 	 * If it's null, empty or does not contain color codes, WHITE is returned.
 	 *
-	 * @param   string
-	 *          string to check last colors of
-	 * @return  last used color code in given string or WHITE if nothing is found
+	 * @param string string to check last colors of
+	 * @return last used color code in given string or WHITE if nothing is found
 	 */
 	public static EnumChatFormat lastColorsOf(String string) {
 		if (string == null || string.length() == 0) return EnumChatFormat.WHITE;
@@ -149,7 +160,7 @@ public enum EnumChatFormat {
 	/**
 	 * Returns color char followed by color's character
 	 *
-	 * @return  color char followed by color's character
+	 * @return color char followed by color's character
 	 */
 	public String getFormat() {
 		return chatFormat;
@@ -158,7 +169,7 @@ public enum EnumChatFormat {
 	/**
 	 * Returns character representing this color
 	 *
-	 * @return  character representing this color
+	 * @return character representing this color
 	 */
 	public char getCharacter() {
 		return character;
@@ -167,7 +178,7 @@ public enum EnumChatFormat {
 	/**
 	 * Returns hex code of this format, null if this is a magic code
 	 *
-	 * @return  hex code of this format
+	 * @return hex code of this format
 	 */
 	public String getHexCode() {
 		return hexCode;
@@ -176,15 +187,12 @@ public enum EnumChatFormat {
 	/**
 	 * Returns enum value with exact red, green and blue values or null if no match was found
 	 *
-	 * @param   red
-	 *          exact red value
-	 * @param   green
-	 *          exact green value
-	 * @param   blue
-	 *          exact blue value
-	 * @return  enum value or null if no such combination exists
+	 * @param red   exact red value
+	 * @param green exact green value
+	 * @param blue  exact blue value
+	 * @return enum value or null if no such combination exists
 	 */
-	public static EnumChatFormat fromRGBExact(int red, int green, int blue){
+	public static EnumChatFormat fromRGBExact(int red, int green, int blue) {
 		for (EnumChatFormat format : VALUES) {
 			if (format.red == red && format.green == green && format.blue == blue) return format;
 		}
@@ -195,16 +203,15 @@ public enum EnumChatFormat {
 	 * Color translation method taken from bukkit, which converts '&amp;' symbol into
 	 * the actual color character if followed by a valid color character.
 	 *
-	 * @param   textToTranslate
-	 *          text to replace color symbol in
-	 * @return  colorized string from provided text
+	 * @param textToTranslate text to replace color symbol in
+	 * @return colorized string from provided text
 	 */
-	public static String color(String textToTranslate){
+	public static String color(String textToTranslate) {
 		if (textToTranslate == null) return null;
 		if (!textToTranslate.contains("&")) return textToTranslate;
 		char[] b = textToTranslate.toCharArray();
 		for (int i = 0; i < b.length - 1; i++) {
-			if ((b[i] == '&') && ("0123456789AaBbCcDdEeFfKkLlMmNnOoRrXx".indexOf(b[(i + 1)]) > -1)){
+			if ((b[i] == '&') && ("0123456789AaBbCcDdEeFfKkLlMmNnOoRrXx".indexOf(b[(i + 1)]) > -1)) {
 				b[i] = COLOR_CHAR;
 				b[(i + 1)] = Character.toLowerCase(b[(i + 1)]);
 			}
@@ -215,24 +222,22 @@ public enum EnumChatFormat {
 	/**
 	 * Code taken from bukkit, which returns last color codes used in provided text.
 	 *
-	 * @param   input
-	 *          text to get last colors from
-	 * @return  last colors used in provided text or empty string if nothing was found
+	 * @param input text to get last colors from
+	 * @return last colors used in provided text or empty string if nothing was found
 	 */
 	public static String getLastColors(String input) {
 		if (input == null) return "";
 		StringBuilder result = new StringBuilder();
 		int length = input.length();
-		for (int index = length - 1; index > -1; index--){
+		for (int index = length - 1; index > -1; index--) {
 			char section = input.charAt(index);
-			if ((section == COLOR_CHAR || section == '&') && (index < length - 1)){
+			if ((section == COLOR_CHAR || section == '&') && (index < length - 1)) {
 				char c = input.charAt(index + 1);
 				if ("0123456789AaBbCcDdEeFfKkLlMmNnOoRr".contains(String.valueOf(c))) {
 					result.insert(0, COLOR_CHAR);
 					result.insert(1, c);
-					if ("0123456789AaBbCcDdEeFfRr".contains(String.valueOf(c))) {
+					if ("0123456789AaBbCcDdEeFfRr".contains(String.valueOf(c)))
 						break;
-					}
 				}
 			}
 		}

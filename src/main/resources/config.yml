@@ -8,12 +8,12 @@ Actionbars:
 Command-alias:
   enable: false
   alias: "glow"
-  
+
 #Delay speed for effects
 Delays:
   slow: 2.0
   fast: 1.0
-  
+
 #Make eGlow handle the formatting of the tab/tag
 #Nametag will always have the glow, to help change this check out this:
 #https://feedback.minecraft.net/hc/en-us/community/posts/360075673311
@@ -42,7 +42,7 @@ World:
   worlds:
     - "world1"
     - "world2"
-   
+
 Settings:
   disable-glow-when-invisible: true
   smart-TAB-nametag-handler: false
@@ -54,7 +54,7 @@ Settings:
     #Enabling this setting requires you to manually add the colors to the GUI section
     #of the messages.yml
     use-gui-color-for-messages: false
-    max-personal-effect-size: 10
+    interaction-delay: 0.8
   join:
     check-glow-permission: false
     default-glow-on-join-value: true
@@ -65,9 +65,9 @@ Settings:
       bypass-blocked-worlds: false
       glows:
         #permission: eglow.force.founder
-        founder: "rainbowfast" 
+        founder: "rainbowfast"
         #permission: eglow.force.vip
-        vip: "gold" 
+        vip: "gold"
   notifications:
     plugin-update: true
     invisibility-change: true
@@ -76,6 +76,10 @@ Settings:
 #Advanced settings - Only edit these when you know what you're doing!
 #Disabling some of these settings may cause eGlow to not work properly
 Advanced:
+  #Disable the messaging between backend and proxy server (required for eGlow's proxy addon)
+  force-disable-proxy-messaging: false
+  #Disable the integration with TAB to have simple glow colors which gets controlled by the end of tagprefix in TAB
+  force-disable-tab-integration: false
   #This setting will be able to hide the glow behind objects
   glow-visibility:
     enable: false

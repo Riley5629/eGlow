@@ -1,11 +1,11 @@
-package me.MrGraycat.eGlow.Command.SubCommands;
+package me.mrgraycat.eglow.command.subcommands;
 
-import me.MrGraycat.eGlow.Command.SubCommand;
-import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
-import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import me.mrgraycat.eglow.command.SubCommand;
+import me.mrgraycat.eglow.config.EGlowMessageConfig.Message;
+import me.mrgraycat.eglow.data.EGlowPlayer;
+import me.mrgraycat.eglow.util.enums.EnumUtil.GlowVisibility;
+import me.mrgraycat.eglow.util.packets.PacketUtil;
+import me.mrgraycat.eglow.util.text.ChatUtil;
 import org.bukkit.command.CommandSender;
 
 public class VisibilityCommand extends SubCommand {
@@ -13,11 +13,6 @@ public class VisibilityCommand extends SubCommand {
 	@Override
 	public String getName() {
 		return "visibility";
-	}
-
-	@Override
-	public String getDescription() {
-		return "Set the way you see the glowing.";
 	}
 
 	@Override
@@ -36,32 +31,51 @@ public class VisibilityCommand extends SubCommand {
 	}
 
 	@Override
-	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
+	public void perform(CommandSender sender, EGlowPlayer eGlowPlayer, String[] args) {
 		if (args.length >= 2) {
-			if (ePlayer.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT)) {
+			if (eGlowPlayer.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT)) {
 				ChatUtil.sendMsg(sender, Message.UNSUPPORTED_GLOW.get(), true);
 				return;
 			}
 
-			if (!args[1].equalsIgnoreCase("all") && !args[1].equalsIgnoreCase("other") && !args[1].equalsIgnoreCase("own") && !args[1].equalsIgnoreCase("none")) {
-				sendSyntax(sender, getSyntax()[0], true);
-				return;
+			switch (args[1].toLowerCase()) {
+				case "all":
+				case "other":
+				case "own":
+				case "none":
+					break;
+				default:
+					sendSyntax(sender);
+					return;
 			}
 
-			GlowVisibility oldVisibility = ePlayer.getGlowVisibility();
+			GlowVisibility oldVisibility = eGlowPlayer.getGlowVisibility();
 			GlowVisibility newVisibility = GlowVisibility.valueOf(args[1].toUpperCase());
 
-			if (!ePlayer.getGlowVisibility().equals(newVisibility) && ePlayer.getSaveData())
-				ePlayer.setSaveData(true);
-
-			ePlayer.setGlowVisibility(newVisibility);
-
-			if (oldVisibility != newVisibility)
-				PacketUtil.forceUpdateGlow(ePlayer);
+			if (!oldVisibility.equals(newVisibility)) {
+				eGlowPlayer.setGlowVisibility(newVisibility);
+				PacketUtil.forceUpdateGlow(eGlowPlayer);
+			}
 
 			ChatUtil.sendMsg(sender, Message.VISIBILITY_CHANGE.get(newVisibility.name()), true);
 		} else {
-			sendSyntax(sender, getSyntax()[0], true);
+			switch (eGlowPlayer.getGlowVisibility()) {
+				case ALL:
+					eGlowPlayer.setGlowVisibility(GlowVisibility.OTHER);
+					break;
+				case OTHER:
+					eGlowPlayer.setGlowVisibility(GlowVisibility.OWN);
+					break;
+				case OWN:
+					eGlowPlayer.setGlowVisibility(GlowVisibility.NONE);
+					break;
+				case NONE:
+					eGlowPlayer.setGlowVisibility(GlowVisibility.ALL);
+					break;
+			}
+
+			PacketUtil.forceUpdateGlow(eGlowPlayer);
+			ChatUtil.sendMsg(sender, Message.VISIBILITY_CHANGE.get(eGlowPlayer.getGlowVisibility().name()), true);
 		}
 	}
 }

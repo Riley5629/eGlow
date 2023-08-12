@@ -1,4 +1,4 @@
-package me.MrGraycat.eGlow.API.Enum;
+package me.mrgraycat.eglow.api.enums;
 
 public enum EGlowEffect {
 	RAINBOW_SLOW,

@@ -1,4 +1,4 @@
-package me.MrGraycat.eGlow.Addon.Citizens;
+package me.mrgraycat.eglow.addon.citizens;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -22,8 +22,8 @@ public class CitizensAddon {
 	 * Check to see if required traits exist & were successfully applied to the NPC
 	 *
 	 * @param npc Citizens NPC
-	 * @return true if required traits exist and are applied, false if not
-	 * @throws NoClassDefFoundError thrown when using an old version of Citizens where the scoreboardTrait doesn't exist
+	 * @return whether traits exist and were applied
+	 * @throws NoClassDefFoundError thrown when Citizens is outdated or scoreboardTrait doesn't exist
 	 */
 	public boolean traitCheck(NPC npc) {
 		try {

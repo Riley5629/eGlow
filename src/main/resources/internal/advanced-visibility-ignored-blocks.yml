@@ -1,5 +1,5 @@
 ignored-blocks:
-# All
+  # All
   - ACACIA_DOOR
   - ACACIA_FENCE
   - ACACIA_FENCE_GATE
@@ -23,7 +23,7 @@ ignored-blocks:
   - SPRUCE_DOOR
   - SPRUCE_FENCE
   - SPRUCE_FENCE_GATE
-# Legacy
+  # Legacy
   - CARPET
   - FENCE
   - FENCE_GATE
@@ -36,7 +36,7 @@ ignored-blocks:
   - STAINED_GLASS
   - STAINED_GLASS_PANE
   - TRAP_DOOR
-# Modern
+  # Modern
   - ACACIA_LEAVES
   - ACACIA_TRAPDOOR
   - AZALEA_LEAVES

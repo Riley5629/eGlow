@@ -1,9 +1,9 @@
-package me.MrGraycat.eGlow.Command.SubCommands;
+package me.mrgraycat.eglow.command.subcommands;
 
-import me.MrGraycat.eGlow.Command.SubCommand;
-import me.MrGraycat.eGlow.Config.EGlowMessageConfig;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import me.mrgraycat.eglow.command.SubCommand;
+import me.mrgraycat.eglow.config.EGlowMessageConfig;
+import me.mrgraycat.eglow.data.EGlowPlayer;
+import me.mrgraycat.eglow.util.text.ChatUtil;
 import org.bukkit.command.CommandSender;
 
 public class ToggleGlowOnJoinCommand extends SubCommand {
@@ -11,11 +11,6 @@ public class ToggleGlowOnJoinCommand extends SubCommand {
 	@Override
 	public String getName() {
 		return "toggleglowonjoin";
-	}
-
-	@Override
-	public String getDescription() {
-		return "Toggle your glow on join status";
 	}
 
 	@Override
@@ -34,8 +29,8 @@ public class ToggleGlowOnJoinCommand extends SubCommand {
 	}
 
 	@Override
-	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
-		ePlayer.setGlowOnJoin(!ePlayer.getGlowOnJoin());
-		ChatUtil.sendMsg(sender, EGlowMessageConfig.Message.GLOWONJOIN_TOGGLE.get(String.valueOf(ePlayer.getGlowOnJoin())), true);
+	public void perform(CommandSender sender, EGlowPlayer eGlowPlayer, String[] args) {
+		eGlowPlayer.setGlowOnJoin(!eGlowPlayer.isGlowOnJoin());
+		ChatUtil.sendMsg(sender, EGlowMessageConfig.Message.GLOWONJOIN_TOGGLE.get(String.valueOf(eGlowPlayer.isGlowOnJoin())), true);
 	}
 }

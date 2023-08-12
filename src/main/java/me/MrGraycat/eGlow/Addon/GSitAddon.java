@@ -1,14 +1,14 @@
-package me.MrGraycat.eGlow.Addon;
+package me.mrgraycat.eglow.addon;
 
 import dev.geco.gsit.api.GSitAPI;
 import dev.geco.gsit.api.event.PlayerGetUpPoseEvent;
 import dev.geco.gsit.api.event.PlayerPoseEvent;
 import lombok.Getter;
-import me.MrGraycat.eGlow.API.Event.GlowColorChangeEvent;
-import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Manager.DataManager;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
+import me.mrgraycat.eglow.EGlow;
+import me.mrgraycat.eglow.api.event.GlowColorChangeEvent;
+import me.mrgraycat.eglow.data.DataManager;
+import me.mrgraycat.eglow.data.EGlowPlayer;
+import me.mrgraycat.eglow.util.enums.EnumUtil.GlowDisableReason;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,13 +18,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GSitAddon implements Listener {
+@Getter
+public class GSitAddon extends AbstractAddonBase implements Listener {
 
-	@Getter
-	Set<Player> posingPlayers = new HashSet<>();
+	private final Set<Player> posingPlayers = new HashSet<>();
 
-	public GSitAddon() {
-		EGlow.getInstance().getServer().getPluginManager().registerEvents(this, EGlow.getInstance());
+	public GSitAddon(EGlow eGlowInstance) {
+		super(eGlowInstance);
 	}
 
 	@EventHandler
@@ -44,6 +44,7 @@ public class GSitAddon implements Listener {
 		checkGlow(event.getPlayer(), false);
 	}
 
+	//TODO check if this event is needed
 	@EventHandler
 	public void onGlowChange(GlowColorChangeEvent event) {
 		Player player = event.getPlayer();
@@ -57,24 +58,19 @@ public class GSitAddon implements Listener {
 	}
 
 	private void checkGlow(Player player, boolean isPosing) {
-		IEGlowPlayer eGlowPlayer = DataManager.getEGlowPlayer(player);
+		EGlowPlayer eGlowPlayer = DataManager.getEGlowPlayer(player);
 
 		if (isPosing) {
 			if (eGlowPlayer.isGlowing()) {
 				getPosingPlayers().add(player);
-				eGlowPlayer.setGlowDisableReason(GlowDisableReason.ANIMATION, false);
+				eGlowPlayer.setGlowDisableReason(GlowDisableReason.ANIMATION);
 				eGlowPlayer.disableGlow(false);
 			}
 		} else {
 			if (getPosingPlayers().remove(player)) {
-				eGlowPlayer.setGlowDisableReason(GlowDisableReason.NONE, false);
+				eGlowPlayer.setGlowDisableReason(GlowDisableReason.NONE);
 				eGlowPlayer.activateGlow();
 			}
 		}
-	}
-
-	//TODO non static access
-	public static boolean isPlayerPosing(Player player) {
-		return GSitAPI.isPosing(player);
 	}
 }

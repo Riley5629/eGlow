@@ -1,8 +1,8 @@
-package me.MrGraycat.eGlow.Util.Packets;
+package me.mrgraycat.eglow.util.packets;
 
 import io.netty.channel.Channel;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import me.mrgraycat.eglow.util.text.ChatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
@@ -217,7 +217,7 @@ public class NMSStorage {
 			this.PacketPlayOutScoreboardTeam = getNMSClass("net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam", "PacketPlayOutScoreboardTeam", "Packet209SetScoreboardTeam");
 			this.PacketPlayOutScoreboardTeam_NAME = getFields(this.PacketPlayOutScoreboardTeam, String.class).get(0);
 			this.PacketPlayOutScoreboardTeam_PLAYERS = getFields(this.PacketPlayOutScoreboardTeam, Collection.class).get(0);
-			this.PacketPlayOutScoreboardTeam_ACTION = getInstanceFields(PacketPlayOutScoreboardTeam, int.class).get(0);
+			this.PacketPlayOutScoreboardTeam_ACTION = getInstanceFields(PacketPlayOutScoreboardTeam).get(0);
 
 			if (this.minorVersion >= 17) {
 				this.PacketPlayOutScoreboardTeam_a = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam$a");
@@ -279,8 +279,7 @@ public class NMSStorage {
 		for (String name : names) {
 			try {
 				return getNMSClass(name);
-			} catch (ClassNotFoundException classNotFoundException) {
-				//Nothing
+			} catch (ClassNotFoundException ignored) {
 			}
 		}
 		throw new ClassNotFoundException("No class found with possible names " + Arrays.toString(names));
@@ -301,7 +300,7 @@ public class NMSStorage {
 			return Class.forName(name);
 		try {
 			return Class.forName("net.minecraft.server." + this.serverPackage + "." + name);
-		} catch (NullPointerException e) {
+		} catch (NullPointerException exception) {
 			throw new ClassNotFoundException(name);
 		}
 	}
@@ -310,8 +309,7 @@ public class NMSStorage {
 		for (String name : names) {
 			try {
 				return clazz.getMethod(name, parameterTypes);
-			} catch (Exception exception) {
-				//Nothing
+			} catch (Exception ignored) {
 			}
 		}
 		throw new NoSuchMethodException("No method found with possible names " + Arrays.toString(names) + " in class " + clazz.getName());
@@ -359,11 +357,11 @@ public class NMSStorage {
 		return list;
 	}
 
-	private List<Field> getInstanceFields(Class<?> clazz, Class<?> type) {
+	private List<Field> getInstanceFields(Class<?> clazz) {
 		if (clazz == null) throw new IllegalArgumentException("Source class cannot be null");
 		List<Field> list = new ArrayList<>();
 		for (Field field : clazz.getDeclaredFields()) {
-			if (field.getType() == type && !Modifier.isStatic(field.getModifiers())) {
+			if (field.getType() == int.class && !Modifier.isStatic(field.getModifiers())) {
 				list.add(setAccessible(field));
 			}
 		}

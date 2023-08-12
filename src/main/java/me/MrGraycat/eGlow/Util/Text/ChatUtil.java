@@ -1,13 +1,13 @@
-package me.MrGraycat.eGlow.Util.Text;
+package me.mrgraycat.eglow.util.text;
 
-import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
-import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
-import me.MrGraycat.eGlow.Manager.DataManager;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.Packets.Chat.ChatColor;
-import me.MrGraycat.eGlow.Util.Packets.Chat.rgb.RGBUtils;
-import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
-import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
+import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
+import me.mrgraycat.eglow.config.EGlowMessageConfig.Message;
+import me.mrgraycat.eglow.data.DataManager;
+import me.mrgraycat.eglow.data.EGlowPlayer;
+import me.mrgraycat.eglow.util.packets.PacketUtil;
+import me.mrgraycat.eglow.util.packets.ProtocolVersion;
+import me.mrgraycat.eglow.util.packets.chat.ChatColor;
+import me.mrgraycat.eglow.util.packets.chat.rgb.RGBUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -43,7 +43,7 @@ public class ChatUtil {
 				text = RGBUtils.getInstance().convertRGBtoLegacy(text);
 				return text.replace("&", "§");
 			}
-		} catch (NullPointerException e) {
+		} catch (NullPointerException exception) {
 			return text.replace("&", "§");
 		}
 
@@ -52,7 +52,7 @@ public class ChatUtil {
 		Matcher match = rgb.matcher(text);
 		while (match.find()) {
 			String color = text.substring(match.start(), match.end());
-			text = text.replace(color, ChatColor.of(color) + "");
+			text = text.replace(color, String.valueOf(ChatColor.of(color)));
 			match = rgb.matcher(text);
 		}
 
@@ -100,7 +100,7 @@ public class ChatUtil {
 	}
 
 	private static void sendActionbar(Player player, String message) {
-		IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(player);
+		EGlowPlayer ePlayer = DataManager.getEGlowPlayer(player);
 
 		if (ePlayer == null) {
 			return;
@@ -113,13 +113,13 @@ public class ChatUtil {
 		}
 	}
 
-	public static void reportError(Exception e) {
+	public static void reportError(Exception exception) {
 		sendToConsole("&f[&eeGlow&f]: &4Please report this error to MrGraycat&f!:", false);
-		e.printStackTrace();
+		exception.printStackTrace();
 	}
 
-	public static String getEffectChatName(IEGlowPlayer entity) {
-		return (entity.getEffect() == null) ? Message.GUI_NOT_AVAILABLE.get() : entity.getEffect().getDisplayName();
+	public static String getEffectChatName(EGlowPlayer eGlowPlayer) {
+		return (eGlowPlayer.getGlowEffect() == null) ? Message.GUI_NOT_AVAILABLE.get() : eGlowPlayer.getGlowEffect().getDisplayName();
 	}
 
 	public static String getEffectName(String effect) {

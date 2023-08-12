@@ -1,37 +1,25 @@
-package me.MrGraycat.eGlow.Command.SubCommands.Admin;
+package me.mrgraycat.eglow.command.subcommands.admin;
 
-import me.MrGraycat.eGlow.Addon.Internal.AdvancedGlowVisibilityAddon;
-import me.MrGraycat.eGlow.Command.SubCommand;
-import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
-import me.MrGraycat.eGlow.Config.EGlowMessageConfig;
-import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
-import me.MrGraycat.eGlow.Config.Playerdata.EGlowPlayerdataManager;
-import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Manager.DataManager;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandMap;
+import me.mrgraycat.eglow.addon.internal.AdvancedGlowVisibilityAddon;
+import me.mrgraycat.eglow.command.SubCommand;
+import me.mrgraycat.eglow.config.EGlowCustomEffectsConfig;
+import me.mrgraycat.eglow.config.EGlowMainConfig;
+import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
+import me.mrgraycat.eglow.config.EGlowMessageConfig;
+import me.mrgraycat.eglow.config.EGlowMessageConfig.Message;
+import me.mrgraycat.eglow.data.DataManager;
+import me.mrgraycat.eglow.data.EGlowPlayer;
+import me.mrgraycat.eglow.database.EGlowPlayerdataManager;
+import me.mrgraycat.eglow.util.enums.EnumUtil;
+import me.mrgraycat.eglow.util.packets.NMSHook;
+import me.mrgraycat.eglow.util.text.ChatUtil;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import java.lang.reflect.Field;
-import java.util.Objects;
 
 public class ReloadCommand extends SubCommand {
 
 	@Override
 	public String getName() {
 		return "reload";
-	}
-
-	@Override
-	public String getDescription() {
-		return "Reload the plugin";
 	}
 
 	@Override
@@ -50,73 +38,44 @@ public class ReloadCommand extends SubCommand {
 	}
 
 	@Override
-	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
+	public void perform(CommandSender sender, EGlowPlayer eGlowPlayer, String[] args) {
 		if (EGlowMainConfig.reloadConfig() && EGlowMessageConfig.reloadConfig() && EGlowCustomEffectsConfig.reloadConfig()) {
 			EGlowPlayerdataManager.setMysql_Failed(false);
+			NMSHook.registerCommandAlias();
 			DataManager.addEGlowEffects();
-			DataManager.addCustomEffects();
 
-			for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
-				ePlayer = DataManager.getEGlowPlayer(onlinePlayer);
+			boolean advancedGlowVisibilityEnabled = MainConfig.ADVANCED_GLOW_VISIBILITY_ENABLE.getBoolean();
 
-				if (ePlayer == null)
+			if (advancedGlowVisibilityEnabled && getInstance().getAdvancedGlowVisibilityAddon() == null) {
+				getInstance().setAdvancedGlowVisibilityAddon(new AdvancedGlowVisibilityAddon());
+			} else if (!advancedGlowVisibilityEnabled && getInstance().getAdvancedGlowVisibilityAddon() != null) {
+				getInstance().getAdvancedGlowVisibilityAddon().shutdown();
+			}
+
+			for (EGlowPlayer eGlowTarget : DataManager.getEGlowPlayers()) {
+				if (eGlowTarget == null)
 					continue;
 
-				ePlayer.updatePlayerTabname();
+				eGlowTarget.setupForceGlows();
+				eGlowTarget.updatePlayerTabname();
 
-				IEGlowEffect effect = ePlayer.getForceGlow();
+				EnumUtil.GlowDisableReason oldGlowDisableReason = eGlowTarget.getGlowDisableReason();
+				EnumUtil.GlowDisableReason newGlowDisableReason = eGlowTarget.setGlowDisableReason(EnumUtil.GlowDisableReason.NONE);
 
-				if (effect != null) {
-					if (getInstance().getLibDisguiseAddon() != null && getInstance().getLibDisguiseAddon().isDisguised(ePlayer.getPlayer()) || getInstance().getIDisguiseAddon() != null && getInstance().getIDisguiseAddon().isDisguised(ePlayer.getPlayer())) {
-						ePlayer.setGlowDisableReason(GlowDisableReason.DISGUISE, false);
-						ChatUtil.sendMsg(ePlayer.getPlayer(), Message.DISGUISE_BLOCKED.get(), true);
-					} else {
-						ePlayer.activateGlow(effect);
-					}
+				if (oldGlowDisableReason.equals(newGlowDisableReason))
 					continue;
-				}
 
-				if (MainConfig.WORLD_ENABLE.getBoolean() && ePlayer.isInBlockedWorld()) {
-					if (ePlayer.isGlowing()) {
-						ePlayer.disableGlow(false);
-						ePlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD, false);
-						ChatUtil.sendMsg(ePlayer.getPlayer(), Message.WORLD_BLOCKED_RELOAD.get(), true);
-					}
+				if (oldGlowDisableReason.equals(EnumUtil.GlowDisableReason.NONE)) {
+					if (eGlowTarget.isGlowing())
+						eGlowTarget.disableGlow(false);
 				} else {
-					if (ePlayer.getGlowDisableReason() != null && ePlayer.getGlowDisableReason().equals(GlowDisableReason.BLOCKEDWORLD)) {
-						if (ePlayer.setGlowDisableReason(GlowDisableReason.NONE, false)) {
-							ePlayer.activateGlow();
-							ChatUtil.sendMsg(ePlayer.getPlayer(), Message.WORLD_ALLOWED.get(), true);
-						}
-					}
+					eGlowTarget.activateGlow();
 				}
-			}
-
-			if (MainConfig.ADVANCED_GLOW_VISIBILITY_ENABLE.getBoolean()) {
-				if (getInstance().getAdvancedGlowVisibility() == null)
-					getInstance().setAdvancedGlowVisibility(new AdvancedGlowVisibilityAddon());
-			} else {
-				if (getInstance().getAdvancedGlowVisibility() != null)
-					getInstance().getAdvancedGlowVisibility().shutdown();
-				getInstance().setAdvancedGlowVisibility(null);
-			}
-
-			try {
-				String alias = MainConfig.COMMAND_ALIAS.getString();
-
-				if (MainConfig.COMMAND_ALIAS_ENABLE.getBoolean() && alias != null && Bukkit.getServer().getPluginCommand(alias) == null) {
-					final Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-					commandMapField.setAccessible(true);
-					CommandMap commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
-					commandMap.register(alias, alias, Objects.requireNonNull(EGlow.getInstance().getCommand("eglow"), "Unable to retrieve eGlow command to register alias"));
-				}
-			} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-				ChatUtil.reportError(e);
 			}
 
 			ChatUtil.sendMsg(sender, Message.RELOAD_SUCCESS.get(), true);
 		} else {
-			ChatUtil.sendMsg(sender, Message.RELOAD_SUCCESS.get(), true);
+			ChatUtil.sendMsg(sender, Message.RELOAD_FAIL.get(), true);
 		}
 	}
 }

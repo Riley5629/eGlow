@@ -1,7 +1,7 @@
-package me.MrGraycat.eGlow.Util.Packets.Chat.rgb.gradient;
+package me.mrgraycat.eglow.util.packets.chat.rgb.gradient;
 
-import me.MrGraycat.eGlow.Util.Packets.Chat.EnumChatFormat;
-import me.MrGraycat.eGlow.Util.Packets.Chat.TextColor;
+import me.mrgraycat.eglow.util.packets.chat.EnumChatFormat;
+import me.mrgraycat.eglow.util.packets.chat.TextColor;
 
 /**
  * Abstract class for applying different gradient patterns

@@ -1,4 +1,4 @@
-package me.MrGraycat.eGlow.Util.Packets.Datawatcher;
+package me.mrgraycat.eglow.util.packets.datawatcher;
 
 public class DataWatcherObject {
 	//position in datawatcher
@@ -9,7 +9,7 @@ public class DataWatcherObject {
 
 	/**
 	 * Constructs a new instance of this class with given parameters
-	 * 
+	 *
 	 * @param position  - position in datawatcher
 	 * @param classType - value class type
 	 */

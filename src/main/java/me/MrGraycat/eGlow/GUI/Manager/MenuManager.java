@@ -1,45 +1,49 @@
-package me.MrGraycat.eGlow.GUI.Manager;
+package me.mrgraycat.eglow.gui.manager;
 
+import lombok.Getter;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 
+@Getter
 public class MenuManager {
 	private final HashMap<Player, MenuMetadata> playerMenuMetadata = new HashMap<>();
-	
+
 	/**
 	 * Get menumetadata of a player
-	 * @param p player to get the menumetadata for
+	 *
+	 * @param player player to get the menumetadata for
 	 * @return menumetadata of the player
 	 */
-	public MenuMetadata getMenuMetadata(Player p) {
-		if (!playerMenuMetadata.containsKey(p)) {
+	public MenuMetadata getMenuMetadata(Player player) {
+		if (!getPlayerMenuMetadata().containsKey(player)) {
 			MenuMetadata meta;
-			
-			meta = new MenuMetadata(p);
-			playerMenuMetadata.put(p, meta);
-			
+
+			meta = new MenuMetadata(player);
+			getPlayerMenuMetadata().put(player, meta);
+
 			return meta;
 		} else {
-			return playerMenuMetadata.get(p);
+			return getPlayerMenuMetadata().get(player);
 		}
 	}
-	
+
+	@Getter
 	public static class MenuMetadata {
-		private Player owner;
-		
-		public MenuMetadata(Player p) {
-			setOwner(p);
+		private final Player owner;
+		private long lastClicked;
+
+		public MenuMetadata(Player player) {
+			this.owner = player;
+			this.lastClicked = System.currentTimeMillis();
 		}
-		
-		//Setter
-		private void setOwner(Player owner) {
-			this.owner = owner;
+
+		public void setLastClicked(long lastClicked) {
+			this.lastClicked = lastClicked;
 		}
-		
-		//Getter
-		public Player getOwner() {
-			return this.owner;
+
+		public long getLastClicked() {
+			return lastClicked;
 		}
 	}
 }

@@ -1,11 +1,9 @@
-package me.MrGraycat.eGlow.Util.Packets.OutGoing;
+package me.mrgraycat.eglow.util.packets.outgoing;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import me.MrGraycat.eGlow.Util.Packets.Datawatcher.DataWatcher;
-import me.MrGraycat.eGlow.Util.Packets.NMSHook;
-import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
-import net.citizensnpcs.util.NMS;
+import me.mrgraycat.eglow.util.packets.NMSHook;
+import me.mrgraycat.eglow.util.packets.ProtocolVersion;
+import me.mrgraycat.eglow.util.packets.datawatcher.DataWatcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +17,7 @@ public class PacketPlayOutEntityMetadata extends PacketPlayOut {
 		this.entityId = entityId;
 		this.dataWatcher = dataWatcher;
 	}
-	
+
 	@Override
 	@SuppressWarnings("rawtypes")
 	public Object toNMS(ProtocolVersion clientVersion) throws Exception {
@@ -34,6 +32,5 @@ public class PacketPlayOutEntityMetadata extends PacketPlayOut {
 		} else {
 			return NMSHook.nms.newPacketPlayOutEntityMetadata.newInstance(entityId, dataWatcher.toNMS(), true);
 		}
-
 	}
 }

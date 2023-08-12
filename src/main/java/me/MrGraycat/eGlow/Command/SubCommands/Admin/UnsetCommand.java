@@ -1,23 +1,19 @@
-package me.MrGraycat.eGlow.Command.SubCommands.Admin;
+package me.mrgraycat.eglow.command.subcommands.admin;
 
-import me.MrGraycat.eGlow.Command.SubCommand;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
-import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import me.mrgraycat.eglow.command.SubCommand;
+import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
+import me.mrgraycat.eglow.config.EGlowMessageConfig.Message;
+import me.mrgraycat.eglow.data.EGlowPlayer;
+import me.mrgraycat.eglow.util.enums.EnumUtil.EntityType;
+import me.mrgraycat.eglow.util.text.ChatUtil;
 import org.bukkit.command.CommandSender;
 
-import java.util.List;
+import java.util.Set;
 
 public class UnsetCommand extends SubCommand {
 	@Override
 	public String getName() {
 		return "unset";
-	}
-
-	@Override
-	public String getDescription() {
-		return "Stop the glowing of a player/NPC";
 	}
 
 	@Override
@@ -27,7 +23,7 @@ public class UnsetCommand extends SubCommand {
 
 	@Override
 	public String[] getSyntax() {
-		return new String[] {"/eGlow unset <player/npc>"};
+		return new String[]{"/eGlow unset <player/npc>"};
 	}
 
 	@Override
@@ -36,26 +32,26 @@ public class UnsetCommand extends SubCommand {
 	}
 
 	@Override
-	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
-		List<IEGlowPlayer> eTargets = getTarget(sender, args);
+	public void perform(CommandSender sender, EGlowPlayer eGlowPlayer, String[] args) {
+		Set<EGlowPlayer> eGlowTargets = getTarget(sender, args);
 
-		if (eTargets == null) {
-			sendSyntax(sender, "", true);
+		if (eGlowTargets.isEmpty()) {
+			sendSyntax(sender);
 			return;
 		}
 
-		for (IEGlowPlayer eTarget : eTargets) {
+		for (EGlowPlayer eTarget : eGlowTargets) {
 			if (eTarget == null)
 				continue;
-			
+
 			if (eTarget.isGlowing()) {
 				eTarget.disableGlow(false);
-				
-				if (eTarget.getEntityType().equals("PLAYER") && MainConfig.SETTINGS_NOTIFICATIONS_TARGET_COMMAND.getBoolean())
+
+				if (eTarget.getEntityType().equals(EntityType.PLAYER) && MainConfig.SETTINGS_NOTIFICATIONS_TARGET_COMMAND.getBoolean())
 					ChatUtil.sendMsg(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.DISABLE_GLOW.get(), true);
 			}
 
 			ChatUtil.sendMsg(sender, Message.OTHER_CONFIRM_OFF.get(eTarget), true);
-		}	
+		}
 	}
 }

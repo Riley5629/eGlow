@@ -1,10 +1,11 @@
-package me.MrGraycat.eGlow.Command.SubCommands;
+package me.mrgraycat.eglow.command.subcommands;
 
-import me.MrGraycat.eGlow.Command.SubCommand;
-import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import me.mrgraycat.eglow.command.SubCommand;
+import me.mrgraycat.eglow.config.EGlowMessageConfig.Message;
+import me.mrgraycat.eglow.data.DataManager;
+import me.mrgraycat.eglow.data.EGlowEffect;
+import me.mrgraycat.eglow.data.EGlowPlayer;
+import me.mrgraycat.eglow.util.text.ChatUtil;
 import org.bukkit.command.CommandSender;
 
 public class ToggleCommand extends SubCommand {
@@ -12,11 +13,6 @@ public class ToggleCommand extends SubCommand {
 	@Override
 	public String getName() {
 		return "toggle";
-	}
-
-	@Override
-	public String getDescription() {
-		return "Toggle your glow on/off";
 	}
 
 	@Override
@@ -35,37 +31,37 @@ public class ToggleCommand extends SubCommand {
 	}
 
 	@Override
-	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
-		if (ePlayer.isInBlockedWorld()) {
-			ChatUtil.sendMsg(sender, Message.WORLD_BLOCKED.get(), true);
-			return;
-		}
-
-		if (ePlayer.isGlowing()) {
-			ePlayer.disableGlow(false);
+	public void perform(CommandSender sender, EGlowPlayer eGlowPlayer, String[] args) {
+		if (eGlowPlayer.isGlowing()) {
+			eGlowPlayer.disableGlow(false);
 			ChatUtil.sendMsg(sender, Message.DISABLE_GLOW.get(), true);
 		} else {
-			if (ePlayer.getEffect() == null || ePlayer.getEffect().getName().equals("none")) {
+			if (eGlowPlayer.getGlowEffect() == null || eGlowPlayer.getGlowEffect().getName().equals("none")) {
 				ChatUtil.sendMsg(sender, Message.NO_LAST_GLOW.get(), true);
-			} else {
-				if (ePlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-					ChatUtil.sendMsg(sender, Message.DISGUISE_BLOCKED.get(), true);
-					return;
-				}
+				return;
+			}
 
-				if (ePlayer.isInvisible()) {
+			switch (eGlowPlayer.getGlowDisableReason()) {
+				case BLOCKEDWORLD:
+					ChatUtil.sendMsg(sender, Message.WORLD_BLOCKED.get(), true);
+					return;
+				case INVISIBLE:
 					ChatUtil.sendMsg(sender, Message.INVISIBILITY_BLOCKED.get(), true);
 					return;
-				}
-
-				if (ePlayer.getPlayer().hasPermission(ePlayer.getEffect().getPermission()) || ePlayer.isForcedGlow(ePlayer.getEffect())) {
-					ePlayer.activateGlow();
-				} else {
-					ChatUtil.sendMsg(sender, Message.NO_PERMISSION.get(), true);
+				case ANIMATION:
+					ChatUtil.sendMsg(sender, Message.ANIMATION_BLOCKED.get(), true);
 					return;
-				}
-				ChatUtil.sendMsg(sender, Message.NEW_GLOW.get(ePlayer.getLastGlowName()), true);
 			}
+
+			EGlowEffect currentEGlowEffect = eGlowPlayer.getGlowEffect();
+
+			if (eGlowPlayer.hasPermission(currentEGlowEffect.getPermissionNode()) || (DataManager.isCustomEffect(currentEGlowEffect.getName()) && eGlowPlayer.hasPermission("eglow.egloweffect.*")) || eGlowPlayer.isForcedGlow(currentEGlowEffect)) {
+				eGlowPlayer.activateGlow();
+			} else {
+				ChatUtil.sendMsg(sender, Message.NO_PERMISSION.get(), true);
+				return;
+			}
+			ChatUtil.sendMsg(sender, Message.NEW_GLOW.get(eGlowPlayer.getLastGlowName()), true);
 		}
 	}
 }

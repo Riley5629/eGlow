@@ -1,4 +1,4 @@
-package me.MrGraycat.eGlow.Util;
+package me.mrgraycat.eglow.util.enums;
 
 public class EnumUtil {
 
@@ -26,7 +26,6 @@ public class EnumUtil {
 	 */
 	public enum GlowDisableReason {
 		BLOCKEDWORLD,
-		DISGUISE,
 		INVISIBLE,
 		ANIMATION,
 		NONE

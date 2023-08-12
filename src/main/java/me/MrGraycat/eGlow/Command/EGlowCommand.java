@@ -1,47 +1,34 @@
-package me.MrGraycat.eGlow.Command;
+package me.mrgraycat.eglow.command;
 
-import me.MrGraycat.eGlow.Command.SubCommands.Admin.DebugCommand;
-import me.MrGraycat.eGlow.Command.SubCommands.Admin.ReloadCommand;
-import me.MrGraycat.eGlow.Command.SubCommands.Admin.SetCommand;
-import me.MrGraycat.eGlow.Command.SubCommands.Admin.UnsetCommand;
-import me.MrGraycat.eGlow.Command.SubCommands.*;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
-import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
-import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Event.EGlowEventListener;
-import me.MrGraycat.eGlow.Manager.DataManager;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import me.mrgraycat.eglow.command.subcommands.*;
+import me.mrgraycat.eglow.command.subcommands.admin.DebugCommand;
+import me.mrgraycat.eglow.command.subcommands.admin.ReloadCommand;
+import me.mrgraycat.eglow.command.subcommands.admin.SetCommand;
+import me.mrgraycat.eglow.command.subcommands.admin.UnsetCommand;
+import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
+import me.mrgraycat.eglow.config.EGlowMessageConfig.Message;
+import me.mrgraycat.eglow.data.DataManager;
+import me.mrgraycat.eglow.data.EGlowEffect;
+import me.mrgraycat.eglow.data.EGlowPlayer;
+import me.mrgraycat.eglow.event.EGlowEventListener;
+import me.mrgraycat.eglow.util.packets.NMSHook;
+import me.mrgraycat.eglow.util.text.ChatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 public class EGlowCommand implements CommandExecutor, TabExecutor {
 	private final ArrayList<String> colors = new ArrayList<>(Arrays.asList("red", "darkred", "gold", "yellow", "green", "darkgreen", "aqua", "darkaqua", "blue", "darkblue", "purple", "pink", "white", "gray", "darkgray", "black", "none"));
-	private final ArrayList<SubCommand> subcmds = new ArrayList<>();
+	private final Set<SubCommand> subcmds = new HashSet<>();
 
 	/**
 	 * Register the subcommands & command alias if enabled
 	 */
 	public EGlowCommand() {
-
-		try {
-			final Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-			String alias = MainConfig.COMMAND_ALIAS.getString();
-
-			if (MainConfig.COMMAND_ALIAS_ENABLE.getBoolean() && alias != null) {
-				commandMapField.setAccessible(true);
-				CommandMap commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
-				commandMap.register(alias, alias, Objects.requireNonNull(EGlow.getInstance().getCommand("eglow"), "Unable to retrieve eGlow command to register alias"));
-			}
-		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-			ChatUtil.reportError(e);
-		}
+		NMSHook.registerCommandAlias();
 
 		subcmds.add(new GUICommand());
 		subcmds.add(new HelpCommand());
@@ -60,45 +47,48 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (command.getName().equalsIgnoreCase("eglow") || MainConfig.COMMAND_ALIAS_ENABLE.getBoolean() && command.getName().equalsIgnoreCase(MainConfig.COMMAND_ALIAS.getString())) {
-			SubCommand cmd = null;
-			IEGlowPlayer ePlayer = null;
+			SubCommand subCommand = null;
+			EGlowPlayer eGlowPlayer = null;
 			String[] argsCopy = args.clone();
 
 			//Get the correct subcommand
-			if (args.length == 0)
+			if (args.length == 0) {
 				args = new String[]{"gui"};
+			}
 
-			if (DataManager.isValidEffect(args[0], true) || args[0].equalsIgnoreCase("blink") || DataManager.isValidEffect(args[0], false) || args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("disable"))
+			if (DataManager.isValidEffect(args[0], true) || args[0].equalsIgnoreCase("blink") || DataManager.isValidEffect(args[0], false)
+					|| args[0].toLowerCase().replace("off", "none").replace("disable", "none").equalsIgnoreCase("none")) {
 				args = new String[]{"effect"};
+			}
 
-			for (int i = 0; i < getSubCommands().size(); i++) {
-				if (args[0].equalsIgnoreCase(getSubCommands().get(i).getName())) {
-					cmd = getSubCommands().get(i);
+			for (SubCommand subCmd : getSubCommands()) {
+				if (args[0].equalsIgnoreCase(subCmd.getName())) {
+					subCommand = subCmd;
 					break;
 				}
 			}
 
-			if (cmd == null) {
+			if (subCommand == null) {
 				ChatUtil.sendMsg(sender, Message.COMMAND_LIST.get(), true);
 				return true;
 			}
-			if (sender instanceof ConsoleCommandSender && cmd.isPlayerCmd()) {
+			if (sender instanceof ConsoleCommandSender && subCommand.isPlayerCmd()) {
 				ChatUtil.sendMsg(sender, Message.PLAYER_ONLY.get(), true);
 				return true;
 			}
-			if (!cmd.getPermission().isEmpty() && !sender.hasPermission(cmd.getPermission())) {
+			if (!subCommand.getPermission().isEmpty() && !sender.hasPermission(subCommand.getPermission())) {
 				ChatUtil.sendMsg(sender, Message.NO_PERMISSION.get(), true);
 				return true;
 			}
 			if (sender instanceof Player) {
-				ePlayer = DataManager.getEGlowPlayer((Player) sender);
+				eGlowPlayer = DataManager.getEGlowPlayer((Player) sender);
 
-				if (ePlayer == null) {
+				if (eGlowPlayer == null) {
 					EGlowEventListener.PlayerConnect((Player) sender, ((Player) sender).getUniqueId());
-					ePlayer = DataManager.getEGlowPlayer((Player) sender);
+					eGlowPlayer = DataManager.getEGlowPlayer((Player) sender);
 				}
 			}
-			cmd.perform(sender, ePlayer, argsCopy);
+			subCommand.perform(sender, eGlowPlayer, argsCopy);
 		}
 		return true;
 	}
@@ -108,7 +98,7 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 		if (sender == null)
 			return null;
 
-		if (sender instanceof Player && cmd.getName().equalsIgnoreCase("eGlow") || MainConfig.COMMAND_ALIAS_ENABLE.getBoolean() && cmd.getName().equalsIgnoreCase(MainConfig.COMMAND_ALIAS.getString())) {
+		if (sender instanceof Player && cmd.getName().equalsIgnoreCase("eglow") || MainConfig.COMMAND_ALIAS_ENABLE.getBoolean() && cmd.getName().equalsIgnoreCase(MainConfig.COMMAND_ALIAS.getString())) {
 			ArrayList<String> suggestions = new ArrayList<>();
 			ArrayList<String> finalSuggestions = new ArrayList<>();
 
@@ -127,10 +117,10 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 
 					suggestions.add("blink");
 
-					for (IEGlowEffect effect : DataManager.getEGlowEffects()) {
+					for (EGlowEffect effect : DataManager.getEGlowEffects()) {
 						String name = effect.getName().replace("slow", "").replace("fast", "");
 
-						if (!name.contains("blink") && sender.hasPermission(effect.getPermission()))
+						if (!name.contains("blink") && sender.hasPermission(effect.getPermissionNode()))
 							suggestions.add(name);
 						if (name.equals("none")) {
 							suggestions.add("off");
@@ -138,8 +128,8 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 						}
 					}
 
-					for (IEGlowEffect effect : DataManager.getCustomEffects()) {
-						if (sender.hasPermission(effect.getPermission()))
+					for (EGlowEffect effect : DataManager.getCustomEffects()) {
+						if (sender.hasPermission(effect.getPermissionNode()))
 							suggestions.add(effect.getName());
 					}
 
@@ -172,7 +162,7 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 								suggestions = new ArrayList<>(Collections.singletonList("stop"));
 
 								for (int i = 1; i <= 10; i++) {
-									suggestions.add(i + "");
+									suggestions.add(String.valueOf(i));
 								}
 							}
 							break;
@@ -212,14 +202,14 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 						suggestions = new ArrayList<>(Arrays.asList("slow", "fast"));
 
 					if (args[0].equalsIgnoreCase("set") && sender.hasPermission("eglow.command.set") && args[1].toLowerCase().contains("npc:") || Bukkit.getPlayer(args[1]) != null) {
-						for (IEGlowEffect effect : DataManager.getEGlowEffects()) {
+						for (EGlowEffect effect : DataManager.getEGlowEffects()) {
 							String name = effect.getName().replace("slow", "").replace("fast", "");
 
 							if (!name.contains("blink"))
 								suggestions.add(name);
 						}
 
-						for (IEGlowEffect effect : DataManager.getCustomEffects()) {
+						for (EGlowEffect effect : DataManager.getCustomEffects()) {
 							suggestions.add(effect.getName());
 						}
 
@@ -270,7 +260,7 @@ public class EGlowCommand implements CommandExecutor, TabExecutor {
 		return null;
 	}
 
-	public ArrayList<SubCommand> getSubCommands() {
+	public Set<SubCommand> getSubCommands() {
 		return subcmds;
 	}
 }

@@ -1,20 +1,16 @@
-package me.MrGraycat.eGlow.Addon.Citizens;
+package me.mrgraycat.eglow.addon.citizens;
 
 import lombok.Getter;
-import lombok.Setter;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import me.mrgraycat.eglow.data.EGlowPlayer;
+import me.mrgraycat.eglow.util.text.ChatUtil;
 import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
 
+@Getter
 public class EGlowCitizensTrait extends Trait {
-	@Getter
-	@Setter
-	IEGlowPlayer eGlowNPC = null;
+	EGlowPlayer eGlowNPC = null;
 
-	@Getter
-	@Setter
 	@Persist("LastEffect")
 	String lastEffect = "none";
 
@@ -24,21 +20,19 @@ public class EGlowCitizensTrait extends Trait {
 
 	@Override
 	public void load(DataKey key) {
-		setLastEffect(key.getString("LastEffect", "none"));
+		this.lastEffect = key.getString("LastEffect", "none");
 	}
 
 	@Override
 	public void save(DataKey key) {
-		if (getEGlowNPC() != null) {
-			key.setString("LastEffect", (getEGlowNPC().isGlowing()) ? getEGlowNPC().getEffect().getName() : "none");
-		}
+		if (getEGlowNPC() != null)
+			key.setString("LastEffect", (getEGlowNPC().isGlowing()) ? getEGlowNPC().getGlowEffect().getName() : "none");
 	}
 
 	@Override
 	public void onSpawn() {
-		if (getEGlowNPC() == null) {
-			setEGlowNPC(new IEGlowPlayer(this.npc));
-		}
+		if (getEGlowNPC() == null)
+			this.eGlowNPC = new EGlowPlayer(this.npc);
 
 		getEGlowNPC().disableGlow(true);
 		getEGlowNPC().setDataFromLastGlow(getLastEffect());

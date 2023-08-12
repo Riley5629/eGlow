@@ -1,7 +1,7 @@
-package me.MrGraycat.eGlow.Util.Packets.OutGoing;
+package me.mrgraycat.eglow.util.packets.outgoing;
 
-import me.MrGraycat.eGlow.Util.Packets.Chat.EnumChatFormat;
-import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
+import me.mrgraycat.eglow.util.packets.chat.EnumChatFormat;
+import me.mrgraycat.eglow.util.packets.ProtocolVersion;
 
 import java.lang.reflect.Field;
 

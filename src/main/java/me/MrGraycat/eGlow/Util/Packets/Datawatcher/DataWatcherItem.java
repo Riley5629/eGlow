@@ -1,27 +1,29 @@
-package me.MrGraycat.eGlow.Util.Packets.Datawatcher;
+package me.mrgraycat.eglow.util.packets.datawatcher;
 
-import me.MrGraycat.eGlow.Util.Packets.NMSHook;
-import me.MrGraycat.eGlow.Util.Packets.NMSStorage;
+import me.mrgraycat.eglow.util.packets.NMSHook;
+import me.mrgraycat.eglow.util.packets.NMSStorage;
 
 public class DataWatcherItem {
 	//type of value (position + data type (1.9+))
 	public DataWatcherObject type;
-	
+
 	//actual data value
 	public Object value;
-	
+
 	/**
 	 * Constructs new instance of the object with given parameters
-	 * @param type - value type
+	 *
+	 * @param type  - value type
 	 * @param value - value
 	 */
-	public DataWatcherItem(DataWatcherObject type, Object value){
+	public DataWatcherItem(DataWatcherObject type, Object value) {
 		this.type = type;
 		this.value = value;
 	}
-	
+
 	/**
 	 * Returns and instance of this class from given NMS item
+	 *
 	 * @param nmsItem - NMS item
 	 * @return instance of this class with same data
 	 * @throws Exception - if something fails

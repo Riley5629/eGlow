@@ -1,137 +1,93 @@
+package me.mrgraycat.eglow.config;
 
-package me.MrGraycat.eGlow.Config;
-
-import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import me.mrgraycat.eglow.EGlow;
+import me.mrgraycat.eglow.util.text.ChatUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.permissions.Permission;
 
 import java.io.File;
-import java.util.*;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 public class EGlowMainConfig {
 	private static YamlConfiguration config;
 	private static File configFile;
-	
+
 	public static void initialize() {
-		configFile = new File(EGlow.getInstance().getDataFolder(), "Config.yml");
-		
+		File oldConfigFile = new File(EGlow.getInstance().getDataFolder(), "Config.yml");
+		configFile = new File(EGlow.getInstance().getDataFolder(), "config.yml");
+
 		try {
-			if (!EGlow.getInstance().getDataFolder().exists()) {
+			if (!EGlow.getInstance().getDataFolder().exists())
 				EGlow.getInstance().getDataFolder().mkdirs();
-			}
-			
+
+			if (oldConfigFile.exists())
+				oldConfigFile.renameTo(configFile);
+
 			if (!configFile.exists()) {
-				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4Config.yml not found&f! &eCreating&f...", false);
+				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4config.yml not found&f! &eCreating&f...", false);
 				configFile.getParentFile().mkdirs();
-				EGlow.getInstance().saveResource("Config.yml", false);
+				EGlow.getInstance().saveResource("config.yml", false);
 			} else {
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &aLoading main config&f.", false);
 			}
-			
+
 			config = new YamlConfiguration();
 			config.load(configFile);
-			
+
 			registerCustomPermissions();
-
-			//TODO to be removed soon
-			if (!config.isConfigurationSection("Command-alias")) {
-				File oldFile = new File(EGlow.getInstance().getDataFolder(), "OLDConfig.yml");
-				
-				if (oldFile.exists())
-					oldFile.delete();
-				
-				ChatUtil.sendToConsole("&f[&eeGlow&f]: &cDetected old main config&f! &eRenamed it to OLDConfig&f! &eReconfiguring might be required&f!", false);
-				configFile.renameTo(oldFile);
-				initialize();
-			}
-
-			configCheck();
-		} catch(Exception e) {
-			ChatUtil.reportError(e);
+			repairConfig();
+		} catch (Exception exception) {
+			ChatUtil.reportError(exception);
 		}
 	}
-	
+
 	public static boolean reloadConfig() {
 		YamlConfiguration configBackup = config;
 		File configFileBackup = configFile;
-		
+
 		try {
 			config = null;
 			configFile = null;
-			
-			configFile = new File(EGlow.getInstance().getDataFolder(), "Config.yml");
+
+			configFile = new File(EGlow.getInstance().getDataFolder(), "config.yml");
 			config = new YamlConfiguration();
 			config.load(configFile);
-			
+
 			registerCustomPermissions();
-			
+
 			return true;
-		} catch(Exception e) {
+		} catch (Exception exception) {
 			config = configBackup;
 			configFile = configFileBackup;
-			
-			ChatUtil.reportError(e);
+
+			ChatUtil.reportError(exception);
 			return false;
 		}
 	}
-	
-	private static void configCheck() {
-		replaceOrAdd("Actionbars.Enable", "Actionbars.enable", true);
-		replaceOrAdd("Actionbars.Use-in-GUI","Actionbars.use-in-GUI", false);
 
-		replaceOrAdd("Command-alias.Enable", "Command-alias.enable", false);
-		replaceOrAdd("Command-alias.Alias", "Command-alias.alias", "glow");
+	private static void repairConfig() {
+		InputStream resource = EGlow.getInstance().getResource("config.yml");
+		YamlConfiguration tempConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(Objects.requireNonNull(resource)));
 
-		replaceOrAdd("Delays.Player.Slow", "Delays.slow", 2.0);
-		replaceOrAdd("Delays.Player.Fast", "Delays.fast", 1.0);
+		for (String path : Objects.requireNonNull(tempConfig.getConfigurationSection("")).getKeys(true)) {
+			if (path.contains("Settings.join.force-glows.glows")) {
+				continue;
+			}
 
-		replaceOrAdd("Tabname.Enable", "Formatting.tablist.enable", false);
-		replaceOrAdd("NA", "Formatting.tablist.format", "%prefix% &r%name% %suffix%");
-		replaceOrAdd("Tagname.Enable", "Formatting.tagname.enable", false);
-		replaceOrAdd("Tagname.tagPrefix", "Formatting.tagname.prefix", "%prefix%");
-		replaceOrAdd("Tagname.tagSuffix", "Formatting.tagname.suffix", "%suffix%");
+			if (!config.contains(path))
+				config.set(path, tempConfig.get(path));
+		}
 
-		replaceOrAdd("MySQL.Enable", "MySQL.enable", false);
-		replaceOrAdd("MySQL.Host", "MySQL.host", "localhost");
-		replaceOrAdd("MySQL.Port", "MySQL.port", 3306);
-		replaceOrAdd("NA", "MySQL.DBName", "");
-		replaceOrAdd("MySQL.Username", "MySQL.username", "root");
-		replaceOrAdd("MySQL.Password", "MySQL.password", "123");
-
-		replaceOrAdd("World.Enable", "World.enable", false);
-		replaceOrAdd("World.Action", "World.action", "BLOCK");
-		replaceOrAdd("World.Worlds", "World.worlds", Arrays.asList("world1", "world2"));
-
-		replaceOrAdd("Options.Disable-glow-when-invisible", "Settings.disable-glow-when-invisible", true);
-		replaceOrAdd("Options.Advanced-TAB-integration", "Settings.smart-TAB-nametag-handler", false);
-
-		replaceOrAdd("Options.Render-player-skulls", "Settings.gui.render-skulls", true);
-		replaceOrAdd("Options.Inventory-add-glass", "Settings.gui.add-glass-panes", true);
-		replaceOrAdd("Options.Disable-prefix-in-GUI", "Settings.gui.add-prefix-to-title", true); //custom-effects-in-gui
-		replaceOrAdd("NA", "Settings.gui.custom-effects-in-gui", true);
-		replaceOrAdd("Options.Use-GUI-color-as-chat-color", "Settings.gui.use-gui-color-for-messages", false);
-		replaceOrAdd("NA", "Settings.gui.max-personal-effect-size", 10);
-
-		replaceOrAdd("Options.PermissionCheck-on-join", "Settings.join.check-glow-permission", false);
-		replaceOrAdd("Options.Default-glow-on-join-value", "Settings.join.default-glow-on-join-value", true);
-		replaceOrAdd("Options.Mention-glow-state-on-join", "Settings.join.mention-glow-state", false);
-		replaceOrAdd("Force-glow.Enable", "Settings.join.force-glows.enable", false);
-		replaceOrAdd("Force-glow.Bypass-blocked-worlds", "Settings.join.force-glows.bypass-blocked-worlds", false);
-		replaceOrAdd("Force-glow.Glows", "Settings.join.force-glows.glows", true);
-		replaceOrAdd("Options.Send-update-notifications", "Settings.notifications.plugin-update", true);
-		replaceOrAdd("Options.Send-invisibility-notification", "Settings.notifications.invisibility-change", true);
-		replaceOrAdd("Options.Send-target-notification", "Settings.notifications.target-set-unset-command", true);
-
-		replaceOrAdd("NA", "Advanced.glow-visibility.enable", false);
-		replaceOrAdd("NA", "Advanced.glow-visibility.delay", 0.5);
-		replaceOrAdd("MySQL.useSSL", "Advanced.MySQL.useSSL", true);
-		replaceOrAdd("Options.Collision", "Advanced.teams.entity-collision", true);
-		replaceOrAdd("Options.Nametag", "Advanced.teams.nametag-visibility", true);
-		replaceOrAdd("Options.Remove-scoreboard-on-join", "Advanced.teams.remove-teams-on-join", true);
-		replaceOrAdd("Options.Feature-team-packets", "Advanced.teams.send-eGlow-team-packets", true);
-		replaceOrAdd("Options.Feature-packet-blocker", "Advanced.packets.smart-packet-blocker", true);
-		remove( "Delays.Player", "Tabname", "Tabname.tabPrefix", "Tabname.tabName", "Tabname.tabSuffix", "Tagname", "Force-glow", "Options");
+		try {
+			config.save(configFile);
+		} catch (Exception exception) {
+			ChatUtil.reportError(exception);
+		}
 	}
 
 	public enum MainConfig {
@@ -169,7 +125,7 @@ public class EGlowMainConfig {
 		SETTINGS_GUI_ADD_PREFIX("Settings.gui.add-prefix-to-title"),
 		SETTINGS_GUI_CUSTOM_EFFECTS("Settings.gui.custom-effects-in-gui"),
 		SETTINGS_GUI_COLOR_FOR_MESSAGES("Settings.gui.use-gui-color-for-messages"),
-		SETTINGS_GUI_MAX_PERSONAL_GLOW_SIZE("Settings.gui.max-personal-effect-size"),
+		SETTINGS_GUIS_INTERACTION_DELAY("Settings.gui.interaction-delay"),
 
 		SETTINGS_JOIN_CHECK_PERMISSION("Settings.join.check-glow-permission"),
 		SETTINGS_JOIN_DEFAULT_GLOW_ON_JOIN_VALUE("Settings.join.default-glow-on-join-value"),
@@ -182,6 +138,8 @@ public class EGlowMainConfig {
 		SETTINGS_NOTIFICATIONS_INVISIBILITY("Settings.notifications.invisibility-change"),
 		SETTINGS_NOTIFICATIONS_TARGET_COMMAND("Settings.notifications.target-set-unset-command"),
 
+		ADVANCED_FORCE_DISABLE_PROXY_MESSAGING("Advanced.force-disable-proxy-messaging"),
+		ADVANCED_FORCE_DISABLE_TAB_INTEGRATION("Advanced.force-disable-tab-integration"),
 		ADVANCED_GLOW_VISIBILITY_ENABLE("Advanced.glow-visibility.enable"),
 		ADVANCED_GLOW_VISIBILITY_DELAY("Advanced.glow-visibility.delay"),
 
@@ -235,6 +193,10 @@ public class EGlowMainConfig {
 			}
 		}
 
+		public long getLong() {
+			return (long) (config.getDouble(main.getConfigPath()) * 1000L);
+		}
+
 		public Boolean getBoolean() {
 			return config.getBoolean(main.getConfigPath());
 		}
@@ -244,41 +206,15 @@ public class EGlowMainConfig {
 		}
 	}
 
-	private static void replaceOrAdd(String oldPath, String newPath, Object value) {
-		try {
-			if (config.contains(oldPath)) {
-				config.set(newPath, config.get(oldPath));
-				config.set(oldPath, null);
-			} else if (!config.contains(newPath)) {
-				config.set(newPath, value);
-			}
-
-			config.save(configFile);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static void remove(String... paths) {
-		try {
-			for (String path : paths) {
-				config.set(path, null);
-			}
-
-			config.save(configFile);
-		} catch (Exception e) {
-			ChatUtil.reportError(e);
-		}
-	}
-	
 	private static void registerCustomPermissions() {
 		if (!MainConfig.SETTINGS_JOIN_FORCE_GLOWS_ENABLE.getBoolean())
 			return;
-		
+
 		for (String name : MainConfig.SETTINGS_JOIN_FORCE_GLOWS_LIST.getConfigSection()) {
 			try {
 				EGlow.getInstance().getServer().getPluginManager().addPermission(new Permission("eglow.force." + name.toLowerCase()));
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 		}
 	}
 }

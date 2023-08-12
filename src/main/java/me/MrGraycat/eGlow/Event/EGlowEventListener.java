@@ -1,18 +1,16 @@
-package me.MrGraycat.eGlow.Event;
+package me.mrgraycat.eglow.event;
 
-import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
-import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
-import me.MrGraycat.eGlow.Config.Playerdata.EGlowPlayerdataManager;
-import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.GUI.Menu;
-import me.MrGraycat.eGlow.Manager.DataManager;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
-import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
-import me.MrGraycat.eGlow.Util.Packets.PipelineInjector;
-import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import me.mrgraycat.eglow.EGlow;
+import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
+import me.mrgraycat.eglow.config.EGlowMessageConfig.Message;
+import me.mrgraycat.eglow.data.DataManager;
+import me.mrgraycat.eglow.data.EGlowPlayer;
+import me.mrgraycat.eglow.database.EGlowPlayerdataManager;
+import me.mrgraycat.eglow.gui.Menu;
+import me.mrgraycat.eglow.util.enums.EnumUtil.GlowDisableReason;
+import me.mrgraycat.eglow.util.packets.PacketUtil;
+import me.mrgraycat.eglow.util.packets.ProtocolVersion;
+import me.mrgraycat.eglow.util.text.ChatUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,7 +20,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
@@ -31,61 +28,60 @@ public class EGlowEventListener implements Listener {
 	public EGlowEventListener() {
 		EGlow.getInstance().getServer().getPluginManager().registerEvents(this, EGlow.getInstance());
 
-		if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 13) {
+		if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 13)
 			new EGlowEventListener113AndAbove();
-		}
 	}
 
 	@EventHandler
-	public void PlayerConnectEvent(PlayerJoinEvent e) {
-		PlayerConnect(e.getPlayer(), e.getPlayer().getUniqueId());
+	public void PlayerConnectEvent(PlayerJoinEvent event) {
+		PlayerConnect(event.getPlayer(), event.getPlayer().getUniqueId());
 	}
 
 	@EventHandler
-	public void PlayerKickedEvent(PlayerKickEvent e) {
-		PlayerDisconnect(e.getPlayer(), false);
+	public void PlayerKickedEvent(PlayerKickEvent event) {
+		PlayerDisconnect(event.getPlayer());
 	}
 
 	@EventHandler
-	public void PlayerDisconnectEvent(PlayerQuitEvent e) {
-		PlayerDisconnect(e.getPlayer(), false);
+	public void PlayerDisconnectEvent(PlayerQuitEvent event) {
+		PlayerDisconnect(event.getPlayer());
 	}
 
 	@EventHandler
-	public void onMenuClick(InventoryClickEvent e) {
-		InventoryHolder holder = e.getInventory().getHolder();
+	public void onMenuClick(InventoryClickEvent event) {
+		InventoryHolder holder = event.getInventory().getHolder();
 
 		if (holder == null)
 			return;
 
 		if (holder instanceof Menu) {
-			e.setCancelled(true);
+			event.setCancelled(true);
 
-			if (e.getView().getBottomInventory().equals(e.getClickedInventory()) || e.getCurrentItem() == null)
+			if (event.getView().getBottomInventory().equals(event.getClickedInventory()) || event.getCurrentItem() == null)
 				return;
 
 			Menu menu = (Menu) holder;
-			menu.handleMenu(e);
+			menu.handleMenu(event);
 		}
 	}
 
 	@EventHandler
-	public void onPlayerWorldChange(PlayerChangedWorldEvent e) {
-		Player p = e.getPlayer();
-		IEGlowPlayer eglowPlayer = DataManager.getEGlowPlayer(p);
+	public void onPlayerWorldChange(PlayerChangedWorldEvent event) {
+		Player player = event.getPlayer();
+		EGlowPlayer eGlowPlayer = DataManager.getEGlowPlayer(player);
 
-		if (eglowPlayer != null) {
-			if (eglowPlayer.isInBlockedWorld()) {
-				if (eglowPlayer.isGlowing()) {
-					eglowPlayer.disableGlow(false);
-					eglowPlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD, false);
-					ChatUtil.sendMsg(p, Message.WORLD_BLOCKED.get(), true);
+		if (eGlowPlayer != null) {
+			if (eGlowPlayer.isInBlockedWorld()) {
+				if (eGlowPlayer.isGlowing()) {
+					eGlowPlayer.disableGlow(false);
+					eGlowPlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD);
+					ChatUtil.sendMsg(player, Message.WORLD_BLOCKED.get(), true);
 				}
 			} else {
-				if (eglowPlayer.getGlowDisableReason().equals(GlowDisableReason.BLOCKEDWORLD)) {
-					if (eglowPlayer.setGlowDisableReason(GlowDisableReason.NONE, false)) {
-						eglowPlayer.activateGlow();
-						ChatUtil.sendMsg(p, Message.WORLD_ALLOWED.get(), true);
+				if (eGlowPlayer.getGlowDisableReason().equals(GlowDisableReason.BLOCKEDWORLD)) {
+					if (eGlowPlayer.setGlowDisableReason(GlowDisableReason.NONE).equals(GlowDisableReason.NONE)) {
+						eGlowPlayer.activateGlow();
+						ChatUtil.sendMsg(player, Message.WORLD_ALLOWED.get(), true);
 					}
 				}
 			}
@@ -95,90 +91,66 @@ public class EGlowEventListener implements Listener {
 	/**
 	 * Code to initialise the player
 	 *
-	 * @param p player to initialise
+	 * @param player player to initialise
 	 */
-	public static void PlayerConnect(Player p, UUID uuid) {
+	public static void PlayerConnect(Player player, UUID uuid) {
 		//Fixes permanent player glows from old eGlow versions/other glow plugins that use Player#setGlowing(true)
-		if (p.isGlowing())
-			p.setGlowing(false);
+		if (player.isGlowing())
+			player.setGlowing(false);
 
-		IEGlowPlayer eglowPlayer = DataManager.addEGlowPlayer(p, uuid.toString());
-		PipelineInjector.inject(eglowPlayer);
-		PacketUtil.scoreboardPacket(eglowPlayer, true);
+		EGlowPlayer eGlowPlayer = DataManager.addEGlowPlayer(player, uuid.toString());
+		PacketUtil.handlePlayerJoin(eGlowPlayer);
 
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				EGlowPlayerdataManager.loadPlayerdata(eglowPlayer);
-				eglowPlayer.setSaveData(false);
+				EGlowPlayerdataManager.loadPlayerdata(eGlowPlayer);
+				eGlowPlayer.updatePlayerTabname();
 
-				if (!EGlow.getInstance().isUpToDate() && MainConfig.SETTINGS_NOTIFICATIONS_UPDATE.getBoolean() && p.hasPermission("eglow.option.update"))
-					ChatUtil.sendPlainMsg(p, "&aA new update is available&f!", true);
+				if (!EGlow.getInstance().isUpToDate() && MainConfig.SETTINGS_NOTIFICATIONS_UPDATE.getBoolean() && player.hasPermission("eglow.option.update"))
+					ChatUtil.sendPlainMsg(player, "&aA new update is available&f!", true);
 
-				if (EGlowPlayerdataManager.getMySQL_Failed() && p.hasPermission("eglow.option.update"))
-					ChatUtil.sendPlainMsg(p, "&cMySQL failed to enable properly, have a look at this asap&f.", true);
+				if (EGlowPlayerdataManager.getMySQL_Failed() && player.hasPermission("eglow.option.update"))
+					ChatUtil.sendPlainMsg(player, "&cMySQL failed to enable properly, have a look at this asap&f.", true);
 
-				new BukkitRunnable() {
-					@Override
-					public void run() {
-						PacketUtil.updatePlayer(eglowPlayer);
-					}
-				}.runTask(EGlow.getInstance());
-
-				eglowPlayer.updatePlayerTabname();
-
-				IEGlowEffect effect = eglowPlayer.getForceGlow();
-
-				if (effect != null) {
-					if (EGlow.getInstance().getLibDisguiseAddon() != null && EGlow.getInstance().getLibDisguiseAddon().isDisguised(p) || EGlow.getInstance().getIDisguiseAddon() != null && EGlow.getInstance().getIDisguiseAddon().isDisguised(p)) {
-						eglowPlayer.setGlowDisableReason(GlowDisableReason.DISGUISE, false);
-						ChatUtil.sendMsg(p, Message.DISGUISE_BLOCKED.get(), true);
-					} else if (eglowPlayer.getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY) && !eglowPlayer.getGlowDisableReason().equals(GlowDisableReason.INVISIBLE)) {
-						eglowPlayer.setGlowDisableReason(GlowDisableReason.INVISIBLE, false);
-						ChatUtil.sendMsg(eglowPlayer.getPlayer(), Message.INVISIBILITY_DISABLED.get(), true);
-					} else {
-						eglowPlayer.activateGlow(effect);
-						if (MainConfig.SETTINGS_JOIN_MENTION_GLOW_STATE.getBoolean() && eglowPlayer.getPlayer().hasPermission("eglow.option.glowstate"))
-							ChatUtil.sendMsg(eglowPlayer.getPlayer(), Message.GLOWING_STATE_ON_JOIN.get(effect.getDisplayName()), true);
+				if (!eGlowPlayer.isGlowOnJoin() || !player.hasPermission("eglow.option.glowonjoin")) {
+					sendNoGlowMessage(eGlowPlayer);
+					return;
+				} else {
+					if (!eGlowPlayer.isActiveOnQuit() && eGlowPlayer.hasNoForceGlow()) {
+						sendNoGlowMessage(eGlowPlayer);
 						return;
 					}
-					if (MainConfig.SETTINGS_JOIN_MENTION_GLOW_STATE.getBoolean() && eglowPlayer.getPlayer().hasPermission("eglow.option.glowstate"))
-						ChatUtil.sendMsg(eglowPlayer.getPlayer(), Message.NON_GLOWING_STATE_ON_JOIN.get(), true);
+				}
+
+				if (MainConfig.SETTINGS_JOIN_CHECK_PERMISSION.getBoolean() && !player.hasPermission(eGlowPlayer.getGlowEffect().getPermissionNode())) {
+					sendNoGlowMessage(eGlowPlayer);
 					return;
 				}
 
-				if (eglowPlayer.getActiveOnQuit()) {
-					if (eglowPlayer.getEffect() == null || !eglowPlayer.getGlowOnJoin() || !p.hasPermission("eglow.option.glowonjoin") || MainConfig.SETTINGS_JOIN_CHECK_PERMISSION.getBoolean() && !p.hasPermission(eglowPlayer.getEffect().getPermission()))
-						return;
+				GlowDisableReason glowDisableReason = eGlowPlayer.setGlowDisableReason(GlowDisableReason.NONE);
 
-					if (eglowPlayer.isInBlockedWorld()) {
-						if (eglowPlayer.isGlowing()) {
-							eglowPlayer.disableGlow(false);
-							eglowPlayer.setGlowDisableReason(GlowDisableReason.BLOCKEDWORLD, false);
-							ChatUtil.sendMsg(p, Message.WORLD_BLOCKED.get(), true);
-							return;
+				switch (glowDisableReason) {
+					case BLOCKEDWORLD:
+						ChatUtil.sendMsg(player, Message.WORLD_BLOCKED.get(), true);
+						break;
+					case INVISIBLE:
+						ChatUtil.sendMsg(player, Message.INVISIBILITY_BLOCKED.get(), true);
+						break;
+					case ANIMATION:
+						ChatUtil.sendMsg(player, Message.ANIMATION_BLOCKED.get(), true);
+						break;
+					default:
+						if (eGlowPlayer.getGlowEffect() != null) {
+							eGlowPlayer.activateGlow();
+
+							if (MainConfig.SETTINGS_JOIN_MENTION_GLOW_STATE.getBoolean() && player.hasPermission("eglow.option.glowstate"))
+								ChatUtil.sendMsg(player, Message.GLOWING_STATE_ON_JOIN.get(eGlowPlayer.getGlowEffect().getDisplayName()), true);
+						} else {
+							sendNoGlowMessage(eGlowPlayer);
 						}
-					}
-
-					if (EGlow.getInstance().getLibDisguiseAddon() != null && EGlow.getInstance().getLibDisguiseAddon().isDisguised(p) || EGlow.getInstance().getIDisguiseAddon() != null && EGlow.getInstance().getIDisguiseAddon().isDisguised(p)) {
-						eglowPlayer.setGlowDisableReason(GlowDisableReason.DISGUISE, false);
-						ChatUtil.sendMsg(p, Message.DISGUISE_BLOCKED.get(), true);
-						return;
-					}
-
-					try {
-						eglowPlayer.activateGlow();
-					} catch (NullPointerException e) {
-						//Prevent rare but useless message whenever something causes the player to disconnect whilst joining the server
-					}
-
-					if (MainConfig.SETTINGS_JOIN_MENTION_GLOW_STATE.getBoolean() && eglowPlayer.getPlayer().hasPermission("eglow.option.glowstate") && eglowPlayer.getEffect() != null)
-						ChatUtil.sendMsg(eglowPlayer.getPlayer(), Message.GLOWING_STATE_ON_JOIN.get(eglowPlayer.getEffect().getDisplayName()), true);
-					return;
+						break;
 				}
-
-				if (MainConfig.SETTINGS_JOIN_MENTION_GLOW_STATE.getBoolean() && eglowPlayer.getPlayer().hasPermission("eglow.option.glowstate"))
-					ChatUtil.sendMsg(eglowPlayer.getPlayer(), Message.NON_GLOWING_STATE_ON_JOIN.get(), true);
 			}
 		}.runTaskLaterAsynchronously(EGlow.getInstance(), 2L);
 	}
@@ -186,34 +158,27 @@ public class EGlowEventListener implements Listener {
 	/**
 	 * Code to unload the player from eGlow
 	 *
-	 * @param p player to unload
+	 * @param player player to unload
 	 */
-	public static void PlayerDisconnect(Player p, boolean shutdown) {
-		IEGlowPlayer eglowPlayer = DataManager.getEGlowPlayer(p);
-		PacketUtil.scoreboardPacket(eglowPlayer, false);
+	public static void PlayerDisconnect(Player player) {
+		EGlowPlayer eGlowPlayer = DataManager.getEGlowPlayer(player);
+		PacketUtil.handlePlayerQuit(eGlowPlayer);
 
-		if (!shutdown) {
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					PlayerDisconnectNext(eglowPlayer);
-				}
-			}.runTaskAsynchronously(EGlow.getInstance());
-		} else {
-			PlayerDisconnectNext(eglowPlayer);
-		}
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				eGlowPlayer.setActiveOnQuit(eGlowPlayer.isGlowing());
+				EGlowPlayerdataManager.savePlayerdata(eGlowPlayer);
+
+				if (EGlow.getInstance().getAdvancedGlowVisibilityAddon() != null)
+					EGlow.getInstance().getAdvancedGlowVisibilityAddon().uncachePlayer(eGlowPlayer.getUuid());
+				DataManager.removeEGlowPlayer(eGlowPlayer.getPlayer());
+			}
+		}.runTaskAsynchronously(EGlow.getInstance());
 	}
 
-	private static void PlayerDisconnectNext(IEGlowPlayer eglowPlayer) {
-		if (eglowPlayer != null) {
-			eglowPlayer.setActiveOnQuit(eglowPlayer.isGlowing());
-			EGlowPlayerdataManager.savePlayerdata(eglowPlayer);
-
-			PipelineInjector.uninject(eglowPlayer);
-			DataManager.removeEGlowPlayer(eglowPlayer.getPlayer());
-			if (EGlow.getInstance().getAdvancedGlowVisibility() != null) {
-				EGlow.getInstance().getAdvancedGlowVisibility().uncachePlayer(eglowPlayer);
-			}
-		}
+	private static void sendNoGlowMessage(EGlowPlayer eGlowPlayer) {
+		if (MainConfig.SETTINGS_JOIN_MENTION_GLOW_STATE.getBoolean() && eGlowPlayer.hasPermission("eglow.option.glowstate"))
+			ChatUtil.sendMsg(eGlowPlayer.getPlayer(), Message.NON_GLOWING_STATE_ON_JOIN.get(), true);
 	}
 }

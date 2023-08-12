@@ -1,15 +1,15 @@
-package me.MrGraycat.eGlow.GUI.Menus;
+package me.mrgraycat.eglow.gui.menus;
 
-import me.MrGraycat.eGlow.Config.EGlowCustomEffectsConfig.Effect;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
-import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
-import me.MrGraycat.eGlow.GUI.PaginatedMenu;
-import me.MrGraycat.eGlow.Manager.DataManager;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
-import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import lombok.Getter;
+import me.mrgraycat.eglow.config.EGlowCustomEffectsConfig.Effect;
+import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
+import me.mrgraycat.eglow.config.EGlowMessageConfig.Message;
+import me.mrgraycat.eglow.data.DataManager;
+import me.mrgraycat.eglow.data.EGlowEffect;
+import me.mrgraycat.eglow.data.EGlowPlayer;
+import me.mrgraycat.eglow.gui.PaginatedMenu;
+import me.mrgraycat.eglow.util.packets.ProtocolVersion;
+import me.mrgraycat.eglow.util.text.ChatUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -18,6 +18,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Getter
 public class EGlowEffectMenu extends PaginatedMenu {
 	private ConcurrentHashMap<Integer, String> effects = new ConcurrentHashMap<>();
 
@@ -36,18 +37,25 @@ public class EGlowEffectMenu extends PaginatedMenu {
 	}
 
 	@Override
-	public void handleMenu(InventoryClickEvent e) {
-		Player player = (Player) e.getWhoClicked();
-		IEGlowPlayer eGlowPlayer = DataManager.getEGlowPlayer(player);
-		ClickType clickType = e.getClick();
-		int clickedSlot = e.getSlot();
+	public void handleMenu(InventoryClickEvent event) {
+		Player player = (Player) event.getWhoClicked();
+		EGlowPlayer eGlowPlayer = DataManager.getEGlowPlayer(player);
+		ClickType clickType = event.getClick();
+		int clickedSlot = event.getSlot();
+
+		if ((System.currentTimeMillis() - getMenuMetadata().getLastClicked()) < MainConfig.SETTINGS_GUIS_INTERACTION_DELAY.getLong()) {
+			ChatUtil.sendMsgFromGUI(player, Message.GUI_COOLDOWN.get());
+			return;
+		}
+
+		getMenuMetadata().setLastClicked(System.currentTimeMillis());
 
 		switch (clickedSlot) {
 			case (28):
-				if (eGlowPlayer.getSaveData())
+				if (eGlowPlayer.skipSaveData())
 					eGlowPlayer.setSaveData(true);
 
-				eGlowPlayer.setGlowOnJoin(!eGlowPlayer.getGlowOnJoin());
+				eGlowPlayer.setGlowOnJoin(!eGlowPlayer.isGlowOnJoin());
 				break;
 			case (29):
 				if (eGlowPlayer.getPlayer().hasPermission("eglow.command.toggle")) {
@@ -55,45 +63,54 @@ public class EGlowEffectMenu extends PaginatedMenu {
 						eGlowPlayer.disableGlow(false);
 						ChatUtil.sendMsgFromGUI(player, Message.DISABLE_GLOW.get());
 					} else {
-						if (eGlowPlayer.getEffect() == null || eGlowPlayer.getEffect().getName().equals("none")) {
+						if (eGlowPlayer.getGlowEffect() == null || eGlowPlayer.getGlowEffect().getName().equals("none")) {
 							ChatUtil.sendMsgFromGUI(player, Message.NO_LAST_GLOW.get());
 							return;
-						} else {
-							if (eGlowPlayer.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-								ChatUtil.sendMsgFromGUI(player, Message.DISGUISE_BLOCKED.get());
-								return;
-							}
-
-							if (eGlowPlayer.getPlayer().hasPermission(eGlowPlayer.getEffect().getPermission())) {
-								eGlowPlayer.activateGlow();
-							} else {
-								ChatUtil.sendMsgFromGUI(player, Message.NO_PERMISSION.get());
-								return;
-							}
-							ChatUtil.sendMsgFromGUI(player, Message.NEW_GLOW.get(eGlowPlayer.getLastGlowName()));
 						}
+
+						switch (eGlowPlayer.getGlowDisableReason()) {
+							case BLOCKEDWORLD:
+								ChatUtil.sendMsgFromGUI(player, Message.WORLD_BLOCKED.get());
+								return;
+							case INVISIBLE:
+								ChatUtil.sendMsgFromGUI(player, Message.INVISIBILITY_BLOCKED.get());
+								return;
+							case ANIMATION:
+								ChatUtil.sendMsgFromGUI(player, Message.ANIMATION_BLOCKED.get());
+								return;
+						}
+
+						EGlowEffect currentEGlowEffect = eGlowPlayer.getGlowEffect();
+
+						if (eGlowPlayer.hasPermission(currentEGlowEffect.getPermissionNode()) || (DataManager.isCustomEffect(currentEGlowEffect.getName()) && eGlowPlayer.hasPermission("eglow.egloweffect.*")) || eGlowPlayer.isForcedGlow(currentEGlowEffect)) {
+							eGlowPlayer.activateGlow();
+						} else {
+							ChatUtil.sendMsgFromGUI(player, Message.NO_PERMISSION.get());
+							return;
+						}
+						ChatUtil.sendMsgFromGUI(player, Message.NEW_GLOW.get(eGlowPlayer.getLastGlowName()));
 					}
 				} else {
 					ChatUtil.sendMsgFromGUI(player, Message.NO_PERMISSION.get());
 				}
 				break;
 			case (33):
-				if (page == 1) {
-					new EGlowMainMenu(eGlowPlayer.getPlayer()).openInventory();
+				if (getPage() == 1) {
+					new EGlowMainMenu(eGlowPlayer).openInventory();
 				} else {
-					page = page - 1;
+					page--;
 					super.openInventory();
 				}
 				break;
 			case (34):
 				if (hasNextPage()) {
-					page = page + 1;
+					page++;
 					super.openInventory();
 				}
 				break;
 			default:
-				if (effects.containsKey(clickedSlot)) {
-					String effect = effects.get(clickedSlot);
+				if (getEffects().containsKey(clickedSlot)) {
+					String effect = getEffects().get(clickedSlot);
 					enableGlow(eGlowPlayer.getPlayer(), clickType, effect);
 				}
 				break;
@@ -104,31 +121,30 @@ public class EGlowEffectMenu extends PaginatedMenu {
 
 	@Override
 	public void setMenuItems() {
-		Player player = menuMetadata.getOwner();
-		IEGlowPlayer p = DataManager.getEGlowPlayer(player);
+		Player player = getMenuMetadata().getOwner();
+		EGlowPlayer eGlowPlayer = DataManager.getEGlowPlayer(player);
 		effects = new ConcurrentHashMap<>();
-		UpdateMainEffectsNavigationBar(p);
+		UpdateMainEffectsNavigationBar(eGlowPlayer);
 		setHasNextPage(false);
 
 		int slot = 0;
-
-		int currentEffect = 0;
-		int nextEffect = (26 * (page - 1)) + ((page > 1) ? 1 : 0);
+		int currentEffectSlot = 0;
+		int nextEffectSlot = (26 * (getPage() - 1)) + ((getPage() > 1) ? 1 : 0);
 
 		for (String effect : Effect.GET_ALL_EFFECTS.get()) {
-			IEGlowEffect Eeffect = DataManager.getEGlowEffect(effect.toLowerCase());
-			if (Eeffect == null)
+			EGlowEffect eGlowEffect = DataManager.getEGlowEffect(effect.toLowerCase());
+			if (eGlowEffect == null)
 				continue;
 
-			if (player.hasPermission(Eeffect.getPermission()) || player.hasPermission("eglow.effect.*")) {
-				if (currentEffect != nextEffect) {
-					currentEffect++;
+			if (player.hasPermission(eGlowEffect.getPermissionNode()) || player.hasPermission("eglow.effect.*")) {
+				if (currentEffectSlot != nextEffectSlot) {
+					currentEffectSlot++;
 					continue;
 				}
 
 				if (slot > getMaxItemsPerPage()) {
 					setHasNextPage(true);
-					UpdateMainEffectsNavigationBar(p);
+					UpdateMainEffectsNavigationBar(eGlowPlayer);
 					return;
 				}
 
@@ -140,18 +156,14 @@ public class EGlowEffectMenu extends PaginatedMenu {
 				ArrayList<String> lores = new ArrayList<>();
 
 				for (String lore : Effect.GET_LORES.getList(effect)) {
-					lore = ChatUtil.translateColors(lore.replace("%effect_name%", Eeffect.getDisplayName()).replace("%effect_has_permission%", hasPermission(p, Eeffect.getPermission())));
+					lore = ChatUtil.translateColors(lore.replace("%effect_name%", eGlowEffect.getDisplayName()).replace("%effect_has_permission%", hasPermission(eGlowPlayer, eGlowEffect.getPermissionNode())));
 					lores.add(lore);
 				}
 
-				if (model < 0) {
-					inventory.setItem(slot, createItem(material, name, meta, lores));
-				} else {
-					inventory.setItem(slot, createItem(material, name, meta, lores, model));
-				}
+				getInventory().setItem(slot, createItem(material, name, meta, lores, model));
 
-				if (!effects.containsKey(slot))
-					effects.put(slot, Eeffect.getName());
+				if (!getEffects().containsKey(slot))
+					getEffects().put(slot, eGlowEffect.getName());
 
 				slot++;
 			}
@@ -159,13 +171,21 @@ public class EGlowEffectMenu extends PaginatedMenu {
 	}
 
 	private Material getMaterial(String effect) {
-		String mat = Effect.GET_MATERIAL.getString(effect).toUpperCase();
+		String material = Effect.GET_MATERIAL.getString(effect).toUpperCase();
 		try {
-			if (mat.equals("SAPLING") && ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 13) mat = "SPRUCE_SAPLING";
-			if (mat.equals("PUMPKIN") && ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 13) mat = "CARVED_PUMPKIN";
-			return Material.valueOf(mat);
+			if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 13) {
+				switch (material) {
+					case "SAPLING":
+						material = "SPRUCE_SAPLING";
+						break;
+					case "PUMPKIN":
+						material = "CARVED_PUMPKIN";
+				}
+			}
+
+			return Material.valueOf(material);
 		} catch (IllegalArgumentException | NullPointerException e) {
-			ChatUtil.sendToConsole("Material: " + mat + " for effect " + effect + "is not valid.", true);
+			ChatUtil.sendToConsole("Material: " + material + " for effect " + effect + "is not valid.", true);
 			return Material.valueOf("DIRT");
 		}
 	}

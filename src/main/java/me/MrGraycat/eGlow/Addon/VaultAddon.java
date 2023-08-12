@@ -1,32 +1,31 @@
-package me.MrGraycat.eGlow.Addon;
+package me.mrgraycat.eglow.addon;
 
 import lombok.Getter;
-import lombok.Setter;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
-import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.DebugUtil;
-import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.mrgraycat.eglow.EGlow;
+import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
+import me.mrgraycat.eglow.data.EGlowPlayer;
+import me.mrgraycat.eglow.util.enums.Dependency;
+import me.mrgraycat.eglow.util.packets.ProtocolVersion;
+import me.mrgraycat.eglow.util.text.ChatUtil;
 import net.milkbowl.vault.chat.Chat;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-public class VaultAddon {
+public class VaultAddon extends AbstractAddonBase {
 	@Getter
-	@Setter
 	private Chat chat;
 
 	/**
 	 * Get vault's chat & check if PlaceholderAPI is installed for placeholder support
 	 */
-	public VaultAddon() {
-		RegisteredServiceProvider<Chat> rsp = EGlow.getInstance().getServer().getServicesManager().getRegistration(Chat.class);
+	public VaultAddon(EGlow eGlowInstance) {
+		super(eGlowInstance);
+		RegisteredServiceProvider<Chat> rsp = getEGlowInstance().getServer().getServicesManager().getRegistration(Chat.class);
 
 		if (rsp != null)
-			setChat(rsp.getProvider());
+			chat = rsp.getProvider();
 	}
 
 	/**
@@ -35,17 +34,14 @@ public class VaultAddon {
 	 * @param eGlowPlayer IEGlowEntity to get the prefix from
 	 * @return Formatted prefix as String
 	 */
-	public String getPlayerTagPrefix(IEGlowPlayer eGlowPlayer) {
+	public String getPlayerTagPrefix(EGlowPlayer eGlowPlayer) {
 		if (!MainConfig.FORMATTING_TAGNAME_ENABLE.getBoolean())
 			return "";
 
 		Player player = eGlowPlayer.getPlayer();
-		String prefix = MainConfig.FORMATTING_TAGNAME_PREFIX.getString();
+		String prefix = (MainConfig.FORMATTING_TAGNAME_PREFIX.getString()).replace("%prefix%", getPlayerPrefix(eGlowPlayer));
 
-		if (prefix.contains("%prefix%"))
-			prefix = prefix.replace("%prefix%", getPlayerPrefix(eGlowPlayer));
-
-		if (DebugUtil.isPAPIInstalled())
+		if (Dependency.PLACEHOLDER_API.isLoaded())
 			prefix = PlaceholderAPI.setPlaceholders(player, prefix);
 
 		if (prefix.length() > 14 && ProtocolVersion.SERVER_VERSION.getMinorVersion() <= 12)
@@ -60,7 +56,7 @@ public class VaultAddon {
 	 * @param eGlowPlayer IEGlowEntity to get the suffix from
 	 * @return Formatted suffix as String
 	 */
-	public String getPlayerTagSuffix(IEGlowPlayer eGlowPlayer) {
+	public String getPlayerTagSuffix(EGlowPlayer eGlowPlayer) {
 		if (!MainConfig.FORMATTING_TAGNAME_ENABLE.getBoolean())
 			return "";
 
@@ -70,7 +66,7 @@ public class VaultAddon {
 		if (suffix.contains("%suffix%"))
 			suffix = suffix.replace("%suffix%", getPlayerSuffix(eGlowPlayer));
 
-		if (DebugUtil.isPAPIInstalled())
+		if (Dependency.PLACEHOLDER_API.isLoaded())
 			suffix = PlaceholderAPI.setPlaceholders(player, suffix);
 
 		return (!suffix.isEmpty()) ? ChatUtil.translateColors(suffix) : "";
@@ -82,7 +78,7 @@ public class VaultAddon {
 	 * @param eGlowPlayer IEGlowEntity to get the prefix from
 	 * @return Vault prefix + glow color (cut to 16 chars if needed)
 	 */
-	public String getPlayerPrefix(IEGlowPlayer eGlowPlayer) {
+	public String getPlayerPrefix(EGlowPlayer eGlowPlayer) {
 		if (EGlow.getInstance().getVaultAddon() == null || getChat() == null)
 			return "";
 
@@ -100,7 +96,7 @@ public class VaultAddon {
 	 * @param eGlowPlayer IEGlowEntity to get the suffix from
 	 * @return Vault suffix + glow color (cut to 16 chars if needed)
 	 */
-	public String getPlayerSuffix(IEGlowPlayer eGlowPlayer) {
+	public String getPlayerSuffix(EGlowPlayer eGlowPlayer) {
 		if (EGlow.getInstance().getVaultAddon() == null || getChat() == null)
 			return "";
 

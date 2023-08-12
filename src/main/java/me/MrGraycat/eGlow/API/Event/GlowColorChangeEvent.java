@@ -1,4 +1,4 @@
-package me.MrGraycat.eGlow.API.Event;
+package me.mrgraycat.eglow.api.event;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -9,7 +9,6 @@ import java.util.UUID;
 
 public class GlowColorChangeEvent extends Event {
 	private static final HandlerList handlers = new HandlerList();
-
 	private final Player player;
 	private final UUID UUID;
 	private final ChatColor color;

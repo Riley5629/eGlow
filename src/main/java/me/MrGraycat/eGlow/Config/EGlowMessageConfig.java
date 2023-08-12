@@ -1,12 +1,15 @@
-package me.MrGraycat.eGlow.Config;
+package me.mrgraycat.eglow.config;
 
-import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.EnumUtil;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import me.mrgraycat.eglow.EGlow;
+import me.mrgraycat.eglow.data.EGlowPlayer;
+import me.mrgraycat.eglow.util.enums.EnumUtil;
+import me.mrgraycat.eglow.util.text.ChatUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Objects;
 
 public class EGlowMessageConfig {
 
@@ -14,37 +17,24 @@ public class EGlowMessageConfig {
 	private static File configFile;
 
 	public static void initialize() {
-		configFile = new File(EGlow.getInstance().getDataFolder(), "Messages.yml");
+		File oldConfigFile = new File(EGlow.getInstance().getDataFolder(), "Messages.yml");
+		configFile = new File(EGlow.getInstance().getDataFolder(), "messages.yml");
 
 		try {
-			if (!EGlow.getInstance().getDataFolder().exists()) {
-				EGlow.getInstance().getDataFolder().mkdirs();
-			}
+			if (oldConfigFile.exists())
+				oldConfigFile.renameTo(configFile);
 
 			if (!configFile.exists()) {
-				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4Messages.yml not found&f! &eCreating&f...", false);
+				ChatUtil.sendToConsole("&f[&eeGlow&f]: &4messages.yml not found&f! &eCreating&f...", false);
 				configFile.getParentFile().mkdirs();
-				EGlow.getInstance().saveResource("Messages.yml", false);
+				EGlow.getInstance().saveResource("messages.yml", false);
 			} else {
 				ChatUtil.sendToConsole("&f[&eeGlow&f]: &aLoading messages config&f.", false);
 			}
 
 			config = new YamlConfiguration();
 			config.load(configFile);
-
-			//TODO to be removed soon
-			if (!config.isConfigurationSection("main")) {
-				File oldFile = new File(EGlow.getInstance().getDataFolder(), "OLDMessages.yml");
-
-				if (oldFile.exists())
-					oldFile.delete();
-
-				ChatUtil.sendToConsole("&f[&eeGlow&f]: &cDetected old messages config&f! &eRenamed it to OLDMessages&f! &eReconfiguring might be required&f!", false);
-				configFile.renameTo(oldFile);
-				initialize();
-			}
-
-			configCheck();
+			repairConfig();
 		} catch (Exception e) {
 			ChatUtil.reportError(e);
 		}
@@ -58,7 +48,7 @@ public class EGlowMessageConfig {
 			config = null;
 			configFile = null;
 
-			configFile = new File(EGlow.getInstance().getDataFolder(), "Messages.yml");
+			configFile = new File(EGlow.getInstance().getDataFolder(), "messages.yml");
 			config = new YamlConfiguration();
 			config.load(configFile);
 			return true;
@@ -74,12 +64,9 @@ public class EGlowMessageConfig {
 	public enum Message {
 		PREFIX("main.prefix"),
 		NO_PERMISSION("main.no-permission"),
-		NO_PERMISSION_ON_JOIN("main.no-permission-join"),
-		NO_PERMISSION_GLOW_ON_JOIN("main.no-permission-glowonjoin"),
 		COLOR("main.color-"),
 		NEW_GLOW("main.glow-new"),
 		SAME_GLOW("main.glow-same"),
-		ENABLE_GLOW("main.glow-enable"),
 		DISABLE_GLOW("main.glow-disable"),
 		GLOW_REMOVED("main.glow-removed"),
 		GLOWONJOIN_TOGGLE("main.glow-glowonjoin-toggle"),
@@ -94,11 +81,13 @@ public class EGlowMessageConfig {
 		OTHER_CONFIRM_OFF("main.other-glow-player-confirm-off"),
 		OTHER_GLOW_ON_JOIN_CONFIRM("main.other-glow-on-join-confirm"),
 		OTHER_PLAYER_IN_DISABLED_WORLD("main.other-glow-player-disabled-world"),
-		OTHER_PLAYER_DISGUISE("main.other-glow-player-disguise"),
 		OTHER_PLAYER_INVISIBLE("main.other-glow-player-invisible"),
+		OTHER_PLAYER_ANIMATION("main.other-glow-player-animation"),
 		TARGET_NOTIFICATION_PREFIX("main.other-glow-target-notification-prefix"),
 		RELOAD_SUCCESS("main.reload-success"),
 		RELOAD_FAIL("main.reload-fail"),
+		RELOAD_GLOW_ALLOWED("main.reload-glow-allowed"),
+		RELOAD_GLOW_BLOCKED("main.reload-glow-blocked"),
 		GLOWING_STATE_ON_JOIN("main.glowing-state-on-join"),
 		NON_GLOWING_STATE_ON_JOIN("main.non-glowing-state-on-join"),
 		NO_LAST_GLOW("main.argument-no-last-glow"),
@@ -107,16 +96,11 @@ public class EGlowMessageConfig {
 		COMMAND_LIST("main.command-list"),
 		PLAYER_ONLY("main.command-player-only"),
 		INVISIBILITY_BLOCKED("main.invisibility-glow-blocked"),
-		INVISIBILITY_DISABLED("main.invisibility-glow-disabled"),
-		INVISIBILITY_ENABLED("main.invisibility-glow-enabled"),
-		DISGUISE_BLOCKED("main.disguise-glow-blocked"),
-		DISGUISE_ALLOWED("main.disguise-glow-allowed"),
+		INVISIBILITY_ALLOWED("main.invisibility-glow-allowed"),
 		WORLD_BLOCKED("main.world-glow-blocked"),
-		WORLD_BLOCKED_RELOAD("main.world-glow-blocked-reload"),
 		WORLD_ALLOWED("main.world-glow-allowed"),
+		ANIMATION_BLOCKED("main.animation-glow-blocked"),
 		CITIZENS_NOT_INSTALLED("main.citizens-not-installed"),
-		CITIZENS_NPC_PREFIX("main.citizens-npc"),
-		CITIZENS_NPC_NOT_SPAWNED("main.citizens-npc-not-spawned"),
 		CITIZENS_NPC_NOT_FOUND("main.citizens-npc-not-found"),
 		GUI_TITLE("gui.title"),
 		GUI_COLOR("gui.color-"),
@@ -126,11 +110,13 @@ public class EGlowMessageConfig {
 		GUI_LEFT_CLICK("gui.misc-left-click"),
 		GUI_RIGHT_CLICK("gui.misc-right-click"),
 		GUI_CLICK_TO_TOGGLE("gui.misc-click-to-toggle"),
+		GUI_CLICK_TO_CYCLE("gui.misc-click-to-cycle"),
 		GUI_CLICK_TO_OPEN("gui.misc-click-to-open"),
 		GUI_PREVIOUS_PAGE("gui.misc-previous-page"),
 		GUI_NEXT_PAGE("gui.misc-next-page"),
 		GUI_PAGE_LORE("gui.misc-page-lore"),
 		GUI_MAIN_MENU("gui.misc-main-menu"),
+		GUI_COOLDOWN("gui.misc-interaction-cooldown"),
 		GUI_COLOR_PERMISSION("gui.color-colorpermission"),
 		GUI_BLINK_PERMISSION("gui.color-blinkpermission"),
 		GUI_EFFECT_PERMISSION("gui.color-effectpermission"),
@@ -139,6 +125,8 @@ public class EGlowMessageConfig {
 		GUI_LAST_GLOW("gui.setting-last-glow"),
 		GUI_GLOW_ITEM_NAME("gui.glow-item-name"),
 		GUI_GLOWING("gui.glow-glowing"),
+		GLOW_VISIBILITY_ITEM_NAME("gui.glow-visibility-item-name"),
+		GLOW_VISIBILITY_INDICATOR("gui.glow-visibility-indicator"),
 		GUI_SPEED_ITEM_NAME("gui.speed-item-name"),
 		GUI_SPEED("gui.speed-speed"),
 		GUI_CUSTOM_EFFECTS_ITEM_NAME("gui.custom-effect-item-name");
@@ -178,26 +166,29 @@ public class EGlowMessageConfig {
 				case NEW_GLOW:
 				case GLOWING_STATE_ON_JOIN:
 					return getColorValue(msg.getConfigPath(), "%glowname%", value);
+				case RELOAD_GLOW_ALLOWED:
+				case RELOAD_GLOW_BLOCKED:
+					return getColorValue(msg.getConfigPath(), "%reason%", value);
 				default:
 					break;
 			}
 			return "Incorrect handled message for: " + msg;
 		}
 
-		public String get(IEGlowPlayer target, String value) {
+		public String get(EGlowPlayer eGlowTarget, String value) {
 			switch (msg) {
 				case OTHER_CONFIRM:
-					return getColorValue(msg.getConfigPath(), target, "%glowname%", value);
+					return getColorValue(msg.getConfigPath(), eGlowTarget, "%glowname%", value);
 				case OTHER_GLOW_ON_JOIN_CONFIRM:
-					return getColorValue(msg.getConfigPath(), target, "%value%", value);
+					return getColorValue(msg.getConfigPath(), eGlowTarget, "%value%", value);
 				default:
 					break;
 			}
 			return "Incorrect handled message for: " + msg;
 		}
 
-		public String get(IEGlowPlayer target) {
-			return getColorValue(msg.getConfigPath(), "%target%", target.getDisplayName());
+		public String get(EGlowPlayer eGlowTarget) {
+			return getColorValue(msg.getConfigPath(), "%target%", eGlowTarget.getDisplayName());
 		}
 
 		private String getColorValue(String path) {
@@ -205,7 +196,6 @@ public class EGlowMessageConfig {
 
 			if (text == null)
 				return "&cFailed to get text for&f: '&e" + path + "'";
-
 			return ChatUtil.translateColors(text);
 		}
 
@@ -219,8 +209,9 @@ public class EGlowMessageConfig {
 			return ChatUtil.translateColors(text.replace(textToReplace, replacement));
 		}
 
-		private String getColorValue(String path, IEGlowPlayer ePlayer, String textToReplace, String replacement) {
+		private String getColorValue(String path, EGlowPlayer eGlowPlayer, String textToReplace, String replacement) {
 			String text = config.getString(path);
+			String name = "NULL";
 
 			if (text == null)
 				return "&cFailed to get text for&f: '&e" + path + "'";
@@ -228,41 +219,26 @@ public class EGlowMessageConfig {
 			if (replacement == null)
 				replacement = "NULL";
 
-			return ChatUtil.translateColors(text.replace(textToReplace, replacement).replace("%target%", ePlayer.getDisplayName()));
+			if (eGlowPlayer != null)
+				name = eGlowPlayer.getDisplayName();
+
+			return ChatUtil.translateColors(text.replace(textToReplace, replacement).replace("%target%", name));
 		}
 	}
 
-	private static void configCheck() {
-		addIfMissing("gui.custom-effect-item-name", "&eCustom effects menu");
-		addIfMissing("gui.misc-click-to-open", "&9Click to open&f.");
-		addIfMissing("gui.misc-previous-page", "&e< Previous page");
-		addIfMissing("gui.misc-next-page", "&eNext page >");
-		addIfMissing("gui.misc-page-lore", "&fPage: %page%");
-		addIfMissing("gui.misc-main-menu", "&eMain menu");
-		addIfMissing("main.glow-removed", "&cDisabling glow&f! &eThe effect your were using got removed.");
-		addIfMissing("main.invisibility-glow-blocked", "&cGlowing is disabled while you're invisible&f.");
-		addIfMissing("main.invisibility-glow-disabled", "&cDisabling glow while you're invisible&f.");
-		addIfMissing("main.invisibility-glow-enabled", "&aRe-enabling you glow as you're no longer invisible&f.");
-		addIfMissing("main.other-glow-player-invisible", "&e%target% &cis invisible which disables the glow&f.");
-		addIfMissing("main.other-glow-player-disguise", "&e%target% &cis in disguise which disabled the glow&f.");
-		addIfMissing("main.glow-glowonjoin-toggle", "&fToggled glow on join setting to: &e%value%");
-		addIfMissing("main.glow-visibility-all", "All");
-		addIfMissing("main.glow-visibility-other", "Other");
-		addIfMissing("main.glow-visibility-own", "Own");
-		addIfMissing("main.glow-visibility-none", "None");
-		addIfMissing("main.glow-visibility-unsupported-version", "Unsupported version");
-		addIfMissing("main.glowing-state-on-join", "&fYou are now glowing&f! &f[&e%glowname%&f]");
-		addIfMissing("main.non-glowing-state-on-join", "&fYou're not glowing.");
-	}
+	private static void repairConfig() {
+		InputStream resource = EGlow.getInstance().getResource("messages.yml");
+		YamlConfiguration tempConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(Objects.requireNonNull(resource)));
 
-	private static void addIfMissing(String path, String text) {
+		for (String path : Objects.requireNonNull(tempConfig.getConfigurationSection("")).getKeys(true)) {
+			if (!config.contains(path))
+				config.set(path, tempConfig.get(path));
+		}
+
 		try {
-			if (!config.contains(path)) {
-				config.set(path, text);
-				config.save(configFile);
-			}
-		} catch (Exception e) {
-			ChatUtil.reportError(e);
+			config.save(configFile);
+		} catch (Exception exception) {
+			ChatUtil.reportError(exception);
 		}
 	}
 }

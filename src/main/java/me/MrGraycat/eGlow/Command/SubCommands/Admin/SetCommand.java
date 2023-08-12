@@ -1,28 +1,22 @@
-package me.MrGraycat.eGlow.Command.SubCommands.Admin;
+package me.mrgraycat.eglow.command.subcommands.admin;
 
-import me.MrGraycat.eGlow.Command.SubCommand;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
-import me.MrGraycat.eGlow.Config.EGlowMessageConfig.Message;
-import me.MrGraycat.eGlow.Manager.DataManager;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.EnumUtil.GlowDisableReason;
-import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import me.mrgraycat.eglow.command.SubCommand;
+import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
+import me.mrgraycat.eglow.config.EGlowMessageConfig.Message;
+import me.mrgraycat.eglow.data.DataManager;
+import me.mrgraycat.eglow.data.EGlowEffect;
+import me.mrgraycat.eglow.data.EGlowPlayer;
+import me.mrgraycat.eglow.util.enums.EnumUtil.EntityType;
+import me.mrgraycat.eglow.util.text.ChatUtil;
 import org.bukkit.command.CommandSender;
 
-import java.util.List;
+import java.util.Set;
 
 public class SetCommand extends SubCommand {
 
 	@Override
 	public String getName() {
 		return "set";
-	}
-
-	@Override
-	public String getDescription() {
-		return "Set an effect for a player/NPC";
 	}
 
 	@Override
@@ -44,87 +38,62 @@ public class SetCommand extends SubCommand {
 	}
 
 	@Override
-	public void perform(CommandSender sender, IEGlowPlayer ePlayer, String[] args) {
-		List<IEGlowPlayer> eTargets = getTarget(sender, args);
+	public void perform(CommandSender sender, EGlowPlayer eGlowPlayer, String[] args) {
+		Set<EGlowPlayer> eGlowTargets = getTarget(sender, args);
 
-		if (eTargets == null) {
-			sendSyntax(sender, "", true);
-			sendSyntax(sender, getSyntax()[0], false);
-			sendSyntax(sender, getSyntax()[1], false);
-			sendSyntax(sender, getSyntax()[2], false);
-			sendSyntax(sender, getSyntax()[3], false);
+		if (eGlowTargets.isEmpty()) {
+			sendSyntax(sender);
 			return;
 		}
 
-		for (IEGlowPlayer eTarget : eTargets) {
-			IEGlowEffect effect = null;
+		for (EGlowPlayer eGlowTarget : eGlowTargets) {
+			EGlowEffect eGlowEffect = null;
 
-			if (eTarget == null)
+			if (eGlowTarget == null)
 				continue;
 
 			switch (args.length) {
 				case (3):
-					effect = DataManager.getEGlowEffect(args[2].toLowerCase().replace("off", "none").replace("disable", "none"));
+					eGlowEffect = DataManager.getEGlowEffect(args[2].toLowerCase().replace("off", "none").replace("disable", "none"));
 					break;
 				case (4):
 					if (args[2].equalsIgnoreCase("glowonjoin")) {
-						eTarget.setGlowOnJoin(Boolean.parseBoolean(args[3].toLowerCase()));
-						ChatUtil.sendMsg(sender, Message.OTHER_GLOW_ON_JOIN_CONFIRM.get(eTarget, args[3].toLowerCase()), true);
+						eGlowTarget.setGlowOnJoin(Boolean.parseBoolean(args[3].toLowerCase()));
+						ChatUtil.sendMsg(sender, Message.OTHER_GLOW_ON_JOIN_CONFIRM.get(eGlowTarget, args[3].toLowerCase()), true);
 						continue;
 
 					}
-					effect = DataManager.getEGlowEffect(args[2] + args[3]);
+					eGlowEffect = DataManager.getEGlowEffect(args[2] + args[3]);
 					break;
 				case (5):
-					effect = DataManager.getEGlowEffect(args[2] + args[3] + args[4]);
+					eGlowEffect = DataManager.getEGlowEffect(args[2] + args[3] + args[4]);
 					break;
 			}
 
-			if (effect == null) {
-				sendSyntax(sender, "", true);
-				sendSyntax(sender, getSyntax()[0], false);
-				sendSyntax(sender, getSyntax()[1], false);
-				sendSyntax(sender, getSyntax()[2], false);
-				sendSyntax(sender, getSyntax()[3], false);
+			if (eGlowEffect == null) {
+				sendSyntax(sender);
 				return;
 			}
 
-			if (eTarget.getEntityType().equals("PLAYER")) {
-				if (eTarget.getGlowDisableReason().equals(GlowDisableReason.DISGUISE)) {
-					ChatUtil.sendMsg(sender, Message.OTHER_PLAYER_DISGUISE.get(), true);
-					continue;
+			if (eGlowEffect.getName().equals("none")) {
+				if (eGlowTarget.isGlowing()) {
+					eGlowTarget.disableGlow(false);
+
+					if (eGlowTarget.getEntityType().equals(EntityType.PLAYER) && MainConfig.SETTINGS_NOTIFICATIONS_TARGET_COMMAND.getBoolean())
+						ChatUtil.sendMsg(eGlowTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.DISABLE_GLOW.get(), true);
 				}
 
-				if (eTarget.isInvisible()) {
-					ChatUtil.sendMsg(sender, Message.OTHER_PLAYER_INVISIBLE.get(), true);
-					continue;
+				ChatUtil.sendMsg(sender, Message.OTHER_CONFIRM_OFF.get(eGlowTarget), true);
+			} else {
+				if (!eGlowTarget.isSameGlow(eGlowEffect)) {
+					eGlowTarget.activateGlow(eGlowEffect);
+
+					if (eGlowTarget.getEntityType().equals(EntityType.PLAYER) && MainConfig.SETTINGS_NOTIFICATIONS_TARGET_COMMAND.getBoolean())
+						ChatUtil.sendMsg(eGlowTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.NEW_GLOW.get(eGlowEffect.getDisplayName()), true);
 				}
 
-				if (eTarget.isInBlockedWorld()) {
-					ChatUtil.sendMsg(sender, Message.OTHER_PLAYER_IN_DISABLED_WORLD.get(), true);
-					continue;
-				}
+				ChatUtil.sendMsg(sender, Message.OTHER_CONFIRM.get(eGlowTarget, eGlowEffect.getDisplayName()), true);
 			}
-
-			if (effect.getName().equals("none")) {
-				if (eTarget.isGlowing())
-					eTarget.disableGlow(false);
-
-				if (eTarget.getEntityType().equals("PLAYER") && MainConfig.SETTINGS_NOTIFICATIONS_TARGET_COMMAND.getBoolean() && !eTarget.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
-					ChatUtil.sendMsg(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.DISABLE_GLOW.get(), true);
-				ChatUtil.sendMsg(sender, Message.OTHER_CONFIRM_OFF.get(eTarget), true);
-				continue;
-			}
-
-			if (!eTarget.isSameGlow(effect)) {
-				eTarget.disableGlow(true);
-				eTarget.activateGlow(effect);
-
-				if (eTarget.getEntityType().equals("PLAYER") && MainConfig.SETTINGS_NOTIFICATIONS_TARGET_COMMAND.getBoolean() && !eTarget.getGlowVisibility().equals(GlowVisibility.UNSUPPORTEDCLIENT))
-					ChatUtil.sendMsg(eTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.NEW_GLOW.get(effect.getDisplayName()), true);
-			}
-
-			ChatUtil.sendMsg(sender, Message.OTHER_CONFIRM.get(eTarget, effect.getDisplayName()), true);
 		}
 	}
 }

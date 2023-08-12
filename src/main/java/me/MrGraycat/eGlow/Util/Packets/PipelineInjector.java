@@ -1,27 +1,27 @@
-package me.MrGraycat.eGlow.Util.Packets;
+package me.mrgraycat.eglow.util.packets;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
-import me.MrGraycat.eGlow.Config.EGlowMainConfig.MainConfig;
-import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Manager.DataManager;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.DebugUtil;
-import me.MrGraycat.eGlow.Util.EnumUtil;
-import me.MrGraycat.eGlow.Util.EnumUtil.GlowVisibility;
-import me.MrGraycat.eGlow.Util.Packets.OutGoing.PacketPlayOut;
-import me.MrGraycat.eGlow.Util.Packets.OutGoing.PacketPlayOutEntityMetadata;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import me.mrgraycat.eglow.EGlow;
+import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
+import me.mrgraycat.eglow.data.DataManager;
+import me.mrgraycat.eglow.data.EGlowPlayer;
+import me.mrgraycat.eglow.util.enums.Dependency;
+import me.mrgraycat.eglow.util.enums.EnumUtil;
+import me.mrgraycat.eglow.util.enums.EnumUtil.GlowVisibility;
+import me.mrgraycat.eglow.util.packets.outgoing.PacketPlayOut;
+import me.mrgraycat.eglow.util.packets.outgoing.PacketPlayOutEntityMetadata;
+import me.mrgraycat.eglow.util.text.ChatUtil;
 
 import java.util.*;
 
 public class PipelineInjector {
 	private static final String DECODER_NAME = "eGlowReader";
-	public static HashMap<Integer, IEGlowPlayer> glowingEntities = new HashMap<>();
+	public static HashMap<Integer, EGlowPlayer> glowingEntities = new HashMap<>();
 
-	public static void inject(IEGlowPlayer eglowPlayer) {
+	public static void inject(EGlowPlayer eglowPlayer) {
 		Channel channel = (Channel) NMSHook.getChannel(eglowPlayer.getPlayer());
 
 		if (channel == null || !channel.pipeline().names().contains("packet_handler"))
@@ -40,17 +40,17 @@ public class PipelineInjector {
 				@Override
 				public void write(ChannelHandlerContext context, Object packet, ChannelPromise channelPromise) throws Exception {
 					if (NMSHook.nms.PacketPlayOutScoreboardTeam.isInstance(packet)) {
-						if (DebugUtil.TABInstalled()) {
-							if (EGlow.getInstance().getTABAddon() == null) {
+						if (Dependency.TAB.isLoaded()) {
+							if (EGlow.getInstance().getTabAddon() == null) {
 								super.write(context, packet, channelPromise);
 								return;
 							} else {
-								if (!EGlow.getInstance().getTABAddon().isVersionSupported() || EGlow.getInstance().getTABAddon().blockEGlowPackets()) {
+								if (!EGlow.getInstance().getTabAddon().isVersionSupported() || EGlow.getInstance().getTabAddon().blockEGlowPackets()) {
 									super.write(context, packet, channelPromise);
 									return;
 								}
 							}
-						} else if (DebugUtil.isTABBridgeInstalled()) {
+						} else if (Dependency.TAB_BRIDGE.isLoaded()) {
 							super.write(context, packet, channelPromise);
 							return;
 						}
@@ -71,7 +71,7 @@ public class PipelineInjector {
 
 						if (glowingEntities.containsKey(entityID)) {
 							PacketPlayOutEntityMetadata packetPlayOutEntityMetadata;
-							IEGlowPlayer glowingTarget = glowingEntities.get(entityID);
+							EGlowPlayer glowingTarget = glowingEntities.get(entityID);
 
 							if (glowingTarget == null) {
 								glowingEntities.remove(entityID);
@@ -79,9 +79,9 @@ public class PipelineInjector {
 								return;
 							}
 
-							GlowVisibility gv = eglowPlayer.getGlowVisibility();
+							GlowVisibility glowVisibility = eglowPlayer.getGlowVisibility();
 
-							if (gv.equals(GlowVisibility.UNSUPPORTEDCLIENT)) {
+							if (glowVisibility.equals(GlowVisibility.UNSUPPORTEDCLIENT)) {
 								super.write(context, packet, channelPromise);
 								return;
 							}
@@ -92,9 +92,9 @@ public class PipelineInjector {
 								return;
 							}
 
-							if (gv.equals(GlowVisibility.NONE) || //Player can't see the glow or set to none
-									(gv.equals(GlowVisibility.OTHER) && glowingTarget.getPlayer().equals(eglowPlayer.getPlayer())) || //if glow is set to other
-									(gv.equals(GlowVisibility.OWN) && !glowingTarget.getPlayer().equals(eglowPlayer.getPlayer()))) { //if glow is set to own
+							if (glowVisibility.equals(GlowVisibility.NONE) || //Player can't see the glow or set to none
+									(glowVisibility.equals(GlowVisibility.OTHER) && glowingTarget.getPlayer().equals(eglowPlayer.getPlayer())) || //if glow is set to other
+									(glowVisibility.equals(GlowVisibility.OWN) && !glowingTarget.getPlayer().equals(eglowPlayer.getPlayer()))) { //if glow is set to own
 								packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(entityID, NMSHook.setGlowFlag(glowingTarget.getEntity(), false));
 								super.write(context, packetPlayOutEntityMetadata.toNMS(eglowPlayer.getVersion()), channelPromise);
 								return;
@@ -109,21 +109,21 @@ public class PipelineInjector {
 					super.write(context, packet, channelPromise);
 				}
 			});
-		} catch (NoSuchElementException e) {
+		} catch (NoSuchElementException ignored) {
 			//for whatever reason this rarely throws
 			//java.util.NoSuchElementException: eGlowReader
 		}
 	}
 
-	public static void uninject(IEGlowPlayer eglowPlayer) {
-		if (glowingEntities.containsValue(eglowPlayer))
-			glowingEntities.remove(eglowPlayer.getPlayer().getEntityId());
+	public static void uninject(EGlowPlayer eGlowPlayer) {
+		if (glowingEntities.containsValue(eGlowPlayer))
+			glowingEntities.remove(eGlowPlayer.getPlayer().getEntityId());
 
 		try {
-			Channel channel = (Channel) NMSHook.getChannel(eglowPlayer.getPlayer());
+			Channel channel = (Channel) NMSHook.getChannel(eGlowPlayer.getPlayer());
 			if (Objects.requireNonNull(channel).pipeline().names().contains(DECODER_NAME))
 				channel.pipeline().remove(DECODER_NAME);
-		} catch (NoSuchElementException e) {
+		} catch (NoSuchElementException ignored) {
 			//for whatever reason this rarely throws
 			//java.util.NoSuchElementException: eGlowReader
 		}
@@ -146,7 +146,7 @@ public class PipelineInjector {
 			List<String> list = new ArrayList<>(players);
 
 			for (String entity : list) {
-				IEGlowPlayer ePlayer = DataManager.getEGlowPlayer(entity);
+				EGlowPlayer ePlayer = DataManager.getEGlowPlayer(entity);
 
 				if (ePlayer == null) {
 					newList.add(entity);
@@ -159,8 +159,8 @@ public class PipelineInjector {
 
 				newList.add(entity);
 			}
-		} catch (ConcurrentModificationException e) {
-			ChatUtil.reportError(e);
+		} catch (ConcurrentModificationException exception) {
+			ChatUtil.reportError(exception);
 		}
 
 		NMSHook.nms.PacketPlayOutScoreboardTeam_PLAYERS.set(packetPlayOutScoreboardTeam, newList);

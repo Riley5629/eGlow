@@ -1,4 +1,4 @@
-package me.MrGraycat.eGlow.Util.Packets.Chat.rgb.format;
+package me.mrgraycat.eglow.util.packets.chat.rgb.format;
 
 /**
  * Formatter for &amp;#RRGGBB

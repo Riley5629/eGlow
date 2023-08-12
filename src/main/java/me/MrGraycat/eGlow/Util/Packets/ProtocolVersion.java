@@ -1,7 +1,8 @@
-package me.MrGraycat.eGlow.Util.Packets;
+package me.mrgraycat.eglow.util.packets;
 
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.DebugUtil;
+import me.mrgraycat.eglow.data.EGlowPlayer;
+import me.mrgraycat.eglow.util.DebugUtil;
+import me.mrgraycat.eglow.util.enums.Dependency;
 import org.bukkit.entity.Player;
 import us.myles.ViaVersion.api.Via;
 
@@ -113,8 +114,8 @@ public enum ProtocolVersion {
 		return UNKNOWN;
 	}
 
-	public static ProtocolVersion getPlayerVersion(IEGlowPlayer p) {
-		if (DebugUtil.isProtocolSupportInstalled()) {
+	public static ProtocolVersion getPlayerVersion(EGlowPlayer p) {
+		if (Dependency.PROTOCOL_SUPPORT.isLoaded()) {
 			int version = getProtocolVersionPS(p.getPlayer());
 			if (version < ProtocolVersion.SERVER_VERSION.getNetworkId()) {
 				return ProtocolVersion.fromNumber(version);
@@ -122,7 +123,7 @@ public enum ProtocolVersion {
 
 		}
 
-		if (DebugUtil.isViaVersionInstalled()) {
+		if (Dependency.VIA_VERSION.isLoaded()) {
 			return ProtocolVersion.fromNumber(getProtocolVersionVia(p.getPlayer()));
 		}
 

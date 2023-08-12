@@ -1,15 +1,14 @@
-package me.MrGraycat.eGlow.API;
+package me.mrgraycat.eglow.api;
 
-import me.MrGraycat.eGlow.API.Enum.EGlowBlink;
-import me.MrGraycat.eGlow.API.Enum.EGlowColor;
-import me.MrGraycat.eGlow.API.Enum.EGlowEffect;
-import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Manager.DataManager;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowEffect;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
-import me.MrGraycat.eGlow.Util.Packets.PacketUtil;
-import me.MrGraycat.eGlow.Util.Packets.PipelineInjector;
-import me.MrGraycat.eGlow.Util.Text.ChatUtil;
+import me.mrgraycat.eglow.EGlow;
+import me.mrgraycat.eglow.api.enums.EGlowBlink;
+import me.mrgraycat.eglow.api.enums.EGlowColor;
+import me.mrgraycat.eglow.data.DataManager;
+import me.mrgraycat.eglow.data.EGlowEffect;
+import me.mrgraycat.eglow.data.EGlowPlayer;
+import me.mrgraycat.eglow.util.packets.PacketUtil;
+import me.mrgraycat.eglow.util.packets.PipelineInjector;
+import me.mrgraycat.eglow.util.text.ChatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -24,7 +23,7 @@ public class EGlowAPI {
 	 * @param player player to get the IEGlowPlayer for
 	 * @return IEGlowEntity instance for the player
 	 */
-	public IEGlowPlayer getEGlowPlayer(Player player) {
+	public EGlowPlayer getEGlowPlayer(Player player) {
 		return DataManager.getEGlowPlayer(player);
 	}
 
@@ -34,8 +33,9 @@ public class EGlowAPI {
 	 * @param uuid uuid to get the IEGlowPlayer for
 	 * @return IEGlowEntity instance for the uuid
 	 */
-	public IEGlowPlayer getEGlowPlayer(UUID uuid) {
+	public EGlowPlayer getEGlowPlayer(UUID uuid) {
 		Player player = Bukkit.getPlayer(uuid);
+
 		if (player != null)
 			return DataManager.getEGlowPlayer(player);
 		return null;
@@ -47,8 +47,8 @@ public class EGlowAPI {
 	 * @param name name for the effect
 	 * @return IEGlowEffect is found, null if not
 	 */
-	public IEGlowEffect getEGlowEffect(String name) {
-		IEGlowEffect eGlowEffect = DataManager.getEGlowEffect(name);
+	public EGlowEffect getEGlowEffect(String name) {
+		EGlowEffect eGlowEffect = DataManager.getEGlowEffect(name);
 
 		if (eGlowEffect == null)
 			ChatUtil.sendToConsole("(API) Unable to find effect for name: " + name, true);
@@ -61,7 +61,7 @@ public class EGlowAPI {
 	 * @param eGlowPlayer player to get the glow color from
 	 * @return Glow color as String (invisible)
 	 */
-	public String getGlowColor(IEGlowPlayer eGlowPlayer) {
+	public String getGlowColor(EGlowPlayer eGlowPlayer) {
 		return (eGlowPlayer != null && eGlowPlayer.isGlowing()) ? String.valueOf(eGlowPlayer.getActiveColor()) : "";
 	}
 
@@ -71,13 +71,12 @@ public class EGlowAPI {
 	 * @param eGlowPlayer to activate the effect for
 	 * @param eGlowEffect to enable
 	 */
-	public void enableGlow(IEGlowPlayer eGlowPlayer, IEGlowEffect eGlowEffect) {
+	public void enableGlow(EGlowPlayer eGlowPlayer, EGlowEffect eGlowEffect) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				if (eGlowPlayer == null)
 					return;
-
 				eGlowPlayer.activateGlow(eGlowEffect);
 			}
 		}.runTaskLaterAsynchronously(EGlow.getInstance(), 1);
@@ -89,14 +88,14 @@ public class EGlowAPI {
 	 * @param eGlowPlayer to activate the glow for
 	 * @param color       to enable
 	 */
-	public void enableGlow(IEGlowPlayer eGlowPlayer, EGlowColor color) {
+	public void enableGlow(EGlowPlayer eGlowPlayer, EGlowColor color) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				if (eGlowPlayer == null)
 					return;
 
-				IEGlowEffect eGlowEffect = DataManager.getEGlowEffect(color.toString());
+				EGlowEffect eGlowEffect = DataManager.getEGlowEffect(color.toString());
 				eGlowPlayer.activateGlow(eGlowEffect);
 			}
 		}.runTaskLaterAsynchronously(EGlow.getInstance(), 1);
@@ -108,14 +107,14 @@ public class EGlowAPI {
 	 * @param eGlowPlayer to activate the blink for
 	 * @param blink       to enable
 	 */
-	public void enableGlow(IEGlowPlayer eGlowPlayer, EGlowBlink blink) {
+	public void enableGlow(EGlowPlayer eGlowPlayer, EGlowBlink blink) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				if (eGlowPlayer == null)
 					return;
 
-				IEGlowEffect eGlowEffect = DataManager.getEGlowEffect(blink.toString());
+				EGlowEffect eGlowEffect = DataManager.getEGlowEffect(blink.toString());
 				eGlowPlayer.activateGlow(eGlowEffect);
 			}
 		}.runTaskLaterAsynchronously(EGlow.getInstance(), 1);
@@ -127,14 +126,14 @@ public class EGlowAPI {
 	 * @param eGlowPlayer to activate the effect for
 	 * @param effect      to enable
 	 */
-	public void enableGlow(IEGlowPlayer eGlowPlayer, EGlowEffect effect) {
+	public void enableGlow(EGlowPlayer eGlowPlayer, me.mrgraycat.eglow.api.enums.EGlowEffect effect) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				if (eGlowPlayer == null)
 					return;
 
-				IEGlowEffect eGlowEffect = DataManager.getEGlowEffect(effect.toString());
+				EGlowEffect eGlowEffect = DataManager.getEGlowEffect(effect.toString());
 				eGlowPlayer.activateGlow(eGlowEffect);
 			}
 		}.runTaskLaterAsynchronously(EGlow.getInstance(), 1);
@@ -145,13 +144,12 @@ public class EGlowAPI {
 	 *
 	 * @param eGlowPlayer to disable the glow for
 	 */
-	public void disableGlow(IEGlowPlayer eGlowPlayer) {
+	public void disableGlow(EGlowPlayer eGlowPlayer) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				if (eGlowPlayer == null)
 					return;
-
 				eGlowPlayer.disableGlow(true);
 			}
 		}.runTaskLaterAsynchronously(EGlow.getInstance(), 1);
@@ -163,7 +161,7 @@ public class EGlowAPI {
 	 * @param eGlowPlayerSender player to add the custom receiver for
 	 * @param playerReceiver    player that the sender will be able to see glowing
 	 */
-	public void addCustomGlowReceiver(IEGlowPlayer eGlowPlayerSender, Player playerReceiver) {
+	public void addCustomGlowReceiver(EGlowPlayer eGlowPlayerSender, Player playerReceiver) {
 		if (eGlowPlayerSender == null)
 			return;
 
@@ -177,7 +175,7 @@ public class EGlowAPI {
 	 * @param eGlowPlayerSender player to remove the custom receiver for
 	 * @param playerReceiver    player that the sender will no longer be able to see glowing
 	 */
-	public void removeCustomGlowReceiver(IEGlowPlayer eGlowPlayerSender, Player playerReceiver) {
+	public void removeCustomGlowReceiver(EGlowPlayer eGlowPlayerSender, Player playerReceiver) {
 		if (eGlowPlayerSender == null)
 			return;
 
@@ -191,7 +189,7 @@ public class EGlowAPI {
 	 * @param eGlowPlayerSender  player to set the custom receivers for
 	 * @param playerReceiverList players that the sender will be able to see glowing
 	 */
-	public void setCustomGlowReceivers(IEGlowPlayer eGlowPlayerSender, List<Player> playerReceiverList) {
+	public void setCustomGlowReceivers(EGlowPlayer eGlowPlayerSender, List<Player> playerReceiverList) {
 		if (eGlowPlayerSender == null)
 			return;
 
@@ -204,7 +202,7 @@ public class EGlowAPI {
 	 *
 	 * @param eGlowPlayer player to reset the custom receivers for
 	 */
-	public void resetCustomGlowReceivers(IEGlowPlayer eGlowPlayer) {
+	public void resetCustomGlowReceivers(EGlowPlayer eGlowPlayer) {
 		if (eGlowPlayer == null)
 			return;
 

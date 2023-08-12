@@ -1,9 +1,10 @@
-package me.MrGraycat.eGlow.Addon.Internal;
+package me.mrgraycat.eglow.addon.internal;
 
-import me.MrGraycat.eGlow.Config.EGlowMainConfig;
-import me.MrGraycat.eGlow.EGlow;
-import me.MrGraycat.eGlow.Manager.DataManager;
-import me.MrGraycat.eGlow.Manager.Interface.IEGlowPlayer;
+import lombok.Getter;
+import me.mrgraycat.eglow.EGlow;
+import me.mrgraycat.eglow.config.EGlowMainConfig;
+import me.mrgraycat.eglow.data.DataManager;
+import me.mrgraycat.eglow.data.EGlowPlayer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -18,62 +19,58 @@ import java.io.InputStreamReader;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Getter
 public class AdvancedGlowVisibilityAddon {
-	private final BukkitTask runnable;
-	private static final int MAX_DISTANCE = 50;
-	private static final Set<Material> ignoredBlocks = EnumSet.noneOf(Material.class);
+	private final BukkitTask bukkitTask;
+	private final Set<Material> ignoredBlocks = EnumSet.noneOf(Material.class);
+	private final Map<UUID, Location> cache = Collections.synchronizedMap(new HashMap<>());
 
-	static {
+	public AdvancedGlowVisibilityAddon() {
 		// This config is internal only, and is assumed to be correct.
-		InputStream resource = EGlow.getInstance().getResource("internal/AdvancedGlowIgnoreList.yml");
+		InputStream resource = EGlow.getInstance().getResource("internal/advanced-visibility-ignored-blocks.yml");
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(new InputStreamReader(Objects.requireNonNull(resource)));
 		List<Material> materials = config.getStringList("ignored-blocks").stream()
 				.map(Material::matchMaterial)
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
-		ignoredBlocks.addAll(materials);
-	}
+		getIgnoredBlocks().addAll(materials);
 
-	private final Map<UUID, Location> cache = Collections.synchronizedMap(new HashMap<>());
-
-	public AdvancedGlowVisibilityAddon() {
-		runnable = new BukkitRunnable() {
+		this.bukkitTask = new BukkitRunnable() {
 			@Override
 			public void run() {
-				Collection<IEGlowPlayer> ePlayers = DataManager.getEGlowPlayers();
+				Collection<EGlowPlayer> eGlowPlayers = DataManager.getEGlowPlayers();
 
-				List<BiPair<UUID, UUID>> checkedPlayers = new ArrayList<>(ePlayers.size());
+				List<BiPair<UUID, UUID>> checkedPlayers = new ArrayList<>(eGlowPlayers.size());
 
-				for (IEGlowPlayer ePlayer : ePlayers) {
-					Player player = ePlayer.getPlayer();
+				for (EGlowPlayer eGlowPlayer : eGlowPlayers) {
+					Player player = eGlowPlayer.getPlayer();
 					Location playerLoc = player.getEyeLocation();
-					boolean playerIsGlowing = ePlayer.getGlowStatus();
+					boolean playerIsGlowing = eGlowPlayer.getGlowStatus();
 
-					if (checkLocationCache(ePlayer, playerLoc))
+					if (checkLocationCache(eGlowPlayer, playerLoc))
 						continue;
 
-					for (Player p : Objects.requireNonNull(playerLoc.getWorld()).getPlayers()) {
-						if (p != player && distance(p.getEyeLocation(), playerLoc) < MAX_DISTANCE && p.getWorld().equals(playerLoc.getWorld())) {
-							IEGlowPlayer ePlayerNearby = DataManager.getEGlowPlayer(p);
+					for (Player player1 : Objects.requireNonNull(playerLoc.getWorld()).getPlayers()) {
+						if (player1 != player && distance(player1.getEyeLocation(), playerLoc) < 50 && player1.getWorld().equals(playerLoc.getWorld())) {
+							EGlowPlayer ePlayerNearby = DataManager.getEGlowPlayer(player1);
 							if (ePlayerNearby != null) {
 								boolean nearbyIsGlowing = ePlayerNearby.getGlowStatus();
 								if (!playerIsGlowing && !nearbyIsGlowing)
 									continue;
 
-								BiPair<UUID, UUID> pair = new BiPair<>(ePlayer.getUUID(), ePlayerNearby.getUUID());
-								if (checkedPlayers.contains(pair)) {
+								BiPair<UUID, UUID> pair = new BiPair<>(eGlowPlayer.getUuid(), ePlayerNearby.getUuid());
+								if (checkedPlayers.contains(pair))
 									continue; // We've already checked visibility between these two players.
-								}
 
 								Location nearbyLoc = ePlayerNearby.getPlayer().getEyeLocation();
 
 								if (isOutsideView(playerLoc, nearbyLoc) && isOutsideView(nearbyLoc, playerLoc)) {
-									toggleGlow(ePlayer, ePlayerNearby, false);
+									toggleGlow(eGlowPlayer, ePlayerNearby, false);
 									continue;
 								} else {
 									Raytrace trace = new Raytrace(playerLoc, nearbyLoc);
 									boolean hasLineOfSight = trace.hasLineOfSight();
-									toggleGlow(ePlayer, ePlayerNearby, hasLineOfSight);
+									toggleGlow(eGlowPlayer, ePlayerNearby, hasLineOfSight);
 								}
 								checkedPlayers.add(pair);
 							}
@@ -88,34 +85,36 @@ public class AdvancedGlowVisibilityAddon {
 	 * Checks if a location is outside the view of another.
 	 * This expects both locations to have a yaw and pitch.
 	 *
-	 * @param loc1 The first location.
-	 * @param loc2 The second location.
+	 * @param location1 The first location.
+	 * @param location2 The second location.
 	 * @return Whether the second location can be seen from the first location.
 	 */
-	private boolean isOutsideView(Location loc1, Location loc2) {
-		Vector c = loc1.toVector().subtract(loc2.toVector());
-		Vector d = loc1.getDirection();
-		double delta = c.dot(d);
+	private boolean isOutsideView(Location location1, Location location2) {
+		Vector vector = location1.toVector().subtract(location2.toVector());
+		Vector direction = location1.getDirection();
+
+		double delta = vector.dot(direction);
 		return delta > 0;
 	}
 
 	/**
 	 * Checks if a player's location has changed from the cached value, updating the cache if necessary.
 	 *
-	 * @param ePlayer   The player whose cache to check against.
-	 * @param playerLoc The location to check against.
+	 * @param eGlowPlayer    The player whose cache to check against.
+	 * @param playerLocation The location to check against.
 	 * @return True if the player's location hasn't changed, false otherwise.
 	 */
-	private boolean checkLocationCache(IEGlowPlayer ePlayer, Location playerLoc) {
-		Location cached = cache.get(ePlayer.getUUID());
+	private boolean checkLocationCache(EGlowPlayer eGlowPlayer, Location playerLocation) {
+		UUID uuid = eGlowPlayer.getUuid();
+		Location cached = getCache().get(uuid);
 
 		if (cached == null) {
-			cache.put(ePlayer.getUUID(), playerLoc);
+			getCache().put(uuid, playerLocation);
 		} else {
-			if (cached.equals(playerLoc)) {
+			if (cached.equals(playerLocation)) {
 				return true;
 			} else {
-				cache.replace(ePlayer.getUUID(), playerLoc);
+				getCache().replace(uuid, playerLocation);
 			}
 		}
 		return false;
@@ -124,22 +123,22 @@ public class AdvancedGlowVisibilityAddon {
 	/**
 	 * Toggles glow visibility for two players.
 	 *
-	 * @param p1     Player 1.
-	 * @param p2     Player 2.
-	 * @param toggle Whether to enable, or disable glow.
+	 * @param eGlowPlayer1 Player 1.
+	 * @param eGlowPlayer2 Player 2.
+	 * @param toggle       Whether to enable, or disable glow.
 	 */
-	private void toggleGlow(IEGlowPlayer p1, IEGlowPlayer p2, boolean toggle) {
+	private void toggleGlow(EGlowPlayer eGlowPlayer1, EGlowPlayer eGlowPlayer2, boolean toggle) {
 		if (toggle) {
-			p1.addGlowTarget(p2.getPlayer());
-			p2.addGlowTarget(p1.getPlayer());
+			eGlowPlayer1.addGlowTarget(eGlowPlayer2.getPlayer());
+			eGlowPlayer2.addGlowTarget(eGlowPlayer1.getPlayer());
 		} else {
-			p1.removeGlowTarget(p2.getPlayer());
-			p2.removeGlowTarget(p1.getPlayer());
+			eGlowPlayer1.removeGlowTarget(eGlowPlayer2.getPlayer());
+			eGlowPlayer2.removeGlowTarget(eGlowPlayer1.getPlayer());
 		}
 	}
 
-	public void uncachePlayer(IEGlowPlayer ePlayer) {
-		cache.remove(ePlayer.getUUID());
+	public void uncachePlayer(UUID uuid) {
+		getCache().remove(uuid);
 	}
 
 	private int distance(Location start, Location end) {
@@ -147,13 +146,13 @@ public class AdvancedGlowVisibilityAddon {
 	}
 
 	public void shutdown() {
-		if (this.runnable != null)
-			this.runnable.cancel();
-		EGlow.getInstance().setAdvancedGlowVisibility(null);
+		if (getBukkitTask() != null)
+			getBukkitTask().cancel();
+		EGlow.getInstance().setAdvancedGlowVisibilityAddon(null);
 	}
 
+	@Getter
 	public static class Raytrace {
-
 		private final Location origin;
 		private final Location target;
 		private final Vector direction;
@@ -170,12 +169,12 @@ public class AdvancedGlowVisibilityAddon {
 			if (distance() <= 1)
 				return true;
 
-			BlockIterator blocks = new BlockIterator(Objects.requireNonNull(origin.getWorld()), origin.toVector(), direction, Math.min(distance, 50));
+			BlockIterator blocks = new BlockIterator(Objects.requireNonNull(getOrigin().getWorld()), getOrigin().toVector(), getDirection(), Math.min(distance, 50));
 
 			while (blocks.hasNext()) {
 				Block block = blocks.next();
 
-				if (!block.isLiquid() && !block.isPassable() && !AdvancedGlowVisibilityAddon.ignoredBlocks.contains(block.getType())) {
+				if (!block.isLiquid() && !block.isPassable() && !EGlow.getInstance().getAdvancedGlowVisibilityAddon().getIgnoredBlocks().contains(block.getType())) {
 					return false;
 				}
 			}
@@ -183,7 +182,7 @@ public class AdvancedGlowVisibilityAddon {
 		}
 
 		private int distance() {
-			return (int) Math.floor(Math.sqrt(Math.pow((origin.getX() - target.getX()), 2) + Math.pow((origin.getY() - target.getY()), 2) + Math.pow((origin.getZ() - target.getZ()), 2)));
+			return (int) Math.floor(Math.sqrt(Math.pow((getOrigin().getX() - getTarget().getX()), 2) + Math.pow((getOrigin().getY() - getTarget().getY()), 2) + Math.pow((getOrigin().getZ() - getTarget().getZ()), 2)));
 		}
 	}
 }

@@ -1,7 +1,7 @@
-package me.MrGraycat.eGlow.Util.Packets.Datawatcher;
+package me.mrgraycat.eglow.util.packets.datawatcher;
 
-import me.MrGraycat.eGlow.Util.Packets.NMSStorage;
-import me.MrGraycat.eGlow.Util.Packets.ProtocolVersion;
+import me.mrgraycat.eglow.util.packets.NMSStorage;
+import me.mrgraycat.eglow.util.packets.ProtocolVersion;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -43,10 +43,11 @@ public class DataWatcherRegistry {
 
 	/**
 	 * Gets values of all static fields in a class
+	 *
 	 * @param clazz class to return field values from
 	 * @return map of values
 	 */
-	private Map<String, Object> getStaticFields(Class<?> clazz){
+	private Map<String, Object> getStaticFields(Class<?> clazz) {
 		Map<String, Object> fields = new HashMap<>();
 		if (clazz == null) return fields;
 		for (Field field : clazz.getDeclaredFields()) {
