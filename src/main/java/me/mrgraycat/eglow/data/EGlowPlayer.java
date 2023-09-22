@@ -29,6 +29,7 @@ public class EGlowPlayer {
 	private Player player;
 	private String displayName;
 	private UUID uuid;
+	private String teamName = "";
 	private ProtocolVersion version = ProtocolVersion.SERVER_VERSION;
 
 	private ChatColor activeColor = ChatColor.RESET;
@@ -52,6 +53,7 @@ public class EGlowPlayer {
 		this.player = player;
 		this.displayName = player.getName();
 		this.uuid = player.getUniqueId();
+		this.teamName = getTeamName();
 		this.customTargetList = new ArrayList<>(Collections.singletonList(player));
 		this.version = ProtocolVersion.getPlayerVersion(this);
 
@@ -204,6 +206,9 @@ public class EGlowPlayer {
 	private final String sortingOrder = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 	public String getTeamName() {
+		if (!this.teamName.isEmpty())
+			return this.teamName;
+
 		String playerName = getDisplayName().replace("_", "0");
 		StringBuilder obvuscatedTeamname = new StringBuilder();
 
