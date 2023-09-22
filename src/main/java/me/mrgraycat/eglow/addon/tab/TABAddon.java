@@ -40,7 +40,12 @@ public class TABAddon extends AbstractAddonBase {
 
 		Plugin tabPlugin = Dependency.TAB.getPlugin();
 
-		if (tabPlugin == null || !tabPlugin.getClass().getName().startsWith("me.neznamy.tab")) {
+		if (tabPlugin == null) {
+			this.versionSupported = false;
+			return;
+		}
+
+		if (!tabPlugin.getClass().getName().startsWith("me.neznamy.tab")) {
 			this.versionSupported = false;
 			ChatUtil.sendToConsole("&cWarning&f! &cThis version of eGlow requires a higher TAB version&f!", true);
 			return;

@@ -2,6 +2,7 @@ package me.mrgraycat.eglow.util;
 
 import me.mrgraycat.eglow.EGlow;
 import me.mrgraycat.eglow.data.EGlowPlayer;
+import me.mrgraycat.eglow.util.enums.Dependency;
 import me.mrgraycat.eglow.util.packets.NMSHook;
 import me.mrgraycat.eglow.util.text.ChatUtil;
 import org.bukkit.Bukkit;
@@ -47,7 +48,7 @@ public class DebugUtil {
 
 		ChatUtil.sendPlainMsg(sender, ChatUtil.translateColors(plugins.substring(0, plugins.length() - 2)), false);
 
-		if (EGlow.getInstance().getTabAddon() != null && !EGlow.getInstance().getTabAddon().isVersionSupported())
+		if (EGlow.getInstance().getTabAddon() != null && !EGlow.getInstance().getTabAddon().isVersionSupported() && Dependency.TAB.isLoaded())
 			ChatUtil.sendPlainMsg(sender, ChatUtil.translateColors("&cYour TAB version seems incompatible with this eGlow version&f!"), false);
 	}
 
