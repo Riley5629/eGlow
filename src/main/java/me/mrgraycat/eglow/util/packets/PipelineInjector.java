@@ -14,6 +14,7 @@ import me.mrgraycat.eglow.util.enums.EnumUtil.GlowVisibility;
 import me.mrgraycat.eglow.util.packets.outgoing.PacketPlayOut;
 import me.mrgraycat.eglow.util.packets.outgoing.PacketPlayOutEntityMetadata;
 import me.mrgraycat.eglow.util.text.ChatUtil;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -116,11 +117,13 @@ public class PipelineInjector {
 	}
 
 	public static void uninject(EGlowPlayer eGlowPlayer) {
+		Player player = eGlowPlayer.getPlayer();
+
 		if (glowingEntities.containsValue(eGlowPlayer))
-			glowingEntities.remove(eGlowPlayer.getPlayer().getEntityId());
+			glowingEntities.remove(player.getEntityId());
 
 		try {
-			Channel channel = (Channel) NMSHook.getChannel(eGlowPlayer.getPlayer());
+			Channel channel = (Channel) NMSHook.getChannel(player);
 			if (Objects.requireNonNull(channel).pipeline().names().contains(DECODER_NAME))
 				channel.pipeline().remove(DECODER_NAME);
 		} catch (NoSuchElementException ignored) {
