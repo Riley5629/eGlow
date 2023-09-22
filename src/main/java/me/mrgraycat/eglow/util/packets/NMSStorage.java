@@ -20,6 +20,7 @@ public class NMSStorage {
 	public Class<?> EntityPlayer;
 	public Class<?> CraftPlayer;
 	public Class<?> PlayerConnection;
+	public Class<?> ServerPacketListener;
 	public Class<?> NetworkManager;
 	public Field PLAYER_CONNECTION;
 	public Field NETWORK_MANAGER;
@@ -124,13 +125,22 @@ public class NMSStorage {
 			this.PlayerConnection = getNMSClass("net.minecraft.server.network.PlayerConnection", "PlayerConnection");
 			this.NetworkManager = getNMSClass("net.minecraft.network.NetworkManager", "NetworkManager");
 			this.PLAYER_CONNECTION = getFields(this.EntityPlayer, this.PlayerConnection).get(0);
-			this.NETWORK_MANAGER = getFields(this.PlayerConnection, this.NetworkManager).get(0);
+
+			if (is1_20_2Plus()) {
+				this.ServerPacketListener = getNMSClass("net.minecraft.server.network.ServerCommonPacketListenerImpl");
+				this.NETWORK_MANAGER = getFields(this.ServerPacketListener, this.NetworkManager).get(0);
+			} else {
+				this.NETWORK_MANAGER = getFields(this.PlayerConnection, this.NetworkManager).get(0);
+			}
+
 			this.CHANNEL = getFields(this.NetworkManager, Channel.class).get(0);
 			this.getHandle = getMethod(this.CraftPlayer, new String[]{"getHandle"});
 			this.sendPacket = getMethod(this.PlayerConnection, new String[]{"sendPacket", "a", "func_147359_a"}, this.Packet);
 			this.setFlag = getMethod(this.EntityPlayer, new String[]{"setFlag", "b", "setEntityFlag"}, int.class, boolean.class);
 
-			if (isIs1_19_4OrAbove()) {
+			if (is1_20_2Plus()) {
+				this.getDataWatcher = getMethod(this.EntityPlayer, new String[]{"al"});
+			} else if (isIs1_19_4OrAbove()) {
 				this.getDataWatcher = getMethod(this.EntityPlayer, new String[]{"aj"});
 			} else if (isIs1_19_3OrAbove()) {
 				this.getDataWatcher = getMethod(this.EntityPlayer, new String[]{"al"});
@@ -261,6 +271,10 @@ public class NMSStorage {
 		} catch (ClassNotFoundException e) {
 			this.is1_19_3OrAbove = false;
 		}
+	}
+
+	private boolean is1_20_2Plus() {
+		return minorVersion >= 20 && !serverPackage.equals("v1_20_R1");
 	}
 
 	private void is1_19_4Check() {
