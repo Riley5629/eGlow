@@ -172,9 +172,10 @@ public class EGlowEventListener implements Listener {
 
 				if (EGlow.getInstance().getAdvancedGlowVisibilityAddon() != null)
 					EGlow.getInstance().getAdvancedGlowVisibilityAddon().uncachePlayer(eGlowPlayer.getUuid());
-				DataManager.removeEGlowPlayer(eGlowPlayer.getPlayer());
 			}
 		}.runTaskAsynchronously(EGlow.getInstance());
+		
+		DataManager.removeEGlowPlayer(eGlowPlayer.getPlayer());
 	}
 
 	private static void sendNoGlowMessage(EGlowPlayer eGlowPlayer) {
