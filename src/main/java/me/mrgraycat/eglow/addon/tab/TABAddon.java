@@ -14,16 +14,13 @@ import me.neznamy.tab.api.TabPlayer;
 import me.neznamy.tab.api.event.plugin.TabLoadEvent;
 import me.neznamy.tab.api.nametag.UnlimitedNameTagManager;
 import me.neznamy.tab.shared.TAB;
+import me.neznamy.tab.shared.config.file.ConfigurationFile;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ConcurrentModificationException;
 import java.util.Objects;
 import java.util.UUID;
@@ -33,7 +30,7 @@ public class TABAddon extends AbstractAddonBase {
 	private final boolean versionSupported;
 	private boolean settingNametagPrefixSuffixEnabled;
 	private boolean settingTeamPacketBlockingEnabled;
-	private YamlConfiguration tabConfig;
+	private ConfigurationFile tabConfig;
 
 	public TABAddon(EGlow eGlowInstance) {
 		super(eGlowInstance);
@@ -87,42 +84,27 @@ public class TABAddon extends AbstractAddonBase {
 	}
 
 	public void loadTABSettings() {
-		File configFile = new File(TAB.getInstance().getDataFolder(), "config.yml");
-
-		if (TAB.getInstance().getDataFolder().exists() && configFile.exists()) {
-			try {
-				this.tabConfig = new YamlConfiguration();
-				getTabConfig().load(configFile);
-			} catch (IOException | InvalidConfigurationException exception) {
-				exception.printStackTrace();
-			}
-		}
-
+		this.tabConfig = TAB.getInstance().getConfig();
 
 		this.settingNametagPrefixSuffixEnabled = getTabConfig().getBoolean("scoreboard-teams.enabled", false);
 		this.settingTeamPacketBlockingEnabled = getTabConfig().getBoolean("scoreboard-teams.anti-override", false);
-
-
+		
 		if (!MainConfig.SETTINGS_SMART_TAB_NAMETAG_HANDLER.getBoolean())
 			return;
 
 		if (!getTabConfig().getBoolean("scoreboard-teams.unlimited-nametag-mode.enabled", false)) {
-			try {
-				getTabConfig().set("scoreboard-teams.unlimited-nametag-mode.enabled", true);
-				getTabConfig().save(configFile);
+			getTabConfig().set("scoreboard-teams.unlimited-nametag-mode.enabled", true);
+			getTabConfig().save();
 
-				ChatUtil.sendToConsole("&6Enabled unlimited-nametag-mode in TAB&f!", true);
-				ChatUtil.sendToConsole("&6TAB reload triggered by eGlow&f!", true);
+			ChatUtil.sendToConsole("&6Enabled unlimited-nametag-mode in TAB&f!", true);
+			ChatUtil.sendToConsole("&6TAB reload triggered by eGlow&f!", true);
 
-				new BukkitRunnable() {
-					@Override
-					public void run() {
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab reload");
-					}
-				}.runTaskLater(EGlow.getInstance(), 10L);
-			} catch (IOException exception) {
-				exception.printStackTrace();
-			}
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab reload");
+				}
+			}.runTaskLater(EGlow.getInstance(), 10L);
 		}
 	}
 
