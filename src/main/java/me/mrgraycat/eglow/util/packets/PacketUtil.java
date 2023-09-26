@@ -31,8 +31,10 @@ public class PacketUtil {
 	}
 
 	public static void handlePlayerQuit(EGlowPlayer eGlowPlayer) {
+		Player player = eGlowPlayer.getPlayer();
+
 		PacketUtil.scoreboardPacket(eGlowPlayer, false);
-		PipelineInjector.uninject(eGlowPlayer);
+		PipelineInjector.uninject(eGlowPlayer, player);
 	}
 
 	private static void updatePlayer(EGlowPlayer eGlowPlayer) {

@@ -116,9 +116,7 @@ public class PipelineInjector {
 		}
 	}
 
-	public static void uninject(EGlowPlayer eGlowPlayer) {
-		Player player = eGlowPlayer.getPlayer();
-
+	public static void uninject(EGlowPlayer eGlowPlayer, Player player) {
 		if (glowingEntities.containsValue(eGlowPlayer))
 			glowingEntities.remove(player.getEntityId());
 
