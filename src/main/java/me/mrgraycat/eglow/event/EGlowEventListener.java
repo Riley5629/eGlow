@@ -162,6 +162,10 @@ public class EGlowEventListener implements Listener {
 	 */
 	public static void PlayerDisconnect(Player player) {
 		EGlowPlayer eGlowPlayer = DataManager.getEGlowPlayer(player);
+
+		if (eGlowPlayer == null)
+			return;
+
 		PacketUtil.handlePlayerQuit(eGlowPlayer);
 
 		new BukkitRunnable() {
@@ -174,7 +178,7 @@ public class EGlowEventListener implements Listener {
 					EGlow.getInstance().getAdvancedGlowVisibilityAddon().uncachePlayer(eGlowPlayer.getUuid());
 			}
 		}.runTaskAsynchronously(EGlow.getInstance());
-		
+
 		DataManager.removeEGlowPlayer(eGlowPlayer.getPlayer());
 	}
 
