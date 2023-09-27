@@ -40,6 +40,7 @@ public class SetCommand extends SubCommand {
 	@Override
 	public void perform(CommandSender sender, EGlowPlayer eGlowPlayer, String[] args) {
 		Set<EGlowPlayer> eGlowTargets = getTarget(sender, args);
+		boolean isSilent = (args[args.length - 1].equalsIgnoreCase("-s"));
 
 		if (eGlowTargets.isEmpty()) {
 			sendSyntax(sender);
@@ -52,23 +53,44 @@ public class SetCommand extends SubCommand {
 			if (eGlowTarget == null)
 				continue;
 
-			switch (args.length) {
-				case (3):
-					eGlowEffect = DataManager.getEGlowEffect(args[2].toLowerCase().replace("off", "none").replace("disable", "none"));
-					break;
-				case (4):
-					if (args[2].equalsIgnoreCase("glowonjoin")) {
-						eGlowTarget.setGlowOnJoin(Boolean.parseBoolean(args[3].toLowerCase()));
-						ChatUtil.sendMsg(sender, Message.OTHER_GLOW_ON_JOIN_CONFIRM.get(eGlowTarget, args[3].toLowerCase()), true);
-						continue;
+			if (!isSilent) {
+				switch (args.length) {
+					case (3):
+						eGlowEffect = DataManager.getEGlowEffect(args[2].toLowerCase().replace("off", "none").replace("disable", "none"));
+						break;
+					case (4):
+						if (args[2].equalsIgnoreCase("glowonjoin")) {
+							eGlowTarget.setGlowOnJoin(Boolean.parseBoolean(args[3].toLowerCase()));
+							ChatUtil.sendMsg(sender, Message.OTHER_GLOW_ON_JOIN_CONFIRM.get(eGlowTarget, args[3].toLowerCase()), true);
+							continue;
 
-					}
-					eGlowEffect = DataManager.getEGlowEffect(args[2] + args[3]);
-					break;
-				case (5):
-					eGlowEffect = DataManager.getEGlowEffect(args[2] + args[3] + args[4]);
-					break;
+						}
+						eGlowEffect = DataManager.getEGlowEffect(args[2] + args[3]);
+						break;
+					case (5):
+						eGlowEffect = DataManager.getEGlowEffect(args[2] + args[3] + args[4]);
+						break;
+				}
+			} else {
+				switch (args.length) {
+					case (4):
+						eGlowEffect = DataManager.getEGlowEffect(args[2].toLowerCase().replace("off", "none").replace("disable", "none"));
+						break;
+					case (5):
+						if (args[2].equalsIgnoreCase("glowonjoin")) {
+							eGlowTarget.setGlowOnJoin(Boolean.parseBoolean(args[3].toLowerCase()));
+							ChatUtil.sendMsg(sender, Message.OTHER_GLOW_ON_JOIN_CONFIRM.get(eGlowTarget, args[3].toLowerCase()), true);
+							continue;
+
+						}
+						eGlowEffect = DataManager.getEGlowEffect(args[2] + args[3]);
+						break;
+					case (6):
+						eGlowEffect = DataManager.getEGlowEffect(args[2] + args[3] + args[4]);
+						break;
+				}
 			}
+
 
 			if (eGlowEffect == null) {
 				sendSyntax(sender);
@@ -92,7 +114,9 @@ public class SetCommand extends SubCommand {
 						ChatUtil.sendMsg(eGlowTarget.getPlayer(), Message.TARGET_NOTIFICATION_PREFIX.get() + Message.NEW_GLOW.get(eGlowEffect.getDisplayName()), true);
 				}
 
-				ChatUtil.sendMsg(sender, Message.OTHER_CONFIRM.get(eGlowTarget, eGlowEffect.getDisplayName()), true);
+				if (!args[args.length - 1].equalsIgnoreCase("-s")) {
+					ChatUtil.sendMsg(sender, Message.OTHER_CONFIRM.get(eGlowTarget, eGlowEffect.getDisplayName()), true);
+				}
 			}
 		}
 	}
