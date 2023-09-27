@@ -28,8 +28,8 @@ import java.util.UUID;
 @Getter
 public class TABAddon extends AbstractAddonBase {
 	private final boolean versionSupported;
-	private boolean settingNametagPrefixSuffixEnabled;
-	private boolean settingTeamPacketBlockingEnabled;
+	private boolean settingNametagPrefixSuffixEnabled = false;
+	private boolean settingTeamPacketBlockingEnabled = false;
 	private ConfigurationFile tabConfig;
 
 	public TABAddon(EGlow eGlowInstance) {
@@ -39,6 +39,9 @@ public class TABAddon extends AbstractAddonBase {
 
 		if (tabPlugin == null) {
 			this.versionSupported = false;
+
+			if (DebugUtil.onBungee())
+				getEGlowInstance().getServer().getPluginManager().registerEvents(new TABAddonEvents(), getEGlowInstance());
 			return;
 		}
 
@@ -58,8 +61,8 @@ public class TABAddon extends AbstractAddonBase {
 		}
 
 		loadTABSettings();
-		getEGlowInstance().getServer().getPluginManager().registerEvents(new TABAddonEvents(), getEGlowInstance());
 
+		getEGlowInstance().getServer().getPluginManager().registerEvents(new TABAddonEvents(), getEGlowInstance());
 		Objects.requireNonNull(TabAPI.getInstance().getEventBus()).register(TabLoadEvent.class, event -> new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -88,7 +91,7 @@ public class TABAddon extends AbstractAddonBase {
 
 		this.settingNametagPrefixSuffixEnabled = getTabConfig().getBoolean("scoreboard-teams.enabled", false);
 		this.settingTeamPacketBlockingEnabled = getTabConfig().getBoolean("scoreboard-teams.anti-override", false);
-		
+
 		if (!MainConfig.SETTINGS_SMART_TAB_NAMETAG_HANDLER.getBoolean())
 			return;
 
