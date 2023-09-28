@@ -25,8 +25,10 @@ public class EGlowCitizensTrait extends Trait {
 
 	@Override
 	public void save(DataKey key) {
-		if (getEGlowNPC() != null)
-			key.setString("LastEffect", (getEGlowNPC().isGlowing()) ? getEGlowNPC().getGlowEffect().getName() : "none");
+		if (getEGlowNPC() != null) {
+			this.lastEffect = getEGlowNPC().getGlowEffect().getName();
+			key.setString("LastEffect", lastEffect);
+		}
 	}
 
 	@Override
