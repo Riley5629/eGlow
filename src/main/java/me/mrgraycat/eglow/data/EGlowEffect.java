@@ -5,6 +5,7 @@ import lombok.Setter;
 import me.mrgraycat.eglow.EGlow;
 import me.mrgraycat.eglow.addon.citizens.EGlowCitizensTrait;
 import me.mrgraycat.eglow.config.EGlowMessageConfig.Message;
+import me.mrgraycat.eglow.util.packets.PacketUtil;
 import me.mrgraycat.eglow.util.text.ChatUtil;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.ChatColor;
@@ -143,6 +144,9 @@ public class EGlowEffect {
 
 								if (getEffectColors().size() == 1) {
 									eglowEntity.setColor(color, true, false);
+
+									if (entity instanceof Player)
+										PacketUtil.updateGlowing(eglowEntity, true);
 									return;
 								}
 
@@ -154,7 +158,7 @@ public class EGlowEffect {
 								getActiveEntities().replace(entity, progress + 1);
 							});
 						}
-					}.runTaskTimerAsynchronously(EGlow.getInstance(), 1, getEffectDelay()));
+					}.runTaskTimerAsynchronously(EGlow.getInstance(), 5, getEffectDelay()));
 		}
 	}
 
