@@ -143,11 +143,11 @@ public class EGlowMainMenu extends Menu {
 				}
 				break;
 			case (31):
-				if (eGlowPlayer.hasPermission("eglow.command.visibility")) {
+				if (!eGlowPlayer.hasPermission("eglow.command.visibility")) {
 					ChatUtil.sendMsgFromGUI(player, Message.NO_PERMISSION.get());
 					return;
 				}
-				
+
 				switch (eGlowPlayer.getGlowVisibility()) {
 					case ALL:
 						eGlowPlayer.setGlowVisibility(GlowVisibility.OTHER);
