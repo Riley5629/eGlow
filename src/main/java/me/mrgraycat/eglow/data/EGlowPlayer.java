@@ -228,7 +228,22 @@ public class EGlowPlayer {
 			obvuscatedTeamname = new StringBuilder(obvuscatedTeamname.substring(0, 15));
 		}
 
-		return obvuscatedTeamname.toString();
+		String teamname = obvuscatedTeamname.toString();
+
+		for (EGlowPlayer eGlowPlayer : DataManager.getEGlowPlayers()) {
+			if (eGlowPlayer.getTeamName().equals(teamname)) {
+				int lastnumber = Integer.parseInt(teamname.substring(teamname.length() - 1));
+				if (lastnumber < 9) {
+					lastnumber++;
+				} else {
+					lastnumber--;
+				}
+
+				teamname = teamname.substring(0, 14) + lastnumber;
+			}
+		}
+
+		return teamname;
 	}
 
 	public Object getEntity() {
@@ -257,6 +272,9 @@ public class EGlowPlayer {
 	}
 
 	public boolean isForcedGlow(EGlowEffect effect) {
+		if (getForcedEffect() == null) {
+			return false;
+		}
 		return (effect.getName().equals(getForcedEffect().getName()));
 	}
 
