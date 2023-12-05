@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.github.mrgraycat'
-version = '3.2.6'
+version = '3.2.7'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -22,6 +22,8 @@ repositories {
     maven { url = 'https://jitpack.io' }
     //Citizens
     maven { url = 'https://repo.citizensnpcs.co/' }
+    //FancyNpcs
+    maven { url = 'https://repo.fancyplugins.de/releases' }
     //PlaceholderAPI
     maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
     //iDisguise
@@ -39,11 +41,12 @@ repositories {
 }
 
 dependencies {
-    compileOnly('org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT')
+    compileOnly('org.spigotmc:spigot-api:1.20.3-R0.1-SNAPSHOT')
     compileOnly('me.neznamy:tab-api:4.0.0')
     compileOnly('me.neznamy:tab-shared:4.0.0')
     compileOnly('net.luckperms:api:5.4')
     compileOnly('net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT')
+    compileOnly('de.oliver:FancyNpcs:2.0.4')
     compileOnly('me.clip:placeholderapi:2.10.9')
     compileOnly('de.robingrether.idisguise:idisguise-core:5.8.2')
     compileOnly('LibsDisguises:LibsDisguises:10.0.28')
@@ -105,9 +108,7 @@ configurations.compileOnly {
     exclude group: 'net.byteflux', module: 'libby-bukkit'
     exclude group: 'net.java.dev.jna', module: 'jna'
     exclude group: 'net.java.dev.jna', module: 'jna-platform'
-    exclude group: 'net.kyori', module: 'adventure-api'
     exclude group: 'net.kyori', module: 'adventure-key'
-    exclude group: 'net.kyori', module: 'adventure-text-minimessage'
     exclude group: 'net.kyori', module: 'event-api'
     exclude group: 'net.kyori', module: 'event-method'
     exclude group: 'net.kyori', module: 'examination-api'
