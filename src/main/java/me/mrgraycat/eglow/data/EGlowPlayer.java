@@ -26,6 +26,7 @@ public class EGlowPlayer {
 	private final EntityType entityType;
 
 	private NPC citizensNPC;
+	//private Npc fancyNPC;
 	private Player player;
 	private String displayName;
 	private UUID uuid;
@@ -67,7 +68,7 @@ public class EGlowPlayer {
 	}
 
 	public EGlowPlayer(NPC npc) {
-		this.entityType = EntityType.NPC;
+		this.entityType = EntityType.CITIZENNPC;
 		this.citizensNPC = npc;
 		this.displayName = npc.getName();
 	}
@@ -85,12 +86,20 @@ public class EGlowPlayer {
 			case PLAYER:
 				PacketUtil.updateGlowing(this, status);
 				break;
-			case NPC:
+			case CITIZENNPC:
 				try {
 					getCitizensNPC().data().setPersistent(NPC.Metadata.GLOWING, status);
 				} catch (Exception e) {
 					ChatUtil.sendToConsole("&cYour Citizens version is outdated please use it's latest version", true);
 				}
+				break;
+			case FANCYNPC:
+				/*try {
+					getFancyNPC().getData().setGlowing(status);
+				} catch (Exception e) {
+					ChatUtil.sendToConsole("&cSomething went wrong enabling glow for fancynpc npc", true);
+				}*/
+				break;
 		}
 	}
 
@@ -116,14 +125,18 @@ public class EGlowPlayer {
 				case PLAYER:
 					PacketUtil.updateScoreboardTeam(DataManager.getEGlowPlayer(getPlayer()), getTeamName(), ((EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagPrefix(this) : "") + color, (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagSuffix(this) : "", EnumChatFormat.valueOf(color.name()));
 					break;
-				case NPC:
+				case CITIZENNPC:
 					if (!fake && getCitizensNPC().isSpawned())
 						getCitizensNPC().getOrAddTrait(ScoreboardTrait.class).setColor(color);
+					break;
+				case FANCYNPC:
+					/*getFancyNPC().getData().setGlowingColor(NamedTextColor.NAMES.value(color.name()));
+					getFancyNPC().updateForAll();*/
 					break;
 			}
 		}
 
-		if (getEntityType().equals(EntityType.NPC))
+		if (getEntityType().equals(EntityType.CITIZENNPC))
 			return;
 
 		updatePlayerTabname();

@@ -71,7 +71,8 @@ public class EnumUtil {
 	 */
 	public enum EntityType {
 		PLAYER,
-		NPC,
+		CITIZENNPC,
+		FANCYNPC,
 		ENTITY
 	}
 }
