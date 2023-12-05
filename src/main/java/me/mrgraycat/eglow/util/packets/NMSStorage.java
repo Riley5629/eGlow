@@ -125,7 +125,7 @@ public class NMSStorage {
 			this.NetworkManager = getNMSClass("net.minecraft.network.NetworkManager", "NetworkManager");
 			this.PLAYER_CONNECTION = getFields(this.EntityPlayer, this.PlayerConnection).get(0);
 
-			if (is1_20_2Plus()) {
+			if (is1_20_3Plus() || is1_20_2Plus()) {
 				this.NETWORK_MANAGER = getFields(this.PlayerConnection.getSuperclass(), this.NetworkManager).get(0);
 			} else {
 				this.NETWORK_MANAGER = getFields(this.PlayerConnection, this.NetworkManager).get(0);
@@ -134,7 +134,7 @@ public class NMSStorage {
 			this.CHANNEL = getFields(this.NetworkManager, Channel.class).get(0);
 			this.getHandle = getMethod(this.CraftPlayer, new String[]{"getHandle"});
 
-			if (is1_20_2Plus()) {
+			if (is1_20_3Plus() || is1_20_2Plus()) {
 				this.sendPacket = getMethod(this.PlayerConnection, new String[]{"b"}, this.Packet);
 			} else {
 				this.sendPacket = getMethod(this.PlayerConnection, new String[]{"sendPacket", "a", "func_147359_a"}, this.Packet);
@@ -142,7 +142,9 @@ public class NMSStorage {
 
 			this.setFlag = getMethod(this.EntityPlayer, new String[]{"setFlag", "b", "setEntityFlag"}, int.class, boolean.class);
 
-			if (is1_20_2Plus()) {
+			if (is1_20_3Plus()) {
+				this.getDataWatcher = getMethod(this.EntityPlayer, new String[]{"an"});
+			} else if (is1_20_2Plus()) {
 				this.getDataWatcher = getMethod(this.EntityPlayer, new String[]{"al"});
 			} else if (isIs1_19_4OrAbove()) {
 				this.getDataWatcher = getMethod(this.EntityPlayer, new String[]{"aj"});
@@ -277,8 +279,12 @@ public class NMSStorage {
 		}
 	}
 
+	private boolean is1_20_3Plus() {
+		return minorVersion >= 20 && serverPackage.equals("v1_20_R3");
+	}
+
 	private boolean is1_20_2Plus() {
-		return minorVersion >= 20 && !serverPackage.equals("v1_20_R1");
+		return minorVersion >= 20 && serverPackage.equals("v1_20_R2");
 	}
 
 	private void is1_19_4Check() {
