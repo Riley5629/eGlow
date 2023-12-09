@@ -335,6 +335,8 @@ public class EGlowPlayer {
 	}
 
 	public void setForcedGlowDisableReason(GlowDisableReason reason) {
+		if (reason.equals(GlowDisableReason.ANIMATION))
+			reason = GlowDisableReason.NONE;
 		this.glowDisableReason = reason;
 	}
 
@@ -353,11 +355,6 @@ public class EGlowPlayer {
 
 					if (isInvisible()) {
 						this.glowDisableReason = GlowDisableReason.INVISIBLE;
-						return getGlowDisableReason();
-					}
-
-					if (EGlow.getInstance().getGSitAddon() != null && EGlow.getInstance().getGSitAddon().getPosingPlayers().contains(getPlayer())) {
-						this.glowDisableReason = GlowDisableReason.ANIMATION;
 						return getGlowDisableReason();
 					}
 				}

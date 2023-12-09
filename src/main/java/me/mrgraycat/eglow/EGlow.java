@@ -2,7 +2,6 @@ package me.mrgraycat.eglow;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.mrgraycat.eglow.addon.GSitAddon;
 import me.mrgraycat.eglow.addon.LuckPermsAddon;
 import me.mrgraycat.eglow.addon.PlaceholderAPIAddon;
 import me.mrgraycat.eglow.addon.VaultAddon;
@@ -46,7 +45,6 @@ public class EGlow extends JavaPlugin {
 	private TABAddon tabAddon;
 	private LuckPermsAddon lpAddon;
 	private VaultAddon vaultAddon;
-	private GSitAddon gSitAddon;
 
 	@Override
 	public void onEnable() {
@@ -113,8 +111,6 @@ public class EGlow extends JavaPlugin {
 					setVaultAddon(new VaultAddon(getInstance()));
 				if (Dependency.CITIZENS.isLoaded() && getCitizensAddon() == null)
 					setCitizensAddon(new CitizensAddon());
-				if (Dependency.GSIT.isLoaded())
-					setGSitAddon(new GSitAddon(getInstance()));
 				if (Dependency.LUCK_PERMS.isLoaded()) {
 					setLpAddon(new LuckPermsAddon(getInstance()));
 				}
