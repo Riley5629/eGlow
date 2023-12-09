@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.github.mrgraycat'
-version = '3.2.7'
+version = '3.2.8'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -52,7 +52,6 @@ dependencies {
     compileOnly('LibsDisguises:LibsDisguises:10.0.28')
     compileOnly('us.myles:viaversion:3.2.1')
     compileOnly('com.github.MilkBowl:VaultAPI:1.7')
-    compileOnly('com.github.Gecolay:GSit:1.4.10')
     compileOnly('org.xerial:sqlite-jdbc:3.42.0.0')
     compileOnly('mysql:mysql-connector-java:8.0.32')
     compileOnly('io.netty:netty-transport:4.1.86.Final')
