@@ -87,7 +87,7 @@ public class PipelineInjector {
 							}
 
 							if (glowingTarget.getGlowTargetMode().equals(EnumUtil.GlowTargetMode.CUSTOM) && !glowingTarget.getGlowTargets().contains(eglowPlayer.getPlayer())) {
-								packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(entityID, NMSHook.setGlowFlag(glowingTarget.getEntity(), false));
+								packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(entityID, NMSHook.setGlowFlag(glowingTarget.getEntity(), packet, false));
 								super.write(context, packetPlayOutEntityMetadata.toNMS(eglowPlayer.getVersion()), channelPromise);
 								return;
 							}
@@ -95,12 +95,12 @@ public class PipelineInjector {
 							if (glowVisibility.equals(GlowVisibility.NONE) || //Player can't see the glow or set to none
 									(glowVisibility.equals(GlowVisibility.OTHER) && glowingTarget.getPlayer().equals(eglowPlayer.getPlayer())) || //if glow is set to other
 									(glowVisibility.equals(GlowVisibility.OWN) && !glowingTarget.getPlayer().equals(eglowPlayer.getPlayer()))) { //if glow is set to own
-								packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(entityID, NMSHook.setGlowFlag(glowingTarget.getEntity(), false));
+								packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(entityID, NMSHook.setGlowFlag(glowingTarget.getEntity(), packet, false));
 								super.write(context, packetPlayOutEntityMetadata.toNMS(eglowPlayer.getVersion()), channelPromise);
 								return;
 							}
 
-							packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(entityID, NMSHook.setGlowFlag(glowingTarget.getEntity(), true));
+							packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(entityID, NMSHook.setGlowFlag(glowingTarget.getEntity(), packet, true));
 							super.write(context, packetPlayOutEntityMetadata.toNMS(eglowPlayer.getVersion()), channelPromise);
 							return;
 						}

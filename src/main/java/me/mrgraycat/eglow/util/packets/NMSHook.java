@@ -90,6 +90,30 @@ public class NMSHook {
 		return null;
 	}
 
+	public static DataWatcher setGlowFlag(Object entity, Object metadataPacket, boolean status) {
+		try {
+			Object nmsPlayer = nms.getHandle.invoke(entity);
+			DataWatcher dw = DataWatcher.fromNMSPacket(metadataPacket);
+
+			if (dw.getItem(0) == null)
+				return dw;
+			
+			byte initialBitMask = (byte) dw.getItem(0).value;
+			byte bitMaskIndex = (byte) 6;
+
+			if (status) {
+				dw.setValue(new DataWatcherObject(0, registry.Byte), (byte) (initialBitMask | 1 << bitMaskIndex));
+			} else {
+				dw.setValue(new DataWatcherObject(0, registry.Byte), (byte) (initialBitMask & ~(1 << bitMaskIndex)));
+			}
+
+			return dw;
+		} catch (Exception exception) {
+			exception.printStackTrace();
+		}
+		return null;
+	}
+
 	public static void registerCommandAlias() {
 		try {
 			String alias = EGlowMainConfig.MainConfig.COMMAND_ALIAS.getString();

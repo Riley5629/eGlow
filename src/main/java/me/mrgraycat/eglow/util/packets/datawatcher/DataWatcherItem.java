@@ -37,4 +37,20 @@ public class DataWatcherItem {
 			return new DataWatcherItem(new DataWatcherObject(nms.DataWatcherItem_TYPE.getInt(nmsItem), null), nms.DataWatcherItem_VALUE.get(nmsItem));
 		}
 	}
+
+	/**
+	 * Returns and instance of this class from given NMS item
+	 *
+	 * @param nmsItem - NMS item
+	 * @return instance of this class with same data
+	 * @throws Exception - if something fails
+	 */
+	public static DataWatcherItem fromPacketNMS(Object nmsItem) throws Exception {
+		NMSStorage nms = NMSHook.nms;
+		if (nms.minorVersion >= 9) {
+			return new DataWatcherItem(new DataWatcherObject((int) nms.DataWatcherB_INT.invoke(nmsItem), nms.DataWatcherB_Serializer.invoke(nmsItem)), nms.DataWatcherB_VALUE.invoke(nmsItem));
+		} else {
+			return new DataWatcherItem(new DataWatcherObject(nms.DataWatcherItem_TYPE.getInt(nmsItem), null), nms.DataWatcherItem_VALUE.get(nmsItem));
+		}
+	}
 }

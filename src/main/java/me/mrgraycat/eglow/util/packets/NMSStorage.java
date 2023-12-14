@@ -97,6 +97,9 @@ public class NMSStorage {
 	public Class<?> DataWatcher$DataValue;
 	public Field DataWatcherItems;
 	public Method DataWatcherItemToData;
+	public Method DataWatcherB_INT;
+	public Method DataWatcherB_Serializer;
+	public Method DataWatcherB_VALUE;
 
 	public Field DataWatcherItem_TYPE;
 	public Field DataWatcherItem_VALUE;
@@ -191,6 +194,10 @@ public class NMSStorage {
 				this.DataWatcher$DataValue = getNMSClass("net.minecraft.network.syncher.DataWatcher$b");
 				this.DataWatcherItems = getFields(this.DataWatcher, Int2ObjectMap.class).get(0);
 				this.DataWatcherItemToData = getMethods(dataWatcherItem, this.DataWatcher$DataValue).get(0);
+
+				this.DataWatcherB_INT = getMethod(this.DataWatcher$DataValue, new String[]{"a"});
+				this.DataWatcherB_Serializer = getMethod(this.DataWatcher$DataValue, new String[]{"b"});
+				this.DataWatcherB_VALUE = getMethod(this.DataWatcher$DataValue, new String[]{"c"});
 			}
 
 			this.DataWatcherItem_TYPE = getFields(dataWatcherItem, this.DataWatcherObject).get(0);
@@ -198,7 +205,7 @@ public class NMSStorage {
 			this.DataWatcherObject_SLOT = getFields(this.DataWatcherObject, int.class).get(0);
 			this.DataWatcherObject_SERIALIZER = getFields(this.DataWatcherObject, dataWatcherSerializer).get(0);
 			this.DataWatcher_REGISTER = getMethod(this.DataWatcher, new String[]{"register", "a"}, this.DataWatcherObject, Object.class);
-
+			
 			this.PacketPlayOutEntityMetadata = getNMSClass("net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata", "PacketPlayOutEntityMetadata", "Packet40EntityMetadata");
 
 			if (isIs1_19_3OrAbove()) {

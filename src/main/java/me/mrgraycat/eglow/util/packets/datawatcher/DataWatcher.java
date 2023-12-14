@@ -86,4 +86,27 @@ public class DataWatcher {
 		}
 		return watcher;
 	}
+
+	/**
+	 * Reads NMS data watcher and returns and instance of this class with same data
+	 *
+	 * @param nmsPacket - NMS datawatcher to read
+	 * @return an instance of this class with same values
+	 * @throws Exception - if something fails
+	 */
+	public static DataWatcher fromNMSPacket(Object nmsPacket) throws Exception {
+		DataWatcher watcher = new DataWatcher();
+		List<Object> items = new ArrayList<>((List<?>) NMSHook.nms.PacketPlayOutEntityMetadata_LIST.get(nmsPacket));
+
+		for (Object watchableObject : items) {
+			DataWatcherItem w;
+			if (NMSHook.nms.isIs1_19_3OrAbove()) {
+				w = DataWatcherItem.fromPacketNMS(watchableObject);
+			} else {
+				w = DataWatcherItem.fromNMS(watchableObject);
+			}
+			watcher.setValue(w.type, w.value);
+		}
+		return watcher;
+	}
 }
