@@ -289,6 +289,11 @@ public class PacketUtil {
 	public static void forceUpdateGlow(EGlowPlayer eGlowPlayer) {
 		for (Player player : (eGlowPlayer.getGlowTargetMode().equals(GlowTargetMode.ALL)) ? Bukkit.getOnlinePlayers() : eGlowPlayer.getGlowTargets()) {
 			EGlowPlayer eGlowTarget = DataManager.getEGlowPlayer(player);
+
+			if (eGlowTarget == null) {
+				continue;
+			}
+
 			boolean isGlowing = eGlowTarget.getGlowStatus() || eGlowTarget.isFakeGlowStatus();
 			PacketPlayOutEntityMetadata packetPlayOutEntityMetadata = null;
 
