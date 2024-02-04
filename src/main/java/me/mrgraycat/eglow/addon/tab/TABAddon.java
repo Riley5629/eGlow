@@ -87,7 +87,8 @@ public class TABAddon extends AbstractAddonBase {
 	}
 
 	public void loadTABSettings() {
-		this.tabConfig = TAB.getInstance().getConfig();
+		this.tabConfig = TAB.getInstance().getConfiguration().getConfig();
+		//this.tabConfig = TAB.getInstance().getConfig();
 
 		this.settingNametagPrefixSuffixEnabled = getTabConfig().getBoolean("scoreboard-teams.enabled", false);
 		this.settingTeamPacketBlockingEnabled = getTabConfig().getBoolean("scoreboard-teams.anti-override", false);
