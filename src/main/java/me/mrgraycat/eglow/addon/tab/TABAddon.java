@@ -40,7 +40,7 @@ public class TABAddon extends AbstractAddonBase {
 		if (tabPlugin == null) {
 			this.versionSupported = false;
 
-			if (DebugUtil.onBungee())
+			if (DebugUtil.onBungee() || DebugUtil.onVelocity())
 				getEGlowInstance().getServer().getPluginManager().registerEvents(new TABAddonEvents(), getEGlowInstance());
 			return;
 		}
@@ -171,7 +171,7 @@ public class TABAddon extends AbstractAddonBase {
 
 					if (tabAddon.isVersionSupported() && tabAddon.blockEGlowPackets()) {
 						tabAddon.updateTABPlayer(eGlowPlayer, eGlowPlayer.getActiveColor());
-					} else if (DebugUtil.onBungee()) {
+					} else if (DebugUtil.onBungee() || DebugUtil.onVelocity()) {
 						DataManager.TABProxyUpdateRequest(player, String.valueOf(eGlowPlayer.getActiveColor()));
 					}
 				} catch (ConcurrentModificationException ignored) {

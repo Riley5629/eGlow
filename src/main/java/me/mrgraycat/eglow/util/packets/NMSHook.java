@@ -31,6 +31,7 @@ public class NMSHook {
 	public static boolean isBungee() {
 		try {
 			return (Boolean) (nms.bungee.get(nms.SpigotConfig));
+
 		} catch (IllegalAccessException exception) {
 			ChatUtil.reportError(exception);
 			return false;
