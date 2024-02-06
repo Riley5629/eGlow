@@ -138,6 +138,7 @@ public class EGlowMainConfig {
 		SETTINGS_NOTIFICATIONS_INVISIBILITY("Settings.notifications.invisibility-change"),
 		SETTINGS_NOTIFICATIONS_TARGET_COMMAND("Settings.notifications.target-set-unset-command"),
 
+		ADVANCED_VELOCITY_MESSAGING("Advanced.use-velocity-plugin-messaging"),
 		ADVANCED_FORCE_DISABLE_PROXY_MESSAGING("Advanced.force-disable-proxy-messaging"),
 		ADVANCED_FORCE_DISABLE_TAB_INTEGRATION("Advanced.force-disable-tab-integration"),
 		ADVANCED_GLOW_VISIBILITY_ENABLE("Advanced.glow-visibility.enable"),

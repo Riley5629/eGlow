@@ -76,6 +76,8 @@ Settings:
 #Advanced settings - Only edit these when you know what you're doing!
 #Disabling some of these settings may cause eGlow to not work properly
 Advanced:
+  #Use velocity plugin messaging if you are running EGlowTabProxy addon on Velocity
+  use-velocity-plugin-messaging: false
   #Disable the messaging between backend and proxy server (required for eGlow's proxy addon)
   force-disable-proxy-messaging: false
   #Disable the integration with TAB to have simple glow colors which gets controlled by the end of tagprefix in TAB
