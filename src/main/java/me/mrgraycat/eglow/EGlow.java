@@ -50,6 +50,7 @@ public class EGlow extends JavaPlugin {
 	public void onEnable() {
 		instance = this;
 		api = new EGlowAPI();
+		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "velocitab:update_team_color");
 
 		if (versionIsCompactible()) {
 			ProtocolVersion.SERVER_VERSION = ProtocolVersion.fromServerString(Bukkit.getBukkitVersion().split("-")[0]);
