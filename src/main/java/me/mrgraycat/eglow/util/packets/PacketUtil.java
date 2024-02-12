@@ -2,6 +2,7 @@ package me.mrgraycat.eglow.util.packets;
 
 import com.google.common.collect.Sets;
 import me.mrgraycat.eglow.EGlow;
+import me.mrgraycat.eglow.config.EGlowMainConfig;
 import me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig;
 import me.mrgraycat.eglow.data.DataManager;
 import me.mrgraycat.eglow.data.EGlowPlayer;
@@ -156,6 +157,9 @@ public class PacketUtil {
 			if (!PipelineInjector.glowingEntities.containsKey(glowingEntityID))
 				PipelineInjector.glowingEntities.put(glowingEntityID, eGlowPlayer);
 
+
+			if(MainConfig.ADVANCED_VELOCITY_MESSAGING.getBoolean()) eGlowPlayer.getPlayer().sendPluginMessage(Bukkit.getServer().getPluginManager().getPlugin("eGlow"), "velocitab:update_team_color", String.valueOf(eGlowPlayer.getActiveColor().getChar()).getBytes());
+
 			for (Player player : (eGlowPlayer.getGlowTargetMode().equals(GlowTargetMode.ALL)) ? Bukkit.getOnlinePlayers() : eGlowPlayer.getGlowTargets()) {
 				EGlowPlayer eGlowTarget = DataManager.getEGlowPlayer(player);
 
@@ -237,6 +241,8 @@ public class PacketUtil {
 				return;
 		}
 
+		if(MainConfig.ADVANCED_VELOCITY_MESSAGING.getBoolean()) eGlowPlayer.getPlayer().sendPluginMessage(Bukkit.getServer().getPluginManager().getPlugin("eGlow"), "velocitab:update_team_color", String.valueOf(eGlowPlayer.getActiveColor().getChar()).getBytes());
+
 		try {
 			NMSHook.sendPacket(eGlowTarget, Objects.requireNonNull(packetPlayOutEntityMetadata).toNMS(eGlowTarget.getVersion()));
 		} catch (Exception exception) {
@@ -257,6 +263,8 @@ public class PacketUtil {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
+
+		if(MainConfig.ADVANCED_VELOCITY_MESSAGING.getBoolean()) eGlowPlayer.getPlayer().sendPluginMessage(Bukkit.getServer().getPluginManager().getPlugin("eGlow"), "velocitab:update_team_color", String.valueOf(eGlowPlayer.getActiveColor().getChar()).getBytes());
 
 		switch (eGlowPlayer.getGlowTargetMode()) {
 			case ALL:
@@ -287,6 +295,7 @@ public class PacketUtil {
 	}
 
 	public static void forceUpdateGlow(EGlowPlayer eGlowPlayer) {
+		if(MainConfig.ADVANCED_VELOCITY_MESSAGING.getBoolean()) eGlowPlayer.getPlayer().sendPluginMessage(Bukkit.getServer().getPluginManager().getPlugin("eGlow"), "velocitab:update_team_color", String.valueOf(eGlowPlayer.getActiveColor().getChar()).getBytes());
 		for (Player player : (eGlowPlayer.getGlowTargetMode().equals(GlowTargetMode.ALL)) ? Bukkit.getOnlinePlayers() : eGlowPlayer.getGlowTargets()) {
 			EGlowPlayer eGlowTarget = DataManager.getEGlowPlayer(player);
 
@@ -331,6 +340,7 @@ public class PacketUtil {
 		if (ProtocolVersion.SERVER_VERSION.getMinorVersion() >= 19 && !ProtocolVersion.SERVER_VERSION.getFriendlyName().equals("1.19")) {
 			PacketPlayOutActionBar packetPlayOutActionBar = new PacketPlayOutActionBar(formattedText);
 
+			if(MainConfig.ADVANCED_VELOCITY_MESSAGING.getBoolean()) eGlowPlayer.getPlayer().sendPluginMessage(Bukkit.getServer().getPluginManager().getPlugin("eGlow"), "velocitab:update_team_color", String.valueOf(eGlowPlayer.getActiveColor().getChar()).getBytes());
 			try {
 				NMSHook.sendPacket(eGlowPlayer.getPlayer(), packetPlayOutActionBar.toNMS(eGlowPlayer.getVersion()));
 			} catch (Exception e) {
@@ -339,6 +349,7 @@ public class PacketUtil {
 		} else {
 			PacketPlayOutChat packetPlayOutChat = new PacketPlayOutChat(formattedText, PacketPlayOutChat.ChatMessageType.GAME_INFO);
 
+			if(MainConfig.ADVANCED_VELOCITY_MESSAGING.getBoolean()) eGlowPlayer.getPlayer().sendPluginMessage(Bukkit.getServer().getPluginManager().getPlugin("eGlow"), "velocitab:update_team_color", String.valueOf(eGlowPlayer.getActiveColor().getChar()).getBytes());
 			try {
 				NMSHook.sendPacket(eGlowPlayer.getPlayer(), packetPlayOutChat.toNMS(eGlowPlayer.getVersion()));
 			} catch (Exception e) {
