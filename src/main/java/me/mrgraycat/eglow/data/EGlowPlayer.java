@@ -123,6 +123,7 @@ public class EGlowPlayer {
 
 			switch (getEntityType()) {
 				case PLAYER:
+					if(MainConfig.ADVANCED_VELOCITY_MESSAGING.getBoolean()) getPlayer().sendPluginMessage(Bukkit.getServer().getPluginManager().getPlugin("eGlow"), "velocitab:update_team_color", String.valueOf(getActiveColor().getChar()).getBytes());
 					PacketUtil.updateScoreboardTeam(DataManager.getEGlowPlayer(getPlayer()), getTeamName(), ((EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagPrefix(this) : "") + color, (EGlow.getInstance().getVaultAddon() != null) ? EGlow.getInstance().getVaultAddon().getPlayerTagSuffix(this) : "", EnumChatFormat.valueOf(color.name()));
 					break;
 				case CITIZENNPC:
