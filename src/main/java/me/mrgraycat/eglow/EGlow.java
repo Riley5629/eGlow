@@ -61,7 +61,7 @@ public class EGlow extends JavaPlugin {
 			DataManager.initialize();
 
 			registerEventsAndCommands();
-			checkForUpdates();
+			//checkForUpdates();
 			runAddonHooks();
 			runPlayerCheckOnEnable();
 		} else {
