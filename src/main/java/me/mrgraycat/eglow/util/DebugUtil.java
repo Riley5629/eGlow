@@ -10,6 +10,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
+import static me.mrgraycat.eglow.config.EGlowMainConfig.MainConfig.ADVANCED_VELOCITY_MESSAGING;
+
 public class DebugUtil {
 	private static final String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 	private static final int minorVersion = Integer.parseInt(version.split("_")[1]);
@@ -62,5 +64,9 @@ public class DebugUtil {
 
 	public static boolean onBungee() {
 		return !Bukkit.getServer().getOnlineMode() && NMSHook.isBungee();
+	}
+
+	public static boolean onVelocity(){
+		return ADVANCED_VELOCITY_MESSAGING.getBoolean();
 	}
 }
